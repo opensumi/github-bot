@@ -102,6 +102,7 @@ router.post('/gh', async (req: Request, event: FetchEvent) => {
     status,
   });
 });
+
 router.all('*', () => {
   return Response.redirect(
     'https://github.com/opensumi/github-webhook-handler',

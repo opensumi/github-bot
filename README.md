@@ -1,4 +1,4 @@
-# github-webhook-handler
+# github-bot
 
 ## 密钥项
 

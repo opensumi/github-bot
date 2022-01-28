@@ -13,6 +13,9 @@ const define = {};
 for (const s of secrets) {
   if (process.env[s]) {
     define[s] = JSON.stringify(process.env[s].trim());
+  } else {
+    console.error(`process.env.${s} not found!`);
+    process.exit(1);
   }
 }
 
