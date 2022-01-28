@@ -12,7 +12,7 @@ const secrets = [
 const define = {};
 for (const s of secrets) {
   if (process.env[s]) {
-    define[s] = JSON.stringify(process.env[s]);
+    define[s] = JSON.stringify(process.env[s].trim());
   }
 }
 

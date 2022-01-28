@@ -14,7 +14,8 @@
   },
   "include": [
     "./src/*.ts",
-    "./node_modules/@cloudflare/workers-types/index.d.ts"
+    "./node_modules/@cloudflare/workers-types/index.d.ts",
+    "src/base64.js"
   ],
   "exclude": ["node_modules/", "dist/"]
 }

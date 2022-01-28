@@ -1,7 +1,10 @@
 import { Router } from 'itty-router';
 import { error } from 'itty-router-extras';
 import { Webhooks } from '@octokit/webhooks';
-import { WebhookEventHandlerError } from '@octokit/webhooks/dist-types/types';
+import {
+  EmitterWebhookEventName,
+  WebhookEventHandlerError,
+} from '@octokit/webhooks/dist-types/types';
 import { WebhookEventName } from '@octokit/webhooks-types';
 import { templates } from './template';
 import { sendToDing } from './utils';
@@ -19,23 +22,33 @@ router.post('/gh', async (req: Request, event: FetchEvent) => {
   const webhooks = new Webhooks({
     secret: GITHUB_WEBHOOK_SECRET,
   });
+  const supportTemplates = Object.keys(templates) as EmitterWebhookEventName[];
 
   webhooks.onAny(async ({ id, name, payload }) => {
     console.log('Receive Github Webhook, id: ', id, ', name: ', name);
-    const templateWorker = templates[name] as (payload: any) => {
-      title: string;
-      text: string;
-    };
-    if (!templateWorker) {
-      console.log('不支持的消息');
-      // await sendToDing(
-      //   '不支持的消息 ' + name,
-      //   JSON.stringify(payload),
-      // );
-      return;
-    }
-    const data = templateWorker(payload);
-    await sendToDing(data.title, data.text);
+    console.log(
+      'Currently Support: ',
+      supportTemplates.filter((v) => v.startsWith(name)),
+    );
+  });
+
+  supportTemplates.forEach((emitName) => {
+    webhooks.on(emitName, async ({ id, name, payload }) => {
+      console.log(
+        'Current Handle Github Webhook, id: ',
+        id,
+        ', name: ',
+        name,
+        'emitName',
+        emitName,
+      );
+      const handler = templates[emitName] as (payload: any) => {
+        title: string;
+        text: string;
+      };
+      const data = handler(payload);
+      await sendToDing(data.title, data.text);
+    });
   });
 
   if (!headers.get('User-Agent')?.startsWith('GitHub-Hookshot/')) {
