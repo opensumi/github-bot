@@ -8,8 +8,12 @@ export function renderUserLink(sender: User) {
   return `[${sender.login}](${sender.html_url})`;
 }
 
+export function renderPrOrIssueLinkText(p: PullRequest | Issue) {
+  return `\#${p.number} ${p.title}`;
+}
+
 export function renderPrOrIssueLink(p: PullRequest | Issue) {
-  return `[\#${p.number} ${p.title}](${p.html_url})`;
+  return `[${renderPrOrIssueLinkText(p)}](${p.html_url})`;
 }
 
 export function renderPrOrIssue(p: PullRequest | Issue) {

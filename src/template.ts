@@ -2,6 +2,7 @@ import { WebhookEventName, WebhookEventMap } from '@octokit/webhooks-types';
 import { EmitterWebhookEventName } from '@octokit/webhooks/dist-types/types';
 
 import { handlePr, handleIssue } from './templates/prOrIssue';
+import { handleIssueComment } from './templates/comments';
 
 export type ExtractPayload<TEmitterEvent extends EmitterWebhookEventName> =
   TEmitterEvent extends `${infer TWebhookEvent}.${infer _TAction}`
@@ -27,4 +28,7 @@ export const templates = {
   'pull_request.closed': handlePr,
   'pull_request.edited': handlePr,
   'pull_request.ready_for_review': handlePr,
+  'issue_comment.created': handleIssueComment,
+  'issue_comment.deleted': handleIssueComment,
+  'issue_comment.edited': handleIssueComment,
 } as TemplateMapping;

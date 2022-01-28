@@ -1,2 +1,2 @@
-export * from './issues';
+export * from './prOrIssue';
 export * from './utils';
