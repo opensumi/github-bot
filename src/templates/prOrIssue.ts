@@ -22,25 +22,31 @@ function render(
 ) {
   const nameBlock = NameBlock[name];
   const action = payload.action.replaceAll('_', '');
-  const sender = renderUserLink(payload.sender);
-  const originAuthor = renderUserLink(data.user);
 
   let shouldRenderOriginAuthor = false;
   if (action !== 'opened') {
     shouldRenderOriginAuthor = true;
   }
+  let shouldRenderBody = true;
+  if (action === 'closed') {
+    shouldRenderBody = false;
+  }
 
   const title = `${nameBlock} ${renderPrOrIssueLink(
     data,
-  )} ${action} by ${sender}`;
+  )} ${action} by ${renderUserLink(payload.sender)}`;
 
-  const text = `${renderRepoLink(
-    payload.repository,
-  )} ${nameBlock} ${action} by ${renderUserLink(payload.sender)}${
-    shouldRenderOriginAuthor ? `, author: ${originAuthor}` : ''
+  let text = `${renderRepoLink(payload.repository)} [${nameBlock}](${
+    data.html_url
+  }) ${action} by ${renderUserLink(payload.sender)}`;
+
+  if (shouldRenderOriginAuthor) {
+    text += `, author: ${renderUserLink(data.user)}`;
   }
 
-${renderPrOrIssue(data)}`;
+  if (shouldRenderBody) {
+    text += `\n\n${renderPrOrIssue(data)}`;
+  }
 
   return {
     title,

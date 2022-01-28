@@ -18,11 +18,11 @@ export function handleIssueComment(payload: ExtractPayload<'issue_comment'>) {
   const title = `Comment ${action} on ${location} ${renderPrOrIssueLinkText(
     payload.issue,
   )}`;
-  const text = `${renderRepoLink(payload.repository)} [Comment ${action}](${
+  const text = `${renderRepoLink(payload.repository)} [Comment](${
     comment.html_url
-  }) by ${renderUserLink(payload.sender)} on ${location} ${renderPrOrIssueLink(
-    payload.issue,
-  )}
+  }) ${action} by ${renderUserLink(
+    payload.sender,
+  )} on ${location} ${renderPrOrIssueLink(payload.issue)}
 >
 > ${comment.body}
 `;
