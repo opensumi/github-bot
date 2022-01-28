@@ -12,9 +12,9 @@ import { sendToDing } from './utils';
 const router = Router();
 
 // 接收 DingTalk webhook 事件
-router.post('/ding', () => {});
+router.post('/ding_webhook', () => {});
 // 接收 Github webhook 事件
-router.post('/gh', async (req: Request, event: FetchEvent) => {
+router.post('/gh_webhook', async (req: Request, event: FetchEvent) => {
   const headers = req.headers;
   let status = 200;
   let respBody = '';
@@ -40,9 +40,7 @@ router.post('/gh', async (req: Request, event: FetchEvent) => {
       console.log(
         'Current Handle Github Webhook, id: ',
         id,
-        ', name: ',
-        name,
-        'emitName',
+        '， emitName:',
         emitName,
       );
       const handler = templates[emitName] as (payload: any) => {
@@ -64,15 +62,7 @@ router.post('/gh', async (req: Request, event: FetchEvent) => {
   }
 
   const eventName = headers.get('x-github-event') as WebhookEventName;
-  console.log(
-    `🚀 ~ file: github.ts ~ line 70 ~ GithubController ~ post ~ eventName`,
-    eventName,
-  );
   const signatureSHA256 = headers.get('x-hub-signature-256') as string;
-  console.log(
-    `🚀 ~ file: github.ts ~ line 71 ~ GithubController ~ post ~ signatureSHA256`,
-    signatureSHA256,
-  );
   const id = headers.get('x-github-delivery') as string;
 
   let payload: any;

@@ -30,16 +30,9 @@ export async function sendToDing(title: string, text: string) {
       text,
     },
   };
-  console.log(
-    `🚀 ~ file: utils.ts ~ line 32 ~ sendToDing ~ dingContent`,
-    dingContent,
-  );
+
   let signStr = '';
   if (DINGTALK_SECRET) {
-    console.log(
-      `🚀 ~ file: utils.ts ~ line 50 ~ sendToDing ~ DINGTALK_SECRET`,
-      DINGTALK_SECRET,
-    );
     const timestamp = Date.now();
     signStr =
       '&timestamp=' +
@@ -48,7 +41,6 @@ export async function sendToDing(title: string, text: string) {
       (await sign(timestamp + '\n' + DINGTALK_SECRET));
   }
 
-  console.log(`🚀 ~ file: utils.ts ~ line 37 ~ sendToDing ~ signStr`, signStr);
   const resp = await fetch(DINGTALK_WEBHOOK_URL + signStr, {
     body: JSON.stringify(dingContent),
     method: 'POST',
@@ -56,5 +48,5 @@ export async function sendToDing(title: string, text: string) {
       'content-type': 'application/json;charset=UTF-8',
     },
   });
-  console.log(await resp.text());
+  console.log('发送结果：', await resp.text());
 }
