@@ -1,4 +1,4 @@
-import { Repository, User, Issue } from '@octokit/webhooks-types';
+import { Repository, User, Issue, PullRequest } from '@octokit/webhooks-types';
 
 export function renderRepoLink(repository: Repository) {
   return `[\[${repository.full_name}\]](${repository.html_url})`;
@@ -8,12 +8,12 @@ export function renderUserLink(sender: User) {
   return `[${sender.login}](${sender.html_url})`;
 }
 
-export function renderIssueLink(issue: Issue) {
-  return `[\#${issue.number} ${issue.title}](${issue.html_url})`;
+export function renderPrOrIssueLink(p: PullRequest | Issue) {
+  return `[\#${p.number} ${p.title}](${p.html_url})`;
 }
 
-export function renderIssue(issue: Issue) {
-  return `> #### ${renderIssueLink(issue)}
+export function renderPrOrIssue(p: PullRequest | Issue) {
+  return `> #### ${renderPrOrIssueLink(p)}
 >
-> ${issue.body ?? ''}`;
+> ${p.body ?? ''}`;
 }

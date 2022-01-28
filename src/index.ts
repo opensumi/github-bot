@@ -26,6 +26,9 @@ router.post('/gh', async (req: Request, event: FetchEvent) => {
 
   webhooks.onAny(async ({ id, name, payload }) => {
     console.log('Receive Github Webhook, id: ', id, ', name: ', name);
+    if ((payload as any).action) {
+      console.log('payload.action: ', (payload as any).action);
+    }
     console.log(
       'Currently Support: ',
       supportTemplates.filter((v) => v.startsWith(name)),
