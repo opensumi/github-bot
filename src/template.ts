@@ -34,10 +34,10 @@ export function getRepoLink({
   installation?: InstallationLite;
   organization?: Organization;
 }) {
-  return `[${repository.full_name}](${repository.html_url})`;
+  return `[\[${repository.full_name}\]](${repository.html_url})`;
 }
 
-export function getUserLink({
+export function getSenderLink({
   sender,
 }: {
   repository: Repository;
@@ -45,16 +45,16 @@ export function getUserLink({
   installation?: InstallationLite;
   organization?: Organization;
 }) {
-  return `[${sender.name ?? 'UNKNOWN'}](${sender.html_url})`;
+  return `[${sender.login}](${sender.html_url})`;
 }
 
 export function issuesOpened(payload: ExtractPayload<'issues.opened'>) {
   const issue = payload.issue;
   return {
-    title: `Issue ${issue.number} opened: ${issue.title}`,
-    text: `${getRepoLink(payload)} Issue ${
-      issue.number
-    } opened by ${getUserLink(payload)}\n\n${issue.title}\n\n${
+    title: `Issue opened: \#${issue.number} ${issue.title}`,
+    text: `${getRepoLink(payload)} Issue opened by ${getSenderLink(
+      payload,
+    )}\n\n> #### [\#${issue.number} ${issue.title}](${issue.html_url})\n\n> ${
       issue.body ?? ''
     }`,
   };
