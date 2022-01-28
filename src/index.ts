@@ -20,7 +20,7 @@ router.post('/gh', async (req: Request, event: FetchEvent) => {
   let respBody = '';
 
   const webhooks = new Webhooks({
-    secret: GITHUB_WEBHOOK_SECRET,
+    secret: SELF_GITHUB_WEBHOOK_SECRET,
   });
   const supportTemplates = Object.keys(templates) as EmitterWebhookEventName[];
 

@@ -7,7 +7,7 @@ console.log(argv);
 const secrets = [
   'DINGTALK_SECRET',
   'DINGTALK_WEBHOOK_URL',
-  'GITHUB_WEBHOOK_SECRET',
+  'SELF_GITHUB_WEBHOOK_SECRET',
 ];
 const define = {};
 for (const s of secrets) {
