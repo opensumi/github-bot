@@ -26,12 +26,14 @@ jobs:
         run: |
           yarn
           yarn run build
+        env:
+          DINGTALK_SECRET: ${{ secrets.DINGTALK_SECRET }}
+          DINGTALK_WEBHOOK_URL: ${{ secrets.DINGTALK_WEBHOOK_URL }}
+          DINGTALK_OUTGOING_TOKEN: ${{ secrets.DINGTALK_OUTGOING_TOKEN }}
+          SELF_GITHUB_WEBHOOK_SECRET: ${{ secrets.SELF_GITHUB_WEBHOOK_SECRET }}
+
       - name: Publish
         uses: cloudflare/wrangler-action@1.3.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           environment: ${{ github.event.inputs.environment }}
-        env:
-          DINGTALK_SECRET: ${{ secrets.DINGTALK_SECRET }}
-          DINGTALK_WEBHOOK_URL: ${{ secrets.DINGTALK_WEBHOOK_URL }}
-          SELF_GITHUB_WEBHOOK_SECRET: ${{ secrets.SELF_GITHUB_WEBHOOK_SECRET }}
