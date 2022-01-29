@@ -1,17 +1,18 @@
 import { handleRequest } from '../src/handler';
-import { mockFetchEvent } from './utils';
-import makeServiceWorkerEnv from 'service-worker-mock';
+import { makeEdgeEnv } from 'edge-mock';
 
-declare const global: any;
+declare const FetchEvent: any;
+declare const Request: any;
 
 describe('handle', () => {
   beforeEach(() => {
-    Object.assign(global, makeServiceWorkerEnv());
+    makeEdgeEnv();
     jest.resetModules();
   });
 
   test('handle Missing route', async () => {
-    const event = mockFetchEvent(new Request('/', { method: 'GET' }));
+    const request = new Request('/?foo=1', { method: 'POST', body: 'hello' });
+    const event = new FetchEvent('fetch', { request });
     const result = await handleRequest(event);
     expect(result.status).toEqual(301);
   });
