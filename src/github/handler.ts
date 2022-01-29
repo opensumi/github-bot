@@ -4,7 +4,6 @@ import {
   EmitterWebhookEventName,
   WebhookEventHandlerError,
 } from '@octokit/webhooks/dist-types/types';
-import { WebhookEventName } from '@octokit/webhooks-types';
 import { templates } from './template';
 import { sendToDing } from './utils';
 
@@ -55,7 +54,7 @@ export async function handler(req: Request, event: FetchEvent) {
     return error(415, 'Content type: not json');
   }
 
-  const eventName = headers.get('x-github-event') as WebhookEventName;
+  const eventName = headers.get('x-github-event') as EmitterWebhookEventName;
   const signatureSHA256 = headers.get('x-hub-signature-256') as string;
   const id = headers.get('x-github-delivery') as string;
 
@@ -65,14 +64,23 @@ export async function handler(req: Request, event: FetchEvent) {
   } catch (err) {
     return error(400, 'Invalid JSON');
   }
+  const matchesSignature = await webhooks.verify(
+    payload,
+    signatureSHA256.replace('sha256=', ''),
+  );
+  if (!matchesSignature) {
+    return error(
+      401,
+      'signature does not match event payload and secret, please reset webhook secret',
+    );
+  }
 
   try {
     event.waitUntil(
-      webhooks.verifyAndReceive({
+      webhooks.receive({
         id: id,
-        name: eventName,
+        name: eventName as any,
         payload: payload,
-        signature: signatureSHA256.replace('sha256=', ''),
       }),
     );
 
