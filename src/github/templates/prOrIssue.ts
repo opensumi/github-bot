@@ -5,12 +5,13 @@ import {
   renderPrOrIssue,
   renderPrOrIssueText,
 } from './utils';
-import { Issue, PullRequest } from '@octokit/webhooks-types';
+import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 
-type Name = 'issues' | 'pull_request';
+type Name = 'issues' | 'pull_request' | 'discussion';
 const NameBlock = {
   issues: 'Issue',
   pull_request: 'Pull Request',
+  discussion: 'Discussion',
 } as {
   [key in Name]: string;
 };
@@ -18,7 +19,7 @@ const NameBlock = {
 function render(
   name: Name,
   payload: ExtractPayload<Name>,
-  data: PullRequest | Issue,
+  data: PullRequest | Issue | Discussion,
 ) {
   const nameBlock = NameBlock[name];
   const action = payload.action.replaceAll('_', '');
@@ -60,4 +61,8 @@ export function handlePr(payload: ExtractPayload<'pull_request'>) {
 
 export function handleIssue(payload: ExtractPayload<'issues'>) {
   return render('issues', payload, payload.issue);
+}
+
+export function handleDiscussion(payload: ExtractPayload<'discussion'>) {
+  return render('discussion', payload, payload.discussion);
 }

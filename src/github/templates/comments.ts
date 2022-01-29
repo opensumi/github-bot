@@ -5,24 +5,39 @@ import {
   renderUserLink,
 } from '.';
 import { ExtractPayload } from '../template';
+import {
+  Issue,
+  PullRequest,
+  Discussion,
+  IssueComment,
+} from '@octokit/webhooks-types';
 
-export function handleIssueComment(payload: ExtractPayload<'issue_comment'>) {
-  const issue = payload.issue;
+type Name = 'issues' | 'pull_request' | 'discussion';
+const NameBlock = {
+  issues: 'Issue',
+  pull_request: 'Pull Request',
+  discussion: 'Discussion',
+} as {
+  [key in Name]: string;
+};
+
+function renderComment(
+  name: Name,
+  payload: ExtractPayload<'issue_comment' | 'discussion_comment'>,
+  data: Issue | PullRequest | Discussion,
+  comment: {
+    html_url: string;
+    body: string;
+  },
+) {
+  const location = NameBlock[name];
   const action = payload.action;
-  const comment = payload.comment;
-  const isUnderPullRequest = Boolean(issue.pull_request);
-  let location = 'issue';
-  if (isUnderPullRequest) {
-    location = 'pull request';
-  }
-  const title = `Comment ${action} on ${location} ${renderPrOrIssueText(
-    payload.issue,
-  )}`;
+  const title = `Comment ${action} on ${location} ${renderPrOrIssueText(data)}`;
   const text = `${renderRepoLink(payload.repository)} [Comment](${
     comment.html_url
   }) ${action} by ${renderUserLink(
     payload.sender,
-  )} on ${location} ${renderPrOrIssueLink(payload.issue)}
+  )} on ${location} ${renderPrOrIssueLink(data)}
 >
 > ${comment.body}
 `;
@@ -30,4 +45,25 @@ export function handleIssueComment(payload: ExtractPayload<'issue_comment'>) {
     title,
     text,
   };
+}
+
+export function handleIssueComment(payload: ExtractPayload<'issue_comment'>) {
+  const issue = payload.issue;
+  const isUnderPullRequest = Boolean(issue.pull_request);
+  let name = 'issues' as Name;
+  if (isUnderPullRequest) {
+    name = 'pull_request';
+  }
+  return renderComment(name, payload, issue, payload.comment);
+}
+
+export function handleDiscussionComment(
+  payload: ExtractPayload<'discussion_comment'>,
+) {
+  return renderComment(
+    'discussion',
+    payload,
+    payload.discussion,
+    payload.comment,
+  );
 }
