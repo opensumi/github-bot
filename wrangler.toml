@@ -1,5 +1,5 @@
-name = "sumi-webhook-dev"
-vars = { ENVIRONMENT = "dev" }
+name = "sumi-webhook-local"
+vars = { ENVIRONMENT = "local" }
 
 type = "javascript"
 
@@ -9,10 +9,6 @@ compatibility_date = "2022-01-28"
 [env.dev]
 name = "sumi-webhook-dev"
 vars = { ENVIRONMENT = "dev" }
-
-[env.pre]
-name = "sumi-webhook-pre"
-vars = { ENVIRONMENT = "pre" }
 
 [env.prod]
 name = "sumi-webhook"
