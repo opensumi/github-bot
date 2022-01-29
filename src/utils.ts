@@ -1,6 +1,6 @@
-export async function sign(content: string): Promise<string> {
+export async function doSign(secret: string, content: string): Promise<string> {
   const encoder = new TextEncoder();
-  const secretKeyData = encoder.encode(DINGTALK_SECRET);
+  const secretKeyData = encoder.encode(secret);
   const key = await crypto.subtle.importKey(
     'raw',
     secretKeyData,
@@ -38,7 +38,7 @@ export async function sendToDing(title: string, text: string) {
       '&timestamp=' +
       timestamp +
       '&sign=' +
-      (await sign(timestamp + '\n' + DINGTALK_SECRET));
+      (await doSign(DINGTALK_SECRET, timestamp + '\n' + DINGTALK_SECRET));
   }
 
   const resp = await fetch(DINGTALK_WEBHOOK_URL + signStr, {

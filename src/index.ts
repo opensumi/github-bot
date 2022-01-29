@@ -8,11 +8,11 @@ import {
 import { WebhookEventName } from '@octokit/webhooks-types';
 import { templates } from './template';
 import { sendToDing } from './utils';
-
+import { handler as dingHandler } from './dingWebhook';
 const router = Router();
 
 // 接收 DingTalk webhook 事件
-router.post('/ding_webhook', () => {});
+router.post('/ding_webhook', dingHandler);
 // 接收 Github webhook 事件
 router.post('/gh_webhook', async (req: Request, event: FetchEvent) => {
   const headers = req.headers;
@@ -100,6 +100,6 @@ router.all('*', () => {
   );
 });
 
-addEventListener('fetch', (event) => {
+addEventListener('fetch', (event: FetchEvent) => {
   event.respondWith(router.handle(event.request, event));
 });
