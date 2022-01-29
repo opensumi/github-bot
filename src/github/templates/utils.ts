@@ -15,7 +15,7 @@ export function renderUserLink(sender: User) {
 }
 
 export function renderPrOrIssueText(p: PullRequest | Issue | Discussion) {
-  return `\#${p.number}\u00b7${p.title}`;
+  return `\#${p.number} ${p.title}`;
 }
 
 export function renderPrOrIssueLink(p: PullRequest | Issue | Discussion) {
