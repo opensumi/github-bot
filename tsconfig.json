@@ -10,7 +10,11 @@
     "moduleResolution": "node",
     "sourceMap": true,
     "esModuleInterop": true,
-    "types": ["@cloudflare/workers-types"]
+    "types": [
+      "@cloudflare/workers-types",
+      "@types/jest",
+      "@types/service-worker-mock"
+    ]
   },
   "include": ["./src/**/*.ts"],
   "exclude": ["node_modules/", "dist/"]
