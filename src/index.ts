@@ -100,6 +100,6 @@ router.all('*', () => {
   );
 });
 
-addEventListener('fetch', (event: FetchEvent) => {
+addEventListener('fetch', (event) => {
   event.respondWith(router.handle(event.request, event));
 });
