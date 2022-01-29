@@ -7,6 +7,15 @@ import {
 } from './utils';
 import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 
+interface ChangeItem {
+  from: string;
+}
+
+interface Changes {
+  body?: ChangeItem;
+  title?: ChangeItem;
+}
+
 type Name = 'issues' | 'pull_request' | 'discussion';
 const NameBlock = {
   issues: 'issue',
@@ -22,7 +31,7 @@ function render(
   data: PullRequest | Issue | Discussion,
 ) {
   const nameBlock = NameBlock[name];
-  const action = payload.action.replaceAll('_', '');
+  let action = payload.action.replaceAll('_', '');
 
   let shouldRenderOriginAuthor = false;
   if (action !== 'opened') {
@@ -33,20 +42,35 @@ function render(
     shouldRenderBody = false;
   }
 
+  let oldTitle = '';
+
+  if ((payload as any).changes) {
+    const changes = (payload as any).changes as Changes;
+    if (changes?.title) {
+      // 说明是标题改变
+      oldTitle = changes.title.from;
+      action = 'changed title';
+    }
+  }
+
   const title = `[${
     payload.repository.name
   }] ${nameBlock} ${renderPrOrIssueText(data)} ${action} by ${
     payload.sender.login
   }`;
 
-  let text = `${renderRepoLink(payload.repository)} [${nameBlock}](${
-    data.html_url
-  }) ${action} by ${renderUserLink(payload.sender)}`;
+  let text = `${renderRepoLink(payload.repository)} [${nameBlock}#${
+    data.number
+  }](${data.html_url}) ${action} by ${renderUserLink(payload.sender)}`;
 
+  const subline = [] as string[];
   if (shouldRenderOriginAuthor) {
-    text += `(author: ${renderUserLink(data.user)})`;
+    subline.push(`author: ${renderUserLink(data.user)}`);
   }
-
+  if (oldTitle) {
+    subline.push(`old title: ${oldTitle}`);
+  }
+  text += '\n\n' + subline.join(', ') + '\n\n';
   text += `\n\n${renderPrOrIssue(data, shouldRenderBody)}`;
 
   return {
