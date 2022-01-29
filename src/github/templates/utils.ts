@@ -25,5 +25,20 @@ export function renderPrOrIssueLink(p: PullRequest | Issue | Discussion) {
 export function renderPrOrIssue(p: PullRequest | Issue | Discussion) {
   return `> #### ${renderPrOrIssueLink(p)}
 >
-> ${p.body ?? ''}`;
+${useRef(p.body)}`;
+}
+
+export function useRef(text?: string | null) {
+  if (!text) {
+    return '';
+  }
+
+  const arrayofLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
+  const newLines = [];
+
+  for (const line of arrayofLines) {
+    newLines.push(`> ${line}`);
+  }
+
+  return newLines.join('\n');
 }

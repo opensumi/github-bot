@@ -3,14 +3,10 @@ import {
   renderPrOrIssueText,
   renderRepoLink,
   renderUserLink,
+  useRef,
 } from '.';
 import { ExtractPayload } from '../template';
-import {
-  Issue,
-  PullRequest,
-  Discussion,
-  IssueComment,
-} from '@octokit/webhooks-types';
+import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 
 type Name = 'issues' | 'pull_request' | 'discussion';
 const NameBlock = {
@@ -39,7 +35,7 @@ function renderComment(
     payload.sender,
   )} on ${location} ${renderPrOrIssueLink(data)}
 >
-> ${comment.body}
+${useRef(comment.body)}
 `;
   return {
     title,
