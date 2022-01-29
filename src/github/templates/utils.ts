@@ -7,7 +7,7 @@ import {
 } from '@octokit/webhooks-types';
 
 export function renderRepoLink(repository: Repository) {
-  return `[\[${repository.name}\]](${repository.html_url})`;
+  return `[[${repository.name}]](${repository.html_url})`;
 }
 
 export function renderUserLink(sender: User) {
@@ -15,7 +15,7 @@ export function renderUserLink(sender: User) {
 }
 
 export function renderPrOrIssueText(p: PullRequest | Issue | Discussion) {
-  return `\#${p.number} ${p.title}`;
+  return `#${p.number} ${p.title}`;
 }
 
 export function renderPrOrIssueLink(p: PullRequest | Issue | Discussion) {

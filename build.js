@@ -1,6 +1,8 @@
 //@ts-check
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const argv = require('minimist')(process.argv.slice(2));
 console.log(argv);
 
@@ -21,6 +23,7 @@ for (const s of secrets) {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('esbuild')
   .build({
     entryPoints: ['./src'],

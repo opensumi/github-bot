@@ -74,7 +74,7 @@ export class CommandCenter {
     if (!text.startsWith('/')) {
       return;
     }
-    let commandToHandle = text.slice(1);
+    const commandToHandle = text.slice(1);
 
     let handler: Handler | undefined;
 
