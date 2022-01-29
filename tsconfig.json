@@ -12,10 +12,6 @@
     "esModuleInterop": true,
     "types": ["@cloudflare/workers-types"]
   },
-  "include": [
-    "./src/**/*.ts",
-    "./node_modules/@cloudflare/workers-types/index.d.ts",
-    "src/base64.js"
-  ],
+  "include": ["./src/**/*.ts"],
   "exclude": ["node_modules/", "dist/"]
 }
