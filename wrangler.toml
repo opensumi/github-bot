@@ -4,6 +4,7 @@ vars = { ENVIRONMENT = "local" }
 type = "javascript"
 
 workers_dev = true
+usage_model="bundled"
 compatibility_date = "2022-01-28"
 
 [env.dev]
