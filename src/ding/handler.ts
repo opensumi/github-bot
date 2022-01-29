@@ -1,6 +1,6 @@
 import { error, text } from 'itty-router-extras';
-import { isGroupMessage, Message } from './ding/types';
-import { doSign, send } from './ding/utils';
+import { isGroupMessage, Message } from './types';
+import { doSign, send } from './utils';
 
 function validateTimestamp(timestamp: string) {
   try {

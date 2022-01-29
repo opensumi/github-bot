@@ -1,5 +1,5 @@
 import { Router } from 'itty-router';
-import { handler as dingHandler } from './dingWebhook';
+import { handler as dingHandler } from './ding';
 import { handler as githubHandler } from './github';
 
 const router = Router();
