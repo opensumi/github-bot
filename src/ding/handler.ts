@@ -44,6 +44,7 @@ async function checkSign(req: Request): Promise<string | undefined> {
   }
   return;
 }
+
 export async function handler(req: Request, event: FetchEvent) {
   const headers = req.headers;
   const timestamp = headers.get('timestamp');
@@ -61,21 +62,6 @@ export async function handler(req: Request, event: FetchEvent) {
 
   const body = (await req.json()) as Message;
   console.log(`收到钉钉消息：`, JSON.stringify(body));
-
-  if (isGroupMessage(body)) {
-    await send(
-      {
-        msgtype: 'text',
-        text: {
-          content: `@${body.senderId}你好哇，我是 Sumi`,
-        },
-        at: {
-          atDingtalkIds: [body.senderId],
-        },
-      },
-      body.sessionWebhook,
-    );
-  }
-
+  commandCenter.handle(body);
   return text('ok');
 }

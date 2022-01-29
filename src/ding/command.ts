@@ -1,6 +1,6 @@
-import { Message } from '.';
+import { Message, send } from '.';
 
-type Handler = (t: string) => Promise<void>;
+type Handler = (msg: Message) => Promise<void>;
 
 function santize(s: string) {
   return s.toString().trim();
@@ -41,6 +41,8 @@ export class CommandCenter {
   eqWrapper: EqHandlerWrapper;
   swWrapper: StartWithHandlerWrapper;
 
+  fallbackHandler: Handler | undefined;
+
   constructor() {
     this.eqWrapper = new EqHandlerWrapper();
     this.swWrapper = new StartWithHandlerWrapper();
@@ -49,10 +51,16 @@ export class CommandCenter {
   }
 
   async on(text: string, handler: Handler, alias?: string[]) {
-    this.eqWrapper.add(text, handler);
-    if (alias && Array.isArray(alias)) {
-      for (const a of alias) {
-        this.eqWrapper.add(a, handler);
+    if (text) {
+      if (text === '*') {
+        this.fallbackHandler = handler;
+      } else {
+        this.eqWrapper.add(text, handler);
+        if (alias && Array.isArray(alias)) {
+          for (const a of alias) {
+            this.eqWrapper.add(a, handler);
+          }
+        }
       }
     }
   }
@@ -79,11 +87,30 @@ export class CommandCenter {
 
     if (!handler) {
       console.log(`${text} 没有触发任何指令`);
-      return;
+      if (!this.fallbackHandler) {
+        return;
+      }
+      console.log(`${text} fallback to *`);
+      handler = this.fallbackHandler;
     }
-    const result = await handler(text);
+    const result = await handler(msg);
     return result;
   }
 }
 
 export const commandCenter = new CommandCenter();
+
+commandCenter.on('*', async (msg) => {
+  await send(
+    {
+      msgtype: 'text',
+      text: {
+        content: `@${msg.senderId}你好哇，我是 Sumi`,
+      },
+      at: {
+        atDingtalkIds: [msg.senderId],
+      },
+    },
+    msg.sessionWebhook,
+  );
+});
