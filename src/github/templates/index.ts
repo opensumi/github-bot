@@ -1,3 +1,3 @@
 export * from './prOrIssue';
-export * from './comments';
+export * from './comment';
 export * from './utils';

@@ -10,9 +10,9 @@ import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 
 type Name = 'issues' | 'pull_request' | 'discussion';
 const NameBlock = {
-  issues: 'Issue',
-  pull_request: 'Pull Request',
-  discussion: 'Discussion',
+  issues: 'issue',
+  pull_request: 'pull request',
+  discussion: 'discussion',
 } as {
   [key in Name]: string;
 };
@@ -30,8 +30,8 @@ function renderComment(
   const action = payload.action;
   const title = `[${
     payload.repository.name
-  }] Comment ${action} on ${location} ${renderPrOrIssueText(data)}`;
-  const text = `${renderRepoLink(payload.repository)} [Comment](${
+  }] comment ${action} on ${location} ${renderPrOrIssueText(data)}`;
+  const text = `${renderRepoLink(payload.repository)} [comment](${
     comment.html_url
   }) ${action} by ${renderUserLink(
     payload.sender,

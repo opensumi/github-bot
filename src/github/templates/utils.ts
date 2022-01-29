@@ -15,17 +15,22 @@ export function renderUserLink(sender: User) {
 }
 
 export function renderPrOrIssueText(p: PullRequest | Issue | Discussion) {
-  return `\#${p.number} ${p.title}`;
+  return `\#${p.number}\u00b7${p.title}`;
 }
 
 export function renderPrOrIssueLink(p: PullRequest | Issue | Discussion) {
   return `[${renderPrOrIssueText(p)}](${p.html_url})`;
 }
 
-export function renderPrOrIssue(p: PullRequest | Issue | Discussion) {
-  return `> #### ${renderPrOrIssueLink(p)}
->
-${useRef(p.body)}`;
+export function renderPrOrIssue(
+  p: PullRequest | Issue | Discussion,
+  renderBody = true,
+) {
+  let result = `> #### ${renderPrOrIssueLink(p)}`;
+  if (renderBody) {
+    result += `\n>\n${useRef(p.body)}`;
+  }
+  return result;
 }
 
 export function useRef(text?: string | null) {
