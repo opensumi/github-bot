@@ -33,7 +33,9 @@ function render(
     shouldRenderBody = false;
   }
 
-  const title = `${nameBlock} ${renderPrOrIssueText(data)} ${action} by ${
+  const title = `[${
+    payload.repository.name
+  }] ${nameBlock} ${renderPrOrIssueText(data)} ${action} by ${
     payload.sender.login
   }`;
 

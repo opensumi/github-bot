@@ -28,7 +28,9 @@ function renderComment(
 ) {
   const location = NameBlock[name];
   const action = payload.action;
-  const title = `Comment ${action} on ${location} ${renderPrOrIssueText(data)}`;
+  const title = `[${
+    payload.repository.name
+  }] Comment ${action} on ${location} ${renderPrOrIssueText(data)}`;
   const text = `${renderRepoLink(payload.repository)} [Comment](${
     comment.html_url
   }) ${action} by ${renderUserLink(
