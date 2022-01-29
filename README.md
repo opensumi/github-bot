@@ -21,27 +21,34 @@ yarn wrangler login
 yarn run publish:local
 ```
 
-因为我们在 `wrangler.toml` 中配置了 `name: sumi-worker-dev`，所以本应用会被部署在：
+因为我们在 `wrangler.toml` 中配置了 `name: sumi-local`，所以本应用会被部署在：
 
 ```txt
-https://sumi-worker-dev.{user}.workers.dev
+https://sumi-local.{user}.workers.dev
 ```
 
 然后可以在 Cloudflare Workers 的后台上配置自定义域名。
 
 最后将这个域名配置在该使用的地方即可。
 
-你也可以指定 [部署环境](https://developers.cloudflare.com/workers/platform/environments)，这些值配置在了 `wrangler.toml` 中，如：
+## 正式部署
 
-```sh
-yarn run publish:local --env prod
-```
+打开 Workflow 页面：<https://github.com/opensumi/github-bot/actions/workflows/deploy.yml>
 
-这时候应用会部署在：
+点击 Run workflow 后可以选择 [部署环境](https://developers.cloudflare.com/workers/platform/environments)，dev 或者 prod。
 
-```txt
-https://sumi-worker.{user}.workers.dev
-```
+这两个环境的区别就是部署域名不同，`ENVIRONMENT` 变量的值不同（都配置在了 `wrangler.toml` 中）。
+
+默认部署的地址为：`https://sumi-local.{user}.workers.dev`  
+dev 部署的地址为：`https://sumi-dev.{user}.workers.dev`  
+prod 部署的地址为：`https://sumi.{user}.workers.dev`  
+
+我们就可以设置不同的路由到不同的路径来区分环境。
+
+比如：
+
+`https://dev.bot.xx.com` -> `https://sumi-dev.{user}.workers.dev`  
+`https://bot.xx.com` -> `https://sumi.{user}.workers.dev`  
 
 ## 如何使用
 
@@ -65,7 +72,23 @@ https://sumi-worker.{user}.workers.dev
 
 打开 `https://github.com/opensumi/core/settings/hooks/new`，
 
-1. 将部署后的地址：`https://sumi-worker-dev.{user}.workers.dev/gh_webhook` 填入 `Payload URL`
+1. 将部署后的地址：`https://bot.xx.com/gh_webhook` 填入 `Payload URL`
 2. `Content type` 选择 `application/json`
 3. `Secret` 填写和 [配置密钥项](#配置密钥项) 中 `SELF_GITHUB_WEBHOOK_SECRET` 一样的值。
 4. `events` 选择 `Send me everything.`
+
+### 配置 Dingtalk Webhook
+
+路径：群设置 -> 智能群助手 -> 添加机器人 -> 自定义机器人
+
+设置好机器人名字，头像。
+
+安全设置选择 `加签`，将这个值设置到 [配置密钥项](#配置密钥项) 的 `DINGTALK_SECRET`。
+
+勾选 **是否开启 Outgoing 机制**，POST 地址填入：
+
+```txt
+https://bot.xx.com/ding_webhook
+```
+
+Token 填入 [配置密钥项](#配置密钥项) 的 `DINGTALK_OUTGOING_TOKEN` 值。
