@@ -1,5 +1,15 @@
-name = "sumi-webhook"
+name = "sumi-webhook-dev"
+vars = { ENVIRONMENT = "dev" }
+
 type = "javascript"
 
 workers_dev = true
 compatibility_date = "2022-01-28"
+
+[env.staging]
+name = "sumi-webhook-staging"
+vars = { ENVIRONMENT = "staging" }
+
+[env.prod]
+name = "sumi-webhook"
+vars = { ENVIRONMENT = "prod" }

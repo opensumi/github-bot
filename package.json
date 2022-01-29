@@ -12,7 +12,7 @@
     "dev": "run-p dev:build dev:worker",
     "dev:build": "yarn build --watch",
     "dev:worker": "wrangler dev",
-    "publish": "yarn build && wrangler publish"
+    "publish:local": "yarn build && wrangler publish"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.3.1",

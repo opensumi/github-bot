@@ -9,6 +9,7 @@ const secrets = [
   'DINGTALK_WEBHOOK_URL',
   'SELF_GITHUB_WEBHOOK_SECRET',
 ];
+
 const define = {};
 for (const s of secrets) {
   if (process.env[s]) {

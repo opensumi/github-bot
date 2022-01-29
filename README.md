@@ -11,25 +11,37 @@ yarn
 yarn dev
 ```
 
-## 部署
+## 本地部署
 
 部署非常简单，你需要做的就是有一个 Cloudflare 帐号，然后执行：
 
 ```sh
 yarn
 yarn wrangler login
-yarn run publish
+yarn run publish:local
 ```
 
-因为我们在 `wrangler.toml` 中配置了 `name: sumi-worker`，所以本应用会被部署在：
+因为我们在 `wrangler.toml` 中配置了 `name: sumi-worker-dev`，所以本应用会被部署在：
 
 ```txt
-https://sumi-worker.{user}.workers.dev
+https://sumi-worker-dev.{user}.workers.dev
 ```
 
 然后可以在 Cloudflare Workers 的后台上配置自定义域名。
 
 最后将这个域名配置在该使用的地方即可。
+
+你也可以指定 [部署环境](https://developers.cloudflare.com/workers/platform/environments)，这些值配置在了 `wrangler.toml` 中，如：
+
+```sh
+yarn run publish:local --env prod
+```
+
+这时候应用会部署在：
+
+```txt
+https://sumi-worker.{user}.workers.dev
+```
 
 ## 如何使用
 
@@ -51,7 +63,7 @@ https://sumi-worker.{user}.workers.dev
 
 打开 `https://github.com/opensumi/core/settings/hooks/new`，
 
-1. 将部署后的地址：`https://sumi-worker.{user}.workers.dev/gh_webhook` 填入 `Payload URL`
+1. 将部署后的地址：`https://sumi-worker-dev.{user}.workers.dev/gh_webhook` 填入 `Payload URL`
 2. `Content type` 选择 `application/json`
 3. `Secret` 填写和 [配置密钥项](#配置密钥项) 中 `SELF_GITHUB_WEBHOOK_SECRET` 一样的值。
 4. `events` 选择 `Send me everything.`
