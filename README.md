@@ -53,8 +53,8 @@ https://sumi-worker.{user}.workers.dev
    创建机器人时选择加签模式，会出现这个加签密钥。
 2. DINGTALK_WEBHOOK_URL
    钉钉的 webhook 地址。
-3. DINGTALK_OUTGOING_SECRET
-   钉钉的 outgoing secret，你 @ 机器人时的验签。
+3. DINGTALK_OUTGOING_TOKEN
+   启用钉钉的 outgoing 机制时要设置的 token。
 4. SELF_GITHUB_WEBHOOK_SECRET
    Github 后台设置 webhooks 时设置的 secret
 
