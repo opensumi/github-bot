@@ -1,6 +1,7 @@
 import { error, text } from 'itty-router-extras';
 import { isGroupMessage, Message } from './types';
 import { doSign, send } from './utils';
+import { commandCenter } from './command';
 
 function validateTimestamp(timestamp: string) {
   try {
