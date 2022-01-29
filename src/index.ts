@@ -10,10 +10,7 @@ router.post('/ding_webhook', dingHandler);
 router.post('/gh_webhook', githubHandler);
 
 router.all('*', () => {
-  return Response.redirect(
-    'https://github.com/opensumi/github-webhook-handler',
-    301,
-  );
+  return Response.redirect('https://github.com/opensumi/github-bot', 301);
 });
 
 addEventListener('fetch', (event) => {

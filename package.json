@@ -1,9 +1,9 @@
 {
-  "name": "github-webhook-handler",
+  "name": "github-bot",
   "version": "1.0.0",
   "private": "true",
   "main": "index.js",
-  "repository": "https://github.com/opensumi/github-webhook-handler.git",
+  "repository": "https://github.com/opensumi/github-bot.git",
   "license": "MIT",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
