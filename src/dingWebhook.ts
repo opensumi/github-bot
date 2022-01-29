@@ -1,5 +1,6 @@
 import { error, text } from 'itty-router-extras';
-import { doSign } from './utils';
+import { isGroupMessage, Message } from './ding/types';
+import { doSign, send } from './ding/utils';
 
 function validateTimestamp(timestamp: string) {
   try {
@@ -53,6 +54,21 @@ export async function handler(req: Request, event: FetchEvent) {
   const errMessage = await checkSign(req);
   if (errMessage) {
     return error(403, errMessage);
+  }
+
+  const body = (await req.json()) as Message;
+
+  if (isGroupMessage(body)) {
+    await send(
+      {
+        msgtype: 'text',
+        content: `@${body.senderId}你好哇，我是 Sumi`,
+        at: {
+          atDingtalkIds: [body.senderId],
+        },
+      },
+      body.sessionWebhook,
+    );
   }
 
   return text('ok');

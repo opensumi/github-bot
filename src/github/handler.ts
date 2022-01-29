@@ -6,7 +6,7 @@ import {
 } from '@octokit/webhooks/dist-types/types';
 import { WebhookEventName } from '@octokit/webhooks-types';
 import { templates } from './template';
-import { sendToDing } from '../utils';
+import { sendToDing } from './utils';
 
 export async function handler(req: Request, event: FetchEvent) {
   const headers = req.headers;

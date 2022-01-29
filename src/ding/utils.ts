@@ -17,31 +17,34 @@ export async function doSign(secret: string, content: string): Promise<string> {
   return encodeURIComponent(base64Mac);
 }
 
-export async function sendToDing(title: string, text: string) {
-  // 也许没有设置环境变量
-  if (!DINGTALK_WEBHOOK_URL) {
+/**
+ * https://open.dingtalk.com/document/group/push-message
+ * https://open.dingtalk.com/document/group/custom-robot-access
+ * @param dingContent
+ * @param webhookUrl
+ * @param secret
+ * @returns
+ */
+export async function send(
+  dingContent: any,
+  webhookUrl: string,
+  secret?: string,
+) {
+  if (!webhookUrl) {
     return;
   }
 
-  const dingContent = {
-    msgtype: 'markdown',
-    markdown: {
-      title,
-      text,
-    },
-  };
-
   let signStr = '';
-  if (DINGTALK_SECRET) {
+  if (secret) {
     const timestamp = Date.now();
     signStr =
       '&timestamp=' +
       timestamp +
       '&sign=' +
-      (await doSign(DINGTALK_SECRET, timestamp + '\n' + DINGTALK_SECRET));
+      (await doSign(secret, timestamp + '\n' + secret));
   }
 
-  const resp = await fetch(DINGTALK_WEBHOOK_URL + signStr, {
+  const resp = await fetch(webhookUrl + signStr, {
     body: JSON.stringify(dingContent),
     method: 'POST',
     headers: {
@@ -49,4 +52,5 @@ export async function sendToDing(title: string, text: string) {
     },
   });
   console.log('发送结果：', await resp.text());
+  return resp;
 }

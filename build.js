@@ -16,7 +16,7 @@ for (const s of secrets) {
   if (process.env[s]) {
     define[s] = JSON.stringify(process.env[s].trim());
   } else {
-    console.error(`process.env.${s} not found!`);
+    console.error(`env ${s} not set!`);
     process.exit(1);
   }
 }
