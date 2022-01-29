@@ -3,7 +3,7 @@ import {
   renderRepoLink,
   renderUserLink,
   renderPrOrIssue,
-  renderPrOrIssueLink,
+  renderPrOrIssueText,
 } from './utils';
 import { Issue, PullRequest } from '@octokit/webhooks-types';
 
@@ -32,9 +32,9 @@ function render(
     shouldRenderBody = false;
   }
 
-  const title = `${nameBlock} ${renderPrOrIssueLink(
-    data,
-  )} ${action} by ${renderUserLink(payload.sender)}`;
+  const title = `${nameBlock} ${renderPrOrIssueText(data)} ${action} by ${
+    payload.sender.login
+  }`;
 
   let text = `${renderRepoLink(payload.repository)} [${nameBlock}](${
     data.html_url

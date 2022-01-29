@@ -1,6 +1,6 @@
 import {
   renderPrOrIssueLink,
-  renderPrOrIssueLinkText,
+  renderPrOrIssueText,
   renderRepoLink,
   renderUserLink,
 } from '.';
@@ -15,7 +15,7 @@ export function handleIssueComment(payload: ExtractPayload<'issue_comment'>) {
   if (isUnderPullRequest) {
     location = 'pull request';
   }
-  const title = `Comment ${action} on ${location} ${renderPrOrIssueLinkText(
+  const title = `Comment ${action} on ${location} ${renderPrOrIssueText(
     payload.issue,
   )}`;
   const text = `${renderRepoLink(payload.repository)} [Comment](${
