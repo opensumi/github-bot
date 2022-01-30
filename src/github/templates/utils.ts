@@ -47,3 +47,9 @@ export function useRef(text?: string | null) {
 
   return newLines.join('\n');
 }
+
+export function limitLine(text: string, count: number) {
+  const arrayofLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
+  const finalLines = arrayofLines.slice(0, count);
+  return finalLines.join('\n').trim();
+}

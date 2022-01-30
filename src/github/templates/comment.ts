@@ -1,4 +1,5 @@
 import {
+  limitLine,
   renderPrOrIssueLink,
   renderPrOrIssueText,
   renderRepoLink,
@@ -6,7 +7,7 @@ import {
   useRef,
 } from '.';
 import { ExtractPayload } from '../template';
-import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
+import { Issue, PullRequest, Discussion, User } from '@octokit/webhooks-types';
 
 type Name = 'issues' | 'pull_request' | 'discussion';
 const NameBlock = {
@@ -17,15 +18,29 @@ const NameBlock = {
   [key in Name]: string;
 };
 
+const formatByUserName = {
+  'codecov-commenter': (text: string) => {
+    return limitLine(text, 3);
+  },
+} as {
+  [key: string]: (text: string) => string;
+};
+
+function renderCommentBody(comment: { body: string; user: User }) {
+  let text = useRef(comment.body);
+  const formatter = formatByUserName[comment.user.name ?? ''];
+  if (formatter) {
+    text = formatter(text);
+  }
+  return text;
+}
+
 function renderComment(
   name: Name,
   payload: ExtractPayload<'issue_comment' | 'discussion_comment'>,
   data: Issue | PullRequest | Discussion,
-  comment: {
-    html_url: string;
-    body: string;
-  },
 ) {
+  const comment = payload.comment;
   const location = NameBlock[name];
   const action = payload.action;
   const title = `[${
@@ -37,7 +52,7 @@ function renderComment(
     payload.sender,
   )} on ${location} ${renderPrOrIssueLink(data)}
 >
-${useRef(comment.body)}
+${renderCommentBody(payload.comment)}
 `;
   return {
     title,
@@ -52,16 +67,11 @@ export function handleIssueComment(payload: ExtractPayload<'issue_comment'>) {
   if (isUnderPullRequest) {
     name = 'pull_request';
   }
-  return renderComment(name, payload, issue, payload.comment);
+  return renderComment(name, payload, issue);
 }
 
 export function handleDiscussionComment(
   payload: ExtractPayload<'discussion_comment'>,
 ) {
-  return renderComment(
-    'discussion',
-    payload,
-    payload.discussion,
-    payload.comment,
-  );
+  return renderComment('discussion', payload, payload.discussion);
 }
