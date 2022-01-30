@@ -43,6 +43,11 @@ function renderComment(
   const comment = payload.comment;
   const location = NameBlock[name];
   const action = payload.action;
+  let shouldRenderBody = true;
+  if (['edited'].includes(action)) {
+    shouldRenderBody = false;
+  }
+
   const title = `[${
     payload.repository.name
   }] comment ${action} on ${location} ${renderPrOrIssueText(data)}`;
@@ -50,9 +55,9 @@ function renderComment(
     comment.html_url
   }) ${action} by ${renderUserLink(
     payload.sender,
-  )} on ${location} ${renderPrOrIssueLink(data)}
->
-${renderCommentBody(payload.comment)}
+  )} on ${location} ${renderPrOrIssueLink(data)}${
+    shouldRenderBody ? `>\n${renderCommentBody(payload.comment)}` : ''
+  }
 `;
   return {
     title,

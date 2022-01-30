@@ -38,7 +38,7 @@ function render(
     shouldRenderOriginAuthor = true;
   }
   let shouldRenderBody = true;
-  if (action === 'closed') {
+  if (['closed', 'edited'].includes(action)) {
     shouldRenderBody = false;
   }
 
