@@ -38,8 +38,8 @@ export const templates = {
   'discussion.deleted': handleDiscussion,
   'discussion_comment.created': handleDiscussionComment,
   'discussion_comment.deleted': handleDiscussionComment,
-  'discussion_comment.edited': handleDiscussionComment,
+  // 'discussion_comment.edited': handleDiscussionComment,
   'issue_comment.created': handleIssueComment,
   'issue_comment.deleted': handleIssueComment,
-  'issue_comment.edited': handleIssueComment,
+  // 'issue_comment.edited': handleIssueComment,
 } as TemplateMapping;
