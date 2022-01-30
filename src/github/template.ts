@@ -4,6 +4,7 @@ import { EmitterWebhookEventName } from '@octokit/webhooks/dist-types/types';
 import {
   handlePr,
   handleIssue,
+  handleRelease,
   handleDiscussion,
   handleIssueComment,
   handleDiscussionComment,
@@ -42,4 +43,6 @@ export const templates = {
   'issue_comment.created': handleIssueComment,
   'issue_comment.deleted': handleIssueComment,
   // 'issue_comment.edited': handleIssueComment,
+  'release.published': handleRelease,
+  'release.released': handleRelease,
 } as TemplateMapping;
