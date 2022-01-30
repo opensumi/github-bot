@@ -53,15 +53,20 @@ function render(
     }
   }
 
-  const title = `[${
-    payload.repository.name
-  }] ${nameBlock} ${renderPrOrIssueText(data)} ${action} by ${
-    payload.sender.login
-  }`;
-
-  let text = `${renderRepoLink(payload.repository)} [${nameBlock}#${
-    data.number
-  }](${data.html_url}) ${action} by ${renderUserLink(payload.sender)}`;
+  let mergeState = '';
+  if (name === 'pull_request' && action === 'closed') {
+    const pr = (payload as ExtractPayload<'pull_request.closed'>).pull_request;
+    if (pr.merged) {
+      // If the action is closed and the merged key is true, the pull request was merged.
+      mergeState = `Merged`;
+      if (pr.merged_by) {
+        mergeState += `by ${renderUserLink(pr.merged_by)}`;
+      }
+    } else {
+      // If the action is closed and the merged key is false, the pull request was closed with unmerged commits.
+      mergeState = `Unmerge`;
+    }
+  }
 
   const subline = [] as string[];
   if (shouldRenderOriginAuthor) {
@@ -70,7 +75,18 @@ function render(
   if (oldTitle) {
     subline.push(`old title: ${oldTitle}`);
   }
-  text += '\n\n' + subline.join(', ') + '\n\n';
+
+  const title = `[${payload.repository.name}] ${nameBlock}#${data.number} ${action} by ${payload.sender.login}`;
+  let text = `${renderRepoLink(payload.repository)} [${nameBlock}#${
+    data.number
+  }](${data.html_url}) ${action} by ${renderUserLink(payload.sender)}`;
+
+  if (subline.length > 0) {
+    text += '\n\n' + subline.join(', ') + '\n\n';
+  }
+  if (mergeState) {
+    text += '\n\nState: ' + mergeState + '\n\n';
+  }
   text += `\n\n${renderPrOrIssue(data, shouldRenderBody)}`;
 
   return {

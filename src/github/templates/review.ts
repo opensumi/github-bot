@@ -22,7 +22,7 @@ export function handleReview(payload: ExtractPayload<'pull_request_review'>) {
     review.html_url
   }) ${action} on PR${renderPrOrIssueLink(pr)} by ${renderUserLink(
     payload.sender,
-  )}`;
+  )}\n`;
 
   text += `State: ${review.state}
 
