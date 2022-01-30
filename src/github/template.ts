@@ -8,6 +8,7 @@ import {
   handleDiscussion,
   handleIssueComment,
   handleDiscussionComment,
+  handleReview,
 } from './templates';
 
 export type ExtractPayload<TEmitterEvent extends EmitterWebhookEventName> =
@@ -45,4 +46,7 @@ export const templates = {
   // 'issue_comment.edited': handleIssueComment,
   'release.published': handleRelease,
   'release.released': handleRelease,
+  'pull_request_review.submitted': handleReview,
+  'pull_request_review.edited': handleReview,
+  'pull_request_review.dismissed': handleReview,
 } as TemplateMapping;
