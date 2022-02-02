@@ -55,3 +55,17 @@ export function isGroupMessage(message: any): message is GroupMessage {
     message.conversationType === ConversationType.group
   );
 }
+
+export interface At {
+  at: {
+    atDingtalkIds: string[];
+  };
+}
+
+export function atDingtalkIds(...ids: string[]): At {
+  return {
+    at: {
+      atDingtalkIds: ids,
+    },
+  };
+}

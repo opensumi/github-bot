@@ -1,19 +1,17 @@
-import { Message, send } from '.';
+type CompareFunc = (command: string, userInput: string) => boolean;
 
-type Handler = (msg: Message) => Promise<void>;
-
-function santize(s: string) {
+function sanitize(s: string) {
   return s.toString().trim();
 }
 
-export abstract class HandlerWrapper {
-  private _array = new Map<string, Handler>();
+class HandlerRegistry<T> {
+  private _array = new Map<string, T>();
 
-  add(text: string, handler: Handler) {
+  constructor(public compare: CompareFunc) {}
+
+  add(text: string, handler: T) {
     this._array.set(text, handler);
   }
-
-  abstract compare(command: string, userInput: string): boolean;
 
   find(userInput: string) {
     for (const [t, h] of this._array) {
@@ -24,33 +22,26 @@ export abstract class HandlerWrapper {
   }
 }
 
-export class EqHandlerWrapper extends HandlerWrapper {
-  compare(command: string, userInput: string): boolean {
-    return command === userInput;
-  }
-}
+const equalFunc: CompareFunc = (command: string, userInput: string) => {
+  return command === userInput;
+};
 
-export class StartWithHandlerWrapper extends HandlerWrapper {
-  compare(command: string, userInput: string): boolean {
-    return command.startsWith(userInput);
-  }
-}
+const startsWith: CompareFunc = (command: string, userInput: string) => {
+  return userInput.startsWith(command) || command.startsWith(userInput);
+};
 
-export class CommandCenter {
-  private handlerWrappers = [] as HandlerWrapper[];
-  eqWrapper: EqHandlerWrapper;
-  swWrapper: StartWithHandlerWrapper;
+export class CommandCenter<T> {
+  fallbackHandler: T | undefined;
 
-  fallbackHandler: Handler | undefined;
+  eqWrapper: HandlerRegistry<T>;
+  swWrapper: HandlerRegistry<T>;
 
   constructor() {
-    this.eqWrapper = new EqHandlerWrapper();
-    this.swWrapper = new StartWithHandlerWrapper();
-    this.handlerWrappers.push(this.eqWrapper);
-    this.handlerWrappers.push(this.swWrapper);
+    this.eqWrapper = new HandlerRegistry<T>(equalFunc);
+    this.swWrapper = new HandlerRegistry<T>(startsWith);
   }
 
-  async on(text: string, handler: Handler, alias?: string[]) {
+  async on(text: string, handler: T, alias?: string[]) {
     if (text) {
       if (text === '*') {
         this.fallbackHandler = handler;
@@ -65,8 +56,8 @@ export class CommandCenter {
     }
   }
 
-  async handle(msg: Message) {
-    const text = santize(msg['text']['content']);
+  async resolveHandler(text: string) {
+    text = sanitize(text);
     if (!text) {
       return;
     }
@@ -76,9 +67,13 @@ export class CommandCenter {
     }
     const commandToHandle = text.slice(1);
 
-    let handler: Handler | undefined;
+    let handler: T | undefined;
+    const handlerWrappers = [
+      this.eqWrapper,
+      this.swWrapper,
+    ] as HandlerRegistry<T>[];
 
-    for (const w of this.handlerWrappers) {
+    for (const w of handlerWrappers) {
       handler = w.find(commandToHandle);
       if (handler) {
         break;
@@ -87,30 +82,14 @@ export class CommandCenter {
 
     if (!handler) {
       console.log(`${text} 没有触发任何指令`);
-      if (!this.fallbackHandler) {
-        return;
+      if (this.fallbackHandler) {
+        console.log(`${text} fallback to *`);
+        handler = this.fallbackHandler;
       }
-      console.log(`${text} fallback to *`);
-      handler = this.fallbackHandler;
     }
-    const result = await handler(msg);
-    return result;
+
+    if (handler) {
+      return handler;
+    }
   }
 }
-
-export const commandCenter = new CommandCenter();
-
-commandCenter.on('*', async (msg) => {
-  await send(
-    {
-      msgtype: 'text',
-      text: {
-        content: `@${msg.senderId}你好哇，我是 Sumi`,
-      },
-      at: {
-        atDingtalkIds: [msg.senderId],
-      },
-    },
-    msg.sessionWebhook,
-  );
-});
