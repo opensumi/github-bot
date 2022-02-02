@@ -1,4 +1,4 @@
-import { error } from 'itty-router-extras';
+import { error } from '../utils';
 import { Webhooks } from '@octokit/webhooks';
 import {
   EmitterWebhookEventName,
