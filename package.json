@@ -14,7 +14,8 @@
     "publish:local": "yarn build && wrangler publish",
     "lint": "eslint . && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
     "lint:fix": "eslint . --fix",
-    "test": "jest --config jestconfig.json --verbose"
+    "test": "jest --config jestconfig.json --verbose",
+    "gen:env": "ts-node scripts/generate-env.ts"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.3.1",

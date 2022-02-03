@@ -12,6 +12,12 @@
     "esModuleInterop": true,
     "types": ["./node_modules/@cloudflare/workers-types", "@types/jest"]
   },
-  "include": ["./src/**/*.ts", "./test/**/*.ts"],
-  "exclude": ["node_modules/", "dist/"]
+  "include": ["./src/**/*.ts", "./test/**/*.ts", "./scripts/**/*.ts"],
+  "exclude": ["node_modules/", "dist/"],
+  "ts-node": {
+    "compilerOptions": {
+      "lib": ["esnext"],
+      "types": ["@types/node"]
+    }
+  }
 }
