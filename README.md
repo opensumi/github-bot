@@ -92,3 +92,20 @@ https://bot.xx.com/ding_webhook
 ```
 
 Token 填入 [配置密钥项](#配置密钥项) 的 `DINGTALK_OUTGOING_TOKEN` 值。
+
+### 配置 Github App
+
+如果想开启 Github App 模式的话，需要先配置以下的环境变量：
+
+- GH_APP_ID  
+  创建的 Github App 的 ID
+- GH_APP_WEBHOOK_SECRET  
+  在 Github App 中设置 webhooks 地址时设置的 secret
+- GH_APP_PRIVATE_KEY  
+  在 Github App 中生成一个 private key，纯文本就好，换行使用 `\n`，如果使用 actions 直接多行粘贴即可。
+
+然后打开你的 Github App 开发页面，设置 webhooks 地址为：
+
+```txt
+https://bot.xx.com/gh_app
+```

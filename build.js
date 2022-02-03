@@ -19,7 +19,20 @@ for (const s of secrets) {
     define[s] = JSON.stringify(process.env[s].trim());
   } else {
     console.error(`env ${s} not set!`);
-    process.exit(1);
+  }
+}
+
+const ghAppSecrets = [
+  'GH_APP_ID',
+  'GH_APP_WEBHOOK_SECRET',
+  'GH_APP_PRIVATE_KEY',
+];
+
+for (const s of ghAppSecrets) {
+  if (process.env[s]) {
+    define[s] = JSON.stringify(process.env[s].trim());
+  } else {
+    console.error(`env ${s} not set!`);
   }
 }
 
