@@ -1,96 +1,43 @@
-import { error } from '../utils';
-import { Webhooks } from '@octokit/webhooks';
-import {
-  EmitterWebhookEventName,
-  WebhookEventHandlerError,
-} from '@octokit/webhooks/dist-types/types';
-import { templates } from './template';
+import { error, message } from '../utils';
+import { WebhookEventHandlerError } from '@octokit/webhooks/dist-types/types';
 import { sendToDing } from './utils';
+import { makeWebhooks } from './webhooks';
+import { validate, ValidationError } from './validate';
+import { Webhooks } from '@octokit/webhooks';
+
+export async function baseHandler(
+  webhooks: Webhooks,
+  req: Request,
+  event: FetchEvent,
+) {
+  try {
+    const { id, event: eventName, payload } = await validate(req, webhooks);
+
+    try {
+      event.waitUntil(
+        webhooks.receive({
+          id: id,
+          name: eventName as any,
+          payload: payload,
+        }),
+      );
+      return message('ok');
+    } catch (err) {
+      const statusCode = Array.from(err as WebhookEventHandlerError)[0].status;
+      const status = typeof statusCode !== 'undefined' ? statusCode : 500;
+      return error(status, String(err));
+    }
+  } catch (err) {
+    const errorCode = (err as ValidationError).code ?? 500;
+    const message =
+      (err as ValidationError).message ?? 'Unknown error in validation';
+    return error(errorCode, message);
+  }
+}
 
 export async function handler(req: Request, event: FetchEvent) {
-  const headers = req.headers;
-  let status = 200;
-  let respBody = '';
-
-  const webhooks = new Webhooks({
-    secret: SELF_GITHUB_WEBHOOK_SECRET,
+  const webhooks = makeWebhooks(async (data) => {
+    await sendToDing(data.title, data.text);
   });
-  const supportTemplates = Object.keys(templates) as EmitterWebhookEventName[];
-
-  webhooks.onAny(async ({ id, name, payload }) => {
-    console.log('Receive Github Webhook, id: ', id, ', name: ', name);
-    if ((payload as any).action) {
-      console.log('payload.action: ', (payload as any).action);
-    }
-    console.log(
-      'Currently Support: ',
-      supportTemplates.filter((v) => v.startsWith(name)),
-    );
-  });
-
-  supportTemplates.forEach((emitName) => {
-    webhooks.on(emitName, async ({ id, name, payload }) => {
-      console.log(
-        'Current Handle Github Webhook, id: ',
-        id,
-        '， emitName:',
-        emitName,
-      );
-      const handler = templates[emitName] as (payload: any) => {
-        title: string;
-        text: string;
-      };
-      const data = handler(payload);
-      await sendToDing(data.title, data.text);
-    });
-  });
-
-  if (!headers.get('User-Agent')?.startsWith('GitHub-Hookshot/')) {
-    console.warn('User agent: not from GitHub');
-    return error(403, 'User agent: not from GitHub');
-  }
-  if (headers.get('Content-Type') !== 'application/json') {
-    console.warn('Content type: not json');
-    return error(415, 'Content type: not json');
-  }
-
-  const eventName = headers.get('x-github-event') as EmitterWebhookEventName;
-  const signatureSHA256 = headers.get('x-hub-signature-256') as string;
-  const id = headers.get('x-github-delivery') as string;
-
-  let payload: any;
-  try {
-    payload = await req.json();
-  } catch (err) {
-    return error(400, 'Invalid JSON');
-  }
-  const matchesSignature = await webhooks.verify(
-    payload,
-    signatureSHA256.replace('sha256=', ''),
-  );
-  if (!matchesSignature) {
-    return error(
-      401,
-      'signature does not match event payload and secret, please reset webhook secret',
-    );
-  }
-
-  try {
-    event.waitUntil(
-      webhooks.receive({
-        id: id,
-        name: eventName as any,
-        payload: payload,
-      }),
-    );
-
-    respBody = 'ok\n';
-  } catch (error) {
-    const statusCode = Array.from(error as WebhookEventHandlerError)[0].status;
-    status = typeof statusCode !== 'undefined' ? statusCode : 500;
-    respBody = String(error);
-  }
-  return new Response(respBody, {
-    status,
-  });
+  return baseHandler(webhooks, req, event);
 }

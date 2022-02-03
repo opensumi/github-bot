@@ -15,13 +15,15 @@ export type ExtractPayload<TEmitterEvent extends EmitterWebhookEventName> =
     ? WebhookEventMap[Extract<TWebhookEvent, WebhookEventName>]
     : WebhookEventMap[Extract<TEmitterEvent, WebhookEventName>];
 
+export type MarkdownContent = {
+  title: string;
+  text: string;
+};
+
 export type TemplateMapping = {
   [TEmitterEvent in EmitterWebhookEventName]?: (
     payload: ExtractPayload<TEmitterEvent>,
-  ) => {
-    title: string;
-    text: string;
-  };
+  ) => MarkdownContent;
 };
 
 export const templates = {
@@ -47,3 +49,7 @@ export const templates = {
   'pull_request_review.edited': handleReview,
   'pull_request_review.dismissed': handleReview,
 } as TemplateMapping;
+
+export const supportTemplates = Object.keys(
+  templates,
+) as EmitterWebhookEventName[];
