@@ -1,14 +1,13 @@
 import { WebhookEventName, WebhookEventMap } from '@octokit/webhooks-types';
 import { EmitterWebhookEventName } from '@octokit/webhooks/dist-types/types';
-
 import {
   handlePr,
   handleIssue,
+  handleReview,
   handleRelease,
   handleDiscussion,
   handleIssueComment,
   handleDiscussionComment,
-  handleReview,
 } from './templates';
 
 export type ExtractPayload<TEmitterEvent extends EmitterWebhookEventName> =
@@ -40,10 +39,8 @@ export const templates = {
   'discussion.deleted': handleDiscussion,
   'discussion_comment.created': handleDiscussionComment,
   'discussion_comment.deleted': handleDiscussionComment,
-  // 'discussion_comment.edited': handleDiscussionComment,
   'issue_comment.created': handleIssueComment,
   'issue_comment.deleted': handleIssueComment,
-  // 'issue_comment.edited': handleIssueComment,
   'release.published': handleRelease,
   'release.released': handleRelease,
   'pull_request_review.submitted': handleReview,

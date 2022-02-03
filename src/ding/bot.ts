@@ -11,7 +11,7 @@ export const commandCenter = new CommandCenter<Handler>();
 
 commandCenter.on('*', async (bot) => {
   const { msg } = bot;
-  await bot.sendText(
+  await bot.replyText(
     `@${msg.senderId} 我是 Sumi~`,
     atDingtalkIds(msg.senderId),
   );
@@ -98,7 +98,7 @@ export class DingBot {
     }
   }
 
-  async sendText(text: string, contentExtra: Record<string, any> = {}) {
+  async replyText(text: string, contentExtra: Record<string, any> = {}) {
     const msg = this.msg;
 
     await send(
