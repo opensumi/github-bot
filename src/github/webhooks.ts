@@ -36,7 +36,7 @@ export const setupWebhooks = (webhooks: Webhooks, cb: WebhookCb) => {
 
 export const makeWebhooks = (cb: WebhookCb) => {
   const webhooks = new Webhooks({
-    secret: SELF_GITHUB_WEBHOOK_SECRET,
+    secret: GH_WEBHOOK_SECRET,
   });
   setupWebhooks(webhooks, cb);
   return webhooks;

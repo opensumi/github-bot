@@ -62,7 +62,7 @@ prod 部署的地址为：`https://sumi.{user}.workers.dev`
    钉钉的 webhook 地址。
 3. DINGTALK_OUTGOING_TOKEN
    启用钉钉的 outgoing 机制时要设置的 token。
-4. SELF_GITHUB_WEBHOOK_SECRET
+4. GH_WEBHOOK_SECRET
    Github 后台设置 webhooks 时设置的 secret
 
 本地部署/调试时可以通过 `.env` 来配置这三项。
@@ -74,7 +74,7 @@ prod 部署的地址为：`https://sumi.{user}.workers.dev`
 
 1. 将部署后的地址：`https://bot.xx.com/gh_webhook` 填入 `Payload URL`
 2. `Content type` 选择 `application/json`
-3. `Secret` 填写和 [配置密钥项](#配置密钥项) 中 `SELF_GITHUB_WEBHOOK_SECRET` 一样的值。
+3. `Secret` 填写和 [配置密钥项](#配置密钥项) 中 `GH_WEBHOOK_SECRET` 一样的值。
 4. `events` 选择 `Send me everything.`
 
 ### 配置 Dingtalk Webhook

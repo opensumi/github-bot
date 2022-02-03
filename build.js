@@ -11,7 +11,7 @@ const secrets = [
   'DINGTALK_SECRET',
   'DINGTALK_WEBHOOK_URL',
   'DINGTALK_OUTGOING_TOKEN',
-  'SELF_GITHUB_WEBHOOK_SECRET',
+  'GH_WEBHOOK_SECRET',
   'GH_APP_ID',
   'GH_APP_WEBHOOK_SECRET',
   'GH_APP_PRIVATE_KEY',
@@ -25,6 +25,7 @@ for (const s of secrets) {
     console.error(`env ${s} not set!`);
   }
 }
+
 // --- SECRETS END ---
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
