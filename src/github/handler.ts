@@ -35,6 +35,7 @@ export async function baseHandler(
   }
 }
 
+// 如果只是想简单使用 webhooks 的回调，这个函数来处理
 export async function handler(req: Request, event: FetchEvent) {
   const webhooks = makeWebhooks(async (data) => {
     await sendToDing(data.title, data.text);

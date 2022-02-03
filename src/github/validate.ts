@@ -1,9 +1,5 @@
 import { Webhooks } from '@octokit/webhooks';
-import {
-  EmitterWebhookEventName,
-  WebhookEventHandlerError,
-} from '@octokit/webhooks/dist-types/types';
-import { error } from '../utils';
+import { EmitterWebhookEventName } from '@octokit/webhooks/dist-types/types';
 
 export class ValidationError extends Error {
   constructor(public code: number, message: string) {
