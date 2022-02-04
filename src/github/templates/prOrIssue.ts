@@ -6,6 +6,7 @@ import {
   renderPrOrIssueText,
 } from './utils';
 import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
+import { StringBuilder } from '../../utils';
 
 interface ChangeItem {
   from: string;
@@ -77,21 +78,26 @@ function render(
   }
 
   const title = `[${payload.repository.name}] ${nameBlock}#${data.number} ${action} by ${payload.sender.login}`;
-  let text = `${renderRepoLink(payload.repository)} [${nameBlock}#${
-    data.number
-  }](${data.html_url}) ${action} by ${renderUserLink(payload.sender)}`;
-
+  const builder = new StringBuilder(
+    `${renderRepoLink(payload.repository)} ${renderUserLink(
+      payload.sender,
+    )} ${action} [${nameBlock}#${data.number}](${data.html_url})`,
+  );
   if (subline.length > 0) {
-    text += '\n\n' + subline.join(', ') + '\n\n';
+    builder.add('');
+    builder.add(subline.join(', '));
+    builder.add('');
   }
   if (mergeState) {
-    text += '\n\nState: ' + mergeState + '\n\n';
+    builder.add('');
+    builder.add('State: ' + mergeState);
+    builder.add('');
   }
-  text += `\n\n${renderPrOrIssue(data, shouldRenderBody)}`;
+  builder.add(renderPrOrIssue(data, shouldRenderBody));
 
   return {
     title,
-    text,
+    text: builder.build(),
   };
 }
 

@@ -51,12 +51,12 @@ function renderComment(
   const title = `[${
     payload.repository.name
   }] comment ${action} on ${location} ${renderPrOrIssueText(data)}`;
-  const text = `${renderRepoLink(payload.repository)} [comment](${
-    comment.html_url
-  }) ${action} by ${renderUserLink(
+  const text = `${renderRepoLink(payload.repository)} ${renderUserLink(
     payload.sender,
-  )} on ${location} ${renderPrOrIssueLink(data)}${
-    shouldRenderBody ? `>\n${renderCommentBody(payload.comment)}` : ''
+  )} ${action} [comment](${
+    comment.html_url
+  }) on ${location} ${renderPrOrIssueLink(data)}${
+    shouldRenderBody ? `\n>\n${renderCommentBody(payload.comment)}` : ''
   }
 `;
   return {

@@ -26,3 +26,16 @@ export const message = (text: string, options = {}) => {
     options,
   );
 };
+
+export class StringBuilder {
+  private array = [] as string[];
+  constructor(...initial: string[]) {
+    this.array.push(...initial);
+  }
+  add(str: string) {
+    this.array.push(str);
+  }
+  build() {
+    return '\n' + this.array.join('\n') + '\n';
+  }
+}

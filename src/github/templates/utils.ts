@@ -5,6 +5,7 @@ import {
   PullRequest,
   Discussion,
 } from '@octokit/webhooks-types';
+import { StringBuilder } from '../../utils';
 
 export function renderRepoLink(repository: Repository) {
   return `[[${repository.name}]](${repository.html_url})`;
@@ -45,11 +46,12 @@ export function renderPrOrIssue(
   p: PullRequest | Issue | Discussion,
   renderBody = true,
 ) {
-  let result = `> #### ${renderPrOrIssueLink(p)}`;
+  const builder = new StringBuilder(`> #### ${renderPrOrIssueLink(p)}`);
   if (renderBody) {
-    result += `\n>\n${useRef(p.body)}`;
+    builder.add(`>`);
+    builder.add(`${useRef(p.body)}`);
   }
-  return result;
+  return builder.build();
 }
 
 export function useRef(text?: string | null) {
