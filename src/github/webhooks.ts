@@ -1,13 +1,12 @@
 import { Webhooks } from '@octokit/webhooks';
 import { MarkdownContent, supportTemplates, templates } from './template';
+import { sendToDing } from './utils';
 
 type THasAction = {
   action?: string;
 };
 
-type WebhookCb = (data: MarkdownContent) => Promise<void>;
-
-export const setupWebhooks = (webhooks: Webhooks, cb: WebhookCb) => {
+export const setupWebhooksSendToDing = (webhooks: Webhooks) => {
   webhooks.onAny(async ({ id, name, payload }) => {
     console.log('Receive Github Webhook, id: ', id, ', name: ', name);
     if ((payload as THasAction)?.action) {
@@ -29,15 +28,7 @@ export const setupWebhooks = (webhooks: Webhooks, cb: WebhookCb) => {
       );
       const handler = templates[emitName] as (payload: any) => MarkdownContent;
       const data = handler(payload);
-      await cb(data);
+      await sendToDing(data.title, data.text);
     });
   });
-};
-
-export const makeWebhooks = (cb: WebhookCb) => {
-  const webhooks = new Webhooks({
-    secret: GH_WEBHOOK_SECRET,
-  });
-  setupWebhooks(webhooks, cb);
-  return webhooks;
 };

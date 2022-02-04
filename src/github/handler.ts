@@ -1,9 +1,56 @@
-import { error, message } from '@/utils';
-import { WebhookEventHandlerError } from '@octokit/webhooks/dist-types/types';
-import { sendToDing } from './utils';
-import { makeWebhooks } from './webhooks';
-import { validate, ValidationError } from './validate';
+import { error, lazyValue, message } from '@/utils';
+import {
+  WebhookEventHandlerError,
+  EmitterWebhookEventName,
+} from '@octokit/webhooks/dist-types/types';
+import { setupWebhooksSendToDing } from './webhooks';
 import { Webhooks } from '@octokit/webhooks';
+
+export class ValidationError extends Error {
+  constructor(public code: number, message: string) {
+    super(message);
+  }
+}
+
+export async function validateGithub(req: Request, webhooks: Webhooks) {
+  const headers = req.headers;
+
+  if (!headers.get('User-Agent')?.startsWith('GitHub-Hookshot/')) {
+    console.warn('User agent: not from GitHub');
+    throw new ValidationError(403, 'User agent: not from GitHub');
+  }
+  if (headers.get('Content-Type') !== 'application/json') {
+    console.warn('Content type: not json');
+    throw new ValidationError(415, 'Content type: not json');
+  }
+
+  const event = headers.get('x-github-event') as EmitterWebhookEventName;
+  const signatureSHA256 = headers.get('x-hub-signature-256') as string;
+  const id = headers.get('x-github-delivery') as string;
+
+  let payload: any;
+  try {
+    payload = await req.json();
+  } catch (err) {
+    throw new ValidationError(400, 'Invalid JSON');
+  }
+  const matchesSignature = await webhooks.verify(
+    payload,
+    signatureSHA256.replace('sha256=', ''),
+  );
+  if (!matchesSignature) {
+    throw new ValidationError(
+      401,
+      'signature does not match event payload and secret, please reset webhook secret',
+    );
+  }
+
+  return {
+    id,
+    event,
+    payload,
+  };
+}
 
 export async function baseHandler(
   webhooks: Webhooks,
@@ -11,7 +58,11 @@ export async function baseHandler(
   event: FetchEvent,
 ) {
   try {
-    const { id, event: eventName, payload } = await validate(req, webhooks);
+    const {
+      id,
+      event: eventName,
+      payload,
+    } = await validateGithub(req, webhooks);
 
     try {
       event.waitUntil(
@@ -35,10 +86,15 @@ export async function baseHandler(
   }
 }
 
+const webhooks = lazyValue(
+  () =>
+    new Webhooks({
+      secret: GH_WEBHOOK_SECRET,
+    }),
+);
+
 // 如果只是想简单使用 webhooks 的回调，这个函数来处理
 export async function handler(req: Request, event: FetchEvent) {
-  const webhooks = makeWebhooks(async (data) => {
-    await sendToDing(data.title, data.text);
-  });
-  return baseHandler(webhooks, req, event);
+  setupWebhooksSendToDing(webhooks());
+  return baseHandler(webhooks(), req, event);
 }
