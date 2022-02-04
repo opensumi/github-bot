@@ -27,9 +27,6 @@ jobs:
         run: |
           yarn
           yarn run build
-      - name: Validate secrets
-        run: |
-          yarn validate-remote
       - name: Publish
         uses: cloudflare/wrangler-action@1.3.0
         with:
