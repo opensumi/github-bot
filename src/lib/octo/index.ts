@@ -7,14 +7,14 @@ import { Webhooks } from '@octokit/webhooks';
 import {
   Options,
   ConstructorOptions,
-  // EachInstallationInterface,
-  // EachRepositoryInterface,
-  // GetInstallationOctokitInterface,
+  EachInstallationInterface,
+  EachRepositoryInterface,
+  GetInstallationOctokitInterface,
 } from './types';
 import { webhooks } from './webhooks';
-// import { eachInstallationFactory } from './each-installation';
-// import { eachRepositoryFactory } from './each-repository';
-// import { getInstallationOctokit } from './get-installation-octokit';
+import { eachInstallationFactory } from './each-installation';
+import { eachRepositoryFactory } from './each-repository';
+import { getInstallationOctokit } from './get-installation-octokit';
 
 type Constructor<T> = new (...args: any[]) => T;
 
@@ -51,11 +51,11 @@ export class App<TOptions extends Options = Options> {
   //   clientType: 'github-app';
   //   Octokit: OctokitClassType<TOptions>;
   // }>;
-  // getInstallationOctokit: GetInstallationOctokitInterface<
-  //   OctokitType<TOptions>
-  // >;
-  // eachInstallation: EachInstallationInterface<OctokitType<TOptions>>;
-  // eachRepository: EachRepositoryInterface<OctokitType<TOptions>>;
+  getInstallationOctokit: GetInstallationOctokitInterface<
+    OctokitType<TOptions>
+  >;
+  eachInstallation: EachInstallationInterface<OctokitType<TOptions>>;
+  eachRepository: EachRepositoryInterface<OctokitType<TOptions>>;
   log: {
     debug: (message: string, additionalInfo?: object) => void;
     info: (message: string, additionalInfo?: object) => void;
@@ -131,15 +131,15 @@ export class App<TOptions extends Options = Options> {
     //   });
     // }
 
-    // this.getInstallationOctokit = getInstallationOctokit.bind(
-    //   null,
-    //   this,
-    // ) as GetInstallationOctokitInterface<OctokitType<TOptions>>;
-    // this.eachInstallation = eachInstallationFactory(
-    //   this,
-    // ) as EachInstallationInterface<OctokitType<TOptions>>;
-    // this.eachRepository = eachRepositoryFactory(
-    //   this,
-    // ) as EachRepositoryInterface<OctokitType<TOptions>>;
+    this.getInstallationOctokit = getInstallationOctokit.bind(
+      null,
+      this,
+    ) as GetInstallationOctokitInterface<OctokitType<TOptions>>;
+    this.eachInstallation = eachInstallationFactory(
+      this,
+    ) as EachInstallationInterface<OctokitType<TOptions>>;
+    this.eachRepository = eachRepositoryFactory(
+      this,
+    ) as EachRepositoryInterface<OctokitType<TOptions>>;
   }
 }
