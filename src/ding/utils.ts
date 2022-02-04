@@ -1,15 +1,7 @@
-export async function doSign(secret: string, content: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const secretKeyData = encoder.encode(secret);
-  const key = await crypto.subtle.importKey(
-    'raw',
-    secretKeyData,
-    { name: 'HMAC', hash: 'SHA-256' },
-    false,
-    ['sign'],
-  );
+import { sign } from '@/crypto';
 
-  const mac = await crypto.subtle.sign('HMAC', key, encoder.encode(content));
+export async function doSign(secret: string, content: string): Promise<string> {
+  const mac = await sign(secret, content);
 
   // `mac` is an ArrayBuffer, so we need to jump through a couple of hoops to get
   // it into a ByteString, and then a Base64-encoded string.
