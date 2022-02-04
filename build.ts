@@ -5,15 +5,19 @@ import minimist from 'minimist';
 const argv = minimist(process.argv.slice(2));
 console.log(argv);
 
-import { buildSync } from 'esbuild';
+import { build } from 'esbuild';
 
-const result = buildSync({
+build({
   entryPoints: ['./src'],
   bundle: true,
   outfile: './index.js',
   minify: true,
   color: true,
   watch: argv['watch'],
-});
-
-console.log(result);
+})
+  .then((result) => {
+    console.log(result);
+  })
+  .catch((err) => {
+    throw err;
+  });
