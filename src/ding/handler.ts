@@ -1,4 +1,4 @@
-import { error, message } from '../utils';
+import { error, message } from '@/utils';
 import { Message } from '.';
 import { DingBot } from './bot';
 

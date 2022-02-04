@@ -1,4 +1,4 @@
-import { handleRequest } from '../src/handler';
+import { handleRequest } from '@/handler';
 import { makeEdgeEnv } from 'edge-mock';
 
 declare const FetchEvent: any;

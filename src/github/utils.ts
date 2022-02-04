@@ -1,4 +1,4 @@
-import { send } from '../ding/utils';
+import { send } from '@/ding/utils';
 
 export async function sendToDing(title: string, text: string) {
   // 也许没有设置环境变量

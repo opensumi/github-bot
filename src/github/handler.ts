@@ -1,4 +1,4 @@
-import { error, message } from '../utils';
+import { error, message } from '@/utils';
 import { WebhookEventHandlerError } from '@octokit/webhooks/dist-types/types';
 import { sendToDing } from './utils';
 import { makeWebhooks } from './webhooks';

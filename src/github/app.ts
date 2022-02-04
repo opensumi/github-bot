@@ -1,12 +1,11 @@
-import { App } from './octo';
-import { baseHandler } from '.';
+import { App } from '@/lib/octo';
+import { baseHandler } from './handler';
 import { sendToDing } from './utils';
 import { setupWebhooks } from './webhooks';
-import { lazyValue } from '../utils';
-import { CommandCenter } from '../command';
+import { lazyValue } from '@/utils';
+import { CommandCenter } from '@/command';
 import { Octokit } from '@octokit/core';
 import { ExtractPayload } from './types';
-import { EmitterWebhookEventName } from '@octokit/webhooks/dist-types/types';
 
 // 在 github app 的设置页面中查看
 // 如：https://github.com/organizations/riril/settings/apps/ririltestbot

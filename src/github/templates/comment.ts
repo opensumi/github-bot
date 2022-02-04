@@ -6,7 +6,7 @@ import {
   renderUserLink,
   useRef,
 } from '.';
-import { ExtractPayload } from '../types';
+import { ExtractPayload } from '@/github/types';
 import { Issue, PullRequest, Discussion, User } from '@octokit/webhooks-types';
 
 type Name = 'issues' | 'pull_request' | 'discussion';

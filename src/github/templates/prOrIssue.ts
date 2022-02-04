@@ -1,7 +1,7 @@
 import { ExtractPayload } from '../types';
 import { renderRepoLink, renderUserLink, renderPrOrIssue } from './utils';
 import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
-import { StringBuilder } from '../../utils';
+import { StringBuilder } from '@/utils';
 
 interface ChangeItem {
   from: string;

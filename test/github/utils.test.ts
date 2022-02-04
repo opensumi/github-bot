@@ -1,4 +1,4 @@
-import { limitLine } from '../../src/github/templates/utils';
+import { limitLine } from '@/github/templates/utils';
 describe('github utils', () => {
   it('can limit lines', () => {
     const text = `line1\nline2\nline3\n`;

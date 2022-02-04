@@ -73,12 +73,13 @@ export class App<TOptions extends Options = Options> {
         appId: options.appId,
         privateKey: options.privateKey,
       },
-      options.oauth
-        ? {
-            clientId: options.oauth.clientId,
-            clientSecret: options.oauth.clientSecret,
-          }
-        : {},
+      {},
+      // options.oauth
+      //   ? {
+      //       clientId: options.oauth.clientId,
+      //       clientSecret: options.oauth.clientSecret,
+      //     }
+      //   : {},
     );
 
     this.octokit = new Octokit({

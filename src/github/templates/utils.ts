@@ -5,7 +5,7 @@ import {
   PullRequest,
   Discussion,
 } from '@octokit/webhooks-types';
-import { StringBuilder } from '../../utils';
+import { StringBuilder } from '@/utils';
 
 export function renderRepoLink(repository: Repository) {
   return `[[${repository.name}]](${repository.html_url})`;
