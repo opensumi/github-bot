@@ -39,3 +39,18 @@ export class StringBuilder {
     return '\n' + this.array.join('\n') + '\n';
   }
 }
+
+// https://github.com/sindresorhus/lazy-value/blob/318fd0fa53b413e066a138ea18750fe2ccf51c04/index.js
+export function lazyValue<T>(function_: () => T) {
+  let isCalled = false;
+  let result: T;
+
+  return () => {
+    if (!isCalled) {
+      isCalled = true;
+      result = function_();
+    }
+
+    return result;
+  };
+}

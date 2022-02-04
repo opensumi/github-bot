@@ -114,3 +114,25 @@ Token 填入 [配置密钥项](#配置密钥项) 的 `DINGTALK_OUTGOING_TOKEN` �
 ```txt
 https://bot.xx.com/gh_app
 ```
+
+Github 下载的 private key 要转一下格式：
+
+```txt
+// https://github.com/gr2m/cloudflare-worker-github-app-example/blob/main/worker.js
+
+// The private-key.pem file from GitHub needs to be transformed from the
+// PKCS#1 format to PKCS#8, as the crypto APIs do not support PKCS#1:
+//
+//     openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in private-key.pem -out private-key-pkcs8.pem
+//
+// The private key is too large, so we split it up across 3 keys.
+// You can split up the *.pem file into 3 equal parts with
+//
+//     split -l 3 private-key-pkcs8.pem
+//
+// Then set the priveat keys
+//
+//     cat xaa | wrangler secret put PRIVATE_KEY_1
+//     cat xab | wrangler secret put PRIVATE_KEY_2
+//     cat xac | wrangler secret put PRIVATE_KEY_3
+```

@@ -1,6 +1,7 @@
 import { Router } from 'itty-router';
 import { handler as dingHandler } from './ding';
 import { handler as githubHandler } from './github';
+import { handler as githubAppHandler } from './github/app';
 
 export const router = Router();
 
@@ -8,6 +9,8 @@ export const router = Router();
 router.post('/ding_webhook', dingHandler);
 // 接收 Github webhook 事件
 router.post('/gh_webhook', githubHandler);
+// 接收 Github App 的 webhook 事件
+router.post('/gh_app', githubAppHandler);
 
 router.all('*', () => {
   return Response.redirect('https://github.com/opensumi/github-bot', 301);
