@@ -8,7 +8,7 @@ export type SendOptions = {
   webhookSecret?: string;
 };
 
-export const commandCenter = new CommandCenter<Handler>();
+export const commandCenter = new CommandCenter<Handler>(['']);
 
 commandCenter.on('*', async (bot) => {
   const { msg } = bot;
@@ -95,11 +95,18 @@ export class DingBot {
       const handler = await commandCenter.resolveHandler(text);
       if (handler) {
         await handler(this);
+      } else {
+        console.log('没有 handler 处理 ', text);
       }
     }
   }
 
   async replyText(text: string, contentExtra: Record<string, any> = {}) {
+    console.log(
+      `DingBot ~ replyText ~ text:`,
+      text,
+      JSON.stringify(contentExtra),
+    );
     const msg = this.msg;
 
     await send(

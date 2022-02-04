@@ -35,8 +35,10 @@ export class CommandCenter<T> {
 
   eqWrapper: HandlerRegistry<T>;
   swWrapper: HandlerRegistry<T>;
+  prefixs = [] as string[];
+  constructor(prefixs?: string[]) {
+    this.prefixs.push(...(prefixs ?? ['/']));
 
-  constructor(private prefix = '/') {
     this.eqWrapper = new HandlerRegistry<T>(equalFunc);
     this.swWrapper = new HandlerRegistry<T>(startsWith);
   }
@@ -61,11 +63,23 @@ export class CommandCenter<T> {
     if (!text) {
       return;
     }
+    let isCommand = false;
+    let commandToHandle = text;
+    for (const prefix of this.prefixs) {
+      if (text.startsWith(prefix)) {
+        commandToHandle = text.slice(prefix.length);
+        isCommand = true;
+        break;
+      }
+    }
 
-    if (!text.startsWith(this.prefix)) {
+    if (!isCommand) {
+      console.log(
+        '没有命中前缀 ' + JSON.stringify(this.prefixs),
+        '不当做命令处理',
+      );
       return;
     }
-    const commandToHandle = text.slice(1);
 
     let handler: T | undefined;
     const handlerWrappers = [
@@ -81,7 +95,7 @@ export class CommandCenter<T> {
     }
 
     if (!handler) {
-      console.log(`${text} 没有触发任何指令`);
+      console.log(`${text} 没有命中任何处理器`);
       if (this.fallbackHandler) {
         console.log(`${text} fallback to *`);
         handler = this.fallbackHandler;
