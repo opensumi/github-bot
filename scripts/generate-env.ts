@@ -1,15 +1,8 @@
 import { writeFileSync } from 'fs';
+import allSecretKeys from './secrets';
 
 async function main() {
-  const envKeys = [
-    'DINGTALK_SECRET',
-    'DINGTALK_WEBHOOK_URL',
-    'DINGTALK_OUTGOING_TOKEN',
-    'GH_WEBHOOK_SECRET',
-    'GH_APP_ID',
-    'GH_APP_WEBHOOK_SECRET',
-    'GH_APP_PRIVATE_KEY',
-  ];
+  const envKeys = allSecretKeys;
 
   const envExample = envKeys.map((key) => `${key}=`).join('\n');
   writeFileSync('./.env.example', envExample);

@@ -2,10 +2,10 @@
 
 import { parse } from 'dotenv';
 import { readFileSync } from 'fs';
-
 import { exec } from 'child_process';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const argv = require('minimist')(process.argv.slice(2));
+
+import minimist from 'minimist';
+const argv = minimist(process.argv.slice(2));
 console.log(argv);
 
 async function main() {
@@ -18,7 +18,7 @@ async function main() {
   console.log(`envs`, envs);
 
   for await (const [k, v] of Object.entries(envs)) {
-    const cmd = `yarn wrangler secret put ${k} ${
+    const cmd = `./node_modules/.bin/wrangler secret put ${k} ${
       argv.env ? `--env ${argv.env}` : ''
     }`;
     console.log(`cmd: `, cmd);

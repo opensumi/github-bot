@@ -2,10 +2,10 @@ import { config } from 'dotenv';
 config();
 
 import minimist from 'minimist';
-import { buildSync } from 'esbuild';
-
 const argv = minimist(process.argv.slice(2));
 console.log(argv);
+
+import { buildSync } from 'esbuild';
 
 const result = buildSync({
   entryPoints: ['./src'],
