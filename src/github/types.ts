@@ -5,3 +5,18 @@ export type ExtractPayload<TEmitterEvent extends EmitterWebhookEventName> =
   TEmitterEvent extends `${infer TWebhookEvent}.${infer _TAction}`
     ? WebhookEventMap[Extract<TWebhookEvent, WebhookEventName>]
     : WebhookEventMap[Extract<TEmitterEvent, WebhookEventName>];
+
+export type MarkdownContent = {
+  title: string;
+  text: string;
+};
+
+export type TemplateMapping = {
+  [TEmitterEvent in EmitterWebhookEventName]?: (
+    payload: ExtractPayload<TEmitterEvent>,
+  ) => MarkdownContent;
+};
+
+export type THasAction = {
+  action?: string;
+};

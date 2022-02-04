@@ -1,10 +1,7 @@
 import { Webhooks } from '@octokit/webhooks';
-import { MarkdownContent, supportTemplates, templates } from './template';
+import { supportTemplates, templates } from './templates';
 import { sendToDing } from './utils';
-
-type THasAction = {
-  action?: string;
-};
+import type { MarkdownContent, THasAction } from './types';
 
 export const setupWebhooksSendToDing = (webhooks: Webhooks) => {
   webhooks.onAny(async ({ id, name, payload }) => {
