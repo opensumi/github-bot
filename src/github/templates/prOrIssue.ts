@@ -1,10 +1,5 @@
-import type { ExtractPayload } from '../template';
-import {
-  renderRepoLink,
-  renderUserLink,
-  renderPrOrIssue,
-  renderPrOrIssueText,
-} from './utils';
+import { ExtractPayload } from '../types';
+import { renderRepoLink, renderUserLink, renderPrOrIssue } from './utils';
 import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 import { StringBuilder } from '../../utils';
 

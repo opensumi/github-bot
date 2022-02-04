@@ -1,5 +1,5 @@
 import { renderRepoLink, renderUserLink, useRef } from '.';
-import { ExtractPayload } from '../template';
+import { ExtractPayload } from '../types';
 
 export function handleRelease(payload: ExtractPayload<'release'>) {
   const action = payload.action;

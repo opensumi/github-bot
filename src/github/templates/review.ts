@@ -5,7 +5,7 @@ import {
   renderUserLink,
   useRef,
 } from '.';
-import { ExtractPayload } from '../template';
+import { ExtractPayload } from '../types';
 
 export function handleReview(payload: ExtractPayload<'pull_request_review'>) {
   const action = payload.action;

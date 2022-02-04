@@ -1,5 +1,5 @@
 import { atDingtalkIds, doSign, Message, send } from '.';
-import { CommandCenter } from './command';
+import { CommandCenter } from '../command';
 
 export type Handler = (bot: DingBot) => Promise<void>;
 export type SendOptions = {

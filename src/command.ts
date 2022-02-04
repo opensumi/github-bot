@@ -36,7 +36,7 @@ export class CommandCenter<T> {
   eqWrapper: HandlerRegistry<T>;
   swWrapper: HandlerRegistry<T>;
 
-  constructor() {
+  constructor(private prefix = '/') {
     this.eqWrapper = new HandlerRegistry<T>(equalFunc);
     this.swWrapper = new HandlerRegistry<T>(startsWith);
   }
@@ -62,7 +62,7 @@ export class CommandCenter<T> {
       return;
     }
 
-    if (!text.startsWith('/')) {
+    if (!text.startsWith(this.prefix)) {
       return;
     }
     const commandToHandle = text.slice(1);
