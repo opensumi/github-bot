@@ -75,8 +75,17 @@ export async function baseHandler(
       );
       return message('ok');
     } catch (err) {
-      const statusCode = Array.from(err as WebhookEventHandlerError)[0].status;
-      const status = typeof statusCode !== 'undefined' ? statusCode : 500;
+      let status = 500;
+      if ((err as WebhookEventHandlerError).name === 'AggregateError') {
+        const statusCode = Array.from(err as WebhookEventHandlerError)[0]
+          .status;
+        if (statusCode) {
+          status = statusCode;
+        }
+      }
+      if ((err as any).code) {
+        status = (err as any).code;
+      }
       return error(status, String(err));
     }
   } catch (err) {
