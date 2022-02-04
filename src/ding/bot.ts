@@ -1,5 +1,6 @@
 import { atDingtalkIds, doSign, Message, send } from '.';
 import { CommandCenter } from '@/command';
+import secrets from '@/secrets';
 
 export type Handler = (bot: DingBot) => Promise<void>;
 export type SendOptions = {
@@ -35,7 +36,7 @@ function validateTimestamp(timestamp: string) {
  * 验证接收到的钉钉消息的签名是否合法
  */
 async function checkSign(req: Request): Promise<string | undefined> {
-  if (!DINGTALK_OUTGOING_TOKEN) {
+  if (!secrets.dingtalkOutGoingToken) {
     return;
   }
   const headers = req.headers;
@@ -49,8 +50,8 @@ async function checkSign(req: Request): Promise<string | undefined> {
     return 'timestamp is invalid';
   }
   const calculatedSign = await doSign(
-    DINGTALK_OUTGOING_TOKEN,
-    timestamp + '\n' + DINGTALK_OUTGOING_TOKEN,
+    secrets.dingtalkOutGoingToken,
+    timestamp + '\n' + secrets.dingtalkOutGoingToken,
   );
   // 2. sign 与开发者自己计算的结果不一致，则认为是非法的请求。
   if (calculatedSign !== sign) {

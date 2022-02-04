@@ -5,6 +5,7 @@ import {
 } from '@octokit/webhooks/dist-types/types';
 import { setupWebhooksSendToDing } from './webhooks';
 import { Webhooks } from '@octokit/webhooks';
+import secrets from '@/secrets';
 
 export class ValidationError extends Error {
   constructor(public code: number, message: string) {
@@ -86,12 +87,11 @@ export async function baseHandler(
   }
 }
 
-const webhooks = lazyValue(
-  () =>
-    new Webhooks({
-      secret: GH_WEBHOOK_SECRET,
-    }),
-);
+const webhooks = lazyValue(() => {
+  return new Webhooks({
+    secret: secrets.ghWebhookSecret,
+  });
+});
 
 // 如果只是想简单使用 webhooks 的回调，这个函数来处理
 export async function handler(req: Request, event: FetchEvent) {

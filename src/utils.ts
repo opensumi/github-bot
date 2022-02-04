@@ -47,8 +47,8 @@ export function lazyValue<T>(function_: () => T) {
 
   return () => {
     if (!isCalled) {
-      isCalled = true;
       result = function_();
+      isCalled = true;
     }
 
     return result;

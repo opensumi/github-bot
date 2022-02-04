@@ -1,8 +1,7 @@
 import { send } from '@/ding/utils';
-
+import secrets from '@/secrets';
 export async function sendToDing(title: string, text: string) {
-  // 也许没有设置环境变量
-  if (!DINGTALK_WEBHOOK_URL) {
+  if (!secrets.dingtalkWebhookUrl) {
     return;
   }
   const dingContent = {
@@ -13,5 +12,5 @@ export async function sendToDing(title: string, text: string) {
     },
   };
 
-  await send(dingContent, DINGTALK_WEBHOOK_URL, DINGTALK_SECRET);
+  await send(dingContent, secrets.dingtalkWebhookUrl, secrets.dingtalkSecret);
 }
