@@ -1,22 +1,6 @@
-import { atDingtalkIds, doSign, Message, send } from '.';
-import { CommandCenter } from '@/command';
+import { doSign, Message, send } from '.';
 import secrets from '@/secrets';
-
-export type Handler = (bot: DingBot) => Promise<void>;
-export type SendOptions = {
-  webhookUrl?: string;
-  webhookSecret?: string;
-};
-
-export const commandCenter = new CommandCenter<Handler>(['']);
-
-commandCenter.on('*', async (bot) => {
-  const { msg } = bot;
-  await bot.replyText(
-    `@${msg.senderId} 我是 Sumi~`,
-    atDingtalkIds(msg.senderId),
-  );
-});
+import { cc } from './commands';
 
 function validateTimestamp(timestamp: string) {
   try {
@@ -92,7 +76,7 @@ export class DingBot {
     // 其实目前钉钉机器人也就支持这一种消息类型
     if (msg.msgtype === 'text') {
       const text = msg.text.content;
-      const handler = await commandCenter.resolveHandler(text);
+      const handler = await cc.resolve(text);
       if (handler) {
         await handler(this);
       } else {

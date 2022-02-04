@@ -32,6 +32,6 @@ export const handleComment = async ({
 }) => {
   const { comment } = payload;
 
-  const handler = await issueCc.resolveHandler(comment.body);
+  const handler = await issueCc.resolve(comment.body);
   await handler?.(octokit, payload);
 };

@@ -4,7 +4,7 @@ function sanitize(s: string) {
   return s.toString().trim();
 }
 
-class HandlerRegistry<T> {
+class Registry<T> {
   private _array = new Map<string, T>();
 
   constructor(public compare: CompareFunc) {}
@@ -33,14 +33,14 @@ const startsWith: CompareFunc = (command: string, userInput: string) => {
 export class CommandCenter<T> {
   fallbackHandler: T | undefined;
 
-  eqWrapper: HandlerRegistry<T>;
-  swWrapper: HandlerRegistry<T>;
+  eqReg: Registry<T>;
+  swReg: Registry<T>;
   prefixs = [] as string[];
   constructor(prefixs?: string[]) {
     this.prefixs.push(...(prefixs ?? ['/']));
 
-    this.eqWrapper = new HandlerRegistry<T>(equalFunc);
-    this.swWrapper = new HandlerRegistry<T>(startsWith);
+    this.eqReg = new Registry<T>(equalFunc);
+    this.swReg = new Registry<T>(startsWith);
   }
 
   async on(text: string, handler: T, alias?: string[]) {
@@ -48,26 +48,26 @@ export class CommandCenter<T> {
       if (text === '*') {
         this.fallbackHandler = handler;
       } else {
-        this.eqWrapper.add(text, handler);
+        this.eqReg.add(text, handler);
         if (alias && Array.isArray(alias)) {
           for (const a of alias) {
-            this.eqWrapper.add(a, handler);
+            this.eqReg.add(a, handler);
           }
         }
       }
     }
   }
 
-  async resolveHandler(text: string) {
+  async resolve(text: string) {
     text = sanitize(text);
     if (!text) {
       return;
     }
     let isCommand = false;
-    let commandToHandle = text;
+    let command = text;
     for (const prefix of this.prefixs) {
       if (text.startsWith(prefix)) {
-        commandToHandle = text.slice(prefix.length);
+        command = text.slice(prefix.length);
         isCommand = true;
         break;
       }
@@ -82,20 +82,17 @@ export class CommandCenter<T> {
     }
 
     let handler: T | undefined;
-    const handlerWrappers = [
-      this.eqWrapper,
-      this.swWrapper,
-    ] as HandlerRegistry<T>[];
+    const regs = [this.eqReg, this.swReg] as Registry<T>[];
 
-    for (const w of handlerWrappers) {
-      handler = w.find(commandToHandle);
+    for (const r of regs) {
+      handler = r.find(command);
       if (handler) {
         break;
       }
     }
 
     if (!handler) {
-      console.log(`${text} 没有命中任何处理器`);
+      console.log(`${text} 没有命中任何 handler`);
       if (this.fallbackHandler) {
         console.log(`${text} fallback to *`);
         handler = this.fallbackHandler;
