@@ -16,7 +16,8 @@
     "lint:fix": "eslint . --fix",
     "test": "jest --config jestconfig.json --verbose",
     "generate-env": "esno scripts/generate-env.ts",
-    "setup-secrets": "esno scripts/setup-secrets.ts"
+    "setup-secrets": "esno scripts/setup-secrets.ts",
+    "validate-remote": "esno scripts/validate-remote-secrets.ts"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.3.1",
