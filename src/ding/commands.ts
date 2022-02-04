@@ -1,5 +1,5 @@
 import { CommandCenter } from '@/command';
-import { atDingtalkIds } from '.';
+import { atDingtalkIds } from './message';
 import type { DingBot } from './bot';
 
 export type Handler = (bot: DingBot) => Promise<void>;

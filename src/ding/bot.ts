@@ -1,6 +1,7 @@
 import { doSign, Message, send } from '.';
 import secrets from '@/secrets';
 import { cc } from './commands';
+import { compose, text as textWrapper } from './message';
 
 function validateTimestamp(timestamp: string) {
   try {
@@ -86,22 +87,13 @@ export class DingBot {
   }
 
   async replyText(text: string, contentExtra: Record<string, any> = {}) {
-    console.log(
-      `DingBot ~ replyText ~ text:`,
-      text,
-      JSON.stringify(contentExtra),
-    );
+    await this.reply(compose(textWrapper(text), contentExtra));
+  }
+
+  async reply(content: Record<string, any>) {
+    console.log(`DingBot ~ reply:`, JSON.stringify(content));
     const msg = this.msg;
 
-    await send(
-      {
-        msgtype: 'text',
-        text: {
-          content: text,
-        },
-        ...contentExtra,
-      },
-      msg.sessionWebhook,
-    );
+    await send(content, msg.sessionWebhook);
   }
 }
