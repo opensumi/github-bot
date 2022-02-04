@@ -9,7 +9,11 @@ const argv = require('minimist')(process.argv.slice(2));
 console.log(argv);
 
 async function main() {
-  const content = readFileSync('./.env');
+  let envFile = './.env';
+  if (argv.env) {
+    envFile = envFile + '.' + argv.env;
+  }
+  const content = readFileSync(envFile);
   const envs = parse(content);
   console.log(`envs`, envs);
 

@@ -54,7 +54,11 @@ prod 部署的地址为：`https://sumi.{user}.workers.dev`
 
 ### 配置密钥项
 
-把这些项设置在环境变量中。
+所有密钥都是通过 [`wrangler secrets`](https://developers.cloudflare.com/workers/cli-wrangler/commands#secret) 来管理的。
+
+以后我们改变密钥时，就不需要再部署一遍代码，而是直接修改 Secrets 即可。
+
+将 `.env.example` 复制一份为 `.env`，配置里面的内容。
 
 1. DINGTALK_SECRET
    创建机器人时选择加签模式，会出现这个加签密钥。
@@ -65,8 +69,9 @@ prod 部署的地址为：`https://sumi.{user}.workers.dev`
 4. GH_WEBHOOK_SECRET
    Github 后台设置 webhooks 时设置的 secret
 
-本地部署/调试时可以通过 `.env` 来配置这三项。
-在 Github Actions 上可以通过设置 secrets 来配置这些变量。
+然后执行 `yarn setup-secrets` 将这些密钥同步到 Cloudflare 环境中。
+
+如果想配置线上环境的密钥，需要创建一个 `.env.prod` 文件，然后执行 `yarn setup-secrets --env prod` 即可。
 
 ### 配置 Github Webhook
 
@@ -95,7 +100,7 @@ Token 填入 [配置密钥项](#配置密钥项) 的 `DINGTALK_OUTGOING_TOKEN` �
 
 ### 配置 Github App
 
-如果想开启 Github App 模式的话，需要先配置以下的环境变量：
+如果想开启 Github App 模式的话，需要先配置以下的 Secrets：
 
 - GH_APP_ID  
   创建的 Github App 的 ID

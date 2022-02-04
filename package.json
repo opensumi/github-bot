@@ -15,7 +15,8 @@
     "lint": "eslint . && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
     "lint:fix": "eslint . --fix",
     "test": "jest --config jestconfig.json --verbose",
-    "gen:env": "esno scripts/generate-env.ts"
+    "generate-env": "esno scripts/generate-env.ts",
+    "setup-secrets": "esno scripts/setup-secrets.ts"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.3.1",

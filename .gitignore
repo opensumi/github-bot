@@ -14,5 +14,7 @@ index.js
 !src
 
 .env
+.env.prod
+.env.dev
 
 yarn-error.log
