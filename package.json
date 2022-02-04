@@ -15,8 +15,7 @@
     "lint": "eslint . && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
     "lint:fix": "eslint . --fix",
     "test": "jest --config jestconfig.json --verbose",
-    "generate-env": "esno scripts/generate-env.ts",
-    "setup-secrets": "esno scripts/setup-secrets.ts",
+    "sync-secrets": "esno scripts/sync-env-to-secrets.ts",
     "validate-remote": "esno scripts/validate-remote-secrets.ts"
   },
   "devDependencies": {

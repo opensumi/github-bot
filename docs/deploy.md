@@ -1,6 +1,6 @@
 # Deploy
 
-Firstly, we should prepare all the secrets we need(which listed in [`scripts/generate-env.ts`](https://github.com/opensumi/github-webhook-handler/blob/2f4d7012b26bfa34fd93cfdaecf426703e4b98d9/scripts/generate-env.ts#L4)).
+Firstly, we should prepare all the secrets we need(which listed in [`scripts/secrets.ts`](https://github.com/opensumi/github-webhook-handler/blob/b237a1e35c8fd5fdf720a88f911691f1e096f78c/scripts/secrets.ts)).
 
 We use [`wrangler secrets`](https://developers.cloudflare.com/workers/cli-wrangler/commands#secret) manage the secrets, Cloudflare Workers will replace them in code when each execute.
 
@@ -8,9 +8,9 @@ We use [`wrangler secrets`](https://developers.cloudflare.com/workers/cli-wrangl
 >
 > Rotating a set of API keys shouldn’t require risking downtime through code edits and redeployments and in some cases it may not make sense for the developer writing the script to know the actual API key value at all.
 
-copy `.env.example` to `.env`, and set the corresponding value. then we can run `yarn setup-secrets` put the secrets to cloudflare。
+copy `.env.example` to `.env`, and set the corresponding value. then we can run `yarn sync-secrets` put the secrets to cloudflare。
 
-> if you want set secrets on specific environment, you need create a file named `.env.{environment}`(like `.env.prod`), and run `yarn setup-secrets --env prod`。
+> if you want set secrets on specific environment, you need create a file named `.env.{environment}`(like `.env.prod`), and run `yarn sync-secrets --env prod`。
 
 We have three enviorments: `local`, `dev` and `prod`. They are defined in `wrangler.toml`.
 

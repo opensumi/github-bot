@@ -18,8 +18,15 @@ const remoteValue = JSON.parse(result.toString()) as {
 const remoteKeys = remoteValue.map((v) => v.name);
 console.log(`remoteKeys: `, remoteKeys);
 
+const missingKeys = [];
+
 for (const key of allSecretKeys) {
   if (!remoteKeys.includes(key)) {
-    throw new Error(`${key} not set in remote`);
+    missingKeys.push(key);
   }
+}
+
+if (missingKeys.length > 0) {
+  console.log('missingKeys: ', missingKeys);
+  process.exit(1);
 }
