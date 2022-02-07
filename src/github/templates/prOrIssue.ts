@@ -76,7 +76,7 @@ function render(
   const builder = new StringBuilder(
     `${renderRepoLink(payload.repository)} ${renderUserLink(
       payload.sender,
-    )} ${action} [${nameBlock}#${data.number}](${data.html_url})`,
+    )} ${action} ${nameBlock} [#${data.number}](${data.html_url})`,
   );
   if (subline.length > 0) {
     builder.add(subline.join(', '), true);

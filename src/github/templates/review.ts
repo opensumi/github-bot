@@ -17,7 +17,7 @@ export function handleReview(
 
   const title = `[${
     payload.repository.name
-  }] review ${action} on ${renderPrOrIssueText(pr, 'PR')} by ${
+  }] review ${action} on pr ${renderPrOrIssueText(pr)} by ${
     payload.sender.login
   }`;
 
@@ -26,9 +26,8 @@ export function handleReview(
   builder.add(
     `${renderRepoLink(payload.repository)} ${renderUserLink(
       payload.sender,
-    )} ${action} [review](${review.html_url}) on ${renderPrOrIssueLink(
+    )} ${action} [review](${review.html_url}) on pr ${renderPrOrIssueLink(
       pr,
-      'PR',
     )}\n`,
   );
   builder.add(`State: ${review.state}\n`);
