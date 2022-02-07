@@ -18,7 +18,7 @@ const NameBlock = {
   [key in Name]: string;
 };
 
-const formatByUserName = {
+const formatByUserLogin = {
   'codecov-commenter': (text: string) => {
     return limitLine(text, 3);
   },
@@ -28,7 +28,7 @@ const formatByUserName = {
 
 function renderCommentBody(comment: { body: string; user: User }) {
   let text = useRef(comment.body);
-  const formatter = formatByUserName[comment.user.name ?? ''];
+  const formatter = formatByUserLogin[comment.user.login];
   if (formatter) {
     text = formatter(text);
   }
