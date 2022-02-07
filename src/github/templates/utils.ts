@@ -15,31 +15,37 @@ export function renderUserLink(sender: User) {
   return `[${sender.login}](${sender.html_url})`;
 }
 
-export function renderPrOrIssueText(p: {
-  /**
-   * The title of the pull request.
-   */
-  title: string;
-  /**
-   * Number uniquely identifying the pull request within its repository.
-   */
-  number: number;
-}) {
-  return `#${p.number} ${p.title}`;
+export function renderPrOrIssueText(
+  p: {
+    /**
+     * The title of the pull request.
+     */
+    title: string;
+    /**
+     * Number uniquely identifying the pull request within its repository.
+     */
+    number: number;
+  },
+  prefix?: string,
+) {
+  return `${prefix ?? ''}#${p.number} ${p.title}`;
 }
 
-export function renderPrOrIssueLink(p: {
-  /**
-   * The title of the pull request.
-   */
-  title: string;
-  /**
-   * Number uniquely identifying the pull request within its repository.
-   */
-  number: number;
-  html_url: string;
-}) {
-  return `[${renderPrOrIssueText(p)}](${p.html_url})`;
+export function renderPrOrIssueLink(
+  p: {
+    /**
+     * The title of the pull request.
+     */
+    title: string;
+    /**
+     * Number uniquely identifying the pull request within its repository.
+     */
+    number: number;
+    html_url: string;
+  },
+  prefix?: string,
+) {
+  return `[${renderPrOrIssueText(p, prefix)}](${p.html_url})`;
 }
 
 export function renderPrOrIssue(

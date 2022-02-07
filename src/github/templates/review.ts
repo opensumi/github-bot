@@ -1,3 +1,4 @@
+import { StringBuilder } from '@/utils';
 import {
   renderPrOrIssueLink,
   renderPrOrIssueText,
@@ -5,32 +6,36 @@ import {
   renderUserLink,
   useRef,
 } from '.';
-import { ExtractPayload } from '../types';
+import { ExtractPayload, MarkdownContent } from '../types';
 
-export function handleReview(payload: ExtractPayload<'pull_request_review'>) {
+export function handleReview(
+  payload: ExtractPayload<'pull_request_review'>,
+): MarkdownContent {
   const action = payload.action;
   const review = payload.review;
   const pr = payload.pull_request;
 
   const title = `[${
     payload.repository.name
-  }] review ${action} on PR${renderPrOrIssueText(pr)} by ${
+  }] review ${action} on ${renderPrOrIssueText(pr, 'PR')} by ${
     payload.sender.login
   }`;
 
-  let text = `${renderRepoLink(payload.repository)} [review](${
-    review.html_url
-  }) ${action} on PR${renderPrOrIssueLink(pr)} by ${renderUserLink(
-    payload.sender,
-  )}\n`;
+  const builder = new StringBuilder();
 
-  text += `State: ${review.state}
-
-> ${useRef(review.body)}
-`;
+  builder.add(
+    `${renderRepoLink(payload.repository)} ${renderUserLink(
+      payload.sender,
+    )} ${action} [review](${review.html_url}) on ${renderPrOrIssueLink(
+      pr,
+      'PR',
+    )}\n`,
+  );
+  builder.add(`State: ${review.state}\n`);
+  builder.add(useRef(review.body));
 
   return {
     title,
-    text,
+    text: builder.build(),
   };
 }
