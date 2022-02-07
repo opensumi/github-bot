@@ -1,4 +1,5 @@
-import { Octokit } from '@octokit/core';
+// source: https://github.com/bytebase/star-history/blob/master/src/helpers/api.ts
+
 import { App } from '.';
 
 export function range(from: number, to: number): number[] {
@@ -56,6 +57,9 @@ export class APIWrapper {
       repo,
       page: page,
       per_page: perPage,
+      headers: {
+        Accept: 'application/vnd.github.v3.star+json',
+      },
     });
     return result;
   }
@@ -72,15 +76,13 @@ export class APIWrapper {
 
   async getRepoStarRecords(owner: string, repo: string) {
     const patchRes = await this.getRepoStargazers(owner, repo);
-    console.log(
-      `🚀 ~ file: apis.ts ~ line 75 ~ APIWrapper ~ getRepoStarRecords ~ patchRes`,
-      patchRes,
-    );
+
     const headerLink = patchRes.headers['link'] || '';
+
     const MAX_REQUEST_AMOUNT = 15;
 
     let pageCount = 1;
-    const regResult = /next.*?page=(\d*).*?last/.exec(headerLink);
+    const regResult = /next.*page=(\d*).*?last/.exec(headerLink);
 
     if (regResult) {
       if (regResult[1] && Number.isInteger(Number(regResult[1]))) {
