@@ -46,7 +46,7 @@ export function renderPrOrIssue(
   p: PullRequest | Issue | Discussion,
   renderBody = true,
 ) {
-  const builder = new StringBuilder(`> #### ${renderPrOrIssueLink(p)}`);
+  const builder = new StringBuilder(`> **${renderPrOrIssueLink(p)}**`);
   if (renderBody) {
     builder.add(`>`);
     builder.add(`${useRef(p.body)}`);
