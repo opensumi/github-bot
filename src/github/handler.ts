@@ -36,19 +36,20 @@ export async function validateGithub(req: Request, webhooks: Webhooks) {
     throw new ValidationError(400, 'Invalid JSON');
   }
 
-  if (signatureSHA256) {
-    const matchesSignature = await webhooks.verify(
-      payload,
-      signatureSHA256.replace('sha256=', ''),
-    );
-    if (!matchesSignature) {
-      throw new ValidationError(
-        401,
-        'signature does not match event payload and secret, please reset webhook secret',
-      );
-    }
+  if (!signatureSHA256) {
+    throw new ValidationError(401, 'please set webhook secret in settings');
   }
 
+  const matchesSignature = await webhooks.verify(
+    payload,
+    signatureSHA256.replace('sha256=', ''),
+  );
+  if (!matchesSignature) {
+    throw new ValidationError(
+      401,
+      'signature does not match event payload and secret, please reset webhook secret',
+    );
+  }
   return {
     id,
     event,
