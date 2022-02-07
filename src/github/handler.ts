@@ -1,11 +1,13 @@
-import { error, lazyValue, message } from '@/utils';
 import {
   WebhookEventHandlerError,
   EmitterWebhookEventName,
 } from '@octokit/webhooks/dist-types/types';
-import { setupWebhooksSendToDing } from './webhooks';
 import { Webhooks } from '@octokit/webhooks';
+import { error, lazyValue, message } from '@/utils';
+import { StopHandleError, supportTemplates, templates } from './templates';
 import secrets from '@/secrets';
+import { sendToDing } from './utils';
+import type { MarkdownContent, THasAction } from './types';
 
 export class ValidationError extends Error {
   constructor(public code: number, message: string) {
@@ -56,6 +58,41 @@ export async function validateGithub(req: Request, webhooks: Webhooks) {
     payload,
   };
 }
+
+export const setupWebhooksSendToDing = (webhooks: Webhooks) => {
+  webhooks.onAny(async ({ id, name, payload }) => {
+    console.log('Receive Github Webhook, id: ', id, ', name: ', name);
+    if ((payload as THasAction)?.action) {
+      console.log('payload.action: ', (payload as THasAction).action);
+    }
+    console.log(
+      'Currently Support: ',
+      supportTemplates.filter((v) => v.startsWith(name)),
+    );
+  });
+
+  supportTemplates.forEach((emitName) => {
+    webhooks.on(emitName, async ({ id, payload }) => {
+      console.log(
+        'Current Handle Github Webhook, id: ',
+        id,
+        '， emitName:',
+        emitName,
+      );
+      const handler = templates[emitName] as (payload: any) => MarkdownContent;
+      try {
+        const data = handler(payload);
+        await sendToDing(data.title, data.text);
+      } catch (err) {
+        if (err instanceof StopHandleError) {
+          console.log('stop handler because: ', err.message);
+        } else {
+          throw err;
+        }
+      }
+    });
+  });
+};
 
 export async function baseHandler(
   webhooks: Webhooks,

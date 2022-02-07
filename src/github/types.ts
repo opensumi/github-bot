@@ -20,3 +20,16 @@ export type TemplateMapping = {
 export type THasAction = {
   action?: string;
 };
+
+export interface ChangeItem {
+  from: string;
+}
+
+export interface Changes {
+  body?: ChangeItem;
+  title?: ChangeItem;
+}
+
+export interface THasChanges {
+  changes?: Changes;
+}

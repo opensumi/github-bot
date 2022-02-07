@@ -1,16 +1,8 @@
-import { ExtractPayload } from '../types';
+import { ExtractPayload, THasChanges } from '../types';
 import { renderRepoLink, renderUserLink, renderPrOrIssue } from './utils';
 import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 import { StringBuilder } from '@/utils';
-
-interface ChangeItem {
-  from: string;
-}
-
-interface Changes {
-  body?: ChangeItem;
-  title?: ChangeItem;
-}
+import { StopHandleError } from '.';
 
 type Name = 'issues' | 'pull_request' | 'discussion';
 const NameBlock = {
@@ -41,23 +33,27 @@ function render(
     shouldRenderBody = false;
   }
 
-  let oldTitle = '';
+  const subline = [] as string[];
 
-  if ((payload as any).changes) {
-    const changes = (payload as any).changes as Changes;
-    if (changes?.title) {
-      // 说明是标题改变
-      oldTitle = changes.title.from;
-      action = 'changed title';
+  if (action === 'edited') {
+    let oldTitle = '';
+    if ((payload as THasChanges).changes) {
+      const changes = (payload as THasChanges).changes;
+      if (changes?.title) {
+        // 说明是标题改变
+        oldTitle = changes.title.from;
+        action = 'changed title';
+      } else {
+        throw new StopHandleError('ignore prOrIssue content change');
+      }
+    }
+    if (oldTitle) {
+      subline.push(`Old title: ${oldTitle}`);
     }
   }
-  const subline = [] as string[];
 
   if (shouldRenderOriginAuthor) {
     subline.push(`Author: ${renderUserLink(data.user)}`);
-  }
-  if (oldTitle) {
-    subline.push(`Old title: ${oldTitle}`);
   }
 
   let mergeState = '';

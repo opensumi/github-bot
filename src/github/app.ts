@@ -1,6 +1,5 @@
 import { App } from '@/lib/octo';
-import { baseHandler } from './handler';
-import { setupWebhooksSendToDing } from './webhooks';
+import { baseHandler, setupWebhooksSendToDing } from './handler';
 import { lazyValue } from '@/utils';
 import { handleComment } from './commands';
 import secrets from '@/secrets';

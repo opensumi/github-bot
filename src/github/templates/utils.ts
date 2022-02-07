@@ -80,3 +80,9 @@ export function limitLine(text: string, count: number) {
   const finalLines = arrayofLines.slice(0, count);
   return finalLines.join('\n').trim();
 }
+
+export class StopHandleError extends Error {
+  constructor(reason: string) {
+    super(reason);
+  }
+}
