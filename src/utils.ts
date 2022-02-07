@@ -32,8 +32,10 @@ export class StringBuilder {
   constructor(...initial: string[]) {
     this.array.push(...initial);
   }
-  add(str: string) {
+  add(str: string, addExtraLine = false) {
+    addExtraLine && this.array.push('');
     this.array.push(str);
+    addExtraLine && this.array.push('');
   }
   build() {
     return '\n' + this.array.join('\n') + '\n';

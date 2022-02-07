@@ -31,8 +31,11 @@ function render(
 
   let shouldRenderOriginAuthor = false;
   if (action !== 'opened') {
-    shouldRenderOriginAuthor = true;
+    if (data.user.name !== payload.sender.name) {
+      shouldRenderOriginAuthor = true;
+    }
   }
+
   let shouldRenderBody = true;
   if (['closed', 'edited'].includes(action)) {
     shouldRenderBody = false;
@@ -48,28 +51,29 @@ function render(
       action = 'changed title';
     }
   }
+  const subline = [] as string[];
+
+  if (shouldRenderOriginAuthor) {
+    subline.push(`Author: ${renderUserLink(data.user)}`);
+  }
+  if (oldTitle) {
+    subline.push(`Old title: ${oldTitle}`);
+  }
 
   let mergeState = '';
   if (name === 'pull_request' && action === 'closed') {
     const pr = (payload as ExtractPayload<'pull_request.closed'>).pull_request;
     if (pr.merged) {
       // If the action is closed and the merged key is true, the pull request was merged.
-      mergeState = `Merged`;
+      mergeState = 'Merged';
       if (pr.merged_by) {
-        mergeState += `by ${renderUserLink(pr.merged_by)}`;
+        mergeState += ` by ${renderUserLink(pr.merged_by)}`;
       }
     } else {
       // If the action is closed and the merged key is false, the pull request was closed with unmerged commits.
       mergeState = `Unmerge`;
     }
-  }
-
-  const subline = [] as string[];
-  if (shouldRenderOriginAuthor) {
-    subline.push(`author: ${renderUserLink(data.user)}`);
-  }
-  if (oldTitle) {
-    subline.push(`old title: ${oldTitle}`);
+    subline.push('State: ' + mergeState);
   }
 
   const title = `[${payload.repository.name}] ${nameBlock}#${data.number} ${action} by ${payload.sender.login}`;
@@ -79,14 +83,7 @@ function render(
     )} ${action} [${nameBlock}#${data.number}](${data.html_url})`,
   );
   if (subline.length > 0) {
-    builder.add('');
-    builder.add(subline.join(', '));
-    builder.add('');
-  }
-  if (mergeState) {
-    builder.add('');
-    builder.add('State: ' + mergeState);
-    builder.add('');
+    builder.add(subline.join(', '), true);
   }
   builder.add(renderPrOrIssue(data, shouldRenderBody));
 
