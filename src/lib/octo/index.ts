@@ -1,7 +1,7 @@
 // source from: https://github.com/octokit/app.js/blob/48655a321844a0d10a4e203ad19eccb92dd7c797/src/index.ts
 import { Octokit as OctokitCore } from '@octokit/core';
 import { createAppAuth } from '@octokit/auth-app';
-// import { OAuthApp } from '@octokit/oauth-app';
+import { OAuthApp } from '@octokit/oauth-app';
 import { Webhooks } from '@octokit/webhooks';
 
 import {
@@ -15,6 +15,7 @@ import { webhooks } from './webhooks';
 import { eachInstallationFactory } from './each-installation';
 import { eachRepositoryFactory } from './each-repository';
 import { getInstallationOctokit } from './get-installation-octokit';
+import { APIWrapper } from './apis';
 
 type Constructor<T> = new (...args: any[]) => T;
 
@@ -29,6 +30,7 @@ type OctokitClassType<TOptions extends Options> =
     : typeof OctokitCore;
 
 export class App<TOptions extends Options = Options> {
+  api: APIWrapper;
   static defaults<
     TDefaults extends Options,
     S extends Constructor<App<TDefaults>>,
@@ -47,10 +49,10 @@ export class App<TOptions extends Options = Options> {
 
   octokit: OctokitType<TOptions>;
   webhooks!: Webhooks<{ octokit: OctokitType<TOptions> }>;
-  // oauth!: OAuthApp<{
-  //   clientType: 'github-app';
-  //   Octokit: OctokitClassType<TOptions>;
-  // }>;
+  oauth!: OAuthApp<{
+    clientType: 'github-app';
+    Octokit: OctokitClassType<TOptions>;
+  }>;
   getInstallationOctokit: GetInstallationOctokitInterface<
     OctokitType<TOptions>
   >;
@@ -73,13 +75,12 @@ export class App<TOptions extends Options = Options> {
         appId: options.appId,
         privateKey: options.privateKey,
       },
-      {},
-      // options.oauth
-      //   ? {
-      //       clientId: options.oauth.clientId,
-      //       clientSecret: options.oauth.clientSecret,
-      //     }
-      //   : {},
+      options.oauth
+        ? {
+            clientId: options.oauth.clientId,
+            clientSecret: options.oauth.clientSecret,
+          }
+        : {},
     );
 
     this.octokit = new Octokit({
@@ -115,21 +116,21 @@ export class App<TOptions extends Options = Options> {
     }
 
     // set app.oauth depending on whether "oauth" option has been passed
-    // if (options.oauth) {
-    //   this.oauth = new OAuthApp({
-    //     ...options.oauth,
-    //     clientType: 'github-app',
-    //     Octokit,
-    //   });
-    // } else {
-    //   Object.defineProperty(this, 'oauth', {
-    //     get() {
-    //       throw new Error(
-    //         '[@octokit/app] oauth.clientId / oauth.clientSecret options are not set',
-    //       );
-    //     },
-    //   });
-    // }
+    if (options.oauth) {
+      this.oauth = new OAuthApp({
+        ...options.oauth,
+        clientType: 'github-app',
+        Octokit,
+      });
+    } else {
+      Object.defineProperty(this, 'oauth', {
+        get() {
+          throw new Error(
+            '[@octokit/app] oauth.clientId / oauth.clientSecret options are not set',
+          );
+        },
+      });
+    }
 
     this.getInstallationOctokit = getInstallationOctokit.bind(
       null,
@@ -138,8 +139,15 @@ export class App<TOptions extends Options = Options> {
     this.eachInstallation = eachInstallationFactory(
       this,
     ) as EachInstallationInterface<OctokitType<TOptions>>;
+
     this.eachRepository = eachRepositoryFactory(
       this,
     ) as EachRepositoryInterface<OctokitType<TOptions>>;
+    this.api = new APIWrapper(this);
+  }
+  async getInstallationOcto() {
+    for await (const { octokit } of this.eachInstallation.iterator()) {
+      return octokit;
+    }
   }
 }

@@ -31,3 +31,21 @@ export function text(content: string): Text {
 export function compose(...objects: any[]) {
   return Object.assign({}, ...objects);
 }
+
+export interface Markdown {
+  msgtype: 'markdown';
+  markdown: {
+    title: string;
+    text: string;
+  };
+}
+
+export function markdown(title: string, text: string): Markdown {
+  return {
+    msgtype: 'markdown',
+    markdown: {
+      title,
+      text,
+    },
+  };
+}

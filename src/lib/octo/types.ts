@@ -9,11 +9,11 @@ export type Options = {
   webhooks?: {
     secret: string;
   };
-  // oauth?: {
-  //   clientId: string;
-  //   clientSecret: string;
-  //   allowSignup?: boolean;
-  // };
+  oauth?: {
+    clientId: string;
+    clientSecret: string;
+    allowSignup?: boolean;
+  };
   Octokit?: typeof Octokit;
   log?: {
     debug: (...data: any[]) => void;

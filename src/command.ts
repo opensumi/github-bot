@@ -17,10 +17,6 @@ const compareFuncMap = {
   [key in FuncName]: CompareFunc;
 };
 
-function sanitize(s: string) {
-  return s.toString().trim();
-}
-
 class Registry<T> {
   private _array = new Map<string, T>();
   private _funcNameArray = new Map<string, FuncName>();
@@ -72,7 +68,6 @@ export class CommandCenter<T> {
   }
 
   async resolve(text: string) {
-    text = sanitize(text);
     if (!text) {
       return;
     }

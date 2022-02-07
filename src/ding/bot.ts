@@ -3,6 +3,9 @@ import secrets from '@/secrets';
 import { cc } from './commands';
 import { compose, text as textWrapper } from './message';
 
+function sanitize(s: string) {
+  return s.toString().trim();
+}
 function validateTimestamp(timestamp: string) {
   try {
     const _tsNumber = parseInt(timestamp, 10);
@@ -76,10 +79,13 @@ export class DingBot {
     console.log(`收到钉钉消息：`, JSON.stringify(msg, null, 2));
     // 其实目前钉钉机器人也就支持这一种消息类型
     if (msg.msgtype === 'text') {
-      const text = msg.text.content;
+      const text = sanitize(msg.text.content);
       const handler = await cc.resolve(text);
       if (handler) {
-        await handler(this);
+        await handler(this, {
+          message: msg,
+          command: text,
+        });
       } else {
         console.log('没有 handler 处理 ', text);
       }
