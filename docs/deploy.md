@@ -28,7 +28,7 @@ yarn wrangler login
 yarn run publish:local
 ```
 
-because we set `name` attribute in `wrangler.toml`，so this func will be depolyed in：
+because we set `name` attribute in `wrangler.toml`, so this func will be depolyed in：
 
 ```txt
 https://{name}.{user}.workers.dev
@@ -40,4 +40,4 @@ and you can deploy to different domain by pass the `env` parameter.
 
 Open the GitHub Actions Workflow page: <https://github.com/opensumi/github-bot/actions/workflows/deploy.yml>
 
-click the `Run workflow` button, then input the [deploy environment](https://developers.cloudflare.com/workers/platform/environments)，dev or prod。
+click the `Run workflow` button, then input the [deploy environment](https://developers.cloudflare.com/workers/platform/environments), dev or prod。

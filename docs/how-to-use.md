@@ -6,7 +6,7 @@ Assure our worker is deployed on: <https://worker.bot/>
 
 ## Configure Github Webhook
 
-Open `https://github.com/opensumi/core/settings/hooks/new`，
+Open `https://github.com/opensumi/core/settings/hooks/new`:
 
 1. `Payload URL`: Input `https://worker.bot/gh_webhook`
 2. `Content type`: Select `application/json`
