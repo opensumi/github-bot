@@ -3,12 +3,13 @@ import {
   EmitterWebhookEventName,
 } from '@octokit/webhooks/dist-types/types';
 import { Webhooks } from '@octokit/webhooks';
-import { error, lazyValue, message } from '@/utils';
+import { error, lazyValue, message, waitUntil } from '@/utils';
 import { StopHandleError, supportTemplates, templates } from './templates';
 import secrets from '@/secrets';
 import { sendToDing } from './utils';
 import type { MarkdownContent, THasAction } from './types';
 import { Octokit } from '@octokit/core';
+import { Context } from './app';
 
 export class ValidationError extends Error {
   constructor(public code: number, message: string) {
@@ -62,6 +63,7 @@ export async function validateGithub(req: Request, webhooks: Webhooks) {
 
 export const setupWebhooksSendToDing = (
   webhooks: Webhooks<{ octokit?: Octokit }>,
+  ctx?: Context,
 ) => {
   webhooks.onAny(async ({ id, name, payload }) => {
     console.log('Receive Github Webhook, id: ', id, ', name: ', name);
@@ -76,29 +78,35 @@ export const setupWebhooksSendToDing = (
 
   supportTemplates.forEach((emitName) => {
     webhooks.on(emitName, async ({ id, payload, octokit }) => {
-      console.log(
-        'Current Handle Github Webhook, id: ',
-        id,
-        ', emitName:',
-        emitName,
-      );
-      const ctx = {
-        octokit,
-      };
-      const handler = templates[emitName] as (
-        payload: any,
-        ctx: any,
-      ) => Promise<MarkdownContent>;
-      try {
-        const data = await handler(payload, ctx);
-        await sendToDing(data.title, data.text);
-      } catch (err) {
-        if (err instanceof StopHandleError) {
-          console.log('stop handler because: ', err.message);
-        } else {
-          throw err;
+      const worker = async () => {
+        console.log(
+          'Current Handle Github Webhook, id: ',
+          id,
+          ', emitName:',
+          emitName,
+        );
+        const handlerCtx = {
+          ...ctx,
+          octokit,
+        };
+        const handler = templates[emitName] as (
+          payload: any,
+          ctx: any,
+        ) => Promise<MarkdownContent>;
+        try {
+          const data = await handler(payload, handlerCtx);
+          console.log('get data from handler: ', data);
+
+          await sendToDing(data.title, data.text);
+        } catch (err) {
+          console.log('stop handler because: ', (err as Error).message);
+          if (!(err instanceof StopHandleError)) {
+            throw err;
+          }
         }
-      }
+      };
+
+      waitUntil(worker, ctx?.event);
     });
   });
 };

@@ -4,8 +4,12 @@ import { lazyValue } from '@/utils';
 import { handleComment } from './commands';
 import secrets from '@/secrets';
 
-// App 的 Construct 中会校验 appId 是否有效等，这里先暂时使用 lazyValue
-export const app = lazyValue(() => {
+export type Context = {
+  event: FetchEvent;
+  request: Request;
+};
+
+export const appFactory = (ctx?: Context) => {
   // https://github.com/octokit/app.js
   // 因为这个包只是为 node 写的，里面会引入 buffer 等包，在 worker 里不能使用
   // 这里从自己重写的包引入进来
@@ -21,14 +25,21 @@ export const app = lazyValue(() => {
     },
   });
 
-  setupWebhooksSendToDing(_app.webhooks);
+  setupWebhooksSendToDing(_app.webhooks, ctx);
 
   _app.webhooks.on('issue_comment.created', handleComment);
   _app.webhooks.on('issue_comment.edited', handleComment);
 
   return _app;
-});
+};
+
+// App 的 Construct 中会校验 appId 是否有效等，这里先暂时使用 lazyValue
+export const app = lazyValue(appFactory);
 
 export async function handler(req: Request, event: FetchEvent) {
-  return baseHandler(app().webhooks, req, event);
+  const app = appFactory({
+    request: req,
+    event,
+  });
+  return baseHandler(app.webhooks, req, event);
 }

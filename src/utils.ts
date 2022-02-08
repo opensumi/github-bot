@@ -56,3 +56,13 @@ export function lazyValue<T>(function_: () => T) {
     return result;
   };
 }
+
+export async function waitUntil(func: () => Promise<void>, event?: FetchEvent) {
+  if (event) {
+    console.log('wait until');
+    event.waitUntil(func());
+  } else {
+    console.log('normal exec');
+    await func();
+  }
+}
