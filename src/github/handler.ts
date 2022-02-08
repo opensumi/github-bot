@@ -160,7 +160,6 @@ const webhooks = lazyValue(() => {
   });
 });
 
-// 如果只是想简单使用 webhooks 的回调，这个函数来处理
 export async function handler(req: Request, event: FetchEvent) {
   setupWebhooksSendToDing(webhooks() as any);
   return baseHandler(webhooks(), req, event);

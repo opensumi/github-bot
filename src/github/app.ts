@@ -1,8 +1,8 @@
 import { App } from '@/lib/octo';
-import { baseHandler, setupWebhooksSendToDing } from './handler';
 import { lazyValue } from '@/utils';
-import { handleComment } from './commands';
 import secrets from '@/secrets';
+import { baseHandler, setupWebhooksSendToDing } from './handler';
+import { handleComment } from './commands';
 
 export type Context = {
   event: FetchEvent;
@@ -10,9 +10,6 @@ export type Context = {
 };
 
 export const appFactory = (ctx?: Context) => {
-  // https://github.com/octokit/app.js
-  // 因为这个包只是为 node 写的，里面会引入 buffer 等包，在 worker 里不能使用
-  // 这里从自己重写的包引入进来
   const _app = new App({
     appId: secrets.appId,
     privateKey: secrets.privateKey,
@@ -33,7 +30,6 @@ export const appFactory = (ctx?: Context) => {
   return _app;
 };
 
-// App 的 Construct 中会校验 appId 是否有效等，这里先暂时使用 lazyValue
 export const app = lazyValue(appFactory);
 
 export async function handler(req: Request, event: FetchEvent) {

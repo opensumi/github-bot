@@ -1,4 +1,4 @@
-// 这个脚本会读取 .env 文件，然后使用 wrangler secrets put
+// this script will read `.env.{env}` file, and use `wrangler secrets put`
 
 import { parse } from 'dotenv';
 import { readFileSync } from 'fs';

@@ -43,6 +43,6 @@ export async function send(
       'content-type': 'application/json;charset=UTF-8',
     },
   });
-  console.log('发送结果：', await resp.text());
+  console.log('response:', await resp.text());
   return resp;
 }

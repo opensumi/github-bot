@@ -76,13 +76,13 @@ export class DingBot {
       }
     } else {
       // 好像企业内部的这个机器人发的 headers 不带这俩字段了，这里的逻辑可以暂时不用了
-      // return error(403, '不是有效的钉钉消息，headers 缺少字段');
+      // return error(403, 'not valid ding msg, missing validation field');
     }
   }
 
   async handle() {
     const msg = this.msg;
-    console.log(`收到钉钉消息：`, JSON.stringify(msg, null, 2));
+    console.log(`recieve dingtalk msg: `, JSON.stringify(msg, null, 2));
     // 其实目前钉钉机器人也就支持这一种消息类型
     if (msg.msgtype === 'text') {
       const text = sanitize(msg.text.content);
@@ -108,7 +108,6 @@ export class DingBot {
   async reply(content: Record<string, any>) {
     console.log(`DingBot ~ reply:`, JSON.stringify(content));
     const msg = this.msg;
-
     await send(content, msg.sessionWebhook);
   }
 }
