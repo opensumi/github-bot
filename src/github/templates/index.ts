@@ -11,6 +11,7 @@ import {
   handleRelease,
   handleDiscussion,
   handleIssueComment,
+  handleCommitComment,
   handleDiscussionComment,
 } from '.';
 
@@ -34,6 +35,7 @@ export const templates = {
   'discussion_comment.deleted': handleDiscussionComment,
   'issue_comment.created': handleIssueComment,
   'issue_comment.deleted': handleIssueComment,
+  'commit_comment.created': handleCommitComment,
   'release.published': handleRelease,
   'release.released': handleRelease,
   'pull_request_review.submitted': handleReview,

@@ -80,3 +80,23 @@ export function handleDiscussionComment(
 ) {
   return renderComment('discussion', payload, payload.discussion);
 }
+
+export function handleCommitComment(payload: ExtractPayload<'commit_comment'>) {
+  const comment = payload.comment;
+  const commitId = comment.commit_id.slice(0, 6);
+  const action = payload.action;
+
+  const title = `[${payload.repository.name}] commit comment ${action} on commit@${commitId}`;
+  const text = `${renderRepoLink(payload.repository)} ${renderUserLink(
+    payload.sender,
+  )} ${action} [commit comment](${comment.html_url}) on [${
+    payload.repository.name
+  }@${commitId}](${comment.html_url})
+>\n
+${renderCommentBody(payload.comment)}
+`;
+  return {
+    title,
+    text,
+  };
+}
