@@ -93,9 +93,8 @@ export async function handleCommitComment(
   const repo = payload.repository;
   const comment = payload.comment;
   const commitId = comment.commit_id.slice(0, 6);
-  const action = payload.action;
 
-  let commitInfo = `${commitId}`;
+  let commitInfo = `commit@${commitId}`;
 
   if (ctx.octokit) {
     const resp = await ctx.octokit.request(
@@ -108,14 +107,14 @@ export async function handleCommitComment(
     );
     if (resp.data) {
       const commit = resp.data.commit;
-      commitInfo = `${commitId}: ${commit.message}`;
+      commitInfo += ` ${commit.message}`;
     }
   }
 
-  const title = `[${payload.repository.name}] commit comment ${action} on ${commitInfo}`;
+  const title = `[${payload.repository.name}] commented on ${commitInfo}`;
   const text = `${renderRepoLink(payload.repository)} ${renderUserLink(
     payload.sender,
-  )} ${action} comment on commit [${commitInfo}](${comment.html_url})
+  )} commented on [${commitInfo}](${comment.html_url})
 >\n
 ${renderCommentBody(payload.comment)}
 `;
