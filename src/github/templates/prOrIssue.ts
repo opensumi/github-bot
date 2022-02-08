@@ -35,20 +35,18 @@ function render(
 
   const subline = [] as string[];
 
+  let firstLineSuffix = '';
+
   if (action === 'edited') {
-    let oldTitle = '';
     if ((payload as THasChanges).changes) {
       const changes = (payload as THasChanges).changes;
       if (changes?.title) {
         // 说明是标题改变
-        oldTitle = changes.title.from;
         action = 'changed title';
+        firstLineSuffix = 'from ' + changes.title.from;
       } else {
         throw new StopHandleError('ignore prOrIssue content change');
       }
-    }
-    if (oldTitle) {
-      subline.push(`Old title: ${oldTitle}`);
     }
   }
 
@@ -56,28 +54,23 @@ function render(
     subline.push(`Author: ${renderUserLink(data.user)}`);
   }
 
-  let mergeState = '';
   if (name === 'pull_request' && action === 'closed') {
     const pr = (payload as ExtractPayload<'pull_request.closed'>).pull_request;
     if (pr.merged) {
       // If the action is closed and the merged key is true, the pull request was merged.
-      mergeState = 'Merged';
-      if (pr.merged_by) {
-        mergeState += ` by ${renderUserLink(pr.merged_by)}`;
-      }
-    } else {
-      // If the action is closed and the merged key is false, the pull request was closed with unmerged commits.
-      mergeState = `Unmerge`;
+      action = 'merged';
     }
-    subline.push('State: ' + mergeState);
   }
 
   const title = `[${payload.repository.name}] ${nameBlock}#${data.number} ${action} by ${payload.sender.login}`;
   const builder = new StringBuilder(
     `${renderRepoLink(payload.repository)} ${renderUserLink(
       payload.sender,
-    )} ${action} ${nameBlock} [#${data.number}](${data.html_url})`,
+    )} ${action} [${nameBlock}#${data.number}](${
+      data.html_url
+    })${firstLineSuffix}`,
   );
+
   if (subline.length > 0) {
     builder.add(subline.join(', '), true);
   }
