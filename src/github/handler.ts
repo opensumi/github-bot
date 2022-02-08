@@ -3,7 +3,7 @@ import {
   EmitterWebhookEventName,
 } from '@octokit/webhooks/dist-types/types';
 import { Webhooks } from '@octokit/webhooks';
-import { error, lazyValue, message, waitUntil } from '@/utils';
+import { error, lazyValue, message } from '@/utils';
 import { StopHandleError, supportTemplates, templates } from './templates';
 import secrets from '@/secrets';
 import { sendToDing } from './utils';
@@ -75,16 +75,10 @@ export const setupWebhooksSendToDing = (
       supportTemplates.filter((v) => v.startsWith(name)),
     );
   });
-
-  supportTemplates.forEach((emitName) => {
+  for (const emitName of supportTemplates) {
     webhooks.on(emitName, async ({ id, payload, octokit }) => {
       const worker = async () => {
-        console.log(
-          'Current Handle Github Webhook, id: ',
-          id,
-          ', emitName:',
-          emitName,
-        );
+        console.log(emitName, 'handled id:', id);
         const handlerCtx = {
           ...ctx,
           octokit,
@@ -94,6 +88,8 @@ export const setupWebhooksSendToDing = (
           ctx: any,
         ) => Promise<MarkdownContent>;
         try {
+          console.log('run handler:', handler?.name);
+
           const data = await handler(payload, handlerCtx);
           console.log('get data from handler: ', data);
 
@@ -106,9 +102,9 @@ export const setupWebhooksSendToDing = (
         }
       };
 
-      waitUntil(worker, ctx?.event);
+      await worker();
     });
-  });
+  }
 };
 
 export async function baseHandler(

@@ -16,6 +16,6 @@ router.all('*', () => {
   return Response.redirect('https://github.com/opensumi/github-bot', 301);
 });
 
-export function handleRequest(event: FetchEvent) {
+export async function handleRequest(event: FetchEvent) {
   return router.handle(event.request, event);
 }
