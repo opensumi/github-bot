@@ -4,12 +4,28 @@ export interface At {
   };
 }
 
-export interface Text {
-  msgtype: 'text';
-  text: {
+export type Base<T extends string, O> = Record<T, O> & { msgtype: T };
+
+export type Image = Base<
+  'image',
+  {
+    picURL: string;
+  }
+>;
+
+export type Markdown = Base<
+  'markdown',
+  {
+    title: string;
+    text: string;
+  }
+>;
+export type Text = Base<
+  'text',
+  {
     content: string;
-  };
-}
+  }
+>;
 
 export function atDingtalkIds(...atDingtalkIds: string[]): At {
   return {
@@ -32,14 +48,6 @@ export function compose(...objects: any[]) {
   return Object.assign({}, ...objects);
 }
 
-export interface Markdown {
-  msgtype: 'markdown';
-  markdown: {
-    title: string;
-    text: string;
-  };
-}
-
 export function markdown(title: string, text: string): Markdown {
   return {
     msgtype: 'markdown',
@@ -47,5 +55,12 @@ export function markdown(title: string, text: string): Markdown {
       title,
       text,
     },
+  };
+}
+
+export function image(url: string): Image {
+  return {
+    msgtype: 'image',
+    image: { picURL: url },
   };
 }

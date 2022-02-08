@@ -149,6 +149,7 @@ export class App<TOptions extends Options = Options> {
     for await (const { octokit } of this.eachInstallation.iterator()) {
       return octokit;
     }
+    throw new Error('no app installation found');
   }
   async init() {
     await this.api.init();

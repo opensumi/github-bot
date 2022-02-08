@@ -1,5 +1,5 @@
 import { App } from '@/lib/octo';
-import { lazyValue } from '@/utils';
+import { Octokit } from '@octokit/rest';
 import secrets from '@/secrets';
 import { baseHandler, setupWebhooksSendToDing } from './handler';
 import { handleComment } from './commands';
@@ -20,15 +20,17 @@ export const appFactory = (ctx?: Context) => {
     webhooks: {
       secret: secrets.webhookSecret,
     },
+    Octokit: Octokit,
   });
 
   setupWebhooksSendToDing(_app.webhooks, ctx);
 
   _app.webhooks.on('issue_comment.created', handleComment);
   _app.webhooks.on('issue_comment.edited', handleComment);
-
   return _app;
 };
+
+export type IApp = ReturnType<typeof appFactory>;
 
 export async function getInitedApp(event: FetchEvent) {
   const app = appFactory({

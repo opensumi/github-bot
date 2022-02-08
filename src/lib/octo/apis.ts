@@ -46,9 +46,6 @@ export class APIWrapper {
 
   async init() {
     this._octo = await this.app.getInstallationOcto();
-    if (!this._octo) {
-      throw new Error('current github app has not valid installation');
-    }
   }
 
   async getRepoStargazers(
