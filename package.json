@@ -8,9 +8,10 @@
   "scripts": {
     "format": "prettier --write '**/*.{js,css,json,md}'",
     "build": "esno build.ts",
-    "dev": "run-p dev:build dev:worker",
+    "dev": "run-p dev:build dev:worker dev:proxy",
     "dev:build": "yarn build --watch",
     "dev:worker": "wrangler dev",
+    "dev:proxy": "esno dev.ts",
     "publish:local": "yarn build && wrangler publish",
     "lint": "eslint . && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
     "lint:fix": "eslint . --fix",
