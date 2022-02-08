@@ -8,6 +8,7 @@ import { StopHandleError, supportTemplates, templates } from './templates';
 import secrets from '@/secrets';
 import { sendToDing } from './utils';
 import type { MarkdownContent, THasAction } from './types';
+import { Octokit } from '@octokit/core';
 
 export class ValidationError extends Error {
   constructor(public code: number, message: string) {
@@ -59,7 +60,9 @@ export async function validateGithub(req: Request, webhooks: Webhooks) {
   };
 }
 
-export const setupWebhooksSendToDing = (webhooks: Webhooks) => {
+export const setupWebhooksSendToDing = (
+  webhooks: Webhooks<{ octokit?: Octokit }>,
+) => {
   webhooks.onAny(async ({ id, name, payload }) => {
     console.log('Receive Github Webhook, id: ', id, ', name: ', name);
     if ((payload as THasAction)?.action) {
@@ -72,16 +75,22 @@ export const setupWebhooksSendToDing = (webhooks: Webhooks) => {
   });
 
   supportTemplates.forEach((emitName) => {
-    webhooks.on(emitName, async ({ id, payload }) => {
+    webhooks.on(emitName, async ({ id, payload, octokit }) => {
       console.log(
         'Current Handle Github Webhook, id: ',
         id,
-        '， emitName:',
+        ', emitName:',
         emitName,
       );
-      const handler = templates[emitName] as (payload: any) => MarkdownContent;
+      const ctx = {
+        octokit,
+      };
+      const handler = templates[emitName] as (
+        payload: any,
+        ctx: any,
+      ) => Promise<MarkdownContent>;
       try {
-        const data = handler(payload);
+        const data = await handler(payload, ctx);
         await sendToDing(data.title, data.text);
       } catch (err) {
         if (err instanceof StopHandleError) {
@@ -145,6 +154,6 @@ const webhooks = lazyValue(() => {
 
 // 如果只是想简单使用 webhooks 的回调，这个函数来处理
 export async function handler(req: Request, event: FetchEvent) {
-  setupWebhooksSendToDing(webhooks());
+  setupWebhooksSendToDing(webhooks() as any);
   return baseHandler(webhooks(), req, event);
 }

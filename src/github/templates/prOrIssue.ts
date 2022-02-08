@@ -89,14 +89,14 @@ function render(
   };
 }
 
-export function handlePr(payload: ExtractPayload<'pull_request'>) {
+export async function handlePr(payload: ExtractPayload<'pull_request'>) {
   return render('pull_request', payload, payload.pull_request);
 }
 
-export function handleIssue(payload: ExtractPayload<'issues'>) {
+export async function handleIssue(payload: ExtractPayload<'issues'>) {
   return render('issues', payload, payload.issue);
 }
 
-export function handleDiscussion(payload: ExtractPayload<'discussion'>) {
+export async function handleDiscussion(payload: ExtractPayload<'discussion'>) {
   return render('discussion', payload, payload.discussion);
 }

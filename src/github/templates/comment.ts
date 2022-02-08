@@ -8,6 +8,7 @@ import {
 } from '.';
 import { ExtractPayload } from '@/github/types';
 import { Issue, PullRequest, Discussion, User } from '@octokit/webhooks-types';
+import { Octokit } from '@octokit/core';
 
 type Name = 'issues' | 'pull_request' | 'discussion';
 const NameBlock = {
@@ -65,7 +66,9 @@ function renderComment(
   };
 }
 
-export function handleIssueComment(payload: ExtractPayload<'issue_comment'>) {
+export async function handleIssueComment(
+  payload: ExtractPayload<'issue_comment'>,
+) {
   const issue = payload.issue;
   const isUnderPullRequest = Boolean(issue.pull_request);
   let name = 'issues' as Name;
@@ -75,23 +78,44 @@ export function handleIssueComment(payload: ExtractPayload<'issue_comment'>) {
   return renderComment(name, payload, issue);
 }
 
-export function handleDiscussionComment(
+export async function handleDiscussionComment(
   payload: ExtractPayload<'discussion_comment'>,
 ) {
   return renderComment('discussion', payload, payload.discussion);
 }
 
-export function handleCommitComment(payload: ExtractPayload<'commit_comment'>) {
+export async function handleCommitComment(
+  payload: ExtractPayload<'commit_comment'>,
+  ctx: {
+    octokit?: Octokit;
+  },
+) {
+  const repo = payload.repository;
   const comment = payload.comment;
   const commitId = comment.commit_id.slice(0, 6);
   const action = payload.action;
 
-  const title = `[${payload.repository.name}] commit comment ${action} on commit@${commitId}`;
+  let commitInfo = `${commitId}`;
+
+  if (ctx.octokit) {
+    const resp = await ctx.octokit.request(
+      'GET /repos/{owner}/{repo}/commits/{ref}',
+      {
+        owner: repo.owner.login,
+        repo: repo.name,
+        ref: comment.commit_id,
+      },
+    );
+    if (resp.data) {
+      const commit = resp.data.commit;
+      commitInfo = `${commitId}: ${commit.message}`;
+    }
+  }
+
+  const title = `[${payload.repository.name}] commit comment ${action} on ${commitInfo}`;
   const text = `${renderRepoLink(payload.repository)} ${renderUserLink(
     payload.sender,
-  )} ${action} [commit comment](${comment.html_url}) on [${
-    payload.repository.name
-  }@${commitId}](${comment.html_url})
+  )} ${action} comment on commit [${commitInfo}](${comment.html_url})
 >\n
 ${renderCommentBody(payload.comment)}
 `;

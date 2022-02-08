@@ -1,7 +1,7 @@
 import { renderRepoLink, renderUserLink, useRef } from '.';
 import { ExtractPayload } from '../types';
 
-export function handleRelease(payload: ExtractPayload<'release'>) {
+export async function handleRelease(payload: ExtractPayload<'release'>) {
   const action = payload.action;
   const release = payload.release;
 

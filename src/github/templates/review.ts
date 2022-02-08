@@ -8,9 +8,9 @@ import {
 } from '.';
 import { ExtractPayload, MarkdownContent } from '../types';
 
-export function handleReview(
+export async function handleReview(
   payload: ExtractPayload<'pull_request_review'>,
-): MarkdownContent {
+): Promise<MarkdownContent> {
   const action = payload.action;
   const review = payload.review;
   const pr = payload.pull_request;

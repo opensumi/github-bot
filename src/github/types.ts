@@ -14,7 +14,7 @@ export type MarkdownContent = {
 export type TemplateMapping = {
   [TEmitterEvent in EmitterWebhookEventName]?: (
     payload: ExtractPayload<TEmitterEvent>,
-  ) => MarkdownContent;
+  ) => Promise<MarkdownContent>;
 };
 
 export type THasAction = {
