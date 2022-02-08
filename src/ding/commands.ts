@@ -2,12 +2,13 @@ import { CommandCenter } from '@/command';
 import { atDingtalkIds, markdown } from './message';
 import type { DingBot } from './bot';
 import { app } from '@/github/app';
-import mri from 'mri';
 import { Message } from './types';
+import mri from 'mri';
 
 interface Context {
   message: Message;
   command: string;
+  parsed: mri.Argv;
 }
 
 export type Handler = (bot: DingBot, ctx: Context) => Promise<void>;
@@ -22,20 +23,13 @@ cc.on('*', async (bot) => {
   );
 });
 
-function parseCliArgs(command: string) {
-  return mri(command.split(' '));
-}
-
 cc.on(
   'star',
   async (bot, ctx) => {
     const { command } = ctx;
     console.log(command.split(' '));
 
-    const result = parseCliArgs(command);
-    console.log(`🚀 ~ file: commands.ts ~ line 34 ~ result`, result);
-    const posArg = result['_'];
-    console.log(`🚀 ~ file: commands.ts ~ line 35 ~ posArg`, posArg);
+    const posArg = ctx.parsed['_'];
     let owner = 'opensumi';
     let repo = 'core';
     if (posArg.length === 2) {
@@ -43,6 +37,8 @@ cc.on(
       if (tmp.includes('/')) {
         owner = tmp.split('/')[0];
         repo = tmp.split('/')[1];
+      } else {
+        repo = tmp;
       }
     } else if (posArg.length === 3) {
       owner = posArg[1];
@@ -54,7 +50,7 @@ cc.on(
       'Stars',
       `
 \`\`\`ts
-${JSON.stringify(payload)}
+${JSON.stringify(payload, null, 2)}
 \`\`\`
     `,
     );

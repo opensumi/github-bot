@@ -2,6 +2,8 @@
 
 import { App } from '.';
 
+const PER_PAGE = 100;
+
 export function range(from: number, to: number): number[] {
   const r: number[] = [];
   for (let i = from; i <= to; i++) {
@@ -48,7 +50,7 @@ export class APIWrapper {
     owner: string,
     repo: string,
     page?: number,
-    perPage = 100,
+    perPage = PER_PAGE,
   ) {
     const result = await (
       await this.octo()
@@ -143,7 +145,7 @@ export class APIWrapper {
           };
           starRecordsMap.set(
             getDateString(starRecord.starred_at),
-            100 * (requestPages[index] - 1),
+            PER_PAGE * (requestPages[index] - 1),
           );
         }
       });

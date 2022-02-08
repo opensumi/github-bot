@@ -2,10 +2,16 @@ import { doSign, Message, send } from '.';
 import secrets from '@/secrets';
 import { cc } from './commands';
 import { compose, text as textWrapper } from './message';
+import mri from 'mri';
 
 function sanitize(s: string) {
   return s.toString().trim();
 }
+
+function parseCliArgs(command: string) {
+  return mri(command.split(' '));
+}
+
 function validateTimestamp(timestamp: string) {
   try {
     const _tsNumber = parseInt(timestamp, 10);
@@ -80,11 +86,14 @@ export class DingBot {
     // 其实目前钉钉机器人也就支持这一种消息类型
     if (msg.msgtype === 'text') {
       const text = sanitize(msg.text.content);
+      const parsed = parseCliArgs(text);
+
       const handler = await cc.resolve(text);
       if (handler) {
         await handler(this, {
           message: msg,
           command: text,
+          parsed,
         });
       } else {
         console.log('没有 handler 处理 ', text);
