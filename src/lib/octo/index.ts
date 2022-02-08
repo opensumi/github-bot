@@ -150,4 +150,7 @@ export class App<TOptions extends Options = Options> {
       return octokit;
     }
   }
+  async init() {
+    await this.api.init();
+  }
 }

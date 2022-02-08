@@ -1,6 +1,7 @@
 import { doSign, Message, send } from '.';
 import secrets from '@/secrets';
 import { cc } from './commands';
+import { getInitedApp } from '@/github/app';
 import { compose, text as textWrapper } from './message';
 import mri from 'mri';
 
@@ -84,6 +85,8 @@ export class DingBot {
     const msg = this.msg;
     console.log(`recieve dingtalk msg: `, JSON.stringify(msg, null, 2));
     // 其实目前钉钉机器人也就支持这一种消息类型
+    const app = await getInitedApp(this.event);
+
     if (msg.msgtype === 'text') {
       const text = sanitize(msg.text.content);
       const parsed = parseCliArgs(text);
@@ -94,6 +97,7 @@ export class DingBot {
           message: msg,
           command: text,
           parsed,
+          app,
         });
       } else {
         console.log('没有 handler 处理 ', text);

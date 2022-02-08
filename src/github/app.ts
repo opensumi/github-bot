@@ -30,12 +30,16 @@ export const appFactory = (ctx?: Context) => {
   return _app;
 };
 
-export const app = lazyValue(appFactory);
-
-export async function handler(req: Request, event: FetchEvent) {
+export async function getInitedApp(event: FetchEvent) {
   const app = appFactory({
-    request: req,
+    request: event.request,
     event,
   });
+  await app.init();
+  return app;
+}
+
+export async function handler(req: Request, event: FetchEvent) {
+  const app = await getInitedApp(event);
   return baseHandler(app.webhooks, req, event);
 }

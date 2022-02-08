@@ -1,5 +1,6 @@
 // source: https://github.com/bytebase/star-history/blob/master/src/helpers/api.ts
 
+import { Octokit } from '@octokit/core';
 import { App } from '.';
 
 const PER_PAGE = 100;
@@ -36,14 +37,18 @@ export function getDateString(
   return formatedString;
 }
 export class APIWrapper {
+  _octo: Octokit | undefined;
   constructor(private app: App) {}
 
-  async octo() {
-    const octo = await this.app.getInstallationOcto();
-    if (!octo) {
-      throw new Error('当前应用没有可用的安装');
+  get octo() {
+    return this._octo as Octokit;
+  }
+
+  async init() {
+    this._octo = await this.app.getInstallationOcto();
+    if (!this._octo) {
+      throw new Error('current github app has not valid installation');
     }
-    return octo;
   }
 
   async getRepoStargazers(
@@ -52,24 +57,23 @@ export class APIWrapper {
     page?: number,
     perPage = PER_PAGE,
   ) {
-    const result = await (
-      await this.octo()
-    ).request('GET /repos/{owner}/{repo}/stargazers', {
-      owner,
-      repo,
-      page: page,
-      per_page: perPage,
-      headers: {
-        Accept: 'application/vnd.github.v3.star+json',
+    const result = await this.octo.request(
+      'GET /repos/{owner}/{repo}/stargazers',
+      {
+        owner,
+        repo,
+        page: page,
+        per_page: perPage,
+        headers: {
+          Accept: 'application/vnd.github.v3.star+json',
+        },
       },
-    });
+    );
     return result;
   }
 
   async getRepoStargazersCount(owner: string, repo: string) {
-    const resp = await (
-      await this.octo()
-    ).request('GET /repos/{owner}/{repo}', {
+    const resp = await this.octo.request('GET /repos/{owner}/{repo}', {
       owner,
       repo,
     });

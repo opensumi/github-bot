@@ -1,14 +1,15 @@
 import { CommandCenter } from '@/command';
 import { atDingtalkIds, markdown } from './message';
 import type { DingBot } from './bot';
-import { app } from '@/github/app';
 import { Message } from './types';
 import mri from 'mri';
+import { App } from '@/lib/octo';
 
 interface Context {
   message: Message;
   command: string;
   parsed: mri.Argv;
+  app: App;
 }
 
 export type Handler = (bot: DingBot, ctx: Context) => Promise<void>;
@@ -26,8 +27,7 @@ cc.on('*', async (bot) => {
 cc.on(
   'star',
   async (bot, ctx) => {
-    const { command } = ctx;
-    console.log(command.split(' '));
+    const { app } = ctx;
 
     const posArg = ctx.parsed['_'];
     let owner = 'opensumi';
@@ -45,12 +45,12 @@ cc.on(
       repo = posArg[2];
     }
 
-    const payload = await app().api.getRepoStarRecords(owner, repo);
+    const payload = await app.api.getRepoStarRecords(owner, repo);
     const content = markdown(
       'Stars',
       `
 \`\`\`ts
-${JSON.stringify(payload, null, 2)}
+${JSON.stringify(payload)}
 \`\`\`
     `,
     );
