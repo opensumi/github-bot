@@ -1,12 +1,7 @@
 import { StringBuilder } from '@/utils';
-import {
-  renderPrOrIssueLink,
-  renderPrOrIssueText,
-  renderRepoLink,
-  renderUserLink,
-  useRef,
-} from '.';
+import { renderPrOrIssueLink, renderRepoLink, renderUserLink, useRef } from '.';
 import { ExtractPayload, MarkdownContent } from '../types';
+import { titleTpl } from './trivias';
 
 export async function handleReview(
   payload: ExtractPayload<'pull_request_review'>,
@@ -14,7 +9,12 @@ export async function handleReview(
   const review = payload.review;
   const action = payload.action;
   const pr = payload.pull_request;
-  const title = `[${payload.repository.name}] Review ${action}`;
+
+  const title = titleTpl({
+    repo: payload.repository,
+    event: 'review',
+    action,
+  });
 
   const builder = new StringBuilder();
 

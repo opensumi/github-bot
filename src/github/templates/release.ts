@@ -1,11 +1,17 @@
 import { renderRepoLink, renderUserLink, useRef } from '.';
 import { ExtractPayload } from '../types';
+import { titleTpl } from './trivias';
 
 export async function handleRelease(payload: ExtractPayload<'release'>) {
   const action = payload.action;
   const release = payload.release;
 
-  const title = `[${payload.repository.name}] Release ${action}`;
+  const title = titleTpl({
+    repo: payload.repository,
+    event: 'release',
+    action,
+  });
+
   let text = `${renderRepoLink(payload.repository)} [release@${release.name}](${
     release.html_url
   }) ${action} by ${renderUserLink(payload.sender)}`;

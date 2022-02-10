@@ -8,6 +8,7 @@ import {
 import { ExtractPayload } from '@/github/types';
 import { Issue, PullRequest, Discussion, User } from '@octokit/webhooks-types';
 import { Octokit } from '@octokit/core';
+import { titleTpl } from './trivias';
 
 type Name = 'issues' | 'pull_request' | 'discussion';
 const NameBlock = {
@@ -48,7 +49,12 @@ function renderComment(
     shouldRenderBody = false;
   }
 
-  const title = `[${payload.repository.name}] Comment ${action}`;
+  const title = titleTpl({
+    repo: payload.repository,
+    event: `${location} comment`,
+    action,
+  });
+
   const text = `${renderRepoLink(payload.repository)} ${renderUserLink(
     payload.sender,
   )} ${action} [comment](${
@@ -107,8 +113,12 @@ export async function handleCommitComment(
       commitInfo += ` ${commit.message}`;
     }
   }
+  const title = titleTpl({
+    repo: payload.repository,
+    event: 'commit comment',
+    action: 'created',
+  });
 
-  const title = `[${payload.repository.name}] Commit comment created`;
   const text = `${renderRepoLink(payload.repository)} ${renderUserLink(
     payload.sender,
   )} commented on [${commitInfo}](${comment.html_url})
@@ -127,7 +137,12 @@ export async function handleReviewComment(
   const repo = payload.repository;
   const comment = payload.comment;
   const pr = payload.pull_request;
-  const title = `[${repo.name}] Review comment created`;
+  const title = titleTpl({
+    repo,
+    event: 'review comment',
+    action: 'created',
+  });
+
   const text = `${renderRepoLink(repo)} ${renderUserLink(
     payload.sender,
   )} [commented](${comment.html_url}) on ${renderPrOrIssueLink(pr)}
