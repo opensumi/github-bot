@@ -1,8 +1,12 @@
-import _ from 'lodash';
 import { Repository } from '@octokit/webhooks-types';
+import _ from 'lodash';
 
-_.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
+type TitleTpl = (data: {
+  repo: Repository;
+  event: string;
+  action: string;
+}) => string;
 
-export const titleTpl = _.template(
-  '[{{ repo.name }}] {{ _.capitalize({{ event }}) }} {{ action }}',
-) as (data: { repo: Repository; event: string; action: string }) => string;
+export const titleTpl: TitleTpl = (data) => {
+  return `[${data.repo.name}] ${_.capitalize(data.event)} ${data.action}`;
+};
