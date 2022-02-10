@@ -43,7 +43,7 @@ function render(
       if (changes?.title) {
         // 说明是标题改变
         action = 'changed title';
-        firstLineSuffix = 'from ' + changes.title.from;
+        firstLineSuffix = ' from ' + changes.title.from;
       } else {
         throw new StopHandleError('ignore prOrIssue content change');
       }
