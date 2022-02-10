@@ -1,4 +1,4 @@
-import { CommandCenter } from '@/command';
+import { CommandCenter, startsWith } from '@/command';
 import { atDingtalkIds, image, markdown } from './message';
 import type { DingBot } from './bot';
 import { Message } from './types';
@@ -56,7 +56,7 @@ ${JSON.stringify(payload)}
     await bot.reply(content);
   },
   ['stars'],
-  'startwiths',
+  startsWith,
 );
 
 function getUrl(str: string) {
@@ -116,5 +116,9 @@ cc.on(
     }
   },
   [],
-  'startwiths',
+  startsWith,
 );
+
+const ISSUE_REGEX = /^#(?<number>\d+)$/;
+const REPO_REGEX =
+  /^(?<owner>[a-zA-Z0-9][a-zA-Z0-9\-]*)\/(?<repo>[a-zA-Z0-9_\-.]+)$/;

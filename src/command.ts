@@ -1,36 +1,37 @@
-type CompareFunc = (command: string, userInput: string) => boolean;
+type CompareFunc<T> = (command: T, userInput: string) => boolean;
 
 export type FuncName = 'equal' | 'startwiths';
 
-const equalFunc: CompareFunc = (command: string, userInput: string) => {
+export const equalFunc: CompareFunc<string> = (
+  command: string,
+  userInput: string,
+) => {
   return command === userInput;
 };
 
-const startsWith: CompareFunc = (command: string, userInput: string) => {
+export const startsWith: CompareFunc<string> = (
+  command: string,
+  userInput: string,
+) => {
   return userInput.startsWith(command) || command.startsWith(userInput);
 };
 
-const compareFuncMap = {
-  equal: equalFunc,
-  startwiths: startsWith,
-} as {
-  [key in FuncName]: CompareFunc;
+export const regex = (reg: RegExp, userInput: string) => {
+  return Boolean(userInput.match(reg));
 };
 
-class Registry<T> {
-  private _array = new Map<string, T>();
-  private _funcNameArray = new Map<string, FuncName>();
+class Registry<K, T> {
+  private _array = new Map<K, [T, CompareFunc<K>]>();
 
-  add(text: string, handler: T, compareFunc: FuncName) {
-    this._array.set(text, handler);
-    this._funcNameArray.set(text, compareFunc);
+  add(m: K, handler: T, compareFunc: CompareFunc<K>) {
+    this._array.set(m, [handler, compareFunc]);
   }
 
   find(userInput: string) {
-    for (const [t, h] of this._array) {
-      const compare = compareFuncMap[this._funcNameArray.get(t) ?? 'equal'];
-      if (compare(t, userInput)) {
-        return h;
+    for (const [m, h] of this._array) {
+      const [handler, compareFunc] = h;
+      if (compareFunc(m, userInput)) {
+        return { data: m, handler };
       }
     }
   }
@@ -39,19 +40,19 @@ class Registry<T> {
 export class CommandCenter<T> {
   fallbackHandler: T | undefined;
 
-  reg: Registry<T>;
+  reg = new Registry<string, T>();
+  regexReg = new Registry<RegExp, T>();
+
   prefixs = [] as string[];
   constructor(prefixs?: string[]) {
     this.prefixs.push(...(prefixs ?? ['/']));
-
-    this.reg = new Registry<T>();
   }
 
   async on(
     text: string,
     handler: T,
     alias?: string[],
-    funcName: FuncName = 'equal',
+    funcName: CompareFunc<string> = equalFunc,
   ) {
     if (text) {
       if (text === '*') {
@@ -65,6 +66,10 @@ export class CommandCenter<T> {
         }
       }
     }
+  }
+
+  async onRegex(reg: RegExp, handler: T) {
+    this.regexReg.add(reg, handler, regex);
   }
 
   async resolve(text: string) {
@@ -89,7 +94,16 @@ export class CommandCenter<T> {
       return;
     }
 
-    let handler = this.reg.find(command);
+    let { handler } = this.reg.find(command) ?? {};
+
+    if (!handler) {
+      const { data, handler: regexHandler } = this.regexReg.find(command) ?? {};
+      if (regexHandler) {
+        (regexHandler as any).type = 'regex';
+        (regexHandler as any).regex = data;
+        handler = regexHandler;
+      }
+    }
 
     if (!handler) {
       console.log(`${text} 没有命中任何 handler`);
