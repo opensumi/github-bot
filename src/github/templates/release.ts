@@ -5,7 +5,7 @@ export async function handleRelease(payload: ExtractPayload<'release'>) {
   const action = payload.action;
   const release = payload.release;
 
-  const title = `[${payload.repository.name}] release ${release.name} ${action} by ${payload.sender.login}`;
+  const title = `[${payload.repository.name}] Release ${action}`;
   let text = `${renderRepoLink(payload.repository)} [release@${release.name}](${
     release.html_url
   }) ${action} by ${renderUserLink(payload.sender)}`;

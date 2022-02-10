@@ -1,7 +1,6 @@
 import {
   limitLine,
   renderPrOrIssueLink,
-  renderPrOrIssueText,
   renderRepoLink,
   renderUserLink,
   useRef,
@@ -49,9 +48,7 @@ function renderComment(
     shouldRenderBody = false;
   }
 
-  const title = `[${
-    payload.repository.name
-  }] comment ${action} on ${location} ${renderPrOrIssueText(data)}`;
+  const title = `[${payload.repository.name}] Comment ${action}`;
   const text = `${renderRepoLink(payload.repository)} ${renderUserLink(
     payload.sender,
   )} ${action} [comment](${
@@ -111,7 +108,7 @@ export async function handleCommitComment(
     }
   }
 
-  const title = `[${payload.repository.name}] commented on ${commitInfo}`;
+  const title = `[${payload.repository.name}] Commit comment created`;
   const text = `${renderRepoLink(payload.repository)} ${renderUserLink(
     payload.sender,
   )} commented on [${commitInfo}](${comment.html_url})

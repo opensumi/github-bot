@@ -3,6 +3,7 @@ import { renderRepoLink, renderUserLink, renderPrOrIssue } from './utils';
 import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 import { StringBuilder } from '@/utils';
 import { StopHandleError } from '.';
+import { capitalize } from 'lodash';
 
 type Name = 'issues' | 'pull_request' | 'discussion';
 const NameBlock = {
@@ -62,7 +63,9 @@ function render(
     }
   }
 
-  const title = `[${payload.repository.name}] ${nameBlock}#${data.number} ${action} by ${payload.sender.login}`;
+  const title = `[${payload.repository.name}] ${capitalize(nameBlock)}#${
+    data.number
+  } ${action}`;
   const builder = new StringBuilder(
     `${renderRepoLink(payload.repository)} ${renderUserLink(
       payload.sender,

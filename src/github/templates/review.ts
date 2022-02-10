@@ -14,9 +14,7 @@ export async function handleReview(
   const review = payload.review;
   const action = payload.action;
   const pr = payload.pull_request;
-  const title = `[${
-    payload.repository.name
-  }] Review ${action} on ${renderPrOrIssueText(pr)}`;
+  const title = `[${payload.repository.name}] Review ${action}`;
 
   const builder = new StringBuilder();
 
