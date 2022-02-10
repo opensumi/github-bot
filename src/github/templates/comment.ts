@@ -123,3 +123,25 @@ ${renderCommentBody(payload.comment)}
     text,
   };
 }
+
+export async function handleReviewComment(
+  payload: ExtractPayload<'pull_request_review_comment'>,
+) {
+  const repo = payload.repository;
+  const comment = payload.comment;
+  const pr = payload.pull_request;
+  const title = `[${repo.name}] Review comment created`;
+  const text = `${renderRepoLink(repo)} ${renderUserLink(
+    payload.sender,
+  )} [commented](${comment.html_url}) on ${renderPrOrIssueLink(pr)}
+>\n
+> \`\`\`diff
+> ${comment.diff_hunk}
+> \`\`\`
+${renderCommentBody(payload.comment)}
+`;
+  return {
+    title,
+    text,
+  };
+}

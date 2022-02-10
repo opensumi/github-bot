@@ -12,6 +12,7 @@ import {
   handleDiscussion,
   handleIssueComment,
   handleCommitComment,
+  handleReviewComment,
   handleDiscussionComment,
 } from '.';
 
@@ -41,6 +42,7 @@ export const templates = {
   'pull_request_review.submitted': handleReview,
   'pull_request_review.edited': handleReview,
   'pull_request_review.dismissed': handleReview,
+  'pull_request_review_comment.created': handleReviewComment,
 } as TemplateMapping;
 
 export const supportTemplates = Object.keys(

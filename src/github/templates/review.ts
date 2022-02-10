@@ -11,10 +11,9 @@ import { ExtractPayload, MarkdownContent } from '../types';
 export async function handleReview(
   payload: ExtractPayload<'pull_request_review'>,
 ): Promise<MarkdownContent> {
-  const action = payload.action;
   const review = payload.review;
+  const action = payload.action;
   const pr = payload.pull_request;
-
   const title = `[${
     payload.repository.name
   }] review ${action} on pr ${renderPrOrIssueText(pr)} by ${
