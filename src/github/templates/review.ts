@@ -16,18 +16,14 @@ export async function handleReview(
   const pr = payload.pull_request;
   const title = `[${
     payload.repository.name
-  }] review ${action} on pr ${renderPrOrIssueText(pr)} by ${
-    payload.sender.login
-  }`;
+  }] Review ${action} on ${renderPrOrIssueText(pr)}`;
 
   const builder = new StringBuilder();
 
   builder.add(
     `${renderRepoLink(payload.repository)} ${renderUserLink(
       payload.sender,
-    )} ${action} [review](${review.html_url}) on pr ${renderPrOrIssueLink(
-      pr,
-    )}\n`,
+    )} ${action} [review](${review.html_url}) on ${renderPrOrIssueLink(pr)}\n`,
   );
   builder.add(`State: ${review.state}\n`);
   builder.add(useRef(review.body));
