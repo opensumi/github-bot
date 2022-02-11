@@ -23,6 +23,10 @@ const formatByUserLogin = {
   'codecov-commenter': (text: string) => {
     return limitLine(text, 3);
   },
+  CLAassistant: (text) => {
+    const data = text.split('<br/>');
+    return data.slice(1).join('<br/>');
+  },
 } as {
   [key: string]: (text: string) => string;
 };
