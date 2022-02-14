@@ -149,7 +149,7 @@ export async function handleReviewComment(
 
   const text = `${renderRepoLink(repo)} ${renderUserLink(
     payload.sender,
-  )} [commented](${comment.html_url}) on ${renderPrOrIssueLink(pr)}
+  )} created [review comment](${comment.html_url}) on ${renderPrOrIssueLink(pr)}
 >\n
 > \`\`\`diff
 > ${comment.diff_hunk}
