@@ -1,5 +1,11 @@
 import { StringBuilder } from '@/utils';
-import { renderPrOrIssueLink, renderRepoLink, renderUserLink, useRef } from '.';
+import {
+  renderPrOrIssueLink,
+  renderRepoLink,
+  renderUserLink,
+  StopHandleError,
+  useRef,
+} from '.';
 import { ExtractPayload, MarkdownContent } from '../types';
 import { titleTpl } from './trivias';
 
@@ -10,8 +16,14 @@ export async function handleReview(
   let action = payload.action as string;
   const pr = payload.pull_request;
 
+  if (action === 'submitted' && review.state === 'commented') {
+    throw new StopHandleError(
+      'review comment is handled by handleReviewComment',
+    );
+  }
+
   if (review.state) {
-    action = review.state;
+    action = review.state as string;
   }
 
   const title = titleTpl({
