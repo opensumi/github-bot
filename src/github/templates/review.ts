@@ -7,8 +7,12 @@ export async function handleReview(
   payload: ExtractPayload<'pull_request_review'>,
 ): Promise<MarkdownContent> {
   const review = payload.review;
-  const action = payload.action;
+  let action = payload.action as string;
   const pr = payload.pull_request;
+
+  if (review.state) {
+    action = review.state;
+  }
 
   const title = titleTpl({
     repo: payload.repository,
@@ -23,7 +27,7 @@ export async function handleReview(
       payload.sender,
     )} ${action} [review](${review.html_url}) on ${renderPrOrIssueLink(pr)}\n`,
   );
-  builder.add(`State: ${review.state}\n`);
+
   builder.add(useRef(review.body));
 
   return {
