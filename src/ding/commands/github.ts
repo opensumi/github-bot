@@ -1,27 +1,6 @@
-import { CommandCenter, startsWith } from '@/command';
-import { atDingtalkIds, image, markdown } from './message';
-import type { DingBot } from './bot';
-import { Message } from './types';
-import mri from 'mri';
-import { IApp } from '@/github/app';
-interface Context {
-  message: Message;
-  command: string;
-  parsed: mri.Argv;
-  app: IApp;
-}
-
-export type Handler = (bot: DingBot, ctx: Context) => Promise<void>;
-
-export const cc = new CommandCenter<Handler>(['']);
-
-cc.on('*', async (bot) => {
-  const { msg } = bot;
-  await bot.replyText(
-    `@${msg.senderId} 我是 Sumi~`,
-    atDingtalkIds(msg.senderId),
-  );
-});
+import { startsWith } from '@/command';
+import { cc } from '.';
+import { image, markdown } from '../message';
 
 cc.on(
   'star',
