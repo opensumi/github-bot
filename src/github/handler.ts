@@ -77,32 +77,29 @@ export const setupWebhooksSendToDing = (
   });
   for (const emitName of supportTemplates) {
     webhooks.on(emitName, async ({ id, payload, octokit }) => {
-      const worker = async () => {
-        console.log(emitName, 'handled id:', id);
-        const handlerCtx = {
-          ...ctx,
-          octokit,
-        };
-        const handler = templates[emitName] as (
-          payload: any,
-          ctx: any,
-        ) => Promise<MarkdownContent>;
-        try {
-          console.log('run handler:', handler?.name);
-
-          const data = await handler(payload, handlerCtx);
-          console.log('get data from handler: ', data);
-
-          await sendToDing(data.title, data.text);
-        } catch (err) {
-          console.log('stop handler because: ', (err as Error).message);
-          if (!(err instanceof StopHandleError)) {
-            throw err;
-          }
-        }
+      console.log(emitName, 'handled id:', id);
+      const handlerCtx = {
+        ...ctx,
+        octokit,
       };
+      const handler = templates[emitName] as (
+        payload: any,
+        ctx: any,
+      ) => Promise<MarkdownContent>;
 
-      await worker();
+      try {
+        console.log('run handler:', handler?.name);
+
+        const data = await handler(payload, handlerCtx);
+        console.log('get data from handler: ', data);
+
+        await sendToDing(data.title, data.text);
+      } catch (err) {
+        console.log('stop handler because: ', (err as Error).message);
+        if (!(err instanceof StopHandleError)) {
+          throw err;
+        }
+      }
     });
   }
 };
