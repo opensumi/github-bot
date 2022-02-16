@@ -14,6 +14,3 @@ interface Context {
 export type Handler = (bot: DingBot, ctx: Context) => Promise<void>;
 
 export const cc = new CommandCenter<Handler>(['']);
-
-import './default';
-import './github';

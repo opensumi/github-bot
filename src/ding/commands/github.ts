@@ -58,8 +58,6 @@ function makeid(length: number) {
   return result;
 }
 
-console.log(makeid(5));
-
 cc.on(
   'http',
   async (bot, ctx) => {
