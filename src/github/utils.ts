@@ -16,12 +16,15 @@ export async function sendToDing(
       text,
     },
   };
-  const toPromise = [] as (() => Promise<void>)[];
+  const toPromise = [] as Promise<void>[];
 
   for (const webhook of secret.dingWebhooks) {
-    toPromise.push(async () => {
-      await send(dingContent, webhook.url, webhook.secret);
-    });
+    toPromise.push(
+      (async () => {
+        console.log('send to ', webhook.url);
+        await send(dingContent, webhook.url, webhook.secret);
+      })(),
+    );
   }
   await Promise.all(toPromise);
 }
