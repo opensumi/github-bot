@@ -30,6 +30,23 @@ try {
   console.error(error);
 }
 
+export interface DingSecret {
+  webhook: string;
+  secret: string;
+}
+
+export const getDingSecretById = async (id: string) => {
+  const webhooks = await WEBHOOKS_INFO.get<DingSecret>(id, 'json');
+  return webhooks;
+};
+
+export const getDefaultSecret = () => {
+  return {
+    webhook: dingtalkWebhookUrl,
+    secret: dingtalkSecret,
+  } as DingSecret;
+};
+
 export default {
   appId,
   webhookSecret,

@@ -43,13 +43,13 @@ export class StringBuilder {
 }
 
 // https://github.com/sindresorhus/lazy-value/blob/318fd0fa53b413e066a138ea18750fe2ccf51c04/index.js
-export function lazyValue<T>(function_: () => T) {
+export function lazyValue<T>(function_: (...args: any[]) => T) {
   let isCalled = false;
   let result: T;
 
-  return () => {
+  return (...args: any[]) => {
     if (!isCalled) {
-      result = function_();
+      result = function_(...args);
       isCalled = true;
     }
 

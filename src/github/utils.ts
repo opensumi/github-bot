@@ -1,7 +1,12 @@
 import { send } from '@/ding/utils';
-import secrets from '@/secrets';
-export async function sendToDing(title: string, text: string) {
-  if (!secrets.dingtalkWebhookUrl) {
+import { DingSecret } from '@/secrets';
+
+export async function sendToDing(
+  title: string,
+  text: string,
+  secret: DingSecret,
+) {
+  if (!secret.webhook) {
     return;
   }
   const dingContent = {
@@ -12,5 +17,5 @@ export async function sendToDing(title: string, text: string) {
     },
   };
 
-  await send(dingContent, secrets.dingtalkWebhookUrl, secrets.dingtalkSecret);
+  await send(dingContent, secret.webhook, secret.secret);
 }

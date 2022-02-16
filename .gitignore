@@ -18,3 +18,5 @@ index.js
 .env.dev
 
 yarn-error.log
+
+webhooks.json

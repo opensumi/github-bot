@@ -3,9 +3,9 @@ import {
   EmitterWebhookEventName,
 } from '@octokit/webhooks/dist-types/types';
 import { Webhooks } from '@octokit/webhooks';
-import { error, lazyValue, message } from '@/utils';
+import { error, message } from '@/utils';
 import { StopHandleError, supportTemplates, templates } from './templates';
-import secrets from '@/secrets';
+import secrets, { getDefaultSecret, getDingSecretById } from '@/secrets';
 import { sendToDing } from './utils';
 import type { MarkdownContent, THasAction } from './types';
 import { Octokit } from '@octokit/core';
@@ -63,7 +63,7 @@ export async function validateGithub(req: Request, webhooks: Webhooks) {
 
 export const setupWebhooksSendToDing = (
   webhooks: Webhooks<{ octokit?: Octokit }>,
-  ctx?: Context,
+  ctx: Context,
 ) => {
   webhooks.onAny(async ({ id, name, payload }) => {
     console.log('Receive Github Webhook, id: ', id, ', name: ', name);
@@ -93,7 +93,7 @@ export const setupWebhooksSendToDing = (
         const data = await handler(payload, handlerCtx);
         console.log('get data from handler: ', data);
 
-        await sendToDing(data.title, data.text);
+        await sendToDing(data.title, data.text, ctx.dingSecret);
       } catch (err) {
         console.log('stop handler because: ', (err as Error).message);
         if (!(err instanceof StopHandleError)) {
@@ -147,13 +147,41 @@ export async function baseHandler(
   }
 }
 
-const webhooks = lazyValue(() => {
+const webhooksFactory = (secret: string) => {
   return new Webhooks({
-    secret: secrets.ghWebhookSecret,
+    secret,
   });
-});
+};
 
 export async function handler(req: Request, event: FetchEvent) {
-  setupWebhooksSendToDing(webhooks() as any);
-  return baseHandler(webhooks(), req, event);
+  const webhooks = webhooksFactory(secrets.ghWebhookSecret);
+  setupWebhooksSendToDing(webhooks as any, {
+    dingSecret: getDefaultSecret(),
+    event,
+    request: req,
+  });
+  return baseHandler(webhooks, req, event);
+}
+
+export async function webhookHandler(
+  req: Request & { params: { id: string } },
+  event: FetchEvent,
+) {
+  const id = req.params?.id;
+  if (!id) {
+    return error(401, 'need a valid id');
+  }
+  const dingSecret = await getDingSecretById(id);
+  if (!dingSecret) {
+    return error(403, 'id not found');
+  }
+
+  const webhooks = webhooksFactory(secrets.ghWebhookSecret);
+
+  setupWebhooksSendToDing(webhooks as any, {
+    dingSecret,
+    event,
+    request: req,
+  });
+  return baseHandler(webhooks, req, event);
 }
