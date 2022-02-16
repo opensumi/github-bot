@@ -75,9 +75,9 @@ export function useRef(text?: string | null) {
   return newLines.join('\n');
 }
 
-export function limitLine(text: string, count: number) {
+export function limitLine(text: string, count: number, start = 0) {
   const arrayofLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
-  const finalLines = arrayofLines.slice(0, count);
+  const finalLines = arrayofLines.slice(start, count);
   return finalLines.join('\n').trim();
 }
 

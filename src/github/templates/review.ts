@@ -35,7 +35,7 @@ export async function handleReview(
   const builder = new StringBuilder();
 
   builder.add(
-    `${renderRepoLink(payload.repository)} ${renderUserLink(
+    `#### ${renderRepoLink(payload.repository)} ${renderUserLink(
       payload.sender,
     )} ${action} [review](${review.html_url}) on ${renderPrOrIssueLink(pr)}\n`,
   );

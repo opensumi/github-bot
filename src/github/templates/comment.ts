@@ -21,7 +21,7 @@ const NameBlock = {
 
 const formatByUserLogin = {
   'codecov-commenter': (text: string) => {
-    return limitLine(text, 3);
+    return limitLine(text, 2, 1);
   },
   CLAassistant: (text) => {
     const data = text.split('<br/>');
@@ -32,12 +32,12 @@ const formatByUserLogin = {
 };
 
 function renderCommentBody(comment: { body: string; user: User }) {
-  let text = useRef(comment.body);
+  let text = comment.body;
   const formatter = formatByUserLogin[comment.user.login];
   if (formatter) {
     text = formatter(text);
   }
-  return text;
+  return useRef(text);
 }
 
 function renderComment(
@@ -59,7 +59,7 @@ function renderComment(
     action,
   });
 
-  const text = `${renderRepoLink(payload.repository)} ${renderUserLink(
+  const text = `#### ${renderRepoLink(payload.repository)} ${renderUserLink(
     payload.sender,
   )} ${action} [comment](${
     comment.html_url
@@ -123,7 +123,7 @@ export async function handleCommitComment(
     action: 'created',
   });
 
-  const text = `${renderRepoLink(payload.repository)} ${renderUserLink(
+  const text = `#### ${renderRepoLink(payload.repository)} ${renderUserLink(
     payload.sender,
   )} commented on [${commitInfo}](${comment.html_url})
 >\n
@@ -147,7 +147,7 @@ export async function handleReviewComment(
     action: 'created',
   });
 
-  const text = `${renderRepoLink(repo)} ${renderUserLink(
+  const text = `#### ${renderRepoLink(repo)} ${renderUserLink(
     payload.sender,
   )} created [review comment](${comment.html_url}) on ${renderPrOrIssueLink(pr)}
 >
