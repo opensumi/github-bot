@@ -3,6 +3,7 @@
 // Smee is a webhook payload delivery service - it receives webhook payloads, and sends them to listening clients.
 
 import SmeeClient from 'smee-client';
+
 const allRoutes = ['ding_webhook', 'gh_app'];
 
 const allClients = [] as SmeeClient[];
