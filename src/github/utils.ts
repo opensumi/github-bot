@@ -6,7 +6,7 @@ export async function sendToDing(
   text: string,
   secret: DingSecret,
 ) {
-  if (!secret.webhook) {
+  if (!secret.dingWebhook) {
     return;
   }
   const dingContent = {
@@ -17,5 +17,5 @@ export async function sendToDing(
     },
   };
 
-  await send(dingContent, secret.webhook, secret.secret);
+  await send(dingContent, secret.dingWebhook, secret.dingSecret);
 }

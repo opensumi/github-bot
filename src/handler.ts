@@ -1,6 +1,6 @@
 import { Router } from './router';
 import { handler as dingHandler } from './ding';
-import { handler as githubHandler, webhookHandler } from './github';
+import { webhookHandler } from './github';
 import { handler as githubAppHandler } from './github/app';
 import { error } from './utils';
 
@@ -8,11 +8,9 @@ export const router = Router();
 
 // 接收 DingTalk webhook 事件
 router.post('/ding_webhook', dingHandler);
-// 接收 Github webhook 事件
-router.post('/gh_webhook', githubHandler);
 // 接收 Github App 的 webhook 事件
 router.post('/gh_app', githubAppHandler);
-
+// 接收 Github webhook 事件
 router.post('/webhook/:id', webhookHandler);
 
 router.all('*', () => {

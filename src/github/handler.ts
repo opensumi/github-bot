@@ -5,7 +5,7 @@ import {
 import { Webhooks } from '@octokit/webhooks';
 import { error, message } from '@/utils';
 import { StopHandleError, supportTemplates, templates } from './templates';
-import secrets, { getDefaultSecret, getDingSecretById } from '@/secrets';
+import { getSecretById } from '@/secrets';
 import { sendToDing } from './utils';
 import type { MarkdownContent, THasAction } from './types';
 import { Octokit } from '@octokit/core';
@@ -153,16 +153,6 @@ const webhooksFactory = (secret: string) => {
   });
 };
 
-export async function handler(req: Request, event: FetchEvent) {
-  const webhooks = webhooksFactory(secrets.ghWebhookSecret);
-  setupWebhooksSendToDing(webhooks as any, {
-    dingSecret: getDefaultSecret(),
-    event,
-    request: req,
-  });
-  return baseHandler(webhooks, req, event);
-}
-
 export async function webhookHandler(
   req: Request & { params: { id: string } },
   event: FetchEvent,
@@ -171,12 +161,12 @@ export async function webhookHandler(
   if (!id) {
     return error(401, 'need a valid id');
   }
-  const dingSecret = await getDingSecretById(id);
+  const dingSecret = await getSecretById(id);
   if (!dingSecret) {
     return error(403, 'id not found');
   }
 
-  const webhooks = webhooksFactory(secrets.ghWebhookSecret);
+  const webhooks = webhooksFactory(dingSecret.githubSecret);
 
   setupWebhooksSendToDing(webhooks as any, {
     dingSecret,

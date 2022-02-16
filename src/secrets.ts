@@ -31,19 +31,24 @@ try {
 }
 
 export interface DingSecret {
-  webhook: string;
-  secret: string;
+  dingWebhook: string;
+  dingSecret: string;
+  githubSecret: string;
 }
 
-export const getDingSecretById = async (id: string) => {
+export const getSecretById = async (id: string) => {
   const webhooks = await WEBHOOKS_INFO.get<DingSecret>(id, 'json');
+  if (webhooks && !webhooks.githubSecret) {
+    webhooks.githubSecret = ghWebhookSecret;
+  }
   return webhooks;
 };
 
 export const getDefaultSecret = () => {
   return {
-    webhook: dingtalkWebhookUrl,
-    secret: dingtalkSecret,
+    dingWebhook: dingtalkWebhookUrl,
+    dingSecret: dingtalkSecret,
+    githubSecret: ghWebhookSecret,
   } as DingSecret;
 };
 
@@ -54,7 +59,4 @@ export default {
   clientSecret,
   privateKey,
   dingtalkOutGoingToken,
-  dingtalkWebhookUrl,
-  dingtalkSecret,
-  ghWebhookSecret,
 };
