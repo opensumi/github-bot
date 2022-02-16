@@ -7,10 +7,12 @@ async function main() {
   const envExample = envKeys.map((key) => `${key}=`).join('\n');
   writeFileSync('./.env.example', envExample);
 
-  const typings = envKeys
-    .map((key) => `declare const ${key}: string;`)
-    .join('\n');
-  writeFileSync('./src/typings.d.ts', typings);
+  const typings = envKeys.map((key) => `declare const ${key}: string;`);
+  typings.push('');
+  typings.push('declare const WEBHOOKS_INFO: KVNamespace;');
+  typings.push('');
+
+  writeFileSync('./src/typings.d.ts', typings.join('\n'));
 }
 
 main();
