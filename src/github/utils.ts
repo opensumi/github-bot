@@ -6,7 +6,7 @@ export async function sendToDing(
   text: string,
   secret: DingSecret,
 ) {
-  if (!secret.dingWebhook) {
+  if (secret.dingWebhooks.length === 0) {
     return;
   }
   const dingContent = {
@@ -16,6 +16,12 @@ export async function sendToDing(
       text,
     },
   };
+  const toPromise = [] as (() => Promise<void>)[];
 
-  await send(dingContent, secret.dingWebhook, secret.dingSecret);
+  for (const webhook of secret.dingWebhooks) {
+    toPromise.push(async () => {
+      await send(dingContent, webhook.url, webhook.secret);
+    });
+  }
+  await Promise.all(toPromise);
 }

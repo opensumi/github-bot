@@ -30,10 +30,14 @@ try {
   console.error(error);
 }
 
+export interface DingWebhookItem {
+  url: string;
+  secret: string;
+}
+
 export interface DingSecret {
-  dingWebhook: string;
-  dingSecret: string;
   githubSecret: string;
+  dingWebhooks: DingWebhookItem[];
 }
 
 export const getSecretById = async (id: string) => {
@@ -46,9 +50,13 @@ export const getSecretById = async (id: string) => {
 
 export const getDefaultSecret = () => {
   return {
-    dingWebhook: dingtalkWebhookUrl,
-    dingSecret: dingtalkSecret,
     githubSecret: ghWebhookSecret,
+    dingWebhooks: [
+      {
+        url: dingtalkWebhookUrl,
+        secret: dingtalkSecret,
+      },
+    ],
   } as DingSecret;
 };
 
