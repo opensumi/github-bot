@@ -1,7 +1,8 @@
-import { Router } from 'itty-router';
+import { Router } from './router';
 import { handler as dingHandler } from './ding';
 import { handler as githubHandler } from './github';
 import { handler as githubAppHandler } from './github/app';
+import { error } from './utils';
 
 export const router = Router();
 
@@ -13,7 +14,7 @@ router.post('/gh_webhook', githubHandler);
 router.post('/gh_app', githubAppHandler);
 
 router.all('*', () => {
-  return Response.redirect('https://github.com/opensumi/github-bot', 301);
+  return error(404, 'no router found');
 });
 
 export async function handleRequest(event: FetchEvent) {
