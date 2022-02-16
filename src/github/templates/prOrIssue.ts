@@ -1,9 +1,7 @@
-import { ExtractPayload, THasChanges } from '../types';
+import { ExtractPayload } from '../types';
 import { renderRepoLink, renderUserLink, renderPrOrIssue } from './utils';
 import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 import { StringBuilder } from '@/utils';
-import { StopHandleError } from '.';
-import { capitalize } from 'lodash';
 import { titleTpl } from './trivias';
 
 type Name = 'issues' | 'pull_request' | 'discussion';
@@ -23,38 +21,12 @@ function render(
   const nameBlock = NameBlock[name];
   let action = payload.action.replaceAll('_', '');
 
-  let shouldRenderOriginAuthor = false;
-  if (action !== 'opened') {
-    if (data.user.name !== payload.sender.name) {
-      shouldRenderOriginAuthor = true;
-    }
-  }
-
   let shouldRenderBody = true;
   if (['closed', 'edited'].includes(action)) {
     shouldRenderBody = false;
   }
 
   const subline = [] as string[];
-
-  let firstLineSuffix = '';
-
-  if (action === 'edited') {
-    if ((payload as THasChanges).changes) {
-      const changes = (payload as THasChanges).changes;
-      if (changes?.title) {
-        // 说明是标题改变
-        action = 'changed title';
-        firstLineSuffix = ' from ' + changes.title.from;
-      } else {
-        throw new StopHandleError('ignore prOrIssue content change');
-      }
-    }
-  }
-
-  if (shouldRenderOriginAuthor) {
-    subline.push(`Author: ${renderUserLink(data.user)}`);
-  }
 
   if (name === 'pull_request' && action === 'closed') {
     const pr = (payload as ExtractPayload<'pull_request.closed'>).pull_request;
@@ -71,11 +43,9 @@ function render(
   });
 
   const builder = new StringBuilder(
-    `${renderRepoLink(payload.repository)} ${renderUserLink(
+    `#### ${renderRepoLink(payload.repository)} ${renderUserLink(
       payload.sender,
-    )} ${action} [${nameBlock}#${data.number}](${
-      data.html_url
-    })${firstLineSuffix}`,
+    )} ${action} [${nameBlock}#${data.number}](${data.html_url})`,
   );
 
   if (subline.length > 0) {
