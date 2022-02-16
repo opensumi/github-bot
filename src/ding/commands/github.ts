@@ -1,5 +1,5 @@
 import { startsWith } from '@/command';
-import { cc } from '.';
+import { cc } from './base';
 import { image, markdown } from '../message';
 
 cc.on(
