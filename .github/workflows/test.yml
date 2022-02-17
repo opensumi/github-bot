@@ -16,7 +16,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    name: Deploy
+    name: Test
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js 14
