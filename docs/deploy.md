@@ -1,6 +1,6 @@
 # Deploy
 
-Firstly, we should prepare all the secrets we need(which listed in [`scripts/secrets.ts`](https://github.com/opensumi/github-webhook-handler/blob/b237a1e35c8fd5fdf720a88f911691f1e096f78c/scripts/secrets.ts)).
+Firstly, we should prepare all the secrets we need(which listed in [`scripts/secrets.ts`](https://github.com/opensumi/github-bot/blob/b237a1e35c8fd5fdf720a88f911691f1e096f78c/scripts/secrets.ts)).
 
 We use [`wrangler secrets`](https://developers.cloudflare.com/workers/cli-wrangler/commands#secret) manage the secrets, Cloudflare Workers will replace them in code when each execute.
 
