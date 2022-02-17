@@ -12,7 +12,7 @@ copy `.env.example` to `.env`, and set the corresponding value. then we can run 
 
 > if you want set secrets on specific environment, you need create a file named `.env.{environment}`(like `.env.prod`), and run `yarn sync-secrets --env prod`。
 
-We have three enviorments: `local`, `dev` and `prod`. They are defined in `wrangler.toml`.
+We have two enviorments: `local` and `prod`. They are defined in `wrangler.toml`.
 
 > More info can be found in: <https://developers.cloudflare.com/workers/platform/environments>
 
