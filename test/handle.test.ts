@@ -14,6 +14,6 @@ describe('handle', () => {
     const request = new Request('/?foo=1', { method: 'POST', body: 'hello' });
     const event = new FetchEvent('fetch', { request });
     const result = await handleRequest(event);
-    expect(result.status).toEqual(301);
+    expect(result.status).toEqual(404);
   });
 });
