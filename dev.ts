@@ -4,7 +4,7 @@
 
 import SmeeClient from 'smee-client';
 
-const allRoutes = ['ding_webhook', 'gh_app'];
+const allRoutes = ['ding_webhook', 'gh_app', 'webhook'];
 
 const allClients = [] as SmeeClient[];
 

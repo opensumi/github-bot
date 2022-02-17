@@ -154,10 +154,13 @@ const webhooksFactory = (secret: string) => {
 };
 
 export async function webhookHandler(
-  req: Request & { params: { id: string } },
+  req: Request & { params?: { id?: string }; query?: { id?: string } },
   event: FetchEvent,
 ) {
-  const id = req.params?.id;
+  let id = req.params?.id;
+  if (!id) {
+    id = req.query?.id;
+  }
   if (!id) {
     return error(401, 'need a valid id');
   }

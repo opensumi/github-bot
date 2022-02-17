@@ -11,7 +11,7 @@ router.post('/ding_webhook', dingHandler);
 // 接收 Github App 的 webhook 事件
 router.post('/gh_app', githubAppHandler);
 // 接收 Github webhook 事件
-router.post('/webhook/:id', webhookHandler);
+router.post('/webhook/:id?', webhookHandler);
 
 router.all('*', () => {
   return error(404, 'no router found');
