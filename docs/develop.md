@@ -12,3 +12,5 @@ yarn
 yarn wrangler login
 yarn dev
 ```
+
+Then you should see the [deploy.md](./deploy.md).
