@@ -14,10 +14,6 @@ export const appFactory = (ctx: Context) => {
   const _app = new App({
     appId: secrets.appId,
     privateKey: secrets.privateKey,
-    // oauth: {
-    //   clientId: secrets.clientId,
-    //   clientSecret: secrets.clientSecret,
-    // },
     webhooks: {
       secret: secrets.webhookSecret,
     },
