@@ -16,6 +16,8 @@ export async function handleReview(
   let action = payload.action as string;
   const pr = payload.pull_request;
 
+  let showIsReview = true;
+
   if (action === 'submitted' && review.state === 'commented') {
     throw new StopHandleError(
       'review comment is handled by handleReviewComment',
@@ -24,6 +26,9 @@ export async function handleReview(
 
   if (review.state) {
     action = review.state as string;
+    if (review.state === 'approved') {
+      showIsReview = false;
+    }
   }
 
   const title = titleTpl({
@@ -37,7 +42,9 @@ export async function handleReview(
   builder.add(
     `#### ${renderRepoLink(payload.repository)} ${renderUserLink(
       payload.sender,
-    )} ${action} [review](${review.html_url}) on ${renderPrOrIssueLink(pr)}\n`,
+    )} ${action} ${
+      showIsReview ? `[review](${review.html_url}) on ` : ''
+    }${renderPrOrIssueLink(pr, 'PR')}\n`,
   );
 
   builder.add(useRef(review.body));
