@@ -32,12 +32,18 @@ export interface DingWebhookItem {
 export interface DingSecret {
   githubSecret: string;
   dingWebhooks: DingWebhookItem[];
+  contentLimit: number;
 }
 
 export const getSecretById = async (id: string) => {
   const webhooks = await WEBHOOKS_INFO.get<DingSecret>(id, 'json');
-  if (webhooks && !webhooks.githubSecret) {
-    webhooks.githubSecret = ghWebhookSecret;
+  if (webhooks) {
+    if (!webhooks.githubSecret) {
+      webhooks.githubSecret = ghWebhookSecret;
+    }
+    if (!webhooks.contentLimit) {
+      webhooks.contentLimit = 300;
+    }
   }
   return webhooks;
 };

@@ -9,6 +9,10 @@ export async function sendToDing(
   if (secret.dingWebhooks.length === 0) {
     return;
   }
+  if (secret.contentLimit && secret.contentLimit > 0) {
+    text = text.slice(0, secret.contentLimit);
+  }
+
   const dingContent = {
     msgtype: 'markdown',
     markdown: {
