@@ -6,7 +6,7 @@ import {
   Discussion,
 } from '@octokit/webhooks-types';
 import { StringBuilder } from '@/utils';
-import { Context } from '../app';
+import _ from 'lodash';
 
 export function renderRepoLink(repository: Repository) {
   return `[[${repository.name}]](${repository.html_url})`;
@@ -94,3 +94,13 @@ export class StopHandleError extends Error {
     super(reason);
   }
 }
+
+type TitleTpl = (data: {
+  repo: Repository;
+  event: string;
+  action: string;
+}) => string;
+
+export const titleTpl: TitleTpl = (data) => {
+  return `[${data.repo.name}] ${_.capitalize(data.event)} ${data.action}`;
+};

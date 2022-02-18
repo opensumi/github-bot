@@ -8,7 +8,7 @@ import {
 import { ExtractPayload } from '@/github/types';
 import { Issue, PullRequest, Discussion, User } from '@octokit/webhooks-types';
 import { Octokit } from '@octokit/core';
-import { titleTpl } from './trivias';
+import { titleTpl } from './utils';
 import { Context } from '../app';
 
 type Name = 'issues' | 'pull_request' | 'discussion';

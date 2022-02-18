@@ -5,10 +5,10 @@ import {
   renderUserLink,
   StopHandleError,
   useRef,
+  titleTpl,
 } from '.';
 import { Context } from '../app';
 import { ExtractPayload, MarkdownContent } from '../types';
-import { titleTpl } from './trivias';
 
 export async function handleReview(
   payload: ExtractPayload<'pull_request_review'>,

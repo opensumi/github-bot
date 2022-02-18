@@ -1,8 +1,12 @@
 import { ExtractPayload } from '../types';
-import { renderRepoLink, renderUserLink, renderPrOrIssue } from './utils';
+import {
+  renderRepoLink,
+  renderUserLink,
+  renderPrOrIssue,
+  titleTpl,
+} from './utils';
 import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 import { StringBuilder } from '@/utils';
-import { titleTpl } from './trivias';
 import { Context } from '../app';
 
 type Name = 'issues' | 'pull_request' | 'discussion';
