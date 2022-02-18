@@ -8,14 +8,19 @@ import {
   useRef,
 } from '.';
 import { ExtractPayload } from '@/github/types';
-import { Issue, PullRequest, Discussion, User } from '@octokit/webhooks-types';
+import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 import { Octokit } from '@octokit/core';
 import { titleTpl } from './utils';
 import { Context } from '../app';
 
 const formatByUserLogin = {
   'codecov-commenter': (text: string) => {
-    return limitLine(text, 2, 1);
+    return limitLine(text, 2, 1, (line) => {
+      if (line.startsWith('> ')) {
+        return line.slice(2);
+      }
+      return line;
+    });
   },
   CLAassistant: (text) => {
     const data = text.split('<br/>');
@@ -25,7 +30,10 @@ const formatByUserLogin = {
   [key: string]: (text: string) => string;
 };
 
-function renderCommentBody(comment: { body: string; user: User }, limit = -1) {
+export function renderCommentBody(
+  comment: { body: string; user: { login: string } },
+  limit = -1,
+) {
   let text = comment.body;
   const formatter = formatByUserLogin[comment.user.login];
   if (formatter) {

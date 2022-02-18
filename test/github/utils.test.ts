@@ -3,7 +3,7 @@ import {
   useRef,
   limitTextByPostion,
 } from '@/github/templates/utils';
-import exp from 'constants';
+
 describe('github utils', () => {
   it('can limit lines', () => {
     const text = `line1\nline2\nline3\n`;

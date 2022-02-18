@@ -99,9 +99,16 @@ export function limitTextByPostion(text: string, position: number) {
   return finalLines.join('\n').trim();
 }
 
-export function limitLine(text: string, count: number, start = 0) {
+export function limitLine(
+  text: string,
+  count: number,
+  start = 0,
+  lineProcess = (v: string) => v,
+) {
   const arrayofLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
-  const finalLines = arrayofLines.slice(start, count);
+  const finalLines = arrayofLines
+    .slice(start, start + count)
+    .map((v) => lineProcess(v));
   return finalLines.join('\n').trim();
 }
 
