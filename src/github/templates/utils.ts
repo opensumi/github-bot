@@ -70,7 +70,7 @@ export function useRef(text?: string | null, bodyLimit = -1) {
   }
 
   if (bodyLimit && bodyLimit > 0) {
-    text = text.slice(0, bodyLimit);
+    text = limitTextByPostion(text, bodyLimit);
   }
 
   const arrayofLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
@@ -81,6 +81,22 @@ export function useRef(text?: string | null, bodyLimit = -1) {
   }
 
   return newLines.join('\n');
+}
+
+export function limitTextByPostion(text: string, position: number) {
+  const arrayofLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
+
+  let count = 0;
+  let lineNo = 0;
+  for (; lineNo < arrayofLines.length; lineNo++) {
+    const line = arrayofLines[lineNo];
+    count += line.length;
+    if (count >= position) {
+      break;
+    }
+  }
+  const finalLines = arrayofLines.slice(0, lineNo + 1);
+  return finalLines.join('\n').trim();
 }
 
 export function limitLine(text: string, count: number, start = 0) {
