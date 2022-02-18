@@ -51,12 +51,20 @@ export function renderPrOrIssueLink(
 export function renderPrOrIssue(
   p: PullRequest | Issue | Discussion,
   renderBody = true,
+  bodyLimit = -1,
 ) {
   const builder = new StringBuilder(`> #### ${renderPrOrIssueLink(p)}`);
-  if (renderBody) {
-    builder.add(`>`);
-    builder.add(`${useRef(p.body)}`);
+
+  let body = p.body || '';
+  if (bodyLimit > 0) {
+    body = body.slice(0, bodyLimit);
   }
+
+  if (renderBody && body.length > 0) {
+    builder.add(`>`);
+    builder.add(`${useRef(body)}`);
+  }
+
   return builder.build();
 }
 

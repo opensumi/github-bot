@@ -1,5 +1,6 @@
 import { WebhookEventName, WebhookEventMap } from '@octokit/webhooks-types';
 import { EmitterWebhookEventName } from '@octokit/webhooks/dist-types/types';
+import { Context } from './app';
 
 export type ExtractPayload<TEmitterEvent extends EmitterWebhookEventName> =
   TEmitterEvent extends `${infer TWebhookEvent}.${infer _TAction}`
@@ -14,6 +15,7 @@ export type MarkdownContent = {
 export type TemplateMapping = {
   [TEmitterEvent in EmitterWebhookEventName]?: (
     payload: ExtractPayload<TEmitterEvent>,
+    ctx: Context,
   ) => Promise<MarkdownContent>;
 };
 

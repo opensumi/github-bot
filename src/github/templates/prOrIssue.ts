@@ -3,6 +3,7 @@ import { renderRepoLink, renderUserLink, renderPrOrIssue } from './utils';
 import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 import { StringBuilder } from '@/utils';
 import { titleTpl } from './trivias';
+import { Context } from '../app';
 
 type Name = 'issues' | 'pull_request' | 'discussion';
 const NameBlock = {
@@ -17,6 +18,7 @@ function render(
   name: Name,
   payload: ExtractPayload<Name>,
   data: PullRequest | Issue | Discussion,
+  ctx: Context,
 ) {
   const nameBlock = NameBlock[name];
   let action = payload.action.replaceAll('_', '');
@@ -51,7 +53,9 @@ function render(
   if (subline.length > 0) {
     builder.add(subline.join(', '), true);
   }
-  builder.add(renderPrOrIssue(data, shouldRenderBody));
+  builder.add(
+    renderPrOrIssue(data, shouldRenderBody, ctx.dingSecret.contentLimit),
+  );
 
   return {
     title,
@@ -59,14 +63,23 @@ function render(
   };
 }
 
-export async function handlePr(payload: ExtractPayload<'pull_request'>) {
-  return render('pull_request', payload, payload.pull_request);
+export async function handlePr(
+  payload: ExtractPayload<'pull_request'>,
+  ctx: Context,
+) {
+  return render('pull_request', payload, payload.pull_request, ctx);
 }
 
-export async function handleIssue(payload: ExtractPayload<'issues'>) {
-  return render('issues', payload, payload.issue);
+export async function handleIssue(
+  payload: ExtractPayload<'issues'>,
+  ctx: Context,
+) {
+  return render('issues', payload, payload.issue, ctx);
 }
 
-export async function handleDiscussion(payload: ExtractPayload<'discussion'>) {
-  return render('discussion', payload, payload.discussion);
+export async function handleDiscussion(
+  payload: ExtractPayload<'discussion'>,
+  ctx: Context,
+) {
+  return render('discussion', payload, payload.discussion, ctx);
 }

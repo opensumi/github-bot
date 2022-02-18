@@ -45,10 +45,11 @@ export const getSecretById = async (id: string) => {
       webhooks.contentLimit = 300;
     }
   }
+
   return webhooks;
 };
 
-export const getDefaultSecret = () => {
+export const getDefaultSecret = (): DingSecret => {
   return {
     githubSecret: ghWebhookSecret,
     dingWebhooks: [
@@ -57,7 +58,8 @@ export const getDefaultSecret = () => {
         secret: dingtalkSecret,
       },
     ],
-  } as DingSecret;
+    contentLimit: 300,
+  };
 };
 
 export default {
