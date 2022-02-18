@@ -15,10 +15,6 @@ export async function sendToDing(
     return;
   }
 
-  if (secret.contentLimit && secret.contentLimit > 0) {
-    text = text.slice(0, secret.contentLimit);
-  }
-
   text = securityInterception(text);
 
   const dingContent = {
