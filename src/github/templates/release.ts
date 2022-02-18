@@ -1,9 +1,13 @@
 import { StringBuilder } from '@/utils';
 import { renderRepoLink, renderUserLink, useRef } from '.';
+import { Context } from '../app';
 import { ExtractPayload } from '../types';
 import { titleTpl } from './trivias';
 
-export async function handleRelease(payload: ExtractPayload<'release'>) {
+export async function handleRelease(
+  payload: ExtractPayload<'release'>,
+  ctx: Context,
+) {
   const action = payload.action;
   const release = payload.release;
 
@@ -34,7 +38,7 @@ export async function handleRelease(payload: ExtractPayload<'release'>) {
   builder.add(
     `Tag: ${release.tag_name}, Commitish: ${release.target_commitish}\n`,
   );
-  builder.add(`>\n${useRef(release.body)}`);
+  builder.add(`>\n${useRef(release.body, ctx.dingSecret.contentLimit)}`);
 
   return { title, text: builder.build() };
 }

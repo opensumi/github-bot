@@ -6,6 +6,7 @@ import {
   Discussion,
 } from '@octokit/webhooks-types';
 import { StringBuilder } from '@/utils';
+import { Context } from '../app';
 
 export function renderRepoLink(repository: Repository) {
   return `[[${repository.name}]](${repository.html_url})`;
@@ -55,22 +56,21 @@ export function renderPrOrIssue(
 ) {
   const builder = new StringBuilder(`> #### ${renderPrOrIssueLink(p)}`);
 
-  let body = p.body || '';
-  if (bodyLimit > 0) {
-    body = body.slice(0, bodyLimit);
-  }
-
-  if (renderBody && body.length > 0) {
+  if (renderBody && p.body) {
     builder.add(`>`);
-    builder.add(`${useRef(body)}`);
+    builder.add(`${useRef(p.body, bodyLimit)}`);
   }
 
   return builder.build();
 }
 
-export function useRef(text?: string | null) {
+export function useRef(text?: string | null, bodyLimit = -1) {
   if (!text) {
     return '';
+  }
+
+  if (bodyLimit && bodyLimit > 0) {
+    text = text.slice(0, bodyLimit);
   }
 
   const arrayofLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');

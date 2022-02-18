@@ -6,11 +6,13 @@ import {
   StopHandleError,
   useRef,
 } from '.';
+import { Context } from '../app';
 import { ExtractPayload, MarkdownContent } from '../types';
 import { titleTpl } from './trivias';
 
 export async function handleReview(
   payload: ExtractPayload<'pull_request_review'>,
+  ctx: Context,
 ): Promise<MarkdownContent> {
   const review = payload.review;
   let action = payload.action as string;
@@ -47,7 +49,7 @@ export async function handleReview(
     }${renderPrOrIssueLink(pr, 'PR')}\n`,
   );
 
-  builder.add(useRef(review.body));
+  builder.add(useRef(review.body, ctx.dingSecret.contentLimit));
 
   return {
     title,

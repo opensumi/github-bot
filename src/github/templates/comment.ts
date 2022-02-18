@@ -9,6 +9,7 @@ import { ExtractPayload } from '@/github/types';
 import { Issue, PullRequest, Discussion, User } from '@octokit/webhooks-types';
 import { Octokit } from '@octokit/core';
 import { titleTpl } from './trivias';
+import { Context } from '../app';
 
 type Name = 'issues' | 'pull_request' | 'discussion';
 const NameBlock = {
@@ -31,19 +32,20 @@ const formatByUserLogin = {
   [key: string]: (text: string) => string;
 };
 
-function renderCommentBody(comment: { body: string; user: User }) {
+function renderCommentBody(comment: { body: string; user: User }, limit = -1) {
   let text = comment.body;
   const formatter = formatByUserLogin[comment.user.login];
   if (formatter) {
     text = formatter(text);
   }
-  return useRef(text);
+  return useRef(text, limit);
 }
 
 function renderComment(
   name: Name,
   payload: ExtractPayload<'issue_comment' | 'discussion_comment'>,
   data: Issue | PullRequest | Discussion,
+  ctx: Context,
 ) {
   const comment = payload.comment;
   const location = NameBlock[name];
@@ -64,7 +66,12 @@ function renderComment(
   )} ${action} [comment](${
     comment.html_url
   }) on ${location} ${renderPrOrIssueLink(data)}${
-    shouldRenderBody ? `\n>\n${renderCommentBody(payload.comment)}` : ''
+    shouldRenderBody
+      ? `\n>\n${renderCommentBody(
+          payload.comment,
+          ctx.dingSecret.contentLimit,
+        )}`
+      : ''
   }
 `;
   return {
@@ -75,6 +82,7 @@ function renderComment(
 
 export async function handleIssueComment(
   payload: ExtractPayload<'issue_comment'>,
+  ctx: Context,
 ) {
   const issue = payload.issue;
   const isUnderPullRequest = Boolean(issue.pull_request);
@@ -82,18 +90,19 @@ export async function handleIssueComment(
   if (isUnderPullRequest) {
     name = 'pull_request';
   }
-  return renderComment(name, payload, issue);
+  return renderComment(name, payload, issue, ctx);
 }
 
 export async function handleDiscussionComment(
   payload: ExtractPayload<'discussion_comment'>,
+  ctx: Context,
 ) {
-  return renderComment('discussion', payload, payload.discussion);
+  return renderComment('discussion', payload, payload.discussion, ctx);
 }
 
 export async function handleCommitComment(
   payload: ExtractPayload<'commit_comment'>,
-  ctx: {
+  ctx: Context & {
     octokit?: Octokit;
   },
 ) {
@@ -127,7 +136,7 @@ export async function handleCommitComment(
     payload.sender,
   )} commented on [${commitInfo}](${comment.html_url})
 >\n
-${renderCommentBody(payload.comment)}
+${renderCommentBody(payload.comment, ctx.dingSecret.contentLimit)}
 `;
   return {
     title,
