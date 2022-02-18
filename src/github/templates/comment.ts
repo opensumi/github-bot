@@ -1,5 +1,7 @@
 import {
   limitLine,
+  Name,
+  NameBlock,
   renderPrOrIssueLink,
   renderRepoLink,
   renderUserLink,
@@ -10,15 +12,6 @@ import { Issue, PullRequest, Discussion, User } from '@octokit/webhooks-types';
 import { Octokit } from '@octokit/core';
 import { titleTpl } from './utils';
 import { Context } from '../app';
-
-type Name = 'issues' | 'pull_request' | 'discussion';
-const NameBlock = {
-  issues: 'issue',
-  pull_request: 'pull request',
-  discussion: 'discussion',
-} as {
-  [key in Name]: string;
-};
 
 const formatByUserLogin = {
   'codecov-commenter': (text: string) => {

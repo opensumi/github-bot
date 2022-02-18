@@ -9,8 +9,8 @@ import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 import { StringBuilder } from '@/utils';
 import { Context } from '../app';
 
-type Name = 'issues' | 'pull_request' | 'discussion';
-const NameBlock = {
+export type Name = 'issues' | 'pull_request' | 'discussion';
+export const NameBlock = {
   issues: 'issue',
   pull_request: 'pull request',
   discussion: 'discussion',
