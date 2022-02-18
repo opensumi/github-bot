@@ -58,7 +58,7 @@ function render(
     builder.add(subline.join(', '), true);
   }
   builder.add(
-    renderPrOrIssue(data, shouldRenderBody, ctx.dingSecret.contentLimit),
+    renderPrOrIssue(data, shouldRenderBody, ctx.setting.contentLimit),
   );
 
   return {

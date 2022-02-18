@@ -1,16 +1,12 @@
 import { send } from '@/ding/utils';
-import { DingSecret } from '@/secrets';
+import { Setting } from '@/secrets';
 
 function securityInterception(text: string) {
   text = text.replaceAll('dingtalk://dingtalkclient/page/link?url=', '');
   return text;
 }
 
-export async function sendToDing(
-  title: string,
-  text: string,
-  secret: DingSecret,
-) {
+export async function sendToDing(title: string, text: string, secret: Setting) {
   if (secret.dingWebhooks.length === 0) {
     return;
   }

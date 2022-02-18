@@ -5,7 +5,7 @@ import {
 import { Webhooks } from '@octokit/webhooks';
 import { error, message } from '@/utils';
 import { StopHandleError, supportTemplates, templates } from './templates';
-import { getSecretById } from '@/secrets';
+import { getSettingById } from '@/secrets';
 import { sendToDing } from './utils';
 import type { MarkdownContent, THasAction } from './types';
 import { Octokit } from '@octokit/core';
@@ -93,7 +93,7 @@ export const setupWebhooksSendToDing = (
         const data = await handler(payload, handlerCtx);
         console.log('get data from handler: ', data);
 
-        await sendToDing(data.title, data.text, ctx.dingSecret);
+        await sendToDing(data.title, data.text, ctx.setting);
       } catch (err) {
         console.log('stop handler because: ', (err as Error).message);
         if (!(err instanceof StopHandleError)) {
@@ -164,7 +164,7 @@ export async function webhookHandler(
   if (!id) {
     return error(401, 'need a valid id');
   }
-  const dingSecret = await getSecretById(id);
+  const dingSecret = await getSettingById(id);
   if (!dingSecret) {
     return error(403, 'id not found');
   }
@@ -172,7 +172,7 @@ export async function webhookHandler(
   const webhooks = webhooksFactory(dingSecret.githubSecret);
 
   setupWebhooksSendToDing(webhooks as any, {
-    dingSecret,
+    setting: dingSecret,
     event,
     request: req,
   });

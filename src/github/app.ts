@@ -1,13 +1,13 @@
 import { App } from '@/lib/octo';
 import { Octokit } from '@octokit/rest';
-import secrets, { DingSecret, getDefaultSecret } from '@/secrets';
+import secrets, { Setting, getDefaultSetting } from '@/secrets';
 import { baseHandler, setupWebhooksSendToDing } from './handler';
 import { handleComment } from './commands';
 
 export type Context = {
   event: FetchEvent;
   request: Request;
-  dingSecret: DingSecret;
+  setting: Setting;
 };
 
 export const appFactory = (ctx: Context) => {
@@ -30,11 +30,11 @@ export const appFactory = (ctx: Context) => {
 export type IApp = ReturnType<typeof appFactory>;
 
 export async function getInitedApp(event: FetchEvent) {
-  const dingSecret = getDefaultSecret();
+  const dingSecret = getDefaultSetting();
   const app = appFactory({
     request: event.request,
     event,
-    dingSecret,
+    setting: dingSecret,
   });
   await app.init();
   return app;

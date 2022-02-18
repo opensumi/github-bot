@@ -67,10 +67,7 @@ function renderComment(
     comment.html_url
   }) on ${location} ${renderPrOrIssueLink(data)}${
     shouldRenderBody
-      ? `\n>\n${renderCommentBody(
-          payload.comment,
-          ctx.dingSecret.contentLimit,
-        )}`
+      ? `\n>\n${renderCommentBody(payload.comment, ctx.setting.contentLimit)}`
       : ''
   }
 `;
@@ -136,7 +133,7 @@ export async function handleCommitComment(
     payload.sender,
   )} commented on [${commitInfo}](${comment.html_url})
 >\n
-${renderCommentBody(payload.comment, ctx.dingSecret.contentLimit)}
+${renderCommentBody(payload.comment, ctx.setting.contentLimit)}
 `;
   return {
     title,

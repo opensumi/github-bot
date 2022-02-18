@@ -49,7 +49,7 @@ export async function handleReview(
     }${renderPrOrIssueLink(pr, 'PR')}\n`,
   );
 
-  builder.add(useRef(review.body, ctx.dingSecret.contentLimit));
+  builder.add(useRef(review.body, ctx.setting.contentLimit));
 
   return {
     title,
