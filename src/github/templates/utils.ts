@@ -83,6 +83,8 @@ export function useRef(text?: string | null, bodyLimit = -1) {
   return newLines.join('\n');
 }
 
+const LIMIT_MIN_LINE = 3;
+
 export function limitTextByPostion(text: string, position: number) {
   const arrayofLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
 
@@ -95,7 +97,11 @@ export function limitTextByPostion(text: string, position: number) {
       break;
     }
   }
-  const finalLines = arrayofLines.slice(0, lineNo + 1);
+
+  // 如果 limit 过后的行数小于 LIMIT_MIN_LINE，则使用 LIMIT_MIN_LINE
+  lineNo = lineNo < LIMIT_MIN_LINE ? LIMIT_MIN_LINE : lineNo;
+
+  const finalLines = arrayofLines.slice(0, lineNo);
   return finalLines.join('\n').trim();
 }
 
