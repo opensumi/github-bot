@@ -24,10 +24,10 @@ export async function handleRelease(
 
   let status = '';
   if (release.draft) {
-    status = 'draft';
+    status = 'Draft';
   }
   if (release.prerelease) {
-    status = 'pre release';
+    status = 'Pre Release';
   }
 
   if (status) {
