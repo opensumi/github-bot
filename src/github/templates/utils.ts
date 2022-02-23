@@ -146,5 +146,5 @@ type TitleTpl = (data: {
 }) => string;
 
 export const titleTpl: TitleTpl = (data) => {
-  return `[${data.repo.name}] ${_.capitalize(data.event)} ${data.action}`;
+  return `${_.capitalize(data.event)} ${data.action}`;
 };
