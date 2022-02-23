@@ -44,5 +44,17 @@ export const getTemplates = (ctx: Context) => {
       'pull_request_review_comment.created': handleReviewComment,
     };
   }
+
+  if (ctx.setting.event) {
+    const newTpl = {} as any;
+    for (const k of ctx.setting.event) {
+      const h = (templates as any)[k];
+      if (h) {
+        newTpl[k] = h;
+      }
+    }
+    templates = newTpl;
+  }
+
   return templates;
 };

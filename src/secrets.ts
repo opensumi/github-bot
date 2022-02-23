@@ -34,6 +34,7 @@ export interface Setting {
   dingWebhooks: DingWebhookItem[];
   contentLimit: number;
   isCommunity?: boolean;
+  event?: string[];
 }
 
 export const getSettingById = async (id: string) => {

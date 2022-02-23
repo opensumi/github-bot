@@ -85,6 +85,9 @@ export const setupWebhooksSendToDing = (
         payload: any,
         ctx: any,
       ) => Promise<MarkdownContent>;
+      if (!handler) {
+        throw new Error('no handler for ' + emitName);
+      }
 
       try {
         console.log('run handler:', handler?.name);
