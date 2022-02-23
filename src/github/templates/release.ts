@@ -17,9 +17,9 @@ export async function handleRelease(
   });
 
   const builder = new StringBuilder(
-    `#### ${renderRepoLink(payload.repository)} [release@${release.name}](${
-      release.html_url
-    }) ${action} by ${renderUserLink(payload.sender)}`,
+    `#### ${renderRepoLink(payload.repository)} ${renderUserLink(
+      payload.sender,
+    )}  ${action} [${release.name}](${release.html_url})`,
   );
 
   let status = '';
@@ -33,10 +33,12 @@ export async function handleRelease(
   if (status) {
     builder.add(`Status: ${status}\n`);
   }
+  let targetCommitish = release.target_commitish;
+  if (targetCommitish.length === 40) {
+    targetCommitish = targetCommitish.slice(0, 6);
+  }
 
-  builder.add(
-    `Tag: ${release.tag_name}, Commitish: ${release.target_commitish}\n`,
-  );
+  builder.add(`Tag: ${release.tag_name}(${targetCommitish})\n`);
   builder.add(`>\n${useRef(release.body, ctx.setting.contentLimit)}`);
 
   return { title, text: builder.build() };

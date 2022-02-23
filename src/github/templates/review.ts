@@ -1,11 +1,11 @@
 import { StringBuilder } from '@/utils';
 import {
-  renderPrOrIssueLink,
   renderRepoLink,
   renderUserLink,
   StopHandleError,
   useRef,
   titleTpl,
+  renderPrOrIssue,
 } from '.';
 import { Context } from '../app';
 import { ExtractPayload, MarkdownContent } from '../types';
@@ -44,9 +44,12 @@ export async function handleReview(
   builder.add(
     `#### ${renderRepoLink(payload.repository)} ${renderUserLink(
       payload.sender,
-    )} ${action} ${
-      showIsReview ? `[review](${review.html_url}) on ` : ''
-    }${renderPrOrIssueLink(pr, 'PR')}\n`,
+    )} ${action}${
+      showIsReview ? `([review](${review.html_url}))` : ''
+    } [pull request#${pr.number}](${pr.html_url})\n
+
+${renderPrOrIssue(pr, false)}
+`,
   );
 
   builder.add(useRef(review.body, ctx.setting.contentLimit));

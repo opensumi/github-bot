@@ -50,7 +50,18 @@ export function renderPrOrIssueLink(
 }
 
 export function renderPrOrIssue(
-  p: PullRequest | Issue | Discussion,
+  p: {
+    /**
+     * The title of the pull request.
+     */
+    title: string;
+    /**
+     * Number uniquely identifying the pull request within its repository.
+     */
+    number: number;
+    html_url: string;
+    body: string | null;
+  },
   renderBody = true,
   bodyLimit = -1,
 ) {
@@ -102,7 +113,11 @@ export function limitTextByPostion(text: string, position: number) {
   lineNo = lineNo < LIMIT_MIN_LINE ? LIMIT_MIN_LINE : lineNo;
 
   const finalLines = arrayofLines.slice(0, lineNo);
-  return finalLines.join('\n').trim();
+  let finalContent = finalLines.join('\n').trim();
+  if (lineNo < arrayofLines.length) {
+    finalContent = finalContent + '...';
+  }
+  return finalContent;
 }
 
 export function limitLine(
