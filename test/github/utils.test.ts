@@ -20,12 +20,19 @@ describe('github utils', () => {
 
   it('can limitTextByPostion', () => {
     const text = `11111
+22222`;
+    const d = limitTextByPostion(text, 100);
+    expect(d).toEqual(`11111\n22222`);
+  });
+
+  it('can limitTextByPostion', () => {
+    const text = `11111
 22222
 33333
 44444
 `;
     const d = limitTextByPostion(text, 9);
-    expect(d).toEqual(`11111\n22222\n33333`);
+    expect(d).toEqual(`11111\n22222\n33333...`);
   });
 
   it('can limitTextByPostion2', () => {
@@ -38,6 +45,6 @@ describe('github utils', () => {
 77777
 `;
     const d = limitTextByPostion(text, 15);
-    expect(d).toEqual(`11111\n22222\n33333`);
+    expect(d).toEqual(`11111\n22222\n33333...`);
   });
 });

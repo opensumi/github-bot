@@ -15,7 +15,7 @@ import { Context } from '../app';
 
 const formatByUserLogin = {
   'codecov-commenter': (text: string) => {
-    return limitLine(text, 2, 1, (line) => {
+    return limitLine(text, 3, 1, (line) => {
       if (line.startsWith('> ')) {
         return line.slice(2);
       }
