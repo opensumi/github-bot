@@ -39,7 +39,7 @@ export async function handleRelease(
   }
 
   builder.add(`Tag: ${release.tag_name}(${targetCommitish})\n`);
-  builder.add(`>\n${useRef(release.body, ctx.setting.contentLimit)}`);
+  builder.add(`>\n${useRef(release.body)}`);
 
   return { title, text: builder.build() };
 }
