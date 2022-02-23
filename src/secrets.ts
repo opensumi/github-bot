@@ -33,6 +33,7 @@ export interface Setting {
   githubSecret: string;
   dingWebhooks: DingWebhookItem[];
   contentLimit: number;
+  isCommunity?: boolean;
 }
 
 export const getSettingById = async (id: string) => {
@@ -43,6 +44,9 @@ export const getSettingById = async (id: string) => {
     }
     if (!webhooks.contentLimit) {
       webhooks.contentLimit = 300;
+    }
+    if (!webhooks.isCommunity) {
+      webhooks.isCommunity = true;
     }
   }
 

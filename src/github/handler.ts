@@ -4,7 +4,7 @@ import {
 } from '@octokit/webhooks/dist-types/types';
 import { Webhooks } from '@octokit/webhooks';
 import { error, message } from '@/utils';
-import { StopHandleError, supportTemplates, templates } from './templates';
+import { getTemplates, StopHandleError } from './templates';
 import { getSettingById } from '@/secrets';
 import { sendToDing } from './utils';
 import type { MarkdownContent, THasAction } from './types';
@@ -65,15 +65,14 @@ export const setupWebhooksSendToDing = (
   webhooks: Webhooks<{ octokit?: Octokit }>,
   ctx: Context,
 ) => {
+  const templates = getTemplates(ctx);
+  const supportTemplates = Object.keys(templates) as EmitterWebhookEventName[];
+
   webhooks.onAny(async ({ id, name, payload }) => {
     console.log('Receive Github Webhook, id: ', id, ', name: ', name);
     if ((payload as THasAction)?.action) {
       console.log('payload.action: ', (payload as THasAction).action);
     }
-    console.log(
-      'Currently Support: ',
-      supportTemplates.filter((v) => v.startsWith(name)),
-    );
   });
   for (const emitName of supportTemplates) {
     webhooks.on(emitName, async ({ id, payload, octokit }) => {

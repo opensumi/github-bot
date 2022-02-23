@@ -16,28 +16,33 @@ import {
   handleDiscussionComment,
 } from '.';
 
-import { EmitterWebhookEventName } from '@octokit/webhooks/dist-types/types';
 import { TemplateMapping } from '@/github/types';
+import { Context } from '../app';
 
-export const templates = {
-  'issues.opened': handleIssue,
-  'issues.closed': handleIssue,
-  'issues.reopened': handleIssue,
-  'pull_request.opened': handlePr,
-  'pull_request.reopened': handlePr,
-  'pull_request.closed': handlePr,
-  'pull_request.ready_for_review': handlePr,
-  'discussion.created': handleDiscussion,
-  'discussion_comment.created': handleDiscussionComment,
-  'issue_comment.created': handleIssueComment,
-  'commit_comment.created': handleCommitComment,
-  'release.released': handleRelease,
-  'release.prereleased': handleRelease,
-  'pull_request_review.submitted': handleReview,
-  'pull_request_review.dismissed': handleReview,
-  'pull_request_review_comment.created': handleReviewComment,
-} as TemplateMapping;
+export const getTemplates = (ctx: Context) => {
+  let templates = {
+    'issues.opened': handleIssue,
+    'pull_request.opened': handlePr,
+    'discussion.created': handleDiscussion,
+    'release.released': handleRelease,
+    'release.prereleased': handleRelease,
+  } as TemplateMapping;
 
-export const supportTemplates = Object.keys(
-  templates,
-) as EmitterWebhookEventName[];
+  if (!ctx.setting.isCommunity) {
+    templates = {
+      ...templates,
+      'issues.closed': handleIssue,
+      'issues.reopened': handleIssue,
+      'pull_request.reopened': handlePr,
+      'pull_request.closed': handlePr,
+      'discussion_comment.created': handleDiscussionComment,
+      'issue_comment.created': handleIssueComment,
+      'commit_comment.created': handleCommitComment,
+      'pull_request.ready_for_review': handlePr,
+      'pull_request_review.submitted': handleReview,
+      'pull_request_review.dismissed': handleReview,
+      'pull_request_review_comment.created': handleReviewComment,
+    };
+  }
+  return templates;
+};
