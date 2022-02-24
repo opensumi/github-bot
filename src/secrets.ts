@@ -33,8 +33,12 @@ export interface Setting {
   githubSecret: string;
   dingWebhooks: DingWebhookItem[];
   contentLimit: number;
+  // 开启这个选项会只推送社区需要的那几个 event
   isCommunity?: boolean;
+  // 需要的 event 列表，和 isCommunity 是叠加的
   event?: string[];
+  // 不展示 repo 名字，适合单仓库
+  notDisplayRepoName?: boolean;
 }
 
 export const getSettingById = async (id: string) => {
@@ -46,8 +50,11 @@ export const getSettingById = async (id: string) => {
     if (!webhooks.contentLimit) {
       webhooks.contentLimit = 300;
     }
-    if (!webhooks.isCommunity) {
+    if (webhooks.isCommunity === undefined) {
       webhooks.isCommunity = true;
+    }
+    if (webhooks.notDisplayRepoName === undefined) {
+      webhooks.notDisplayRepoName = true;
     }
   }
 

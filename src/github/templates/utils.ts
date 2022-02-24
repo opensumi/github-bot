@@ -1,12 +1,7 @@
-import {
-  Repository,
-  User,
-  Issue,
-  PullRequest,
-  Discussion,
-} from '@octokit/webhooks-types';
+import { Repository, User } from '@octokit/webhooks-types';
 import { StringBuilder } from '@/utils';
 import _ from 'lodash';
+import { Context } from '../app';
 
 export function renderRepoLink(repository: Repository) {
   return `[[${repository.name}]](${repository.html_url})`;
@@ -147,4 +142,30 @@ type TitleTpl = (data: {
 
 export const titleTpl: TitleTpl = (data) => {
   return `${_.capitalize(data.event)} ${data.action}`;
+};
+
+type TextTpl = (
+  data: {
+    repo: Repository;
+    title: string;
+    body: string;
+    notRenderBody?: boolean;
+  },
+  ctx: Context,
+) => string;
+
+export const textTpl: TextTpl = (data, ctx) => {
+  const { repo, title, body } = data;
+  let repoInfo = renderRepoLink(repo) + ' ';
+  if (ctx.setting.notDisplayRepoName) {
+    repoInfo = '';
+  }
+
+  let text = `#### ${repoInfo}${title}  `;
+  if (!data.notRenderBody) {
+    text += `
+${body}`;
+  }
+
+  return text;
 };
