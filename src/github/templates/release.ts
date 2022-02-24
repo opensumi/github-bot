@@ -1,5 +1,5 @@
 import { StringBuilder } from '@/utils';
-import { renderRepoLink, renderUserLink, useRef, titleTpl } from '.';
+import { renderUserLink, useRef, textTpl } from '.';
 import { Context } from '../app';
 import { ExtractPayload } from '../types';
 
@@ -12,11 +12,7 @@ export async function handleRelease(
 
   const title = `${release.name} ${action}`;
 
-  const builder = new StringBuilder(
-    `#### ${renderRepoLink(payload.repository)} ${renderUserLink(
-      payload.sender,
-    )} ${action} [${release.name}](${release.html_url})`,
-  );
+  const builder = new StringBuilder();
 
   let status = '';
   if (release.draft) {
@@ -33,5 +29,16 @@ export async function handleRelease(
   builder.add(`Tag: ${release.tag_name}\n`);
   builder.add(`>\n${useRef(release.body)}`);
 
-  return { title, text: builder.build() };
+  const text = textTpl(
+    {
+      repo: payload.repository,
+      title: `${renderUserLink(payload.sender)} ${action} [${release.name}](${
+        release.html_url
+      })`,
+      body: builder.build(),
+    },
+    ctx,
+  );
+
+  return { title, text };
 }

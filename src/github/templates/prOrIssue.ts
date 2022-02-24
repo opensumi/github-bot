@@ -8,6 +8,7 @@ import {
 import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 import { StringBuilder } from '@/utils';
 import { Context } from '../app';
+import { textTpl } from '.';
 
 export type Name = 'issues' | 'pull_request' | 'discussion';
 export const NameBlock = {
@@ -48,11 +49,7 @@ function render(
     action,
   });
 
-  const builder = new StringBuilder(
-    `#### ${renderRepoLink(payload.repository)} ${renderUserLink(
-      payload.sender,
-    )} ${action} [${nameBlock}#${data.number}](${data.html_url})`,
-  );
+  const builder = new StringBuilder();
 
   if (subline.length > 0) {
     builder.add(subline.join(', '), true);
@@ -61,9 +58,20 @@ function render(
     renderPrOrIssue(data, shouldRenderBody, ctx.setting.contentLimit),
   );
 
+  const text = textTpl(
+    {
+      title: `${renderUserLink(payload.sender)} ${action} [${nameBlock}#${
+        data.number
+      }](${data.html_url})`,
+      body: builder.build(),
+      repo: payload.repository,
+    },
+    ctx,
+  );
+
   return {
     title,
-    text: builder.build(),
+    text,
   };
 }
 

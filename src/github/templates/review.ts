@@ -1,11 +1,11 @@
 import { StringBuilder } from '@/utils';
 import {
-  renderRepoLink,
   renderUserLink,
   StopHandleError,
   useRef,
   titleTpl,
   renderPrOrIssue,
+  textTpl,
 } from '.';
 import { Context } from '../app';
 import { ExtractPayload, MarkdownContent } from '../types';
@@ -40,22 +40,22 @@ export async function handleReview(
   });
 
   const builder = new StringBuilder();
-
-  builder.add(
-    `#### ${renderRepoLink(payload.repository)} ${renderUserLink(
-      payload.sender,
-    )} ${action}${
-      showIsReview ? `([review](${review.html_url}))` : ''
-    } [pull request#${pr.number}](${pr.html_url})\n
-
-${renderPrOrIssue(pr, false)}
-`,
-  );
-
+  builder.add(renderPrOrIssue(pr, false));
   builder.add(useRef(review.body, ctx.setting.contentLimit));
+
+  const text = textTpl(
+    {
+      title: `${renderUserLink(payload.sender)} ${action}${
+        showIsReview ? `([review](${review.html_url}))` : ''
+      } [pull request#${pr.number}](${pr.html_url})`,
+      body: builder.build(),
+      repo: payload.repository,
+    },
+    ctx,
+  );
 
   return {
     title,
-    text: builder.build(),
+    text,
   };
 }
