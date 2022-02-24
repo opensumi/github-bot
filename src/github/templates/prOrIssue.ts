@@ -60,9 +60,9 @@ function render(
 
   const text = textTpl(
     {
-      title: `${renderUserLink(payload.sender)} ${action} [${nameBlock}#${
-        data.number
-      }](${data.html_url})`,
+      title: `${renderUserLink(payload.sender)} ${action} [${nameBlock}](${
+        data.html_url
+      })`,
       body: builder.build(),
       repo: payload.repository,
     },
