@@ -67,7 +67,7 @@ function renderComment(
       repo: payload.repository,
       title: `${renderUserLink(payload.sender)} ${action} [comment](${
         comment.html_url
-      }) on ${location} ${renderPrOrIssueLink(data)}`,
+      }) on ${location}${renderPrOrIssueLink(data)}`,
       body: renderCommentBody(payload.comment, ctx.setting.contentLimit),
       notRenderBody,
     },
