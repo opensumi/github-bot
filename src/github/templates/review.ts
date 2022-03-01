@@ -24,6 +24,10 @@ export async function handleReview(
     );
   }
 
+  if (review.state) {
+    action = review.state as string;
+  }
+
   if (action === 'changes_requested') {
     action = 'requested changes';
   }
