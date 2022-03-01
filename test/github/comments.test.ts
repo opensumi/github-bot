@@ -4,6 +4,10 @@ describe('comment', () => {
   it.only('renderCommentBody', () => {
     const d = renderCommentBody(
       {
+        title: '123',
+        html_url: '12312',
+      },
+      {
         body: `# [Codecov](https://codecov.io/gh/opensumi/core/pull/466?src=pr&el=h1&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=opensumi) Report
 > Merging [#466](https://codecov.io/gh/opensumi/core/pull/466?src=pr&el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=opensumi) (5aeef71) into [main](https://codecov.io/gh/opensumi/core/commit/f3c09bbed6a9db6737bb4f93adcce4aae3e3ff85?el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=opensumi) (f3c09bb) will **increase** coverage by \`0.00%\`.
 > The diff coverage is \`0.00%\`.
@@ -14,6 +18,8 @@ describe('comment', () => {
       },
       300,
     );
-    expect(d.split('\n').length).toEqual(2);
+    console.log(`🚀 ~ file: comments.test.ts ~ line 21 ~ it.only ~ d`, d);
+    expect(d.split('\n').length).toEqual(6);
+    expect(d.trim().split('\n').length).toEqual(4);
   });
 });
