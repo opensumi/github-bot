@@ -40,9 +40,9 @@ export async function handleReview(
 
   const text = textTpl(
     {
-      title: `${renderUserLink(payload.sender)} ${action} on [pull request#${
-        pr.number
-      }](${pr.html_url})`,
+      title: `${renderUserLink(payload.sender)} ${action} on [pull request](${
+        pr.html_url
+      })`,
       body: builder.build(),
       repo: payload.repository,
     },

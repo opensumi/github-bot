@@ -20,11 +20,16 @@ export function renderPrOrIssueText(
     /**
      * Number uniquely identifying the pull request within its repository.
      */
-    number: number;
+    number?: number;
   },
   prefix?: string,
 ) {
-  return `${prefix ?? ''}#${p.number} ${p.title}`;
+  let text = `${prefix ?? ''}`;
+  if (p.number) {
+    text += `#${p.number} `;
+  }
+  text += p.title;
+  return text;
 }
 
 export function renderPrOrIssueLink(
@@ -36,7 +41,7 @@ export function renderPrOrIssueLink(
     /**
      * Number uniquely identifying the pull request within its repository.
      */
-    number: number;
+    number?: number;
     html_url: string;
   },
   prefix?: string,

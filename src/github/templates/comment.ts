@@ -7,10 +7,11 @@ import {
   useRef,
 } from '.';
 import { ExtractPayload } from '@/github/types';
-import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
+import { Repository, User } from '@octokit/webhooks-types';
 import { Octokit } from '@octokit/core';
 import { textTpl, titleTpl } from './utils';
 import { Context } from '../app';
+import { StringBuilder } from '@/utils';
 
 const formatByUserLogin = {
   'codecov-commenter': (text: string) => {
@@ -30,6 +31,11 @@ const formatByUserLogin = {
 };
 
 export function renderCommentBody(
+  data: {
+    title: string;
+    html_url: string;
+    number?: number;
+  },
   comment: { body: string; user: { login: string } },
   limit = -1,
 ) {
@@ -38,13 +44,29 @@ export function renderCommentBody(
   if (formatter) {
     text = formatter(text);
   }
-  return useRef(text, limit);
+  const builder = new StringBuilder(`> #### ${renderPrOrIssueLink(data)}`);
+  builder.add(`>`);
+  builder.add(useRef(text, limit));
+  return builder.build();
 }
 
 function renderComment(
   name: Name,
-  payload: ExtractPayload<'issue_comment' | 'discussion_comment'>,
-  data: Issue | PullRequest | Discussion,
+  payload: {
+    comment: {
+      html_url: string;
+      body: string;
+      user: { login: string };
+    };
+    action: string;
+    repository: Repository;
+    sender: User;
+  },
+  data: {
+    title: string;
+    number: number;
+    html_url: string;
+  },
   ctx: Context,
 ) {
   const comment = payload.comment;
@@ -67,8 +89,8 @@ function renderComment(
       repo: payload.repository,
       title: `${renderUserLink(payload.sender)} ${action} [comment](${
         comment.html_url
-      }) on ${location}${renderPrOrIssueLink(data)}`,
-      body: renderCommentBody(payload.comment, ctx.setting.contentLimit),
+      }) on [${location}](${data.html_url})`,
+      body: renderCommentBody(data, payload.comment, ctx.setting.contentLimit),
       notRenderBody,
     },
     ctx,
@@ -135,10 +157,17 @@ export async function handleCommitComment(
   const text = textTpl(
     {
       repo,
-      title: `${renderUserLink(payload.sender)} commented on [${commitInfo}](${
+      title: `${renderUserLink(payload.sender)} commented on [commit](${
         comment.html_url
       })`,
-      body: renderCommentBody(payload.comment, ctx.setting.contentLimit),
+      body: renderCommentBody(
+        {
+          html_url: comment.html_url,
+          title: commitInfo,
+        },
+        payload.comment,
+        ctx.setting.contentLimit,
+      ),
     },
     ctx,
   );
@@ -156,19 +185,22 @@ export async function handleReviewComment(
   const repo = payload.repository;
   const comment = payload.comment;
   const pr = payload.pull_request;
+  const action = 'created';
+  const location = 'pull request';
+
   const title = titleTpl({
     repo,
     event: 'review comment',
-    action: 'created',
+    action,
   });
 
   const text = textTpl(
     {
       repo,
-      title: `${renderUserLink(payload.sender)} created [review comment](${
+      title: `${renderUserLink(payload.sender)} ${action} [review comment](${
         comment.html_url
-      }) on ${renderPrOrIssueLink(pr)}`,
-      body: renderCommentBody(payload.comment, ctx.setting.contentLimit),
+      }) on [${location}](${pr.html_url})`,
+      body: renderCommentBody(pr, payload.comment, ctx.setting.contentLimit),
     },
     ctx,
   );
