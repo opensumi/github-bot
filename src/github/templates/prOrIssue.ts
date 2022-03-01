@@ -21,7 +21,7 @@ function render(
   ctx: Context,
 ) {
   const nameBlock = NameBlock[name];
-  let action = payload.action.replaceAll('_', '');
+  let action = payload.action as string;
 
   let shouldRenderBody = true;
   if (['closed', 'edited'].includes(action)) {
