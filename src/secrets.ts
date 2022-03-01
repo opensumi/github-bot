@@ -27,6 +27,8 @@ try {
 export interface DingWebhookItem {
   url: string;
   secret: string;
+  // 该 webhook 仅接收哪些事件的推送
+  event?: string[];
 }
 
 export interface Setting {
@@ -35,7 +37,7 @@ export interface Setting {
   contentLimit: number;
   // 开启这个选项会只推送社区需要的那几个 event
   isCommunity?: boolean;
-  // 需要的 event 列表，和 isCommunity 是叠加的
+  // 监听哪些事件
   event?: string[];
   // 不展示 repo 名字，适合单仓库
   notDisplayRepoName?: boolean;

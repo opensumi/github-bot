@@ -95,7 +95,7 @@ export const setupWebhooksSendToDing = (
         const data = await handler(payload, handlerCtx);
         console.log('get data from handler: ', data);
 
-        await sendToDing(data.title, data.text, ctx.setting);
+        await sendToDing(data, emitName, ctx.setting);
       } catch (err) {
         console.log('stop handler because: ', (err as Error).message);
         if (!(err instanceof StopHandleError)) {
