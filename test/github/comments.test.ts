@@ -22,4 +22,21 @@ describe('comment', () => {
     expect(d.split('\n').length).toEqual(6);
     expect(d.trim().split('\n').length).toEqual(4);
   });
+  it.only('render comment with number', () => {
+    const d = renderCommentBody(
+      {
+        title: '123',
+        html_url: '12312',
+        number: 1,
+      },
+      {
+        body: `123123`,
+        user: { login: 'hello' },
+      },
+      300,
+    );
+    console.log(`🚀 ~ file: comments.test.ts ~ line 21 ~ it.only ~ d`, d);
+    expect(d.trim().split('\n').length).toEqual(3);
+    expect(d.trim().split('\n')[0]).toEqual('> #### [#1 123](12312)');
+  });
 });
