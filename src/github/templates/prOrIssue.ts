@@ -30,11 +30,17 @@ function render(
 
   const subline = [] as string[];
 
-  if (name === 'pull_request' && action === 'closed') {
-    const pr = (payload as ExtractPayload<'pull_request.closed'>).pull_request;
-    if (pr.merged) {
-      // If the action is closed and the merged key is true, the pull request was merged.
-      action = 'merged';
+  if (name === 'pull_request') {
+    if (action === 'closed') {
+      const pr = (payload as ExtractPayload<'pull_request.closed'>)
+        .pull_request;
+      if (pr.merged) {
+        // If the action is closed and the merged key is true, the pull request was merged.
+        action = 'merged';
+      }
+    }
+    if (action === 'ready_for_review') {
+      action = 'ready for review';
     }
   }
 

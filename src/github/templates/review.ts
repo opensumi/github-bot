@@ -15,13 +15,17 @@ export async function handleReview(
   ctx: Context,
 ): Promise<MarkdownContent> {
   const review = payload.review;
-  const action = payload.action as string;
+  let action = payload.action as string;
   const pr = payload.pull_request;
 
   if (action === 'submitted' && review.state === 'commented') {
     throw new StopHandleError(
       'review comment is handled by handleReviewComment',
     );
+  }
+
+  if (action === 'changes_requested') {
+    action = 'requested changes';
   }
 
   const title = titleTpl({
@@ -36,7 +40,7 @@ export async function handleReview(
 
   const text = textTpl(
     {
-      title: `${renderUserLink(payload.sender)} ${action} [pull request#${
+      title: `${renderUserLink(payload.sender)} ${action} on [pull request#${
         pr.number
       }](${pr.html_url})`,
       body: builder.build(),
