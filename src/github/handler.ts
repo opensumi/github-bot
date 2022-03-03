@@ -74,19 +74,19 @@ export const setupWebhooksSendToDing = (
       console.log('payload.action: ', (payload as THasAction).action);
     }
   });
-  for (const emitName of supportTemplates) {
-    webhooks.on(emitName, async ({ id, payload, octokit }) => {
-      console.log(emitName, 'handled id:', id);
+  for (const eventName of supportTemplates) {
+    webhooks.on(eventName, async ({ id, payload, octokit }) => {
+      console.log(eventName, 'handled id:', id);
       const handlerCtx = {
         ...ctx,
         octokit,
       };
-      const handler = templates[emitName] as (
+      const handler = templates[eventName] as (
         payload: any,
         ctx: any,
       ) => Promise<MarkdownContent>;
       if (!handler) {
-        throw new Error('no handler for ' + emitName);
+        throw new Error('no handler for ' + eventName);
       }
 
       try {
@@ -95,7 +95,7 @@ export const setupWebhooksSendToDing = (
         const data = await handler(payload, handlerCtx);
         console.log('get data from handler: ', data);
 
-        await sendToDing(data, emitName, ctx.setting);
+        await sendToDing(data, eventName, ctx.setting);
       } catch (err) {
         console.log('stop handler because: ', (err as Error).message);
         if (!(err instanceof StopHandleError)) {

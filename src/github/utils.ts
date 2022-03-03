@@ -26,9 +26,11 @@ export async function sendToDing(
       text,
     },
   };
+
   const toPromise = [] as Promise<void>[];
 
   for (const webhook of setting.dingWebhooks) {
+    console.log(`webhook`, webhook);
     if (webhook.event && webhook.event.length > 0) {
       // 如果 webhook 设置了只接受的 event，查询一下
       if (!webhook.event.includes(eventName)) {

@@ -3,6 +3,8 @@ import {
   useRef,
   limitTextByPostion,
 } from '@/github/templates/utils';
+import { sendToDing } from '@/github/utils';
+import * as DingUtils from '@/ding/utils';
 
 describe('github utils', () => {
   it('can limit lines', () => {
@@ -46,5 +48,54 @@ describe('github utils', () => {
 `;
     const d = limitTextByPostion(text, 15);
     expect(d).toEqual(`11111\n22222\n33333...`);
+  });
+
+  it('send to ding', async () => {
+    const md = {
+      title: '123',
+      text: '123123',
+    };
+
+    const urls = [] as string[];
+    jest
+      .spyOn(DingUtils, 'send')
+      .mockImplementation(async (content, url, secret): Promise<any> => {
+        urls.push(url);
+      });
+
+    await sendToDing(md, 'release.released', {
+      githubSecret: '123',
+      contentLimit: 300,
+      dingWebhooks: [
+        {
+          secret: '1',
+          url: '1',
+        },
+        {
+          secret: '2',
+          url: '2',
+          event: ['release.released'],
+        },
+      ],
+    });
+    console.log(urls);
+    expect(urls.length).toEqual(2);
+
+    await sendToDing(md, 'test', {
+      githubSecret: '123',
+      contentLimit: 300,
+      dingWebhooks: [
+        {
+          secret: '1',
+          url: '1',
+        },
+        {
+          secret: '2',
+          url: '2',
+          event: ['release.released'],
+        },
+      ],
+    });
+    expect(urls.length).toEqual(3);
   });
 });
