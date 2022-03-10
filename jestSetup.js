@@ -1,3 +1,3 @@
-import replaceAllInserter from 'string.prototype.replaceall';
+const replaceAllInserter = require('string.prototype.replaceall');
 
 replaceAllInserter.shim();
