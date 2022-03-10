@@ -6,5 +6,6 @@
   "collectCoverageFrom": ["src/**/*.{ts,js}"],
   "moduleNameMapper": {
     "@/(.*)$": "<rootDir>/src/$1"
-  }
+  },
+  "setupFilesAfterEnv": ["<rootDir>/jestSetup.js"]
 }
