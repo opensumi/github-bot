@@ -78,11 +78,14 @@ function renderComment(
     notRenderBody = true;
   }
 
-  const title = titleTpl({
-    repo: payload.repository,
-    event: `${location} comment`,
-    action,
-  });
+  const title = titleTpl(
+    {
+      repo: payload.repository,
+      event: `${location} comment`,
+      action,
+    },
+    ctx,
+  );
 
   const text = textTpl(
     {
@@ -148,11 +151,14 @@ export async function handleCommitComment(
       commitInfo += ` ${commit.message}`;
     }
   }
-  const title = titleTpl({
-    repo: payload.repository,
-    event: 'commit comment',
-    action: 'created',
-  });
+  const title = titleTpl(
+    {
+      repo: payload.repository,
+      event: 'commit comment',
+      action: 'created',
+    },
+    ctx,
+  );
 
   const text = textTpl(
     {
@@ -188,11 +194,14 @@ export async function handleReviewComment(
   const action = 'created';
   const location = 'pull request';
 
-  const title = titleTpl({
-    repo,
-    event: 'review comment',
-    action,
-  });
+  const title = titleTpl(
+    {
+      repo,
+      event: 'review comment',
+      action,
+    },
+    ctx,
+  );
 
   const text = textTpl(
     {

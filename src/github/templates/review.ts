@@ -32,11 +32,14 @@ export async function handleReview(
     action = 'requested changes';
   }
 
-  const title = titleTpl({
-    repo: payload.repository,
-    event: 'review',
-    action,
-  });
+  const title = titleTpl(
+    {
+      repo: payload.repository,
+      event: 'review',
+      action,
+    },
+    ctx,
+  );
 
   const builder = new StringBuilder();
   builder.add(renderPrOrIssue(pr, false));

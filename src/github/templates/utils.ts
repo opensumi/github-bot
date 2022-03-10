@@ -139,14 +139,24 @@ export class StopHandleError extends Error {
   }
 }
 
-type TitleTpl = (data: {
-  repo: Repository;
-  event: string;
-  action: string;
-}) => string;
+type TitleTpl = (
+  data: {
+    repo: Repository;
+    event: string;
+    action: string;
+  },
+  ctx: Context,
+) => string;
 
-export const titleTpl: TitleTpl = (data) => {
-  return `${_.capitalize(data.event)} ${data.action}`;
+export const titleTpl: TitleTpl = (data, ctx) => {
+  const info = `${_.capitalize(data.event)} ${data.action}`;
+  let text;
+  if (ctx.setting.notDisplayRepoName) {
+    text = info;
+  } else {
+    text = `[${data.repo.name}] ${info}`;
+  }
+  return text;
 };
 
 type TextTpl = (

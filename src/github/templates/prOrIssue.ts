@@ -44,11 +44,14 @@ function render(
     }
   }
 
-  const title = titleTpl({
-    repo: payload.repository,
-    event: `${nameBlock}#${data.number}`,
-    action,
-  });
+  const title = titleTpl(
+    {
+      repo: payload.repository,
+      event: `${nameBlock}#${data.number}`,
+      action,
+    },
+    ctx,
+  );
 
   const builder = new StringBuilder();
 
