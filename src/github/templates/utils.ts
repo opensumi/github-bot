@@ -146,7 +146,7 @@ type TitleTpl = (
     action: string;
   },
   ctx: Context,
-  captialize: boolean,
+  captialize?: boolean,
 ) => string;
 
 export const titleTpl: TitleTpl = (data, ctx, captialize = true) => {
