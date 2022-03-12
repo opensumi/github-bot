@@ -2,6 +2,7 @@ import { StringBuilder } from '@/utils';
 import { renderUserLink, useRef, textTpl } from '.';
 import { Context } from '../app';
 import { ExtractPayload } from '../types';
+import { titleTpl } from './utils';
 
 export async function handleRelease(
   payload: ExtractPayload<'release'>,
@@ -9,8 +10,16 @@ export async function handleRelease(
 ) {
   const action = payload.action;
   const release = payload.release;
-
-  const title = `${release.name} ${action}`;
+  const repo = payload.repository;
+  const title = titleTpl(
+    {
+      repo,
+      event: release.name,
+      action,
+    },
+    ctx,
+    false,
+  );
 
   const builder = new StringBuilder();
 

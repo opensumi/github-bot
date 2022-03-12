@@ -146,10 +146,15 @@ type TitleTpl = (
     action: string;
   },
   ctx: Context,
+  captialize: boolean,
 ) => string;
 
-export const titleTpl: TitleTpl = (data, ctx) => {
-  const info = `${_.capitalize(data.event)} ${data.action}`;
+export const titleTpl: TitleTpl = (data, ctx, captialize = true) => {
+  let event = data.event;
+  if (captialize) {
+    event = _.capitalize(event);
+  }
+  const info = `${event} ${data.action}`;
   let text;
   if (ctx.setting.notDisplayRepoName) {
     text = info;
