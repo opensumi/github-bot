@@ -1,8 +1,8 @@
 # Develop
 
-First of all, you need to learn this concepts of [Cloudflare Workers](https://workers.dev).
+First of all, you need to learn the concepts of [Cloudflare Workers](https://workers.dev).
 
-It is recommended to use Github Codespaces for development, because the listened ports on Codespaces can be accessed directly from the public network, it's great for debugging.
+It is recommended to use Github Codespaces to develop, because we can access the ports on Codespaces from the public network, which make debug easier.
 
 and just run:
 
@@ -13,4 +13,4 @@ yarn wrangler login
 yarn dev
 ```
 
-Then you should see the [deploy.md](./deploy.md).
+Then you should see the [how-to-use.md](./how-to-use.md).
