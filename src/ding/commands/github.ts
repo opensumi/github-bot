@@ -2,27 +2,40 @@ import { startsWith } from '@/command';
 import { cc } from './base';
 import { image, markdown } from '../message';
 
+// cmds example:
+// 1. star -> opensumi/core
+// 2. star ide-startup -> opensumi/ide-startup
+// 3. star microsoft/core -> microsoft/core
+// 4. star microsoft core -> microsoft/core
+function getRepoInfoFromCommand(cmds: string[]) {
+  let owner = 'opensumi';
+  let repo = 'core';
+  if (cmds.length === 2) {
+    const tmp = cmds[1];
+    if (tmp.includes('/')) {
+      owner = tmp.split('/')[0];
+      repo = tmp.split('/')[1];
+    } else {
+      repo = tmp;
+    }
+  } else if (cmds.length === 3) {
+    owner = cmds[1];
+    repo = cmds[2];
+  }
+
+  return {
+    owner,
+    repo,
+  };
+}
+
 cc.on(
   'star',
   async (bot, ctx) => {
     const { app } = ctx;
 
     const posArg = ctx.parsed['_'];
-    let owner = 'opensumi';
-    let repo = 'core';
-    if (posArg.length === 2) {
-      const tmp = posArg[1];
-      if (tmp.includes('/')) {
-        owner = tmp.split('/')[0];
-        repo = tmp.split('/')[1];
-      } else {
-        repo = tmp;
-      }
-    } else if (posArg.length === 3) {
-      owner = posArg[1];
-      repo = posArg[2];
-    }
-
+    const { owner, repo } = getRepoInfoFromCommand(posArg);
     const payload = await app.api.getRepoStarRecords(owner, repo);
     const content = markdown(
       'Stars',
@@ -99,3 +112,13 @@ cc.on(
 const ISSUE_REGEX = /^#(?<number>\d+)$/;
 const REPO_REGEX =
   /^(?<owner>[a-zA-Z0-9][a-zA-Z0-9\-]*)\/(?<repo>[a-zA-Z0-9_\-.]+)$/;
+
+cc.onRegex(ISSUE_REGEX, async (bot, ctx) => {
+  const { app } = ctx;
+  await bot.replyText(`请你自己打开 GitHub。`);
+});
+
+cc.onRegex(REPO_REGEX, async (bot, ctx) => {
+  const { app } = ctx;
+  await bot.replyText(`请你自己打开 GitHub。`);
+});
