@@ -117,6 +117,8 @@ export class APIWrapper {
   }
 
   async getRepoStarRecords(owner: string, repo: string) {
+    console.log('getRepoStarRecords');
+
     const patchRes = await this.getRepoStargazers(owner, repo);
 
     const headerLink = patchRes.headers['link'] || '';
@@ -217,10 +219,9 @@ export class APIWrapper {
     owner: string,
     repo: string,
     from: number,
-    to?: number,
+    to: number,
   ) {
-    to = to || Date.now();
-
+    console.log('getRepoStarIncrement');
     const patchRes = await this.getRepoStargazers(owner, repo);
 
     const headerLink = patchRes.headers['link'] || '';
@@ -275,10 +276,9 @@ export class APIWrapper {
     owner: string,
     repo: string,
     from: number,
-    to?: number,
+    to: number,
   ) {
-    // 默认获取两周数据
-    to = to || Date.now();
+    console.log('getRepoIssueStatus');
 
     const patchRes = await this.getRepoIssues(owner, repo);
 
@@ -333,10 +333,9 @@ export class APIWrapper {
     owner: string,
     repo: string,
     from: number,
-    to?: number,
+    to: number,
   ) {
-    // 默认获取两周数据
-    to = to || Date.now();
+    console.log('getRepoPullStatus');
 
     const patchRes = await this.getRepoPulls(owner, repo);
 
@@ -391,6 +390,8 @@ export class APIWrapper {
   async getRepoHistory(owner: string, repo: string) {
     const from = Date.now() - HISTORY_RANGE;
     const to = Date.now();
+
+    console.log('getRepoHistory');
     const issues = await this.getRepoIssueStatus(owner, repo, from, to);
     const pulls = await this.getRepoPullStatus(owner, repo, from, to);
     const star = await this.getRepoStarIncrement(owner, repo, from, to);
