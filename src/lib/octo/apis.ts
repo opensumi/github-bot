@@ -335,7 +335,6 @@ export class APIWrapper {
     from: number,
     to?: number,
   ) {
-    console.log(`🚀 ~ file: apis.ts ~ line 330 ~ APIWrapper ~ from`, from);
     // 默认获取两周数据
     to = to || Date.now();
 
@@ -391,11 +390,14 @@ export class APIWrapper {
 
   async getRepoHistory(owner: string, repo: string) {
     const from = Date.now() - HISTORY_RANGE;
-    const issues = await this.getRepoIssueStatus(owner, repo, from);
-    const pulls = await this.getRepoPullStatus(owner, repo, from);
-    const star = await this.getRepoStarIncrement(owner, repo, from);
+    const to = Date.now();
+    const issues = await this.getRepoIssueStatus(owner, repo, from, to);
+    const pulls = await this.getRepoPullStatus(owner, repo, from, to);
+    const star = await this.getRepoStarIncrement(owner, repo, from, to);
     const { count: star_count } = await this.getRepoStarRecords(owner, repo);
     return {
+      from: new Date(from).toISOString(),
+      to: new Date(to).toISOString(),
       star_count,
       ...issues,
       ...pulls,
