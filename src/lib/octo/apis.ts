@@ -81,6 +81,7 @@ export class APIWrapper {
       repo,
       page: page,
       per_page: perPage,
+      state: 'all',
       headers: {
         Accept: 'application/vnd.github.v3.full+json',
       },
@@ -99,6 +100,7 @@ export class APIWrapper {
       repo,
       page: page,
       per_page: perPage,
+      state: 'all',
       headers: {
         Accept: 'application/vnd.github.v3.full+json',
       },
@@ -254,6 +256,7 @@ export class APIWrapper {
     for (startIndex = 1; startIndex++; startIndex < latestStars?.data?.length) {
       if (
         latestStars.data[startIndex] &&
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         new Date((latestStars.data[startIndex] as any).starred_at).getTime() <=
           from
       ) {
@@ -394,13 +397,13 @@ export class APIWrapper {
 
   async getRepoHistory(owner: string, repo: string) {
     const from = Date.now() - HISTORY_RANGE;
-    // const issues = await this.getRepoIssueStatus(owner, repo, from);
+    const issues = await this.getRepoIssueStatus(owner, repo, from);
     const pulls = await this.getRepoPullStatus(owner, repo, from);
     const star = await this.getRepoStarIncrement(owner, repo, from);
     const { count: star_count } = await this.getRepoStarRecords(owner, repo);
     return {
       star_count,
-      // ...issues,
+      ...issues,
       ...pulls,
       ...star,
     };
