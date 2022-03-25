@@ -124,9 +124,12 @@ cc.on(
     const posArg = ctx.parsed['_'];
     const { owner, repo } = getRepoInfoFromCommand(posArg);
     const payload = await app.api.getRepoHistory(owner, repo);
+    console.log(`🚀 ~ file: github.ts ~ line 127 ~ payload`, payload);
     const content = code('json', JSON.stringify(payload, null, 2));
+    console.log(`🚀 ~ file: github.ts ~ line 128 ~ content`, content);
     await bot.reply(content);
+    await bot.replyText('已经发给你啦');
   },
-  ['history'],
+  [],
   startsWith,
 );
