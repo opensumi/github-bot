@@ -64,3 +64,17 @@ export function image(url: string): Image {
     image: { picURL: url },
   };
 }
+
+export function extension(extension: Record<string, unknown>) {
+  return {
+    msgtype: 'extension',
+    extension,
+  };
+}
+
+export function code(language: string, code: string) {
+  return {
+    ...extension({ text_type: 'code_snippet', code_language: language }),
+    ...text(code),
+  };
+}

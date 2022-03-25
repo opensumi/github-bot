@@ -1,6 +1,6 @@
 import { startsWith } from '@/command';
 import { cc } from './base';
-import { image, markdown } from '../message';
+import { code, image } from '../message';
 
 // cmds example:
 // 1. star -> opensumi/core
@@ -37,14 +37,7 @@ cc.on(
     const posArg = ctx.parsed['_'];
     const { owner, repo } = getRepoInfoFromCommand(posArg);
     const payload = await app.api.getRepoStarRecords(owner, repo);
-    const content = markdown(
-      'Stars',
-      `
-\`\`\`ts
-${JSON.stringify(payload)}
-\`\`\`
-    `,
-    );
+    const content = code('json', JSON.stringify(payload));
     await bot.reply(content);
   },
   ['stars'],
@@ -131,14 +124,7 @@ cc.on(
     const posArg = ctx.parsed['_'];
     const { owner, repo } = getRepoInfoFromCommand(posArg);
     const payload = await app.api.getRepoHistory(owner, repo);
-    const content = markdown(
-      '2 Week History',
-      `
-\`\`\`ts
-${JSON.stringify(payload, null, 2)}
-\`\`\`
-    `,
-    );
+    const content = code('json', JSON.stringify(payload, null, 2));
     await bot.reply(content);
   },
   ['history'],

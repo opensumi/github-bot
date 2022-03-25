@@ -304,8 +304,9 @@ export class APIWrapper {
     let issue_closed_increment = 0;
     let done = false;
     let issues;
-    while (!done && pageCount >= 0) {
-      issues = await this.getRepoIssues(owner, repo, pageCount--);
+    let curPage = 1;
+    while (!done && curPage <= pageCount) {
+      issues = await this.getRepoIssues(owner, repo, curPage++);
       for (let index = 0; index < issues?.data?.length; index++) {
         if (
           issues.data[index] &&
@@ -362,18 +363,11 @@ export class APIWrapper {
     let pull_closed_increment = 0;
     let done = false;
     let pulls;
-    while (!done && pageCount >= 0) {
-      pulls = await this.getRepoPulls(owner, repo, pageCount--);
+    let curPage = 1;
+    while (!done && curPage <= pageCount) {
+      pulls = await this.getRepoPulls(owner, repo, curPage++);
 
       for (let index = 0; index < pulls?.data?.length; index++) {
-        console.log(
-          `🚀 ~ file: apis.ts ~ line 365 ~ APIWrapper ~ index`,
-          index,
-        );
-        console.log(
-          `🚀 ~ file: apis.ts ~ line 367 ~ APIWrapper ~ pulls.data[index]`,
-          JSON.stringify(pulls.data[index]),
-        );
         if (
           pulls.data[index] &&
           new Date(pulls.data[index].created_at).getTime() >= from
