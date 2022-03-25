@@ -83,7 +83,7 @@ export class APIWrapper {
       per_page: perPage,
       state: 'all',
       headers: {
-        Accept: 'application/vnd.github.v3.full+json',
+        Accept: 'application/vnd.github.v3.json',
       },
     });
     return result;
@@ -102,7 +102,7 @@ export class APIWrapper {
       per_page: perPage,
       state: 'all',
       headers: {
-        Accept: 'application/vnd.github.v3.full+json',
+        Accept: 'application/vnd.github.v3.json',
       },
     });
     return result;
@@ -393,28 +393,13 @@ export class APIWrapper {
 
     console.log('getRepoHistory');
     const issues = await this.getRepoIssueStatus(owner, repo, from, to);
-    console.log(
-      `🚀 ~ file: apis.ts ~ line 396 ~ APIWrapper ~ getRepoHistory ~ issues`,
-      issues,
-    );
     const pulls = await this.getRepoPullStatus(owner, repo, from, to);
-    console.log(
-      `🚀 ~ file: apis.ts ~ line 398 ~ APIWrapper ~ getRepoHistory ~ pulls`,
-      pulls,
-    );
     const star = await this.getRepoStarIncrement(owner, repo, from, to);
-    console.log(
-      `🚀 ~ file: apis.ts ~ line 400 ~ APIWrapper ~ getRepoHistory ~ star`,
-      star,
-    );
     const { count: star_count } = await this.getRepoStarRecords(owner, repo);
-    console.log(
-      `🚀 ~ file: apis.ts ~ line 402 ~ APIWrapper ~ getRepoHistory ~ star_count`,
-      star_count,
-    );
+
     return {
-      from: new Date(from).toString(),
-      to: new Date(to).toString(),
+      from: new Date(from).toISOString(),
+      to: new Date(to).toISOString(),
       star_count,
       ...issues,
       ...pulls,
