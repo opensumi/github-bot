@@ -12,7 +12,7 @@ export async function handler(req: Request, event: FetchEvent) {
   const _msg = (await req.json()) as Message;
 
   const bot = new DingBot(req, _msg, event);
-  await bot.handle();
+  event.waitUntil(bot.handle());
 
   return message('ok');
 }
