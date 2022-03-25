@@ -122,3 +122,26 @@ cc.onRegex(REPO_REGEX, async (bot, ctx) => {
   const { app } = ctx;
   await bot.replyText(`请你自己打开 GitHub。`);
 });
+
+
+cc.on(
+  'history',
+  async (bot, ctx) => {
+    const { app } = ctx;
+
+    const posArg = ctx.parsed['_'];
+    const { owner, repo } = getRepoInfoFromCommand(posArg);
+    const payload = await app.api.getRepoHistory(owner, repo);
+    const content = markdown(
+      '2 Week History',
+      `
+\`\`\`ts
+${JSON.stringify(payload)}
+\`\`\`
+    `,
+    );
+    await bot.reply(content);
+  },
+  ['history'],
+  startsWith,
+);
