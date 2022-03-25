@@ -123,7 +123,6 @@ cc.onRegex(REPO_REGEX, async (bot, ctx) => {
   await bot.replyText(`请你自己打开 GitHub。`);
 });
 
-
 cc.on(
   'history',
   async (bot, ctx) => {
@@ -136,7 +135,7 @@ cc.on(
       '2 Week History',
       `
 \`\`\`ts
-${JSON.stringify(payload)}
+${JSON.stringify(payload, null, 2)}
 \`\`\`
     `,
     );

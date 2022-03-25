@@ -112,6 +112,7 @@ export class CommandCenter<T> {
         handler = this.fallbackHandler;
       }
     }
+    console.log(`${text} 命中命令：`, handler);
 
     return handler;
   }

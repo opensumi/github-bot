@@ -1,6 +1,6 @@
 // source: https://github.com/bytebase/star-history/blob/master/src/helpers/api.ts
 
-import { Octokit } from '@octokit/core';
+import { Octokit } from '@octokit/rest';
 import { App } from '.';
 
 const PER_PAGE = 100;
@@ -46,7 +46,7 @@ export class APIWrapper {
   }
 
   async init() {
-    this._octo = await this.app.getInstallationOcto();
+    this._octo = (await this.app.getInstallationOcto()) as Octokit;
   }
 
   async getRepoStargazers(
@@ -76,18 +76,15 @@ export class APIWrapper {
     page?: number,
     perPage = PER_PAGE,
   ) {
-    const result = await this.octo.request(
-      'GET /repos/{owner}/{repo}/issues',
-      {
-        owner,
-        repo,
-        page: page,
-        per_page: perPage,
-        headers: {
-          Accept: 'application/vnd.github.v3.star+json',
-        },
+    const result = await this.octo.request('GET /repos/{owner}/{repo}/issues', {
+      owner,
+      repo,
+      page: page,
+      per_page: perPage,
+      headers: {
+        Accept: 'application/vnd.github.v3.full+json',
       },
-    );
+    });
     return result;
   }
 
@@ -97,18 +94,15 @@ export class APIWrapper {
     page?: number,
     perPage = PER_PAGE,
   ) {
-    const result = await this.octo.request(
-      'GET /repos/{owner}/{repo}/pulls',
-      {
-        owner,
-        repo,
-        page: page,
-        per_page: perPage,
-        headers: {
-          Accept: 'application/vnd.github.v3.star+json',
-        },
+    const result = await this.octo.request('GET /repos/{owner}/{repo}/pulls', {
+      owner,
+      repo,
+      page: page,
+      per_page: perPage,
+      headers: {
+        Accept: 'application/vnd.github.v3.full+json',
       },
-    );
+    });
     return result;
   }
 
@@ -217,15 +211,17 @@ export class APIWrapper {
     };
   }
 
-  async getRepoStarIncrement(owner: string, repo: string, from?: number, to?: number) {
-    // 默认获取两周数据
-    to = to || Date.now();;
-    from = from || to - HISTORY_RANGE;
+  async getRepoStarIncrement(
+    owner: string,
+    repo: string,
+    from: number,
+    to?: number,
+  ) {
+    to = to || Date.now();
 
     const patchRes = await this.getRepoStargazers(owner, repo);
 
     const headerLink = patchRes.headers['link'] || '';
-
 
     let pageCount = 1;
     const regResult = /next.*page=(\d*).*?last/.exec(headerLink);
@@ -244,16 +240,23 @@ export class APIWrapper {
     }
 
     let star_increment = 0;
-    let latestStars = await this.getRepoStargazers(owner, repo, pageCount);
-    while (latestStars.data && latestStars.data[0] && new Date(latestStars.data[0].starred_at).getTime() > from) {
+    let latestStars = await this.getRepoStargazers(owner, repo, pageCount--);
+    while (
+      latestStars.data &&
+      latestStars.data[0] &&
+      new Date(latestStars.data[0].starred_at).getTime() >= from
+    ) {
       star_increment += latestStars.data.length;
-      latestStars = await this.getRepoStargazers(owner, repo, pageCount);
+      latestStars = await this.getRepoStargazers(owner, repo, pageCount--);
     }
     // 不需要判断第一位
     let startIndex = 1;
     for (startIndex = 1; startIndex++; startIndex < latestStars?.data?.length) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if (latestStars.data[startIndex] && new Date((latestStars.data[startIndex] as any).starred_at).getTime() <= from) {
+      if (
+        latestStars.data[startIndex] &&
+        new Date((latestStars.data[startIndex] as any).starred_at).getTime() <=
+          from
+      ) {
         break;
       }
     }
@@ -265,15 +268,18 @@ export class APIWrapper {
     };
   }
 
-  async getRepoIssueStatus(owner: string, repo: string, from?: number, to?: number) {
+  async getRepoIssueStatus(
+    owner: string,
+    repo: string,
+    from: number,
+    to?: number,
+  ) {
     // 默认获取两周数据
-    to = to || Date.now();;
-    from = from || to - HISTORY_RANGE;
+    to = to || Date.now();
 
     const patchRes = await this.getRepoIssues(owner, repo);
 
     const headerLink = patchRes.headers['link'] || '';
-
 
     let pageCount = 1;
     const regResult = /next.*page=(\d*).*?last/.exec(headerLink);
@@ -295,13 +301,16 @@ export class APIWrapper {
     let issue_closed_increment = 0;
     let done = false;
     let issues;
-    while (!done) {
-      issues= await this.getRepoIssues(owner, repo, pageCount);
-      for (let index = 0; index++; index < issues?.data?.length) {
-        if (issues.data[index] && new Date((issues.data[index]).created_at).getTime() >= from) {
-          issue_increment ++;
-          if ((issues.data[index]).closed_at) {
-            issue_closed_increment ++;
+    while (!done && pageCount >= 0) {
+      issues = await this.getRepoIssues(owner, repo, pageCount--);
+      for (let index = 0; index < issues?.data?.length; index++) {
+        if (
+          issues.data[index] &&
+          new Date(issues.data[index].created_at).getTime() >= from
+        ) {
+          issue_increment++;
+          if (issues.data[index].closed_at) {
+            issue_closed_increment++;
           }
         } else {
           done = true;
@@ -309,22 +318,26 @@ export class APIWrapper {
         }
       }
     }
-    
+
     return {
       issue_increment,
       issue_closed_increment,
     };
   }
 
-  async getRepoPullStatus(owner: string, repo: string, from?: number, to?: number) {
+  async getRepoPullStatus(
+    owner: string,
+    repo: string,
+    from: number,
+    to?: number,
+  ) {
+    console.log(`🚀 ~ file: apis.ts ~ line 330 ~ APIWrapper ~ from`, from);
     // 默认获取两周数据
-    to = to || Date.now();;
-    from = from || to - HISTORY_RANGE;
+    to = to || Date.now();
 
     const patchRes = await this.getRepoPulls(owner, repo);
 
     const headerLink = patchRes.headers['link'] || '';
-
 
     let pageCount = 1;
     const regResult = /next.*page=(\d*).*?last/.exec(headerLink);
@@ -346,13 +359,25 @@ export class APIWrapper {
     let pull_closed_increment = 0;
     let done = false;
     let pulls;
-    while (!done) {
-      pulls= await this.getRepoPulls(owner, repo, pageCount);
-      for (let index = 0; index++; index < pulls?.data?.length) {
-        if (pulls.data[index] && new Date((pulls.data[index]).created_at).getTime() >= from) {
-          pull_increment ++;
-          if ((pulls.data[index]).closed_at) {
-            pull_closed_increment ++;
+    while (!done && pageCount >= 0) {
+      pulls = await this.getRepoPulls(owner, repo, pageCount--);
+
+      for (let index = 0; index < pulls?.data?.length; index++) {
+        console.log(
+          `🚀 ~ file: apis.ts ~ line 365 ~ APIWrapper ~ index`,
+          index,
+        );
+        console.log(
+          `🚀 ~ file: apis.ts ~ line 367 ~ APIWrapper ~ pulls.data[index]`,
+          JSON.stringify(pulls.data[index]),
+        );
+        if (
+          pulls.data[index] &&
+          new Date(pulls.data[index].created_at).getTime() >= from
+        ) {
+          pull_increment++;
+          if (pulls.data[index].closed_at) {
+            pull_closed_increment++;
           }
         } else {
           done = true;
@@ -360,7 +385,7 @@ export class APIWrapper {
         }
       }
     }
-    
+
     return {
       pull_increment,
       pull_closed_increment,
@@ -368,14 +393,14 @@ export class APIWrapper {
   }
 
   async getRepoHistory(owner: string, repo: string) {
-    const now = Date.now();
-    const issues = await this.getRepoIssueStatus(owner, repo, now);
-    const pulls = await this.getRepoPullStatus(owner, repo, now);
-    const star = await this.getRepoStarIncrement(owner, repo, now);
+    const from = Date.now() - HISTORY_RANGE;
+    // const issues = await this.getRepoIssueStatus(owner, repo, from);
+    const pulls = await this.getRepoPullStatus(owner, repo, from);
+    const star = await this.getRepoStarIncrement(owner, repo, from);
     const { count: star_count } = await this.getRepoStarRecords(owner, repo);
     return {
       star_count,
-      ...issues,
+      // ...issues,
       ...pulls,
       ...star,
     };
