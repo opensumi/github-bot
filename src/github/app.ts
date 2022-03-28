@@ -3,6 +3,7 @@ import { Octokit } from '@octokit/rest';
 import secrets, { Setting, getDefaultSetting } from '@/secrets';
 import { baseHandler, setupWebhooksSendToDing } from './handler';
 import { handleComment } from './commands';
+import { sendToDing } from './utils';
 
 export type Context = {
   event: FetchEvent;
@@ -21,6 +22,20 @@ export const appFactory = (ctx: Context) => {
   });
 
   setupWebhooksSendToDing(_app.webhooks, ctx);
+
+  _app.webhooks.on('star.created', async ({ payload }) => {
+    const starCount = payload.repository.stargazers_count;
+    if (starCount % 100 === 0) {
+      await sendToDing(
+        {
+          title: '⭐⭐⭐',
+          text: `一个好消息，有 ${starCount} 颗 🌟 了~`,
+        },
+        'star.created',
+        ctx.setting,
+      );
+    }
+  });
 
   _app.webhooks.on('issue_comment.created', handleComment);
   _app.webhooks.on('issue_comment.edited', handleComment);
