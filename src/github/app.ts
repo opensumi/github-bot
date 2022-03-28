@@ -3,7 +3,8 @@ import { Octokit } from '@octokit/rest';
 import secrets, { Setting, getDefaultSetting } from '@/secrets';
 import { baseHandler, setupWebhooksSendToDing } from './handler';
 import { handleComment } from './commands';
-import { sendToDing } from './utils';
+import { sendContentToDing, sendToDing } from './utils';
+import { image } from '@/ding/message';
 
 export type Context = {
   event: FetchEvent;
@@ -31,6 +32,16 @@ export const appFactory = (ctx: Context) => {
           title: '⭐⭐⭐',
           text: `一个好消息，有 ${starCount} 颗 🌟 了~`,
         },
+        'star.created',
+        ctx.setting,
+      );
+    }
+
+    if (starCount === 1000) {
+      await sendContentToDing(
+        image(
+          'https://img.alicdn.com/imgextra/i3/O1CN01BJvYwd28RX9V5RBlW_!!6000000007929-0-tps-900-383.jpg',
+        ),
         'star.created',
         ctx.setting,
       );

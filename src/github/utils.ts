@@ -7,25 +7,14 @@ function securityInterception(text: string) {
   return text;
 }
 
-export async function sendToDing(
-  data: MarkdownContent,
+export async function sendContentToDing(
+  dingContent: Record<string, unknown>,
   eventName: string,
   setting: Setting,
 ) {
   if (setting.dingWebhooks.length === 0) {
     return;
   }
-  const { text: _text, title } = data;
-
-  const text = securityInterception(_text);
-
-  const dingContent = {
-    msgtype: 'markdown',
-    markdown: {
-      title,
-      text,
-    },
-  };
 
   const toPromise = [] as Promise<void>[];
 
@@ -47,4 +36,27 @@ export async function sendToDing(
     );
   }
   await Promise.all(toPromise);
+}
+
+export async function sendToDing(
+  data: MarkdownContent,
+  eventName: string,
+  setting: Setting,
+) {
+  if (setting.dingWebhooks.length === 0) {
+    return;
+  }
+  const { text: _text, title } = data;
+
+  const text = securityInterception(_text);
+
+  const dingContent = {
+    msgtype: 'markdown',
+    markdown: {
+      title,
+      text,
+    },
+  };
+
+  await sendContentToDing(dingContent, eventName, setting);
 }
