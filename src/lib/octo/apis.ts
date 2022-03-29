@@ -398,8 +398,8 @@ export class APIWrapper {
     const { count: star_count } = await this.getRepoStarRecords(owner, repo);
 
     return {
-      from: new Date(from).toISOString(),
-      to: new Date(to).toISOString(),
+      from: new Date(from).toLocaleString('zh-cn'),
+      to: new Date(to).toLocaleString('zh-cn'),
       star_count,
       ...issues,
       ...pulls,
