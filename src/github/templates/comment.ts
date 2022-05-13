@@ -13,15 +13,18 @@ import { textTpl, titleTpl } from './utils';
 import { Context } from '../app';
 import { StringBuilder } from '@/utils';
 
+const codeCov = (text: string) => {
+  return limitLine(text, 3, 1, (line) => {
+    if (line.startsWith('> ')) {
+      return line.slice(2);
+    }
+    return line;
+  });
+};
+
 const formatByUserLogin = {
-  'codecov-commenter': (text: string) => {
-    return limitLine(text, 3, 1, (line) => {
-      if (line.startsWith('> ')) {
-        return line.slice(2);
-      }
-      return line;
-    });
-  },
+  'codecov-commenter': codeCov,
+  'codecov[bot]': codeCov,
   CLAassistant: (text) => {
     const data = text.split('<br/>');
     return data.slice(1).join('<br/>');
