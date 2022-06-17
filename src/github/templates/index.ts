@@ -3,6 +3,7 @@ export * from './comment';
 export * from './release';
 export * from './review';
 export * from './utils';
+export * from './workflow';
 
 import {
   handlePr,
@@ -10,6 +11,7 @@ import {
   handleReview,
   handleRelease,
   handleDiscussion,
+  handleWorkflowRun,
   handleIssueComment,
   handleCommitComment,
   handleReviewComment,
@@ -42,6 +44,7 @@ export const getTemplates = (ctx: Context) => {
       'pull_request_review.submitted': handleReview,
       'pull_request_review.dismissed': handleReview,
       'pull_request_review_comment.created': handleReviewComment,
+      'workflow_run.completed': handleWorkflowRun,
     };
   }
 

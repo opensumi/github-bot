@@ -140,11 +140,15 @@ cc.on(
     const { app } = ctx;
 
     const ref = ctx.parsed.ref;
-    const payload = await app.api.releaseRCVersion(ref);
-    const content = code('json', JSON.stringify(payload));
-    await bot.replyText(`在该 REF(${ref}) 上发布 RC 成功`);
-    await bot.reply(content);
+    if (ref) {
+      const payload = await app.api.releaseRCVersion(ref);
+      const content = code('json', JSON.stringify(payload));
+      await bot.replyText(`在该 REF(${ref}) 上发布 RC 成功`);
+      await bot.reply(content);
+    } else {
+      await bot.replyText(`使用方法 rc --ref v2.xx`);
+    }
   },
-  ['stars'],
+  [],
   startsWith,
 );
