@@ -406,4 +406,17 @@ export class APIWrapper {
       ...star,
     };
   }
+
+  async releaseRCVersion(branch: string) {
+    const workflow = await this.octo.actions.createWorkflowDispatch({
+      owner: 'opensumi',
+      repo: 'core',
+      workflow_id: 'manual-release-rc.yml',
+      ref: 'main',
+      inputs: {
+        ref: branch,
+      },
+    });
+    return workflow;
+  }
 }

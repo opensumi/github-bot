@@ -1,5 +1,5 @@
 import { startsWith } from '@/command';
-import { cc } from './base';
+import { cc, Context } from './base';
 import { code, image } from '../message';
 
 // cmds example:
@@ -131,5 +131,20 @@ cc.on(
     await bot.replyText('已经发给你啦');
   },
   [],
+  startsWith,
+);
+
+cc.on(
+  'rc',
+  async (bot, ctx: Context<{ ref: string }>) => {
+    const { app } = ctx;
+
+    const ref = ctx.parsed.ref;
+    const payload = await app.api.releaseRCVersion(ref);
+    const content = code('json', JSON.stringify(payload));
+    await bot.replyText(`在该 REF(${ref}) 上发布 RC 成功`);
+    await bot.reply(content);
+  },
+  ['stars'],
   startsWith,
 );

@@ -4,10 +4,10 @@ import { Message } from '../types';
 import { IApp } from '@/github/app';
 import mri from 'mri';
 
-interface Context {
+export interface Context<T = any> {
   message: Message;
   command: string;
-  parsed: mri.Argv;
+  parsed: mri.Argv<T>;
   app: IApp;
 }
 
