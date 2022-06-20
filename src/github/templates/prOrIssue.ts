@@ -24,7 +24,7 @@ function render(
   let action = payload.action as string;
 
   let shouldRenderBody = true;
-  if (['closed', 'edited'].includes(action)) {
+  if (['closed', 'edited', 'reopened'].includes(action)) {
     shouldRenderBody = false;
   }
 
