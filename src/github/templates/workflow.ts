@@ -40,11 +40,11 @@ export async function handleWorkflowRun(
   );
 
   const builder = new StringBuilder();
-  builder.add(`Name: ${workflow.name}`);
-  builder.add(`[Click me to see version detail](${workflowRun.html_url})`);
+  builder.add(`Name: ${workflow.name}\n`);
+  builder.add(`[Click me to see version detail](${workflowRun.html_url})\n`);
 
   for (const run of runs) {
-    builder.add(`- Run: ${run.name}  \n\nSummary: ${run.output.summary}`);
+    builder.add(`Run: ${run.name}  \n\nSummary: ${run.output.summary}\n\n`);
   }
 
   const text = textTpl(
