@@ -142,9 +142,11 @@ cc.on(
     const ref = ctx.parsed.ref;
     if (ref) {
       const payload = await app.api.releaseRCVersion(ref);
-      const content = code('json', JSON.stringify(payload));
-      await bot.replyText(`在该 REF(${ref}) 上发布 RC 成功`);
-      await bot.reply(content);
+      if (payload.status === 204) {
+        await bot.replyText(`在 ${ref} 上发布 Release Candidate 成功`);
+      } else {
+        await bot.replyText(`调用流水线时发生错误：${JSON.stringify(payload)}`);
+      }
     } else {
       await bot.replyText(`使用方法 rc --ref v2.xx`);
     }
