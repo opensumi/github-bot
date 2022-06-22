@@ -25,7 +25,8 @@ export async function handleWorkflowRun(
   );
 
   const builder = new StringBuilder();
-  builder.add(`Name: ${workflow.name}, [Link](${workflow.html_url})`);
+  builder.add(`Name: ${workflow.name}`);
+  builder.add(`[Click me to see version detail](${workflowRun.html_url})`);
 
   const text = textTpl(
     {
