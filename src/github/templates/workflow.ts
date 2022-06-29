@@ -45,6 +45,7 @@ export async function handleWorkflowRun(
   for (const run of runs) {
     builder.add(`Run: ${run.name}  \n\n`);
   }
+
   builder.add(`[Click me to see version detail](${workflowRun.html_url})\n`);
 
   const text = textTpl(
