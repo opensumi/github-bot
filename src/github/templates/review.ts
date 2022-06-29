@@ -32,6 +32,10 @@ export async function handleReview(
     action = 'requested changes';
   }
 
+  if (action === 'dismissed') {
+    action = 'dismissed their stale review';
+  }
+
   const title = titleTpl(
     {
       repo: payload.repository,
@@ -47,9 +51,9 @@ export async function handleReview(
 
   const text = textTpl(
     {
-      title: `${renderUserLink(payload.sender)} ${action} on [pull request](${
-        pr.html_url
-      })`,
+      title: `${renderUserLink(payload.sender)} [${action}](${
+        review.html_url
+      }) on [pull request](${pr.html_url})`,
       body: builder.build(),
       repo: payload.repository,
     },
