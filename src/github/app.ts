@@ -1,29 +1,29 @@
 import { App } from '@/lib/octo';
 import { Octokit } from '@octokit/rest';
-import secrets, { Setting, getDefaultSetting } from '@/github/storage';
+import { Setting, getDefaultAppSetting, AppSetting } from '@/github/storage';
 import { baseHandler, setupWebhooksSendToDing } from './handler';
 import { handleComment } from './commands';
 import { sendContentToDing, sendToDing } from './utils';
 import { image } from '@/ding/message';
+import { renderRepoLink } from './templates';
 
-export type Context = {
+export interface Context {
   event: FetchEvent;
   request: Request;
   setting: Setting;
-};
-
-export interface AppSettings {
-  appId: string;
-  privateKey: string;
-  webhookSecret: string;
 }
 
-export const appFactory = (settings: AppSettings, ctx: Context) => {
+export interface AppContext extends Context {
+  setting: AppSetting;
+}
+
+export const appFactory = (ctx: AppContext) => {
+  const { appSettings } = ctx.setting;
   const _app = new App({
-    appId: settings.appId,
-    privateKey: settings.privateKey,
+    appId: appSettings.appId,
+    privateKey: appSettings.privateKey,
     webhooks: {
-      secret: settings.webhookSecret,
+      secret: appSettings.webhookSecret,
     },
     Octokit: Octokit,
   });
@@ -36,22 +36,25 @@ export const appFactory = (settings: AppSettings, ctx: Context) => {
       await sendToDing(
         {
           title: '⭐⭐⭐',
-          text: `一个好消息，有 ${starCount} 颗 🌟 了~`,
+          text: `一个好消息，${renderRepoLink(
+            payload.repository,
+          )} 有 ${starCount} 颗 🌟 了~`,
         },
         'star.created',
         ctx.setting,
       );
     }
 
-    if (starCount === 1000) {
-      await sendContentToDing(
-        image(
-          'https://img.alicdn.com/imgextra/i3/O1CN01BJvYwd28RX9V5RBlW_!!6000000007929-0-tps-900-383.jpg',
-        ),
-        'star.created',
-        ctx.setting,
-      );
-    }
+    // Easter Eggs
+    // if (starCount === 1000) {
+    //   await sendContentToDing(
+    //     image(
+    //       'https://img.alicdn.com/imgextra/i3/O1CN01BJvYwd28RX9V5RBlW_!!6000000007929-0-tps-900-383.jpg',
+    //     ),
+    //     'star.created',
+    //     ctx.setting,
+    //   );
+    // }
   });
 
   _app.webhooks.on('issue_comment.created', handleComment);
@@ -61,25 +64,18 @@ export const appFactory = (settings: AppSettings, ctx: Context) => {
 
 export type IApp = ReturnType<typeof appFactory>;
 
-export async function initApp(event: FetchEvent) {
-  const setting = getDefaultSetting();
-  const app = appFactory(
-    {
-      appId: secrets.appId,
-      privateKey: secrets.privateKey,
-      webhookSecret: secrets.webhookSecret,
-    },
-    {
-      request: event.request,
-      event,
-      setting: setting,
-    },
-  );
+export async function initDefaultApp(event: FetchEvent) {
+  const setting = getDefaultAppSetting();
+  const app = appFactory(setting.appSettings, {
+    request: event.request,
+    event,
+    setting: setting,
+  });
   await app.init();
   return app;
 }
 
 export async function handler(req: Request, event: FetchEvent) {
-  const app = await initApp(event);
+  const app = await initDefaultApp(event);
   return baseHandler(app.webhooks, req, event);
 }

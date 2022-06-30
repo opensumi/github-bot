@@ -1,7 +1,7 @@
 import { doSign, Message, send } from '.';
 import secrets from './secrets';
 import { cc } from './commands';
-import { initApp } from '@/github/app';
+import { initDefaultApp } from '@/github/app';
 import { compose, text as textWrapper } from './message';
 import mri from 'mri';
 
@@ -85,7 +85,7 @@ export class DingBot {
     const msg = this.msg;
     console.log(`recieve dingtalk msg: `, JSON.stringify(msg, null, 2));
     // 其实目前钉钉机器人也就支持这一种消息类型
-    const app = await initApp(this.event);
+    const app = await initDefaultApp(this.event);
 
     if (msg.msgtype === 'text') {
       const text = sanitize(msg.text.content);

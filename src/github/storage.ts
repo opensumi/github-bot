@@ -1,24 +1,20 @@
 // 在 github app 的设置页面中查看
 // 如：https://github.com/organizations/riril/settings/apps/ririltestbot
 
-let appId = '';
-let webhookSecret = '';
-let privateKey = '';
+let ghAppId = '';
+let ghAppWebhookSecret = '';
+let ghAppPrivateKey = '';
 
 let dingtalkWebhookUrl = '';
 let dingtalkSecret = '';
 
-let ghWebhookSecret = '';
-
 try {
-  appId = GH_APP_ID;
-  webhookSecret = GH_APP_WEBHOOK_SECRET;
-  privateKey = GH_APP_PRIVATE_KEY;
+  ghAppId = GH_APP_ID;
+  ghAppWebhookSecret = GH_APP_WEBHOOK_SECRET;
+  ghAppPrivateKey = GH_APP_PRIVATE_KEY;
 
   dingtalkWebhookUrl = DINGTALK_WEBHOOK_URL;
   dingtalkSecret = DINGTALK_SECRET;
-
-  ghWebhookSecret = GH_WEBHOOK_SECRET;
 } catch (error) {
   console.error(error);
 }
@@ -62,9 +58,20 @@ export const getSettingById = async (id: string) => {
   return webhooks;
 };
 
-export const getDefaultSetting = (): Setting => {
+export type AppSetting = Setting & {
+  appSettings: {
+    appId: string;
+    privateKey: string;
+  };
+};
+
+export const getDefaultAppSetting = (): AppSetting => {
   return {
-    githubSecret: ghWebhookSecret,
+    appSettings: {
+      appId: ghAppId,
+      privateKey: ghAppPrivateKey,
+    },
+    githubSecret: ghAppWebhookSecret,
     dingWebhooks: [
       {
         url: dingtalkWebhookUrl,
@@ -73,10 +80,4 @@ export const getDefaultSetting = (): Setting => {
     ],
     contentLimit: 300,
   };
-};
-
-export default {
-  appId,
-  webhookSecret,
-  privateKey,
 };

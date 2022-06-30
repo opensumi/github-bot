@@ -7,10 +7,6 @@ export default [
   // The POST mode `outgoing` token.
   'DINGTALK_OUTGOING_TOKEN',
 
-  // --- GitHub Webhook related
-  // The secret you should set in GitHub Webhook Settings.
-  'GH_WEBHOOK_SECRET',
-
   // --- GitHub App related
   // The appId of your GitHub App.
   'GH_APP_ID',
