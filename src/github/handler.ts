@@ -166,15 +166,18 @@ export async function webhookHandler(
   if (!id) {
     return error(401, 'need a valid id');
   }
-  const dingSecret = await getSettingById(id);
-  if (!dingSecret) {
+  const setting = await getSettingById(id);
+  if (!setting) {
     return error(403, 'id not found');
   }
+  if (!setting.githubSecret) {
+    return error(401, 'please set webhook secret in settings');
+  }
 
-  const webhooks = webhooksFactory(dingSecret.githubSecret);
+  const webhooks = webhooksFactory(setting.githubSecret);
 
   setupWebhooksSendToDing(webhooks as any, {
-    setting: dingSecret,
+    setting: setting,
     event,
     request: req,
   });

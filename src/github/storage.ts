@@ -31,6 +31,9 @@ export interface DingWebhookItem {
 }
 
 export interface Setting {
+  /**
+   * 在 GitHub 上设置的此 webhook 的验证
+   */
   githubSecret: string;
   dingWebhooks: DingWebhookItem[];
   contentLimit: number;
@@ -45,10 +48,7 @@ export interface Setting {
 export const getSettingById = async (id: string) => {
   const webhooks = await WEBHOOKS_INFO.get<Setting>(id, 'json');
   if (webhooks) {
-    if (!webhooks.githubSecret) {
-      webhooks.githubSecret = ghWebhookSecret;
-    }
-    if (!webhooks.contentLimit) {
+    if (webhooks.contentLimit === undefined) {
       webhooks.contentLimit = 300;
     }
     if (webhooks.isCommunity === undefined) {

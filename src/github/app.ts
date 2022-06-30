@@ -12,12 +12,18 @@ export type Context = {
   setting: Setting;
 };
 
-export const appFactory = (ctx: Context) => {
+export interface AppSettings {
+  appId: string;
+  privateKey: string;
+  webhookSecret: string;
+}
+
+export const appFactory = (settings: AppSettings, ctx: Context) => {
   const _app = new App({
-    appId: secrets.appId,
-    privateKey: secrets.privateKey,
+    appId: settings.appId,
+    privateKey: settings.privateKey,
     webhooks: {
-      secret: secrets.webhookSecret,
+      secret: settings.webhookSecret,
     },
     Octokit: Octokit,
   });
@@ -55,18 +61,25 @@ export const appFactory = (ctx: Context) => {
 
 export type IApp = ReturnType<typeof appFactory>;
 
-export async function getInitedApp(event: FetchEvent) {
-  const dingSecret = getDefaultSetting();
-  const app = appFactory({
-    request: event.request,
-    event,
-    setting: dingSecret,
-  });
+export async function initApp(event: FetchEvent) {
+  const setting = getDefaultSetting();
+  const app = appFactory(
+    {
+      appId: secrets.appId,
+      privateKey: secrets.privateKey,
+      webhookSecret: secrets.webhookSecret,
+    },
+    {
+      request: event.request,
+      event,
+      setting: setting,
+    },
+  );
   await app.init();
   return app;
 }
 
 export async function handler(req: Request, event: FetchEvent) {
-  const app = await getInitedApp(event);
+  const app = await initApp(event);
   return baseHandler(app.webhooks, req, event);
 }
