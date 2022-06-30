@@ -41,8 +41,13 @@ export interface Setting {
   notDisplayRepoName?: boolean;
 }
 
+const GITHUB_SETTINGS_PREFIX = 'github/settings/';
+
 export const getSettingById = async (id: string) => {
-  const webhooks = await WEBHOOKS_INFO.get<Setting>(id, 'json');
+  const webhooks = await WEBHOOKS_INFO.get<Setting>(
+    GITHUB_SETTINGS_PREFIX + id,
+    'json',
+  );
   if (webhooks) {
     if (webhooks.contentLimit === undefined) {
       webhooks.contentLimit = 300;
