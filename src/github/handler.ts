@@ -5,7 +5,7 @@ import {
 import { Webhooks } from '@octokit/webhooks';
 import { error, message } from '@/utils';
 import { getTemplates, StopHandleError } from './templates';
-import { getSettingById } from '@/secrets';
+import { getSettingById } from '@/github/storage';
 import { sendToDing } from './utils';
 import type { MarkdownContent, THasAction } from './types';
 import { Octokit } from '@octokit/core';

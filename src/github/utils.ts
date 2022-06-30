@@ -1,5 +1,5 @@
 import { send } from '@/ding/utils';
-import { Setting } from '@/secrets';
+import { Setting } from '@/github/storage';
 import { MarkdownContent } from './types';
 
 function securityInterception(text: string) {

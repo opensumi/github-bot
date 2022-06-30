@@ -1,5 +1,5 @@
 import { doSign, Message, send } from '.';
-import secrets from '@/secrets';
+import secrets from './secrets';
 import { cc } from './commands';
 import { getInitedApp } from '@/github/app';
 import { compose, text as textWrapper } from './message';

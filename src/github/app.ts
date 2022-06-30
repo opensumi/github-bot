@@ -1,6 +1,6 @@
 import { App } from '@/lib/octo';
 import { Octokit } from '@octokit/rest';
-import secrets, { Setting, getDefaultSetting } from '@/secrets';
+import secrets, { Setting, getDefaultSetting } from '@/github/storage';
 import { baseHandler, setupWebhooksSendToDing } from './handler';
 import { handleComment } from './commands';
 import { sendContentToDing, sendToDing } from './utils';
