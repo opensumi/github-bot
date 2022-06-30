@@ -27,7 +27,6 @@ export const getTemplates = (ctx: Context) => {
     'pull_request.opened': handlePr,
     'discussion.created': handleDiscussion,
     'release.released': handleRelease,
-    'release.prereleased': handleRelease,
   } as TemplateMapping;
 
   if (!ctx.setting.isCommunity) {
