@@ -1,5 +1,5 @@
 import { doSign, Message, send } from '.';
-import secrets from './secrets';
+import { IDingBotSetting } from './secrets';
 import { cc } from './commands';
 import { initDefaultApp } from '@/github/app';
 import { compose, text as textWrapper } from './message';
@@ -30,8 +30,11 @@ function validateTimestamp(timestamp: string) {
 /**
  * 验证接收到的钉钉消息的签名是否合法
  */
-async function checkSign(req: Request): Promise<string | undefined> {
-  if (!secrets.dingtalkOutGoingToken) {
+async function checkSign(
+  req: Request,
+  token: string,
+): Promise<string | undefined> {
+  if (!token) {
     return;
   }
   const headers = req.headers;
@@ -44,10 +47,7 @@ async function checkSign(req: Request): Promise<string | undefined> {
   if (!tsValid) {
     return 'timestamp is invalid';
   }
-  const calculatedSign = await doSign(
-    secrets.dingtalkOutGoingToken,
-    timestamp + '\n' + secrets.dingtalkOutGoingToken,
-  );
+  const calculatedSign = await doSign(token, timestamp + '\n' + token);
   // 2. sign 与开发者自己计算的结果不一致，则认为是非法的请求。
   if (calculatedSign !== sign) {
     return 'sign is invalid';
@@ -56,22 +56,25 @@ async function checkSign(req: Request): Promise<string | undefined> {
 }
 
 export class DingBot {
+  _msg!: Message;
   constructor(
+    public id: string,
     private req: Request,
-    private _msg: Message,
     private event: FetchEvent,
+    private setting: IDingBotSetting,
   ) {}
 
   get msg(): Message {
     return this._msg;
   }
 
-  static async verify(req: Request) {
+  async verify() {
+    const req = this.req;
     const headers = req.headers;
     const timestamp = headers.get('timestamp');
     const sign = headers.get('sign');
     if (timestamp && sign) {
-      const errMessage = await checkSign(req);
+      const errMessage = await checkSign(req, this.setting.outGoingToken);
       if (errMessage) {
         return errMessage;
       }
@@ -82,8 +85,9 @@ export class DingBot {
   }
 
   async handle() {
-    const msg = this.msg;
-    console.log(`recieve dingtalk msg: `, JSON.stringify(msg, null, 2));
+    this._msg = (await this.req.json()) as Message;
+    const msg = this._msg;
+    console.log(`receive dingtalk msg: `, JSON.stringify(msg, null, 2));
     // 其实目前钉钉机器人也就支持这一种消息类型
     const app = await initDefaultApp(this.event);
 

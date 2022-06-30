@@ -1,28 +1,40 @@
 import { startsWith } from '@/command';
 import { cc, Context } from './base';
 import { code, image } from '../message';
+import { getDefaultRepo } from '../secrets';
+import { DingBot } from '../bot';
 
-// cmds example:
+// example:
 // 1. star -> opensumi/core
 // 2. star ide-startup -> opensumi/ide-startup
 // 3. star microsoft/core -> microsoft/core
 // 4. star microsoft core -> microsoft/core
-function getRepoInfoFromCommand(cmds: string[]) {
-  let owner = 'opensumi';
-  let repo = 'core';
-  if (cmds.length === 2) {
-    const tmp = cmds[1];
+async function getRepoInfoFromCommand(argv: string[], bot: DingBot) {
+  const defaultRepo = await getDefaultRepo(bot.id);
+  let owner, repo;
+  if (defaultRepo) {
+    owner = defaultRepo.owner;
+    repo = defaultRepo.repo;
+  }
+
+  if (argv.length === 2) {
+    const tmp = argv[1];
     if (tmp.includes('/')) {
       owner = tmp.split('/')[0];
       repo = tmp.split('/')[1];
     } else {
       repo = tmp;
     }
-  } else if (cmds.length === 3) {
-    owner = cmds[1];
-    repo = cmds[2];
+  } else if (argv.length === 3) {
+    owner = argv[1];
+    repo = argv[2];
   }
-
+  if (!owner || !repo) {
+    await bot.replyText(
+      'pls set defaultRepo first. e.g. `putData --defaultRepo opensumi/core`',
+    );
+    throw new Error('pls set defaultRepo first');
+  }
   return {
     owner,
     repo,
@@ -35,7 +47,7 @@ cc.on(
     const { app } = ctx;
 
     const posArg = ctx.parsed['_'];
-    const { owner, repo } = getRepoInfoFromCommand(posArg);
+    const { owner, repo } = await getRepoInfoFromCommand(posArg, bot);
     const payload = await app.api.getRepoStarRecords(owner, repo);
     const content = code('json', JSON.stringify(payload));
     await bot.reply(content);
@@ -122,7 +134,7 @@ cc.on(
     const { app } = ctx;
 
     const posArg = ctx.parsed['_'];
-    const { owner, repo } = getRepoInfoFromCommand(posArg);
+    const { owner, repo } = await getRepoInfoFromCommand(posArg, bot);
     const payload = await app.api.getRepoHistory(owner, repo);
     console.log(`🚀 ~ file: github.ts ~ line 127 ~ payload`, payload);
     const content = code('json', JSON.stringify(payload, null, 2));

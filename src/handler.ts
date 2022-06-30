@@ -7,7 +7,7 @@ import { error } from './utils';
 export const router = Router();
 
 // 接收 DingTalk webhook 事件
-router.post('/ding_webhook', dingHandler);
+router.post('/ding/:id?', dingHandler);
 // 接收 Github App 的 webhook 事件
 router.post('/gh_app', githubAppHandler);
 // 接收 Github webhook 事件
