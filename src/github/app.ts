@@ -18,12 +18,12 @@ export interface AppContext extends Context {
 }
 
 export const appFactory = (ctx: AppContext) => {
-  const { appSettings } = ctx.setting;
+  const { appSettings, githubSecret } = ctx.setting;
   const _app = new App({
     appId: appSettings.appId,
     privateKey: appSettings.privateKey,
     webhooks: {
-      secret: appSettings.webhookSecret,
+      secret: githubSecret,
     },
     Octokit: Octokit,
   });
