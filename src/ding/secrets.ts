@@ -1,10 +1,3 @@
-let dingtalkOutGoingToken = '';
-try {
-  dingtalkOutGoingToken = DINGTALK_OUTGOING_TOKEN;
-} catch (error) {
-  console.error(error);
-}
-
 export interface IDingBotSetting {
   outGoingToken: string;
 }
@@ -48,10 +41,4 @@ export const getDefaultRepo = async (id: string) => {
     };
   }
   return undefined;
-};
-
-export const getDefaultSetting = (): IDingBotSetting => {
-  return {
-    outGoingToken: dingtalkOutGoingToken,
-  };
 };

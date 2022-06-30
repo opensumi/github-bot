@@ -4,8 +4,6 @@ export default [
   'DINGTALK_SECRET',
   // Webhook for the dingtalk bot
   'DINGTALK_WEBHOOK_URL',
-  // The POST mode `outgoing` token.
-  'DINGTALK_OUTGOING_TOKEN',
 
   // --- GitHub App related
   // The appId of your GitHub App.
