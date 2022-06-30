@@ -3,8 +3,7 @@ import { Octokit } from '@octokit/rest';
 import { Setting, getDefaultAppSetting, AppSetting } from '@/github/storage';
 import { baseHandler, setupWebhooksSendToDing } from './handler';
 import { handleComment } from './commands';
-import { sendContentToDing, sendToDing } from './utils';
-import { image } from '@/ding/message';
+import { sendToDing } from './utils';
 import { renderRepoLink } from './templates';
 
 export interface Context {
@@ -66,7 +65,7 @@ export type IApp = ReturnType<typeof appFactory>;
 
 export async function initDefaultApp(event: FetchEvent) {
   const setting = getDefaultAppSetting();
-  const app = appFactory(setting.appSettings, {
+  const app = appFactory({
     request: event.request,
     event,
     setting: setting,
