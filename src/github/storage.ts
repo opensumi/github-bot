@@ -1,6 +1,8 @@
 // 在 github app 的设置页面中查看
 // 如：https://github.com/organizations/riril/settings/apps/ririltestbot
 
+import { KVManager } from '@/kv';
+
 let ghAppId = '';
 let ghAppWebhookSecret = '';
 let ghAppPrivateKey = '';
@@ -42,6 +44,7 @@ export interface Setting {
 }
 
 const GITHUB_SETTINGS_PREFIX = 'github/settings/';
+const GITHUB_APP_SETTINGS_PREFIX = 'github/app/settings/';
 
 export const getSettingById = async (id: string) => {
   const webhooks = await WEBHOOKS_INFO.get<Setting>(
@@ -68,6 +71,11 @@ export type AppSetting = Setting & {
     appId: string;
     privateKey: string;
   };
+};
+
+export const getAppSettingById = (id: string) => {
+  const manager = new KVManager<AppSetting>(GITHUB_APP_SETTINGS_PREFIX, id);
+  return manager.getJSON();
 };
 
 export const getDefaultAppSetting = (): AppSetting => {

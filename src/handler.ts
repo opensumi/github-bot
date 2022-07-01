@@ -1,7 +1,10 @@
 import { Router } from './router';
 import { handler as dingHandler } from './ding';
 import { webhookHandler } from './github';
-import { handler as githubAppHandler } from './github/app';
+import {
+  handler as githubAppHandler,
+  handler2 as githubAppHandler2,
+} from './github/app';
 import { error } from './utils';
 
 export const router = Router();
@@ -10,6 +13,7 @@ export const router = Router();
 router.post('/ding/:id?', dingHandler);
 // 接收 Github App 的 webhook 事件
 router.post('/gh_app', githubAppHandler);
+router.post('/github/app/:id?', githubAppHandler2);
 // 接收 Github webhook 事件
 router.post('/webhook/:id?', webhookHandler);
 
