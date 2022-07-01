@@ -1,11 +1,6 @@
 import { App } from '@/lib/octo';
 import { Octokit } from '@octokit/rest';
-import {
-  Setting,
-  getDefaultAppSetting,
-  AppSetting,
-  getAppSettingById,
-} from '@/github/storage';
+import { Setting, AppSetting, getAppSettingById } from '@/github/storage';
 import { baseHandler, setupWebhooksSendToDing } from './handler';
 import { handleComment } from './commands';
 import { sendToDing } from './utils';
@@ -79,18 +74,7 @@ export async function initApp(setting: AppSetting, event: FetchEvent) {
   return app;
 }
 
-export async function initDefaultApp(event: FetchEvent) {
-  const setting = getDefaultAppSetting();
-  const app = await initApp(setting, event);
-  return app;
-}
-
-export async function handler(req: Request, event: FetchEvent) {
-  const app = await initDefaultApp(event);
-  return baseHandler(app.webhooks, req, event);
-}
-
-export async function handler2(
+export async function handler(
   req: Request & { params?: { id?: string }; query?: { id?: string } },
   event: FetchEvent,
 ) {

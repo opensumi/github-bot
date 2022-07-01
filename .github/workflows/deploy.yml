@@ -4,18 +4,13 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Choose an environment to deploy to: <prod>'
+        description: "Choose an environment to deploy to: <prod>"
         required: true
-        default: 'prod'
+        default: "prod"
 
 env:
   BUILD_ENVIRONMENT: ${{ github.event.inputs.environment }}
   CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-  DINGTALK_SECRET: ${{ secrets.DINGTALK_SECRET }}
-  DINGTALK_WEBHOOK_URL: ${{ secrets.DINGTALK_WEBHOOK_URL }}
-  GH_APP_ID: ${{ secrets.GH_APP_ID }}
-  GH_APP_WEBHOOK_SECRET: ${{ secrets.GH_APP_WEBHOOK_SECRET }}
-  GH_APP_PRIVATE_KEY: ${{ secrets.GH_APP_PRIVATE_KEY }}
   KV_LOCAL_ID: ${{ secrets.KV_LOCAL_ID }}
   KV_PROD_ID: ${{ secrets.KV_PROD_ID }}
 
@@ -29,7 +24,7 @@ jobs:
       - name: Use Node.js 14
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
+          node-version: "14"
       - name: Build & Test
         run: |
           yarn
@@ -41,9 +36,3 @@ jobs:
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           environment: ${{ github.event.inputs.environment }}
-          secrets: |
-              DINGTALK_SECRET
-              DINGTALK_WEBHOOK_URL
-              GH_APP_ID
-              GH_APP_WEBHOOK_SECRET
-              GH_APP_PRIVATE_KEY

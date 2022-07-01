@@ -18,10 +18,7 @@
     "publish:local": "yarn build && wrangler publish",
     "lint": "eslint . && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
     "lint:fix": "eslint . --fix",
-    "test": "jest --config jestconfig.json --verbose",
-    "sync-secrets": "esno scripts/sync-env-to-secrets.ts",
-    "validate-remote": "esno scripts/validate-remote-secrets.ts",
-    "generate-env": "esno ./scripts/generate-env-typing.ts"
+    "test": "jest --config jest.config.json --verbose"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.13.0",

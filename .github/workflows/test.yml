@@ -31,8 +31,3 @@ jobs:
         env:
           KV_LOCAL_ID: ${{ secrets.KV_LOCAL_ID }}
           KV_PROD_ID: ${{ secrets.KV_PROD_ID }}
-          DINGTALK_SECRET: ${{ secrets.DINGTALK_SECRET }}
-          DINGTALK_WEBHOOK_URL: ${{ secrets.DINGTALK_WEBHOOK_URL }}
-          GH_APP_ID: ${{ secrets.GH_APP_ID }}
-          GH_APP_WEBHOOK_SECRET: ${{ secrets.GH_APP_WEBHOOK_SECRET }}
-          GH_APP_PRIVATE_KEY: ${{ secrets.GH_APP_PRIVATE_KEY }}

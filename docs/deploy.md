@@ -2,19 +2,7 @@
 
 Firstly, we should prepare all the secrets we need(which listed in [`scripts/secrets.ts`](https://github.com/opensumi/github-bot/blob/b237a1e35c8fd5fdf720a88f911691f1e096f78c/scripts/secrets.ts)).
 
-We use [`wrangler secrets`](https://developers.cloudflare.com/workers/cli-wrangler/commands#secret) manage the secrets, Cloudflare Workers will replace them in code when each execute.
-
-> The thinking about `wrangler secrets` can see: <https://blog.cloudflare.com/workers-secrets-environment/>
->
-> Rotating a set of API keys shouldn’t require risking downtime through code edits and redeployments and in some cases it may not make sense for the developer writing the script to know the actual API key value at all.
-
-copy `.env.example` to `.env`, and set the corresponding value. then we can run `yarn sync-secrets` put the secrets to cloudflare。
-
-> if you want set secrets on specific environment, you need create a file named `.env.{environment}`(like `.env.prod`), and run `yarn sync-secrets --env prod`。
-
-We have two enviorments: `local` and `prod`. They are defined in `wrangler.toml`.
-
-> More info can be found in: <https://developers.cloudflare.com/workers/platform/environments>
+and save them to the KV store.
 
 When we run the command: `yarn dev`, we will use `local` environment.
 
@@ -28,7 +16,7 @@ yarn wrangler login
 yarn run publish:local
 ```
 
-because we set `name` attribute in `wrangler.toml`, so this func will be depolyed in：
+because we set `name` attribute in `wrangler.toml`, so this func will be deploy at:
 
 ```txt
 https://{name}.{user}.workers.dev

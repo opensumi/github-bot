@@ -3,26 +3,10 @@
 
 import { KVManager } from '@/kv';
 
-let ghAppId = '';
-let ghAppWebhookSecret = '';
-let ghAppPrivateKey = '';
-
-let dingtalkWebhookUrl = '';
-let dingtalkSecret = '';
-
-try {
-  ghAppId = GH_APP_ID;
-  ghAppWebhookSecret = GH_APP_WEBHOOK_SECRET;
-  ghAppPrivateKey = GH_APP_PRIVATE_KEY;
-
-  dingtalkWebhookUrl = DINGTALK_WEBHOOK_URL;
-  dingtalkSecret = DINGTALK_SECRET;
-} catch (error) {
-  console.error(error);
-}
-
 export interface DingWebhookItem {
+  // Webhook for the dingtalk bot
   url: string;
+  // You should select **signed mode(加签模式)** in the security settings of the bot. and you will see this secret.
   secret: string;
   // 该 webhook 仅接收哪些事件的推送
   event?: string[];
@@ -67,8 +51,11 @@ export const getSettingById = async (id: string) => {
 };
 
 export type AppSetting = Setting & {
+  // GitHub App related
   appSettings: {
+    // The appId of your GitHub App.
     appId: string;
+    // Generate a private key in GitHub App Settings.
     privateKey: string;
   };
 };
@@ -76,21 +63,4 @@ export type AppSetting = Setting & {
 export const getAppSettingById = (id: string) => {
   const manager = new KVManager<AppSetting>(GITHUB_APP_SETTINGS_PREFIX, id);
   return manager.getJSON();
-};
-
-export const getDefaultAppSetting = (): AppSetting => {
-  return {
-    appSettings: {
-      appId: ghAppId,
-      privateKey: ghAppPrivateKey,
-    },
-    githubSecret: ghAppWebhookSecret,
-    dingWebhooks: [
-      {
-        url: dingtalkWebhookUrl,
-        secret: dingtalkSecret,
-      },
-    ],
-    contentLimit: 300,
-  };
 };
