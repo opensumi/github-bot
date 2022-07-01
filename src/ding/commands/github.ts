@@ -1,8 +1,22 @@
 import { startsWith } from '@/command';
-import { cc, Context } from './base';
+import { cc, Context, ContextWithApp } from './base';
 import { code, image } from '../message';
 import { getDefaultRepo } from '../secrets';
 import { DingBot } from '../bot';
+
+function hasApp(
+  item: Context,
+): item is Context & Required<Pick<Context, 'app'>> {
+  return !!item.app;
+}
+
+async function replyIfAppNotDefined(bot: DingBot, ctx: Context) {
+  if (!hasApp(ctx)) {
+    await bot.replyText(
+      'Current DingBot has not configured use GitHub App. Please contact admin.',
+    );
+  }
+}
 
 // example:
 // 1. star -> opensumi/core
@@ -44,6 +58,11 @@ async function getRepoInfoFromCommand(argv: string[], bot: DingBot) {
 cc.on(
   'star',
   async (bot, ctx) => {
+    await replyIfAppNotDefined(bot, ctx);
+    if (!hasApp(ctx)) {
+      return;
+    }
+
     const { app } = ctx;
 
     const posArg = ctx.parsed['_'];
@@ -79,6 +98,11 @@ function makeid(length: number) {
 cc.on(
   'http',
   async (bot, ctx) => {
+    await replyIfAppNotDefined(bot, ctx);
+    if (!hasApp(ctx)) {
+      return;
+    }
+
     const { command, app } = ctx;
     const octokit = await app.getInstallationOcto();
     const url = getUrl(command);
@@ -131,6 +155,11 @@ cc.onRegex(REPO_REGEX, async (bot, ctx) => {
 cc.on(
   'history',
   async (bot, ctx) => {
+    await replyIfAppNotDefined(bot, ctx);
+    if (!hasApp(ctx)) {
+      return;
+    }
+
     const { app } = ctx;
 
     const posArg = ctx.parsed['_'];
@@ -149,6 +178,11 @@ cc.on(
 cc.on(
   'rc',
   async (bot, ctx: Context<{ ref: string }>) => {
+    await replyIfAppNotDefined(bot, ctx);
+    if (!hasApp(ctx)) {
+      return;
+    }
+
     const { app } = ctx;
 
     const ref = ctx.parsed.ref;

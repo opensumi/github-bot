@@ -11,6 +11,8 @@ export interface Context<T = any> {
   app?: IApp;
 }
 
+export type ContextWithApp<T = any> = Required<Context<T>>;
+
 export type Handler = (bot: DingBot, ctx: Context) => Promise<void>;
 
 export const cc = new CommandCenter<Handler>(['']);
