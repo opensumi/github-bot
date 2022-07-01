@@ -8,7 +8,7 @@ export interface Context<T = any> {
   message: Message;
   command: string;
   parsed: mri.Argv<T>;
-  app: IApp;
+  app?: IApp;
 }
 
 export type Handler = (bot: DingBot, ctx: Context) => Promise<void>;
