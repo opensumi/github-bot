@@ -94,13 +94,17 @@ export class DingBot {
     let app: App<any> | undefined;
     const setting = await getAppSettingById(this.id);
     if (setting) {
+      console.log('has github app settings');
       app = await initApp(setting, this.event);
+      console.log('init app success');
     }
 
     // 其实目前钉钉机器人也就支持这一种消息类型
     if (msg.msgtype === 'text') {
       const text = sanitize(msg.text.content);
+      console.log(`DingBot ~ handle ~ text`, text);
       const parsed = parseCliArgs(text);
+      console.log(`DingBot ~ handle ~ parsed`, parsed);
 
       const handler = await cc.resolve(text);
       if (handler) {

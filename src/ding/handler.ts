@@ -10,6 +10,7 @@ export async function handler(
   if (!id) {
     id = req.query?.id;
   }
+  console.log(`handler ~ id`, id);
   if (!id) {
     return error(401, 'need a valid id');
   }

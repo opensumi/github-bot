@@ -60,7 +60,7 @@ export type AppSetting = Setting & {
   };
 };
 
-export const getAppSettingById = (id: string) => {
+export const getAppSettingById = async (id: string) => {
   const manager = new KVManager<AppSetting>(GITHUB_APP_SETTINGS_PREFIX, id);
-  return manager.getJSON();
+  return await manager.getJSON();
 };
