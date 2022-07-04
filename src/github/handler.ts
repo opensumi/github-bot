@@ -178,7 +178,6 @@ export async function webhookHandler(
 
   setupWebhooksSendToDing(webhooks as any, {
     setting: setting,
-    event,
   });
   return baseHandler(webhooks, req, event);
 }

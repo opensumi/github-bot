@@ -91,7 +91,7 @@ export class DingBot {
     const setting = await getAppSettingById(this.id);
     if (setting) {
       console.log('has github app settings');
-      app = await initApp(setting, this.event);
+      app = await initApp(setting);
       console.log('init app success');
     }
 
