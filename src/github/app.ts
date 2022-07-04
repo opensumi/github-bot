@@ -30,14 +30,13 @@ export const appFactory = (ctx: AppContext) => {
   setupWebhooksSendToDing(_app.webhooks, ctx);
 
   _app.webhooks.on('star.created', async ({ payload }) => {
-    const starCount = payload.repository.stargazers_count;
+    const repository = payload.repository;
+    const starCount = repository.stargazers_count;
     if (starCount % 100 === 0) {
       await sendToDing(
         {
           title: '⭐⭐⭐',
-          text: `一个好消息，${renderRepoLink(
-            payload.repository,
-          )} 有 ${starCount} 颗 🌟 了~`,
+          text: `一个好消息，[${repository.name}](${repository.html_url}) 有 ${starCount} 颗 🌟 了~`,
         },
         'star.created',
         ctx.setting,
