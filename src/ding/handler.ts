@@ -1,6 +1,6 @@
 import { error, message } from '@/utils';
 import { getSettingById } from './secrets';
-import { DingBot } from './bot';
+import { DingBot, verifyMessage } from './bot';
 
 export async function handler(
   req: Request & { params?: { id?: string }; query?: { id?: string } },
@@ -16,20 +16,19 @@ export async function handler(
   }
   const setting = await getSettingById(id);
   if (!setting) {
-    return error(403, 'id not found');
+    return error(404, 'id not found');
   }
   if (!setting.outGoingToken) {
     return error(401, 'please set webhook token in bot settings');
   }
 
-  const bot = new DingBot(id, req, event, setting);
-
-  const errMessage = await bot.verify();
+  const errMessage = await verifyMessage(req, setting.outGoingToken);
   if (errMessage) {
     console.log(`check sign error:`, errMessage);
     return error(403, errMessage);
   }
-  event.waitUntil(bot.handle());
 
+  const bot = new DingBot(id, await req.json(), event, setting);
+  event.waitUntil(bot.handle());
   return message('ok');
 }

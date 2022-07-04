@@ -4,13 +4,13 @@
 
 import SmeeClient from 'smee-client';
 
-const allRoutes = ['ding_webhook', 'gh_app', 'webhook'];
+const allRoutes = ['ding-opensumi', 'github-app-opensumi', 'webhook-opensumi'];
 
 const allClients = [] as SmeeClient[];
 
 for (const routeName of allRoutes) {
   const source = 'https://smee.io/opensumi-github-bot-' + routeName;
-  const target = 'http://localhost:8787/' + routeName;
+  const target = 'http://localhost:8787/' + routeName.replace(/-/g, '/');
 
   const smee = new SmeeClient({
     source,

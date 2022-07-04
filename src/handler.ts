@@ -7,11 +7,11 @@ import { error } from './utils';
 export const router = Router();
 
 // 接收 DingTalk webhook 事件
-router.post('/ding/:id', dingHandler);
+router.post('/ding/?:id', dingHandler);
 // 接收 Github App 的 webhook 事件
-router.post('/github/app/:id', githubAppHandler);
+router.post('/github/app/?:id', githubAppHandler);
 // 接收 Github webhook 事件
-router.post('/webhook/:id', webhookHandler);
+router.post('/webhook/?:id', webhookHandler);
 
 router.all('*', () => {
   return error(404, 'no router found');

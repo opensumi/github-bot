@@ -9,7 +9,6 @@ import { error } from '@/utils';
 
 export interface Context {
   event: FetchEvent;
-  request: Request;
   setting: Setting;
 }
 
@@ -66,7 +65,6 @@ export type IApp = ReturnType<typeof appFactory>;
 
 export async function initApp(setting: AppSetting, event: FetchEvent) {
   const app = appFactory({
-    request: event.request,
     event,
     setting: setting,
   });
@@ -87,7 +85,7 @@ export async function handler(
   }
   const setting = await getAppSettingById(id);
   if (!setting) {
-    return error(403, 'id not found');
+    return error(404, 'id not found');
   }
   if (!setting.githubSecret) {
     return error(401, 'please set app webhook secret in settings');

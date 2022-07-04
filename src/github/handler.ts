@@ -168,7 +168,7 @@ export async function webhookHandler(
   }
   const setting = await getSettingById(id);
   if (!setting) {
-    return error(403, 'id not found');
+    return error(404, 'id not found');
   }
   if (!setting.githubSecret) {
     return error(401, 'please set webhook secret in settings');
@@ -179,7 +179,6 @@ export async function webhookHandler(
   setupWebhooksSendToDing(webhooks as any, {
     setting: setting,
     event,
-    request: req,
   });
   return baseHandler(webhooks, req, event);
 }

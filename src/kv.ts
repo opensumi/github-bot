@@ -1,8 +1,8 @@
 export class KVManager<T> {
-  constructor(private prefix: string, private _id: string) {}
+  constructor(private prefix: string, private id: string) {}
 
   get fullId() {
-    return this.prefix + this._id;
+    return this.prefix + this.id;
   }
 
   async getJSON() {
