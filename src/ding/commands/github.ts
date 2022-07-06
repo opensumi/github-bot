@@ -1,4 +1,4 @@
-import { startsWith } from '@/command';
+import { equalFunc, startsWith } from '@/command';
 import { cc, Context, ContextWithApp } from './base';
 import { code, image } from '../message';
 import { getDefaultRepo } from '../secrets';
@@ -184,6 +184,22 @@ cc.on(
     }
 
     const { app } = ctx;
+    await app.api.deployBot();
+    await bot.replyText('分发部署任务成功');
+  },
+  [],
+  startsWith,
+);
+
+cc.on(
+  'deploy',
+  async (bot, ctx: Context<{ ref: string }>) => {
+    await replyIfAppNotDefined(bot, ctx);
+    if (!hasApp(ctx)) {
+      return;
+    }
+
+    const { app } = ctx;
 
     let ref = ctx.parsed.ref;
     if (!ref) {
@@ -205,5 +221,5 @@ cc.on(
     }
   },
   [],
-  startsWith,
+  equalFunc,
 );

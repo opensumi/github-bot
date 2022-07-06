@@ -420,6 +420,18 @@ export class APIWrapper {
     return workflow;
   }
 
+  async deployBot(environment = 'prod') {
+    await this.octo.actions.createWorkflowDispatch({
+      owner: 'opensumi',
+      repo: 'github-bot',
+      workflow_id: 'deploy.yml',
+      ref: 'main',
+      inputs: {
+        environment,
+      },
+    });
+  }
+
   async getRefInfo(ref: string) {
     const commit = await this.octo.repos.getCommit({
       owner: 'opensumi',
