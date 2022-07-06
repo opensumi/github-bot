@@ -4,9 +4,9 @@ import { code, image } from '../message';
 import { getDefaultRepo } from '../secrets';
 import { DingBot } from '../bot';
 
-function hasApp(
-  item: Context,
-): item is Context & Required<Pick<Context, 'app'>> {
+function hasApp<T>(
+  item: Context<T>,
+): item is Context<T> & Required<Pick<Context<T>, 'app'>> {
   return !!item.app;
 }
 
@@ -185,8 +185,18 @@ cc.on(
 
     const { app } = ctx;
 
-    const ref = ctx.parsed.ref;
+    let ref = ctx.parsed.ref;
+    if (!ref) {
+      ref = ctx.parsed['_'][0];
+    }
+
     if (ref) {
+      const commit = await app.api.getRefInfo(ref);
+      if (commit.status !== 200) {
+        await bot.replyText(`看起来 ${ref} 不存在哦`);
+        return;
+      }
+
       const payload = await app.api.releaseRCVersion(ref);
       if (payload.status === 204) {
         await bot.replyText(`在 ${ref} 上发布 Release Candidate 成功`);
@@ -194,7 +204,7 @@ cc.on(
         await bot.replyText(`调用流水线时发生错误：${JSON.stringify(payload)}`);
       }
     } else {
-      await bot.replyText(`使用方法 rc --ref v2.xx`);
+      await bot.replyText(`使用方法 rc --ref v2.xx 或 rc v2.xx`);
     }
   },
   [],
