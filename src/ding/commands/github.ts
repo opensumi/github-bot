@@ -187,21 +187,18 @@ cc.on(
 
     let ref = ctx.parsed.ref;
     if (!ref) {
-      ref = ctx.parsed['_'][0];
+      if (ctx.parsed['_'].length > 1) {
+        ref = ctx.parsed['_'][1];
+      }
     }
 
     if (ref) {
-      const commit = await app.api.getRefInfo(ref);
-      if (commit.status !== 200) {
-        await bot.replyText(`看起来 ${ref} 不存在哦`);
-        return;
-      }
-
-      const payload = await app.api.releaseRCVersion(ref);
-      if (payload.status === 204) {
+      try {
+        await app.api.getRefInfo(ref);
+        await app.api.releaseRCVersion(ref);
         await bot.replyText(`在 ${ref} 上发布 Release Candidate 成功`);
-      } else {
-        await bot.replyText(`调用流水线时发生错误：${JSON.stringify(payload)}`);
+      } catch (error) {
+        await bot.replyText(`执行出错：${(error as Error).message}`);
       }
     } else {
       await bot.replyText(`使用方法 rc --ref v2.xx 或 rc v2.xx`);

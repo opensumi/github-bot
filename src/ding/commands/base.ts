@@ -7,6 +7,9 @@ import mri from 'mri';
 export interface Context<T = any> {
   message: Message;
   command: string;
+  /**
+   * _ 的首位为命令
+   */
   parsed: mri.Argv<T>;
   app?: IApp;
 }

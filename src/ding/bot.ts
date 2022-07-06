@@ -100,16 +100,22 @@ export class DingBot {
       const text = sanitize(msg.text.content);
       console.log(`DingBot ~ handle ~ text`, text);
       const parsed = parseCliArgs(text);
-      console.log(`DingBot ~ handle ~ parsed`, parsed);
+      console.log(`DingBot ~ handle ~ parsed`, JSON.stringify(parsed));
 
       const handler = await cc.resolve(text);
       if (handler) {
-        await handler(this, {
-          message: msg,
-          command: text,
-          parsed,
-          app,
-        });
+        try {
+          await handler(this, {
+            message: msg,
+            command: text,
+            parsed,
+            app,
+          });
+        } catch (error) {
+          await this.replyText(
+            `执行 ${text} 出错: ${(error as Error).message}`,
+          );
+        }
       } else {
         console.log('没有 handler 处理 ', text);
       }
