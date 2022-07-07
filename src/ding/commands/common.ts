@@ -50,5 +50,5 @@ cc.on('help', async (bot) => {
     text.add(`- *: fallbackHandler`);
   }
 
-  await bot.replyText(text.toString());
+  await bot.replyText(text.build());
 });

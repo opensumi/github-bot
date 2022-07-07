@@ -40,6 +40,9 @@ export class StringBuilder {
   build() {
     return '\n' + this.array.join('\n') + '\n';
   }
+  toString() {
+    return this.build();
+  }
 }
 
 // https://github.com/sindresorhus/lazy-value/blob/318fd0fa53b413e066a138ea18750fe2ccf51c04/index.js
