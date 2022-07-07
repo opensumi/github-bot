@@ -23,6 +23,10 @@ export const regex = (reg: RegExp, userInput: string) => {
 class Registry<K, T> {
   private _array = new Map<K, [T, CompareFunc<K>]>();
 
+  get handlers() {
+    return Array.from(this._array.values());
+  }
+
   add(m: K, handler: T, compareFunc: CompareFunc<K>) {
     this._array.set(m, [handler, compareFunc]);
   }

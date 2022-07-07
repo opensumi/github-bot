@@ -2,6 +2,7 @@ import { cc, Context } from './base';
 import { code } from '../message';
 import { DingInfo, updateGroupInfo } from '../secrets';
 import { startsWith } from '@/command';
+import { StringBuilder } from '@/utils';
 
 cc.on(
   'putData',
@@ -27,4 +28,27 @@ cc.on('getGroupInfo', async (bot) => {
       }),
     ),
   );
+});
+
+cc.on('help', async (bot) => {
+  const text = new StringBuilder();
+  const prefix = cc.prefixs.filter(Boolean).join('、');
+  if (prefix) {
+    text.add('前缀：' + prefix);
+  }
+
+  text.add('支持的命令：', true);
+
+  cc.reg.handlers.forEach(([key, func]) => {
+    text.add(`- ${key}: ${func.name}`);
+  });
+
+  cc.regexReg.handlers.forEach(([key, func]) => {
+    text.add(`- ${key}: ${func.name}`);
+  });
+  if (cc.fallbackHandler) {
+    text.add(`- *: fallbackHandler`);
+  }
+
+  await bot.replyText(text.toString());
 });
