@@ -201,24 +201,8 @@ cc.on(
 
     const { app } = ctx;
 
-    let ref = ctx.parsed.ref;
-    if (!ref) {
-      if (ctx.parsed['_'].length > 1) {
-        ref = ctx.parsed['_'][1];
-      }
-    }
-
-    if (ref) {
-      try {
-        await app.api.getRefInfo(ref);
-        await app.api.releaseRCVersion(ref);
-        await bot.replyText(`在 ${ref} 上发布 Release Candidate 成功`);
-      } catch (error) {
-        await bot.replyText(`执行出错：${(error as Error).message}`);
-      }
-    } else {
-      await bot.replyText(`使用方法 rc --ref v2.xx 或 rc v2.xx`);
-    }
+    await app.api.deployBot();
+    await bot.replyText('触发部署成功');
   },
   [],
   equalFunc,
