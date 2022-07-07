@@ -39,12 +39,12 @@ cc.on('help', async (bot) => {
 
   text.add('支持的命令：', true);
 
-  cc.reg.handlers.forEach(([key, func]) => {
-    text.add(`- ${key}: ${func.name}`);
+  cc.reg.handlers.forEach(([key, [_, compareFunc]]) => {
+    text.add(`- ${key}: ${compareFunc.name}`);
   });
 
-  cc.regexReg.handlers.forEach(([key, func]) => {
-    text.add(`- ${key}: ${func.name}`);
+  cc.regexReg.handlers.forEach(([key, [_, compareFunc]]) => {
+    text.add(`- ${key}: ${compareFunc.name}`);
   });
   if (cc.fallbackHandler) {
     text.add(`- *: fallbackHandler`);

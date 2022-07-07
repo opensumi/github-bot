@@ -24,7 +24,7 @@ class Registry<K, T> {
   private _array = new Map<K, [T, CompareFunc<K>]>();
 
   get handlers() {
-    return Array.from(this._array.values());
+    return Array.from(this._array.entries());
   }
 
   add(m: K, handler: T, compareFunc: CompareFunc<K>) {
