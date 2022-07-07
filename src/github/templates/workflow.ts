@@ -19,8 +19,14 @@ export async function handleWorkflowRun(
   const workflowRun = payload.workflow_run;
   const action = payload.action as string;
 
-  if (!(workflowRun.path && workflowToHandle.has(workflowRun.path))) {
-    throw new StopHandleError('只有指定的工作流能被触发');
+  if (!workflowRun.path) {
+    throw new StopHandleError('need workflow path');
+  }
+
+  if (!workflowToHandle.has(workflowRun.path)) {
+    throw new StopHandleError(
+      'only selected path allow to run, receive path: ' + workflowRun.path,
+    );
   }
 
   if (!ctx.octokit) {
