@@ -18,7 +18,7 @@ export async function handleWorkflowRun(
   const workflow = payload.workflow;
   const workflowRun = payload.workflow_run;
   const action = payload.action as string;
-
+  const repository = payload.repository;
   if (!workflowRun.path) {
     throw new StopHandleError('need workflow path');
   }
@@ -34,8 +34,8 @@ export async function handleWorkflowRun(
   }
 
   const checkRunsData = await ctx.octokit.checks.listForSuite({
-    owner: 'opensumi',
-    repo: 'core',
+    owner: repository.owner.login,
+    repo: repository.name,
     check_suite_id: workflowRun.check_suite_id,
   });
 
