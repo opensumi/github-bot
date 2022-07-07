@@ -11,7 +11,6 @@ build({
   entryPoints: ['./src'],
   bundle: true,
   outfile: './index.js',
-  minify: true,
   color: true,
   watch: argv['watch'],
 })
