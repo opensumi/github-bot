@@ -1,22 +1,9 @@
-import { equalFunc, startsWith } from '@/command';
-import { cc, Context, ContextWithApp } from './base';
+import { startsWith } from '@/command';
+import { cc } from './base';
 import { code, image } from '../message';
 import { getDefaultRepo } from '../secrets';
 import { DingBot } from '../bot';
-
-function hasApp<T>(
-  item: Context<T>,
-): item is Context<T> & Required<Pick<Context<T>, 'app'>> {
-  return !!item.app;
-}
-
-async function replyIfAppNotDefined(bot: DingBot, ctx: Context) {
-  if (!hasApp(ctx)) {
-    await bot.replyText(
-      'Current DingBot has not configured use GitHub App. Please contact admin.',
-    );
-  }
-}
+import { hasApp, replyIfAppNotDefined } from './utils';
 
 // example:
 // 1. star -> opensumi/core
@@ -143,12 +130,10 @@ const REPO_REGEX =
   /^(?<owner>[a-zA-Z0-9][a-zA-Z0-9\-]*)\/(?<repo>[a-zA-Z0-9_\-.]+)$/;
 
 cc.onRegex(ISSUE_REGEX, async (bot, ctx) => {
-  const { app } = ctx;
   await bot.replyText(`请你自己打开 GitHub。`);
 });
 
 cc.onRegex(REPO_REGEX, async (bot, ctx) => {
-  const { app } = ctx;
   await bot.replyText(`请你自己打开 GitHub。`);
 });
 
@@ -173,53 +158,4 @@ cc.on(
   },
   [],
   startsWith,
-);
-
-cc.on(
-  'deploy',
-  async (bot, ctx: Context<{ ref: string }>) => {
-    await replyIfAppNotDefined(bot, ctx);
-    if (!hasApp(ctx)) {
-      return;
-    }
-
-    const { app } = ctx;
-    await app.api.deployBot();
-    await bot.replyText('机器人部署任务分发成功');
-  },
-  [],
-  startsWith,
-);
-
-cc.on(
-  'rc',
-  async (bot, ctx: Context<{ ref: string }>) => {
-    await replyIfAppNotDefined(bot, ctx);
-    if (!hasApp(ctx)) {
-      return;
-    }
-
-    const { app } = ctx;
-
-    let ref = ctx.parsed.ref;
-    if (!ref) {
-      if (ctx.parsed['_'].length > 1) {
-        ref = ctx.parsed['_'][1];
-      }
-    }
-
-    if (ref) {
-      try {
-        await app.api.getRefInfo(ref);
-        await app.api.releaseRCVersion(ref);
-        await bot.replyText(`在 ${ref} 上发布 Release Candidate 成功`);
-      } catch (error) {
-        await bot.replyText(`执行出错：${(error as Error).message}`);
-      }
-    } else {
-      await bot.replyText(`使用方法 rc --ref v2.xx 或 rc v2.xx`);
-    }
-  },
-  [],
-  equalFunc,
 );
