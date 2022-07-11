@@ -47,9 +47,9 @@ export class CommandCenter<T> {
   reg = new Registry<string, T>();
   regexReg = new Registry<RegExp, T>();
 
-  prefixs = [] as string[];
-  constructor(prefixs?: string[]) {
-    this.prefixs.push(...(prefixs ?? ['/']));
+  prefixes = [] as string[];
+  constructor(prefixes?: string[]) {
+    this.prefixes.push(...(prefixes ?? ['/']));
   }
 
   async on(
@@ -82,7 +82,7 @@ export class CommandCenter<T> {
     }
     let isCommand = false;
     let command = text;
-    for (const prefix of this.prefixs) {
+    for (const prefix of this.prefixes) {
       if (text.startsWith(prefix)) {
         command = text.slice(prefix.length);
         isCommand = true;
@@ -92,7 +92,7 @@ export class CommandCenter<T> {
 
     if (!isCommand) {
       console.log(
-        '没有命中前缀 ' + JSON.stringify(this.prefixs),
+        '没有命中前缀 ' + JSON.stringify(this.prefixes),
         '不当做命令处理',
       );
       return;

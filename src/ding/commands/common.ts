@@ -32,7 +32,7 @@ cc.on('getGroupInfo', async (bot) => {
 
 cc.on('help', async (bot) => {
   const text = new StringBuilder();
-  const prefix = cc.prefixs.filter(Boolean).join('、');
+  const prefix = cc.prefixes.filter(Boolean).join('、');
   if (prefix) {
     text.add('前缀：' + prefix);
   }
