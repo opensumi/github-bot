@@ -23,20 +23,6 @@ issueCc.on('hello', async (octokit, payload) => {
   );
 });
 
-issueCc.on('ping', async (octokit, payload) => {
-  const { issue, repository } = payload;
-
-  await octokit.request(
-    'POST /repos/{owner}/{repo}/issues/{issue_number}/comments',
-    {
-      owner: repository.owner.login,
-      repo: repository.name,
-      issue_number: issue.number,
-      body: 'Please Have A Look.\n@Aaaaash @AhkunTa @bk1012 @bytemain @ensorrow @erha19 @frankLife @hacke2 @life2015 @MMhunter @Ricbet @yantze',
-    },
-  );
-});
-
 export const handleComment = async ({
   octokit,
   payload,
