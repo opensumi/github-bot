@@ -48,14 +48,3 @@ When create bot done, you can get the last two secrets you need:
 set **App ID** to [Secrets](./secrets.md), [HERE IS A SECRET]
 
 and generate a private key. and set it's value to [Secrets](./secrets.md), [HERE IS A SECRET].
-
-Notice, we should transform the format of private key：
-
-```txt
-// https://github.com/gr2m/cloudflare-worker-github-app-example/blob/main/worker.js
-
-// The private-key.pem file from GitHub needs to be transformed from the
-// PKCS#1 format to PKCS#8, as the crypto APIs do not support PKCS#1:
-//
-//     openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in private-key.pem -out private-key-pkcs8.pem
-```
