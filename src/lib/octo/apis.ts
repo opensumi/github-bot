@@ -432,10 +432,10 @@ export class APIWrapper {
     });
   }
 
-  async getRefInfo(ref: string) {
+  async getRefInfoByRepo(ref: string, owner: string, repo: string) {
     const commit = await this.octo.repos.getCommit({
-      owner: 'opensumi',
-      repo: 'core',
+      owner,
+      repo,
       ref,
     });
     return commit;

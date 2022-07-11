@@ -63,7 +63,7 @@ cc.on(
 
     if (ref) {
       try {
-        await app.api.getRefInfo(ref);
+        await app.api.getRefInfoByRepo(ref, 'opensumi', 'core');
         await app.api.releaseRCVersion(ref);
         await bot.replyText(`在 ${ref} 上发布 Release Candidate 成功`);
       } catch (error) {
