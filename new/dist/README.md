@@ -1,1 +1,0 @@
-This folder contains the built output assets for the worker "new" generated at 2022-07-15T14:24:41.074Z.
