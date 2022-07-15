@@ -5,7 +5,7 @@ import { compose, text as textWrapper } from './message';
 import mri from 'mri';
 import { initApp } from '@/github/app';
 import { App } from '@/lib/octo';
-import { Env } from '..';
+import { Env } from '@/env';
 import { GitHubKVManager } from '@/github/storage';
 
 function sanitize(s: string) {

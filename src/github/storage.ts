@@ -2,7 +2,7 @@
 // 如：https://github.com/organizations/riril/settings/apps/ririltestbot
 
 import { KVManager2 } from '@/runtime/cfworker/kv';
-import { Env } from '..';
+import { Env } from '@/env';
 
 export interface IDingWebhookItem {
   // Webhook for the dingtalk bot

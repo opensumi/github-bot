@@ -5,7 +5,7 @@ import { baseHandler, setupWebhooksSendToDing } from './handler';
 import { handleComment } from './commands';
 import { sendToDing } from './utils';
 import { error } from '@/runtime/response';
-import { Env } from '..';
+import { Env } from '@/env';
 
 export interface Context {
   setting: ISetting;

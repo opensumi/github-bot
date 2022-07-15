@@ -1,7 +1,7 @@
 import { error, message } from '@/runtime/response';
 import { DingKVManager } from './secrets';
 import { DingBot, verifyMessage } from './bot';
-import { Env } from '..';
+import { Env } from '@/env';
 
 export async function handler(
   req: Request & { params?: { id?: string }; query?: { id?: string } },

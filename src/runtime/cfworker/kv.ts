@@ -1,29 +1,3 @@
-export class KVManager<T> {
-  constructor(
-    private kv: KVNamespace,
-    private prefix: string,
-    private id: string,
-  ) {}
-
-  get fullId() {
-    return this.prefix + this.id;
-  }
-
-  async getJSON() {
-    return await this.kv.get<T>(this.fullId, 'json');
-  }
-
-  async setJSON(data: T) {
-    return await this.kv.put(this.fullId, JSON.stringify(data));
-  }
-
-  async updateJSON(data: Partial<T>) {
-    const oldData = (await this.getJSON()) ?? {};
-    const newData = Object.assign({}, oldData, data);
-    return await this.kv.put(this.fullId, JSON.stringify(newData));
-  }
-}
-
 export class KVManager2<T> {
   constructor(private kv: KVNamespace, private prefix: string = '') {}
 
@@ -35,11 +9,11 @@ export class KVManager2<T> {
     return await this.kv.get<T>(this.f(key), 'json');
   }
 
-  async setJSON(key: string,data: T) {
+  async setJSON(key: string, data: T) {
     return await this.kv.put(this.f(key), JSON.stringify(data));
   }
 
-  async updateJSON(key: string,data: Partial<T>) {
+  async updateJSON(key: string, data: Partial<T>) {
     const oldData = (await this.getJSON(key)) ?? {};
     const newData = Object.assign({}, oldData, data);
     return await this.kv.put(this.f(key), JSON.stringify(newData));

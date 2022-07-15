@@ -1,5 +1,5 @@
 import { KVManager2 } from '@/runtime/cfworker/kv';
-import { Env } from '..';
+import { Env } from '@/env';
 
 export interface IDingBotSetting {
   outGoingToken: string;

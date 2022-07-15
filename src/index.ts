@@ -4,6 +4,7 @@ import { handler as proxyHandler } from './proxy';
 import { webhookHandler } from './github';
 import { handler as githubAppHandler } from './github/app';
 import { error } from '@/runtime/response';
+import { Env } from './env';
 
 export const router = Router();
 
@@ -24,11 +25,6 @@ const errorHandler = (err: Error) => {
   console.error(err);
   return error(500, 'server internal error');
 };
-
-export interface Env {
-  KV_PROD: KVNamespace;
-  HOST: string;
-}
 
 export default {
   async fetch(
