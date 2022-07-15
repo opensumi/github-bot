@@ -1,4 +1,4 @@
-import { error } from './response';
+import { error } from './runtime/response';
 
 function getURL(_url: string) {
   try {

@@ -1,7 +1,7 @@
 // 在 github app 的设置页面中查看
 // 如：https://github.com/organizations/riril/settings/apps/ririltestbot
 
-import { KVManager } from '@/kv';
+import { KVManager } from '@/runtime/cfworker/kv';
 
 export interface DingWebhookItem {
   // Webhook for the dingtalk bot

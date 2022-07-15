@@ -1,9 +1,9 @@
-import { Router } from './router';
+import { Router } from './runtime/router';
 import { handler as dingHandler } from './ding';
 import { handler as proxyHandler } from './proxy';
 import { webhookHandler } from './github';
 import { handler as githubAppHandler } from './github/app';
-import { error } from '@/response';
+import { error } from '@/runtime/response';
 
 export const router = Router();
 
