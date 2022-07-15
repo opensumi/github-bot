@@ -7,12 +7,14 @@
   "license": "MIT",
   "scripts": {
     "format": "prettier --write '**/*.{js,css,json,md}'",
+    "prebuild": "yarn gen",
     "build": "wrangler publish --dry-run --outdir=dist",
-    "dev": "yarn dev:preview",
+    "dev": "yarn gen && yarn dev:preview",
     "dev:preview": "run-p dev:worker dev:proxy",
     "dev:worker": "wrangler dev",
     "dev:proxy": "esno dev.ts",
-    "publish:local": "yarn build && wrangler publish",
+    "gen": "esno ./scripts/generate-wrangler-toml.ts",
+    "publish:local": "wrangler publish",
     "lint": "eslint . && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
     "lint:fix": "eslint . --fix",
     "test": "jest --config jest.config.json --verbose"

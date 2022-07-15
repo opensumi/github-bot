@@ -8,6 +8,12 @@ node_compat = true
 workers_dev = true
 usage_model = "unbound"
 
+kv_namespaces = [
+    { binding = "KV_PROD", id = "{{KV_LOCAL_ID}}", preview_id = "{{KV_LOCAL_ID}}" },
+]
+
 [env.prod]
 name = "sumi-webhook"
 vars = { ENVIRONMENT = "prod" }
+
+kv_namespaces = [{ binding = "KV_PROD", id = "{{KV_PROD_ID}}" }]
