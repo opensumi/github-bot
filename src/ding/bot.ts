@@ -58,8 +58,7 @@ async function checkSign(
   return;
 }
 
-export async function verifyMessage(req: Request, token: string) {
-  const headers = req.headers;
+export async function verifyMessage(headers: Headers, token: string) {
   const timestamp = headers.get('timestamp') as string;
   const sign = headers.get('sign') as string;
   if (timestamp && sign) {

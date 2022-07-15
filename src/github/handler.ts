@@ -18,7 +18,7 @@ export class ValidationError extends Error {
   }
 }
 
-export async function validateGithub(req: Request, webhooks: Webhooks) {
+export async function validateGithub(req: Request<any>, webhooks: Webhooks) {
   const headers = req.headers;
 
   if (!headers.get('User-Agent')?.startsWith('GitHub-Hookshot/')) {
@@ -109,7 +109,7 @@ export const setupWebhooksSendToDing = (
 
 export async function baseHandler(
   webhooks: Webhooks,
-  req: Request,
+  req: Request<any>,
   env: Env,
   ctx: ExecutionContext,
 ) {

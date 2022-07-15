@@ -57,7 +57,7 @@ app.get('/favicon.ico', async (c) => {
 });
 
 // 接收 DingTalk webhook 事件
-app.post('/ding/?:id', async (c) => {
+app.post('/ding/:id', async (c) => {
   const id = c.req.param('id') ?? c.req.query('id');
 
   console.log(`handler ~ id`, id);
@@ -75,7 +75,7 @@ app.post('/ding/?:id', async (c) => {
     return c.error(401, 'please set webhook token in bot settings');
   }
 
-  const errMessage = await verifyMessage(c.req, setting.outGoingToken);
+  const errMessage = await verifyMessage(c.req.headers, setting.outGoingToken);
   if (errMessage) {
     console.log(`check sign error:`, errMessage);
     return c.error(403, errMessage);
@@ -94,7 +94,7 @@ app.post('/ding/?:id', async (c) => {
 });
 
 // 接收 Github App 的 webhook 事件
-app.post('/github/app/?:id', async (c) => {
+app.post('/github/app/:id', async (c) => {
   const id = c.req.param('id') ?? c.req.query('id');
   if (!id) {
     return c.error(401, 'need a valid id');
@@ -113,7 +113,7 @@ app.post('/github/app/?:id', async (c) => {
 });
 
 // 接收 Github webhook 事件
-app.post('/webhook/?:id', async (c) => {
+app.post('/webhook/:id', async (c) => {
   const id = c.req.param('id') ?? c.req.query('id');
   if (!id) {
     return c.error(401, 'need a valid id');
