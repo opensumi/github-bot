@@ -4,10 +4,7 @@ import { Context } from '../app';
 import { ExtractPayload, MarkdownContent } from '../types';
 import { Octokit } from '@octokit/rest';
 
-const workflowToHandle = new Set([
-  '.github/workflows/manual-release-rc.yml',
-  '.github/workflows/deploy.yml',
-]);
+const workflowToHandle = new Set(['.github/workflows/manual-release-rc.yml']);
 
 export async function handleWorkflowRun(
   payload: ExtractPayload<'workflow_run'>,
