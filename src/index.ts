@@ -38,7 +38,7 @@ app.use('*', async (c, next) => {
       message: text,
     });
   };
-  next();
+  await next();
 });
 
 app.get('/', (c) => c.text('Hono!!'));
