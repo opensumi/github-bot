@@ -151,7 +151,7 @@ export async function baseHandler(
   }
 }
 
-const webhooksFactory = (secret: string) => {
+export const webhooksFactory = (secret: string) => {
   return new Webhooks({
     secret,
   });

@@ -1,6 +1,6 @@
 import { error } from './runtime/response';
 
-function getURL(_url: string) {
+export function getURL(_url: string) {
   try {
     return new URL(_url);
   } catch (error) {
@@ -10,7 +10,6 @@ function getURL(_url: string) {
 
 export function handler(
   request: Request & { params?: { url?: string }; query?: { url?: string } },
-
 ) {
   const { params, query } = request;
   const _url = params?.url ?? query?.url;
