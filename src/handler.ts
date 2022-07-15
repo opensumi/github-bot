@@ -28,6 +28,11 @@ router.all('*', () => {
   return error(404, 'no router found');
 });
 
+router.exception((request, err) => {
+  console.error(err);
+  return error(500, 'server internal error');
+});
+
 export async function handleRequest(event: FetchEvent) {
   return router.handle(event.request, event);
 }

@@ -3,6 +3,9 @@
 // @ts-nocheck
 
 const Router = ({ base = '', routes = [] } = {}) => ({
+  data: {} as {
+    exception?: ExceptionHandler;
+  },
   __proto__: new Proxy(
     {},
     {
@@ -39,14 +42,21 @@ const Router = ({ base = '', routes = [] } = {}) => ({
       ) {
         request.params = match.groups;
         for (let handler of handlers) {
-          if (
-            (response = await handler(request.proxy || request, ...args)) !==
-            undefined
-          )
-            return response;
+          try {
+            if (
+              (response = await handler(request.proxy || request, ...args)) !==
+              undefined
+            )
+              return response;
+          } catch (error) {
+            return this.data['exception']?.(request, error);
+          }
         }
       }
     }
+  },
+  async exception(handler: ExceptionHandler) {
+    this.data['exception'] = handler;
   },
 });
 
@@ -86,8 +96,11 @@ export interface Request {
   text?(): Promise<any>;
 }
 
+type ExceptionHandler = (request: Request, error: Error) => any;
+
 export type Router<TRequest> = {
   handle: (request: Request, ...extra: any) => any;
+  exception: (handler: ExceptionHandler) => any;
   routes: RouteEntry<TRequest>[];
 } & {
   [any: string]: Route;
