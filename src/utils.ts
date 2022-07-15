@@ -59,3 +59,7 @@ export function lazyValue<T>(function_: (...args: any[]) => T) {
     return result;
   };
 }
+
+export function proxyThisUrl(url: string) {
+  return `${HOST}/proxy/${encodeURIComponent(url)}`;
+}

@@ -1,9 +1,10 @@
 import { startsWith } from '@/command';
 import { cc } from './base';
-import { code, image } from '../message';
+import { code, image, markdown } from '../message';
 import { getDefaultRepo } from '../secrets';
 import { DingBot } from '../bot';
 import { hasApp, replyIfAppNotDefined } from './utils';
+import { proxyThisUrl } from '@/utils';
 
 // example:
 // 1. star -> opensumi/core
@@ -110,10 +111,15 @@ cc.on(
         owner: splitted[0],
         repo: splitted[1],
       });
-      const name = result.data?.full_name;
-      if (name) {
+      const full_name = result.data?.full_name;
+      if (full_name) {
         await bot.reply(
-          image(`https://opengraph.githubassets.com/${makeid(16)}/${name}`),
+          markdown(
+            `${full_name} Open Graph`,
+            `![](${proxyThisUrl(
+              `https://opengraph.githubassets.com/${makeid(16)}/${full_name}`,
+            )})`,
+          ),
         );
       }
       return;
