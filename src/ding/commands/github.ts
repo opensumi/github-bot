@@ -1,6 +1,6 @@
 import { startsWith } from '@/command';
 import { cc } from './base';
-import { code, image, markdown } from '../message';
+import { code, markdown } from '../message';
 import { DingBot } from '../bot';
 import { hasApp, replyIfAppNotDefined } from './utils';
 import { proxyThisUrl } from '@/utils';
@@ -116,6 +116,7 @@ cc.on(
           markdown(
             `${full_name} Open Graph`,
             `![](${proxyThisUrl(
+              bot.env,
               `https://opengraph.githubassets.com/${makeid(16)}/${full_name}`,
             )})`,
           ),

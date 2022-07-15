@@ -79,9 +79,9 @@ export class DingBot {
     public id: string,
     public msg: Message,
     public kvManager: DingKVManager,
-    private ctx: ExecutionContext,
-    private env: Env,
-    private setting: IDingBotSetting,
+    public ctx: ExecutionContext,
+    public env: Env,
+    public setting: IDingBotSetting,
   ) {
     this.githubKVManager = new GitHubKVManager(env);
   }

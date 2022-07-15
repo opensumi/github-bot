@@ -1,3 +1,5 @@
+import { Env } from '@/env';
+
 export class StringBuilder {
   private array = [] as string[];
   constructor(...initial: string[]) {
@@ -16,6 +18,6 @@ export class StringBuilder {
   }
 }
 
-export function proxyThisUrl(url: string) {
-  return `${HOST}/proxy/${encodeURIComponent(url)}`;
+export function proxyThisUrl(env: Env, url: string) {
+  return `${env.HOST}/proxy/${encodeURIComponent(url)}`;
 }
