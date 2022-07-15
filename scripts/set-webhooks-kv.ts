@@ -1,4 +1,4 @@
-// wrangler kv:key put --binding=WEBHOOKS_INFO antdm {}
+// wrangler kv:key put --binding=KV_PROD antdm {}
 import { exec } from 'child_process';
 import { readFileSync } from 'fs';
 
@@ -11,7 +11,7 @@ async function main() {
   console.log(`🚀 ~ file: set-kv.ts ~ line 12 ~ main ~ data`, data);
   const json = JSON.parse(data);
   for (const [name, sec] of Object.entries(json)) {
-    const cmd = `./node_modules/.bin/wrangler kv:key put --binding=WEBHOOKS_INFO ${
+    const cmd = `./node_modules/.bin/wrangler kv:key put --binding=KV_PROD ${
       argv.env ? `--env ${argv.env}` : ''
     } ${name} '${JSON.stringify(sec)}'`;
     exec(cmd, (_err, stdout, stderr) => {

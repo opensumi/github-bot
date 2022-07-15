@@ -6,16 +6,16 @@ export class KVManager<T> {
   }
 
   async getJSON() {
-    return await WEBHOOKS_INFO.get<T>(this.fullId, 'json');
+    return await KV_PROD.get<T>(this.fullId, 'json');
   }
 
   async setJSON(data: T) {
-    return await WEBHOOKS_INFO.put(this.fullId, JSON.stringify(data));
+    return await KV_PROD.put(this.fullId, JSON.stringify(data));
   }
 
   async updateJSON(data: Partial<T>) {
     const oldData = (await this.getJSON()) ?? {};
     const newData = Object.assign({}, oldData, data);
-    return await WEBHOOKS_INFO.put(this.fullId, JSON.stringify(newData));
+    return await KV_PROD.put(this.fullId, JSON.stringify(newData));
   }
 }

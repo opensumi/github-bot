@@ -31,7 +31,7 @@ const GITHUB_SETTINGS_PREFIX = 'github/settings/';
 const GITHUB_APP_SETTINGS_PREFIX = 'github/app/settings/';
 
 export const getSettingById = async (id: string) => {
-  const webhooks = await WEBHOOKS_INFO.get<Setting>(
+  const webhooks = await KV_PROD.get<Setting>(
     GITHUB_SETTINGS_PREFIX + id,
     'json',
   );

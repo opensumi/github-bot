@@ -6,7 +6,7 @@ const SECRETS_PREFIX = 'ding/secrets/';
 const INFO_PREFIX = 'ding/info/';
 
 export const getSettingById = async (id: string) => {
-  const webhooks = await WEBHOOKS_INFO.get<IDingBotSetting>(
+  const webhooks = await KV_PROD.get<IDingBotSetting>(
     SECRETS_PREFIX + id,
     'json',
   );
@@ -18,17 +18,17 @@ export interface DingInfo {
 }
 
 export const getGroupInfo = async (id: string) => {
-  return await WEBHOOKS_INFO.get<DingInfo>(INFO_PREFIX + id, 'json');
+  return await KV_PROD.get<DingInfo>(INFO_PREFIX + id, 'json');
 };
 
 export const setGroupInfo = async (id: string, info: DingInfo) => {
-  return await WEBHOOKS_INFO.put(INFO_PREFIX + id, JSON.stringify(info));
+  return await KV_PROD.put(INFO_PREFIX + id, JSON.stringify(info));
 };
 
 export const updateGroupInfo = async (id: string, info: Partial<DingInfo>) => {
   const oldInfo = (await getGroupInfo(id)) ?? {};
   const newInfo = Object.assign({}, oldInfo, info);
-  return await WEBHOOKS_INFO.put(INFO_PREFIX + id, JSON.stringify(newInfo));
+  return await KV_PROD.put(INFO_PREFIX + id, JSON.stringify(newInfo));
 };
 
 export const getDefaultRepo = async (id: string) => {

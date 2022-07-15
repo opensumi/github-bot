@@ -8,10 +8,10 @@ usage_model = "unbound"
 compatibility_date = "2022-01-28"
 
 kv_namespaces = [
-    { binding = "WEBHOOKS_INFO", id = "{{KV_LOCAL_ID}}", preview_id = "{{KV_LOCAL_ID}}" },
+    { binding = "KV_PROD", id = "{{KV_LOCAL_ID}}", preview_id = "{{KV_LOCAL_ID}}" },
 ]
 
 [env.prod]
 name = "sumi-webhook"
 vars = { ENVIRONMENT = "prod" }
-kv_namespaces = [{ binding = "WEBHOOKS_INFO", id = "{{KV_PROD_ID}}" }]
+kv_namespaces = [{ binding = "KV_PROD", id = "{{KV_PROD_ID}}" }]
