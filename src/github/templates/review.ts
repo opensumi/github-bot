@@ -24,23 +24,27 @@ export async function handleReview(
     );
   }
 
+  let titleActionText = action;
+  let fullAction = action;
+
   if (review.state) {
-    action = review.state as string;
+    titleActionText = review.state as string;
   }
 
   if (action === 'changes_requested') {
-    action = 'requested changes';
+    titleActionText = 'requested changes';
+    fullAction = 'changes requested';
   }
 
   if (action === 'dismissed') {
-    action = 'dismissed their stale review';
+    fullAction = 'dismissed their stale review';
   }
 
   const title = titleTpl(
     {
       repo: payload.repository,
       event: 'review',
-      action,
+      action: titleActionText,
     },
     ctx,
   );
@@ -51,7 +55,7 @@ export async function handleReview(
 
   const text = textTpl(
     {
-      title: `${renderUserLink(payload.sender)} [${action}](${
+      title: `${renderUserLink(payload.sender)} [${fullAction}](${
         review.html_url
       }) on [pull request](${pr.html_url})`,
       body: builder.build(),
