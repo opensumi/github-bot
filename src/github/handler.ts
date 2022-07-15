@@ -3,7 +3,7 @@ import {
   EmitterWebhookEventName,
 } from '@octokit/webhooks/dist-types/types';
 import { Webhooks } from '@octokit/webhooks';
-import { error, message } from '@/utils';
+import { error, message } from '@/response';
 import { getTemplates, StopHandleError } from './templates';
 import { getSettingById } from '@/github/storage';
 import { sendToDing } from './utils';

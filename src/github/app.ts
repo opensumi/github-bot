@@ -4,7 +4,7 @@ import { Setting, AppSetting, getAppSettingById } from '@/github/storage';
 import { baseHandler, setupWebhooksSendToDing } from './handler';
 import { handleComment } from './commands';
 import { sendToDing } from './utils';
-import { error } from '@/utils';
+import { error } from '@/response';
 
 export interface Context {
   setting: Setting;

@@ -1,4 +1,4 @@
-import { error } from './utils';
+import { error } from './response';
 
 function getURL(_url: string) {
   try {

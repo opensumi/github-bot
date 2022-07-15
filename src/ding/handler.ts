@@ -1,4 +1,4 @@
-import { error, message } from '@/utils';
+import { error, message } from '@/response';
 import { getSettingById } from './secrets';
 import { DingBot, verifyMessage } from './bot';
 

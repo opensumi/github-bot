@@ -3,7 +3,7 @@ import { handler as dingHandler } from './ding';
 import { handler as proxyHandler } from './proxy';
 import { webhookHandler } from './github';
 import { handler as githubAppHandler } from './github/app';
-import { error } from './utils';
+import { error } from '@/response';
 
 export const router = Router();
 
