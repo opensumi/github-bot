@@ -1,5 +1,6 @@
 import { Router } from './router';
 import { handler as dingHandler } from './ding';
+import { handler as proxyHandler } from './proxy';
 import { webhookHandler } from './github';
 import { handler as githubAppHandler } from './github/app';
 import { error } from './utils';
@@ -13,16 +14,7 @@ router.post('/github/app/?:id', githubAppHandler);
 // 接收 Github webhook 事件
 router.post('/webhook/?:id', webhookHandler);
 
-router.get('/proxy/?:url', (request) => {
-  const { params, query } = request;
-  const _url = params?.url ?? query?.url;
-  if (_url) {
-    const url = new URL(_url);
-    return fetch(url.toString(), request);
-  }
-
-  return error(401, 'not a valid hostname');
-});
+router.all('/proxy/?:url', proxyHandler);
 
 router.all('*', () => {
   return error(404, 'no router found');
