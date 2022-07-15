@@ -1,4 +1,4 @@
-import { doSign, Message, send } from '.';
+import { doSign, send } from '@/ding/utils';
 import { DingKVManager, IDingBotSetting } from './secrets';
 import { cc } from './commands';
 import { compose, text as textWrapper } from './message';
@@ -7,6 +7,7 @@ import { initApp } from '@/github/app';
 import { App } from '@/lib/octo';
 import { Env } from '@/env';
 import { GitHubKVManager } from '@/github/storage';
+import { Message } from './types';
 
 function sanitize(s: string) {
   return s.toString().trim();
