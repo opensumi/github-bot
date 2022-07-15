@@ -10,6 +10,7 @@ function getURL(_url: string) {
 
 export function handler(
   request: Request & { params?: { url?: string }; query?: { url?: string } },
+
 ) {
   const { params, query } = request;
   const _url = params?.url ?? query?.url;

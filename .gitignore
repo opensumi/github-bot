@@ -20,4 +20,4 @@ index.js
 yarn-error.log
 
 webhooks.json
-wrangler.toml
+# wrangler.toml

@@ -1,9 +1,10 @@
 // 在 github app 的设置页面中查看
 // 如：https://github.com/organizations/riril/settings/apps/ririltestbot
 
-import { KVManager } from '@/runtime/cfworker/kv';
+import { KVManager2 } from '@/runtime/cfworker/kv';
+import { Env } from '..';
 
-export interface DingWebhookItem {
+export interface IDingWebhookItem {
   // Webhook for the dingtalk bot
   url: string;
   // You should select **signed mode(加签模式)** in the security settings of the bot. and you will see this secret.
@@ -12,12 +13,12 @@ export interface DingWebhookItem {
   event?: string[];
 }
 
-export interface Setting {
+export interface ISetting {
   /**
    * 在 GitHub 上设置的此 webhook 的验证
    */
   githubSecret: string;
-  dingWebhooks: DingWebhookItem[];
+  dingWebhooks: IDingWebhookItem[];
   contentLimit: number;
   // 开启这个选项会只推送社区需要的那几个 event
   isCommunity?: boolean;
@@ -30,27 +31,7 @@ export interface Setting {
 const GITHUB_SETTINGS_PREFIX = 'github/settings/';
 const GITHUB_APP_SETTINGS_PREFIX = 'github/app/settings/';
 
-export const getSettingById = async (id: string) => {
-  const webhooks = await KV_PROD.get<Setting>(
-    GITHUB_SETTINGS_PREFIX + id,
-    'json',
-  );
-  if (webhooks) {
-    if (webhooks.contentLimit === undefined) {
-      webhooks.contentLimit = 300;
-    }
-    if (webhooks.isCommunity === undefined) {
-      webhooks.isCommunity = true;
-    }
-    if (webhooks.notDisplayRepoName === undefined) {
-      webhooks.notDisplayRepoName = true;
-    }
-  }
-
-  return webhooks;
-};
-
-export type AppSetting = Setting & {
+export type AppSetting = ISetting & {
   // GitHub App related
   appSettings: {
     // The appId of your GitHub App.
@@ -60,7 +41,37 @@ export type AppSetting = Setting & {
   };
 };
 
-export const getAppSettingById = async (id: string) => {
-  const manager = new KVManager<AppSetting>(GITHUB_APP_SETTINGS_PREFIX, id);
-  return await manager.getJSON();
-};
+export class GitHubKVManager {
+  kv: KVNamespace<string>;
+  appSettingsKV: KVManager2<AppSetting>;
+  settingsKV: KVManager2<ISetting>;
+  constructor(private env: Env) {
+    this.kv = env.KV_PROD;
+    this.appSettingsKV = new KVManager2<AppSetting>(
+      this.kv,
+      GITHUB_APP_SETTINGS_PREFIX,
+    );
+    this.settingsKV = new KVManager2<ISetting>(this.kv, GITHUB_SETTINGS_PREFIX);
+  }
+
+  getAppSettingById = async (id: string) => {
+    return await this.appSettingsKV.getJSON(id);
+  };
+
+  getSettingById = async (id: string) => {
+    const webhooks = await this.settingsKV.getJSON(id);
+    if (webhooks) {
+      if (webhooks.contentLimit === undefined) {
+        webhooks.contentLimit = 300;
+      }
+      if (webhooks.isCommunity === undefined) {
+        webhooks.isCommunity = true;
+      }
+      if (webhooks.notDisplayRepoName === undefined) {
+        webhooks.notDisplayRepoName = true;
+      }
+    }
+
+    return webhooks;
+  };
+}

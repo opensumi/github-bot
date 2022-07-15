@@ -7,9 +7,10 @@ It is recommended to use Github Codespaces to develop, because we can access the
 and just run:
 
 ```sh
+yarn global add wrangler
 yarn
 # Login to Cloudflare
-yarn wrangler login
+wrangler login
 yarn dev
 ```
 

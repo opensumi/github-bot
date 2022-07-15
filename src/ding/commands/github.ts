@@ -1,7 +1,6 @@
 import { startsWith } from '@/command';
 import { cc } from './base';
 import { code, image, markdown } from '../message';
-import { getDefaultRepo } from '../secrets';
 import { DingBot } from '../bot';
 import { hasApp, replyIfAppNotDefined } from './utils';
 import { proxyThisUrl } from '@/utils';
@@ -12,7 +11,7 @@ import { proxyThisUrl } from '@/utils';
 // 3. star microsoft/core -> microsoft/core
 // 4. star microsoft core -> microsoft/core
 async function getRepoInfoFromCommand(argv: string[], bot: DingBot) {
-  const defaultRepo = await getDefaultRepo(bot.id);
+  const defaultRepo = await bot.kvManager.getDefaultRepo(bot.id);
   let owner, repo;
   if (defaultRepo) {
     owner = defaultRepo.owner;

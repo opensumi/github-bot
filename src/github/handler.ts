@@ -5,11 +5,12 @@ import {
 import { Webhooks } from '@octokit/webhooks';
 import { error, message } from '@/runtime/response';
 import { getTemplates, StopHandleError } from './templates';
-import { getSettingById } from '@/github/storage';
+import { GitHubKVManager } from '@/github/storage';
 import { sendToDing } from './utils';
 import type { MarkdownContent, THasAction } from './types';
 import { Octokit } from '@octokit/core';
 import { Context } from './app';
+import { Env } from '..';
 
 export class ValidationError extends Error {
   constructor(public code: number, message: string) {
@@ -109,7 +110,8 @@ export const setupWebhooksSendToDing = (
 export async function baseHandler(
   webhooks: Webhooks,
   req: Request,
-  event: FetchEvent,
+  env: Env,
+  ctx: ExecutionContext,
 ) {
   try {
     const {
@@ -119,7 +121,7 @@ export async function baseHandler(
     } = await validateGithub(req, webhooks);
 
     try {
-      event.waitUntil(
+      ctx.waitUntil(
         webhooks.receive({
           id: id,
           name: eventName as any,
@@ -157,7 +159,8 @@ const webhooksFactory = (secret: string) => {
 
 export async function webhookHandler(
   req: Request & { params?: { id?: string }; query?: { id?: string } },
-  event: FetchEvent,
+  env: Env,
+  ctx: ExecutionContext,
 ) {
   let id = req.params?.id;
   if (!id) {
@@ -166,7 +169,8 @@ export async function webhookHandler(
   if (!id) {
     return error(401, 'need a valid id');
   }
-  const setting = await getSettingById(id);
+  const githubKVManager = new GitHubKVManager(env);
+  const setting = await githubKVManager.getSettingById(id);
   if (!setting) {
     return error(404, 'id not found');
   }
@@ -179,5 +183,5 @@ export async function webhookHandler(
   setupWebhooksSendToDing(webhooks as any, {
     setting: setting,
   });
-  return baseHandler(webhooks, req, event);
+  return baseHandler(webhooks, req, env, ctx);
 }

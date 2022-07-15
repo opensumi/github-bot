@@ -1,13 +1,14 @@
 import { App } from '@/lib/octo';
 import { Octokit } from '@octokit/rest';
-import { Setting, AppSetting, getAppSettingById } from '@/github/storage';
+import { ISetting, AppSetting, GitHubKVManager } from '@/github/storage';
 import { baseHandler, setupWebhooksSendToDing } from './handler';
 import { handleComment } from './commands';
 import { sendToDing } from './utils';
 import { error } from '@/runtime/response';
+import { Env } from '..';
 
 export interface Context {
-  setting: Setting;
+  setting: ISetting;
 }
 
 export interface AppContext extends Context {
@@ -70,7 +71,8 @@ export async function initApp(setting: AppSetting) {
 
 export async function handler(
   req: Request & { params?: { id?: string }; query?: { id?: string } },
-  event: FetchEvent,
+  env: Env,
+  ctx: ExecutionContext,
 ) {
   let id = req.params?.id;
   if (!id) {
@@ -79,7 +81,8 @@ export async function handler(
   if (!id) {
     return error(401, 'need a valid id');
   }
-  const setting = await getAppSettingById(id);
+  const githubKVManager = new GitHubKVManager(env);
+  const setting = await githubKVManager.getAppSettingById(id);
   if (!setting) {
     return error(404, 'id not found');
   }
@@ -88,5 +91,5 @@ export async function handler(
   }
 
   const app = await initApp(setting);
-  return baseHandler(app.webhooks, req, event);
+  return baseHandler(app.webhooks, req, env, ctx);
 }

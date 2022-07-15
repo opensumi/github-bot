@@ -1,5 +1,5 @@
 import { send } from '@/ding/utils';
-import { Setting } from '@/github/storage';
+import { ISetting } from '@/github/storage';
 import { MarkdownContent } from './types';
 
 function securityInterception(text: string) {
@@ -10,7 +10,7 @@ function securityInterception(text: string) {
 export async function sendContentToDing(
   dingContent: Record<string, unknown>,
   eventName: string,
-  setting: Setting,
+  setting: ISetting,
 ) {
   if (setting.dingWebhooks.length === 0) {
     return;
@@ -41,7 +41,7 @@ export async function sendContentToDing(
 export async function sendToDing(
   data: MarkdownContent,
   eventName: string,
-  setting: Setting,
+  setting: ISetting,
 ) {
   if (setting.dingWebhooks.length === 0) {
     return;

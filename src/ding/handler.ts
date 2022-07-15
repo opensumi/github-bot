@@ -1,10 +1,12 @@
 import { error, message } from '@/runtime/response';
-import { getSettingById } from './secrets';
+import { DingKVManager } from './secrets';
 import { DingBot, verifyMessage } from './bot';
+import { Env } from '..';
 
 export async function handler(
   req: Request & { params?: { id?: string }; query?: { id?: string } },
-  event: FetchEvent,
+  env: Env,
+  ctx: ExecutionContext,
 ) {
   let id = req.params?.id;
   if (!id) {
@@ -14,7 +16,9 @@ export async function handler(
   if (!id) {
     return error(401, 'need a valid id');
   }
-  const setting = await getSettingById(id);
+
+  const kvManager = new DingKVManager(env);
+  const setting = await kvManager.getSettingById(id);
   if (!setting) {
     return error(404, 'id not found');
   }
@@ -28,7 +32,7 @@ export async function handler(
     return error(403, errMessage);
   }
 
-  const bot = new DingBot(id, await req.json(), event, setting);
-  event.waitUntil(bot.handle());
+  const bot = new DingBot(id, await req.json(), kvManager, ctx, env, setting);
+  ctx.waitUntil(bot.handle());
   return message('ok');
 }

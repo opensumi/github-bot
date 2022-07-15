@@ -8,7 +8,7 @@
   "scripts": {
     "format": "prettier --write '**/*.{js,css,json,md}'",
     "_build": "esno build.ts",
-    "build": "run-s gen _build",
+    "build": "wrangler publish --dry-run --outdir=dist",
     "dev": "run-s gen dev:preview",
     "gen": "esno generate.ts",
     "dev:preview": "run-p dev:build dev:worker dev:proxy",
@@ -22,7 +22,6 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.1",
-    "@cloudflare/wrangler": "^1.19.12",
     "@octokit/types": "^6.39.0",
     "@types/jest": "^28.1.5",
     "@types/lodash": "^4.14.182",
@@ -53,6 +52,7 @@
     "@octokit/plugin-paginate-rest": "^3.0.0",
     "@octokit/rest": "^19.0.3",
     "@octokit/webhooks": "^10.0.8",
+    "itty-router": "^2.6.1",
     "lodash": "^4.17.21",
     "mri": "^1.2.0"
   }

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/index.ts"],
+  "sourcesContent": ["/**\n * Welcome to Cloudflare Workers! This is your first worker.\n *\n * - Run `wrangler dev src/index.ts` in your terminal to start a development server\n * - Open a browser tab at http://localhost:8787/ to see your worker in action\n * - Run `wrangler publish src/index.ts --name my-worker` to publish your worker\n *\n * Learn more at https://developers.cloudflare.com/workers/\n */\n\nexport interface Env {\n\t// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/\n\t// MY_KV_NAMESPACE: KVNamespace;\n\t//\n\t// Example binding to Durable Object. Learn more at https://developers.cloudflare.com/workers/runtime-apis/durable-objects/\n\t// MY_DURABLE_OBJECT: DurableObjectNamespace;\n\t//\n\t// Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/\n\t// MY_BUCKET: R2Bucket;\n}\n\nexport default {\n\tasync fetch(\n\t\trequest: Request,\n\t\tenv: Env,\n\t\tctx: ExecutionContext\n\t): Promise<Response> {\n\t\treturn new Response(\"Hello World!\");\n\t},\n};\n"],
+  "mappings": ";;;AAqBA,IAAO,cAAQ;AAAA,EACd,MAAM,MACL,SACA,KACA,KACoB;AACpB,WAAO,IAAI,SAAS,cAAc;AAAA,EACnC;AACD;",
+  "names": []
+}

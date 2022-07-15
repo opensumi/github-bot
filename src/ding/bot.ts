@@ -1,11 +1,12 @@
 import { doSign, Message, send } from '.';
-import { IDingBotSetting } from './secrets';
+import { DingKVManager, IDingBotSetting } from './secrets';
 import { cc } from './commands';
 import { compose, text as textWrapper } from './message';
 import mri from 'mri';
-import { getAppSettingById } from '@/github/storage';
 import { initApp } from '@/github/app';
 import { App } from '@/lib/octo';
+import { Env } from '..';
+import { GitHubKVManager } from '@/github/storage';
 
 function sanitize(s: string) {
   return s.toString().trim();
@@ -73,12 +74,17 @@ export async function verifyMessage(req: Request, token: string) {
 
 export class DingBot {
   _msg!: Message;
+  githubKVManager: GitHubKVManager;
   constructor(
     public id: string,
     public msg: Message,
-    private event: FetchEvent,
+    public kvManager: DingKVManager,
+    private ctx: ExecutionContext,
+    private env: Env,
     private setting: IDingBotSetting,
-  ) {}
+  ) {
+    this.githubKVManager = new GitHubKVManager(env);
+  }
 
   async handle() {
     const msg = this.msg;
@@ -88,7 +94,7 @@ export class DingBot {
     );
 
     let app: App<any> | undefined;
-    const setting = await getAppSettingById(this.id);
+    const setting = await this.githubKVManager.getAppSettingById(this.id);
     if (setting) {
       console.log('has github app settings');
       app = await initApp(setting);

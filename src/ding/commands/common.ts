@@ -1,17 +1,17 @@
 import { cc, Context } from './base';
 import { code } from '../message';
-import { DingInfo, updateGroupInfo } from '../secrets';
+import { IDingInfo } from '../secrets';
 import { startsWith } from '@/command';
 import { StringBuilder } from '@/utils';
 
 cc.on(
   'putData',
-  async (bot, ctx: Context<Partial<DingInfo>>) => {
-    const info = {} as DingInfo;
+  async (bot, ctx: Context<Partial<IDingInfo>>) => {
+    const info = {} as IDingInfo;
     if (ctx.parsed['defaultRepo']) {
       info['defaultRepo'] = ctx.parsed['defaultRepo'];
     }
-    await updateGroupInfo(bot.id, info);
+    await bot.kvManager.updateGroupInfo(bot.id, info);
     await bot.replyText('更新信息成功');
   },
   undefined,
