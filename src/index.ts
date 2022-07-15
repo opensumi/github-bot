@@ -43,6 +43,19 @@ app.use('*', async (c, next) => {
 
 app.get('/', (c) => c.text('Hono!!'));
 
+app.get('/favicon.ico', async (c) => {
+  return c.body(
+    `<svg xmlns="http://www.w3.org/2000/svg" baseProfile="full" width="200" height="200">
+  <rect width="100%" height="100%" fill="#F38020"/>
+  <text font-size="120" font-family="Arial, Helvetica, sans-serif" text-anchor="end" fill="#FFF" x="185" y="185">H</text>
+</svg>`,
+    200,
+    {
+      'content-type': 'image/svg+xml',
+    },
+  );
+});
+
 // 接收 DingTalk webhook 事件
 app.post('/ding/?:id', async (c) => {
   const id = c.req.param('id') ?? c.req.query('id');
@@ -57,6 +70,7 @@ app.post('/ding/?:id', async (c) => {
   if (!setting) {
     return c.error(404, 'id not found');
   }
+
   if (!setting.outGoingToken) {
     return c.error(401, 'please set webhook token in bot settings');
   }
