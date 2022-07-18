@@ -15,7 +15,7 @@ export async function handleReview(
   ctx: Context,
 ): Promise<MarkdownContent> {
   const review = payload.review;
-  const action = payload.action as string;
+  const action = payload.action;
   const pr = payload.pull_request;
 
   if (action === 'submitted' && review.state === 'commented') {
@@ -24,14 +24,15 @@ export async function handleReview(
     );
   }
 
-  let titleActionText = action;
-  let fullAction = action;
+  let titleActionText = action as string;
+  let fullAction = action as string;
 
   if (review.state) {
-    titleActionText = review.state as string;
+    titleActionText = review.state;
+    fullAction = review.state;
   }
 
-  if (action === 'changes_requested') {
+  if (review.state === 'changes_requested') {
     titleActionText = 'requested changes';
     fullAction = 'changes requested';
   }
