@@ -7,7 +7,7 @@ import {
 import { initApp } from './github/app';
 import { Env } from './env';
 import { Hono } from 'hono';
-import { StatusCode } from 'hono/dist/utils/http-status';
+import { StatusCode } from 'hono/utils/http-status';
 import { prettyJSON } from 'hono/pretty-json';
 import { DingKVManager } from './ding/secrets';
 import { DingBot, verifyMessage } from './ding/bot';
