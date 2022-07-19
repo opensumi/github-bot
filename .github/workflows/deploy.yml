@@ -4,9 +4,9 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Choose an environment to deploy to: <prod>'
+        description: "Choose an environment to deploy to: <prod>"
         required: true
-        default: 'prod'
+        default: "prod"
 
 env:
   BUILD_ENVIRONMENT: ${{ github.event.inputs.environment }}
@@ -22,14 +22,14 @@ jobs:
       - name: Use Node.js 16
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: "16"
       - name: Build & Test
         run: |
           yarn
           yarn run build
           yarn run test
       - name: Publish
-        uses: cloudflare/wrangler-action@2
+        uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           environment: ${{ github.event.inputs.environment }}
