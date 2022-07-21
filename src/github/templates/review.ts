@@ -6,6 +6,7 @@ import {
   titleTpl,
   renderPrOrIssue,
   textTpl,
+  detailTitleTpl,
 } from '.';
 import { Context } from '../app';
 import { ExtractPayload, MarkdownContent } from '../types';
@@ -25,20 +26,23 @@ export async function handleReview(
   }
 
   let titleActionText = action as string;
-  let fullAction = action as string;
+  let did = action as string;
+  let something = undefined;
 
   if (review.state) {
     titleActionText = review.state;
-    fullAction = review.state;
+    did = review.state;
   }
 
   if (review.state === 'changes_requested') {
     titleActionText = 'requested changes';
-    fullAction = 'changes requested';
+    did = 'requested';
+    something = 'changes';
   }
 
   if (action === 'dismissed') {
-    fullAction = 'dismissed their stale review';
+    did = 'dismissed';
+    something = 'their stale review';
   }
 
   const title = titleTpl(
@@ -56,9 +60,21 @@ export async function handleReview(
 
   const text = textTpl(
     {
-      title: `${renderUserLink(payload.sender)} [${fullAction}](${
-        review.html_url
-      }) on [pull request](${pr.html_url})`,
+      title: detailTitleTpl(
+        {
+          somebody: payload.sender,
+          did: {
+            text: did,
+            html_url: review.html_url,
+          },
+          something,
+          something1: {
+            text: 'pull request',
+            html_url: pr.html_url,
+          },
+        },
+        ctx,
+      ),
       body: builder.build(),
       repo: payload.repository,
     },

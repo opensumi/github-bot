@@ -7,7 +7,7 @@ export function renderRepoLink(repository: Repository) {
   return `[[${repository.name}]](${repository.html_url})`;
 }
 
-export function renderUserLink(sender: User) {
+export function renderUserLink(sender: { login: string; html_url: string }) {
   return `[${sender.login}](${sender.html_url})`;
 }
 
@@ -81,13 +81,13 @@ export function useRef(text?: string | null, bodyLimit = -1) {
   }
 
   if (bodyLimit && bodyLimit > 0) {
-    text = limitTextByPostion(text, bodyLimit);
+    text = limitTextByPosition(text, bodyLimit);
   }
 
-  const arrayofLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
+  const arrayOfLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
   const newLines = [];
 
-  for (const line of arrayofLines) {
+  for (const line of arrayOfLines) {
     newLines.push(`> ${line}`);
   }
 
@@ -96,13 +96,13 @@ export function useRef(text?: string | null, bodyLimit = -1) {
 
 const LIMIT_MIN_LINE = 3;
 
-export function limitTextByPostion(text: string, position: number) {
-  const arrayofLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
+export function limitTextByPosition(text: string, position: number) {
+  const arrayOfLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
 
   let count = 0;
   let lineNo = 0;
-  for (; lineNo < arrayofLines.length; lineNo++) {
-    const line = arrayofLines[lineNo];
+  for (; lineNo < arrayOfLines.length; lineNo++) {
+    const line = arrayOfLines[lineNo];
     count += line.length;
     if (count >= position) {
       break;
@@ -112,9 +112,9 @@ export function limitTextByPostion(text: string, position: number) {
   // 如果 limit 过后的行数小于 LIMIT_MIN_LINE，则使用 LIMIT_MIN_LINE
   lineNo = lineNo < LIMIT_MIN_LINE ? LIMIT_MIN_LINE : lineNo;
 
-  const finalLines = arrayofLines.slice(0, lineNo);
+  const finalLines = arrayOfLines.slice(0, lineNo);
   let finalContent = finalLines.join('\n').trim();
-  if (lineNo < arrayofLines.length) {
+  if (lineNo < arrayOfLines.length) {
     finalContent = finalContent + '...';
   }
   return finalContent;
@@ -126,8 +126,8 @@ export function limitLine(
   start = 0,
   lineProcess = (v: string) => v,
 ) {
-  const arrayofLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
-  const finalLines = arrayofLines
+  const arrayOfLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
+  const finalLines = arrayOfLines
     .slice(start, start + count)
     .map((v) => lineProcess(v));
   return finalLines.join('\n').trim();
@@ -146,12 +146,12 @@ type TitleTpl = (
     action: string;
   },
   ctx: Context,
-  captialize?: boolean,
+  capitalize?: boolean,
 ) => string;
 
-export const titleTpl: TitleTpl = (data, ctx, captialize = true) => {
+export const titleTpl: TitleTpl = (data, ctx, capitalize = true) => {
   let event = data.event;
-  if (captialize) {
+  if (capitalize) {
     event = _.capitalize(event);
   }
   const info = `${event} ${data.action}`;
@@ -161,6 +161,33 @@ export const titleTpl: TitleTpl = (data, ctx, captialize = true) => {
   } else {
     text = `[${data.repo.name}] ${info}`;
   }
+  return text;
+};
+
+type DetailTitleTpl = (
+  data: {
+    somebody: { login: string; html_url: string };
+    did: {
+      text: string;
+      html_url?: string;
+    };
+    something: string | undefined;
+    something1: {
+      text: string;
+      html_url?: string;
+    };
+  },
+  ctx: Context,
+) => string;
+
+export const detailTitleTpl: DetailTitleTpl = (data, ctx) => {
+  let text = `${renderUserLink(data.somebody)} [${data.did.text}](${
+    data.did.html_url
+  }) `;
+  if (data.something) {
+    text += `${data.something} on `;
+  }
+  text += `[${data.something1.text}](${data.something1.html_url})`;
   return text;
 };
 

@@ -64,7 +64,7 @@ function render(
 
   const text = textTpl(
     {
-      title: `${renderUserLink(payload.sender)} ${action} on [${nameBlock}](${
+      title: `${renderUserLink(payload.sender)} ${action} [${nameBlock}](${
         data.html_url
       })`,
       body: builder.build(),

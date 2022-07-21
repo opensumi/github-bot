@@ -1,7 +1,7 @@
 import {
   limitLine,
   useRef,
-  limitTextByPostion,
+  limitTextByPosition,
 } from '@/github/templates/utils';
 import { sendToDing } from '@/github/utils';
 import * as DingUtils from '@/ding/utils';
@@ -23,7 +23,7 @@ describe('github utils', () => {
   it('can limitTextByPostion', () => {
     const text = `11111
 22222`;
-    const d = limitTextByPostion(text, 100);
+    const d = limitTextByPosition(text, 100);
     expect(d).toEqual(`11111\n22222`);
   });
 
@@ -33,7 +33,7 @@ describe('github utils', () => {
 33333
 44444
 `;
-    const d = limitTextByPostion(text, 9);
+    const d = limitTextByPosition(text, 9);
     expect(d).toEqual(`11111\n22222\n33333...`);
   });
 
@@ -46,7 +46,7 @@ describe('github utils', () => {
 66666
 77777
 `;
-    const d = limitTextByPostion(text, 15);
+    const d = limitTextByPosition(text, 15);
     expect(d).toEqual(`11111\n22222\n33333...`);
   });
 
