@@ -9,6 +9,7 @@ import { Env } from './env';
 import { Hono } from 'hono';
 import { StatusCode } from 'hono/utils/http-status';
 import { prettyJSON } from 'hono/pretty-json';
+import { logger } from 'hono/logger';
 import { DingKVManager } from './ding/secrets';
 import { DingBot, verifyMessage } from './ding/bot';
 import { GitHubKVManager } from './github/storage';
@@ -18,7 +19,7 @@ const app = new Hono<Env>();
 
 declare module 'hono' {
   interface Context {
-    sentry: Toucan;
+    sentry?: Toucan;
     waitUntil: (promise: Promise<any>) => void;
     error(status: StatusCode, content: string): Response;
     message(text: string): Response;
@@ -35,6 +36,7 @@ app.use('*', async (c, next) => {
       allowedSearchParams: /(.*)/,
     });
     c.sentry = sentry;
+
     const waitUntil = c.executionCtx.waitUntil.bind(c.executionCtx);
     c.executionCtx.waitUntil = (promise) => {
       waitUntil(
@@ -48,9 +50,11 @@ app.use('*', async (c, next) => {
       );
     };
   }
+
   await next();
 });
 
+app.use('*', logger());
 app.use('*', prettyJSON());
 app.use('*', async (c, next) => {
   c.error = (status = 500, content = 'Internal Server Error.') => {
@@ -70,7 +74,7 @@ app.use('*', async (c, next) => {
   await next();
 });
 
-app.get('/', (c) => c.text('Hono!!'));
+app.get('/', (c) => c.text('Nice catch 👍'));
 
 app.get('/favicon.ico', async (c) => {
   return c.body(
@@ -175,7 +179,6 @@ app.all('/proxy/?:url', async (c) => {
       return fetch(url.toString(), c.req);
     }
   }
-
   return c.error(401, 'not a valid hostname');
 });
 
@@ -185,7 +188,7 @@ app.notFound((c) => {
 
 app.onError((err, c) => {
   console.error(err);
-  c.sentry.captureException(err);
+  c.sentry?.captureException(err);
   return c.error(500, 'server internal error');
 });
 
