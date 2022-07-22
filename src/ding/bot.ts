@@ -54,6 +54,7 @@ async function checkSign(
 }
 
 export async function verifyMessage(headers: Headers, token: string) {
+  console.log(`verifyMessage ~ headers`, headers);
   const timestamp = headers.get('timestamp') as string;
   const sign = headers.get('sign') as string;
   if (timestamp && sign) {
@@ -63,6 +64,9 @@ export async function verifyMessage(headers: Headers, token: string) {
     }
   } else {
     // 好像企业内部的这个机器人发的 headers 不带这俩字段了，这里的逻辑可以暂时不用了
+    console.log('====================================');
+    console.error('not valid ding msg, missing validation field');
+    console.log('====================================');
     // return error(403, 'not valid ding msg, missing validation field');
   }
 }
