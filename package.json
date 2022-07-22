@@ -21,17 +21,17 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.14.1",
-    "@octokit/types": "^6.39.0",
-    "@types/jest": "^28.1.5",
+    "@octokit/types": "^6.40.0",
+    "@types/jest": "^28.1.6",
     "@types/lodash": "^4.14.182",
     "@types/minimist": "^1.2.2",
-    "@types/node": "^18.0.4",
-    "@typescript-eslint/eslint-plugin": "^5.30.6",
-    "@typescript-eslint/parser": "^5.30.6",
+    "@types/node": "^18.0.6",
+    "@typescript-eslint/eslint-plugin": "^5.30.7",
+    "@typescript-eslint/parser": "^5.30.7",
     "dotenv": "^16.0.1",
     "edge-mock": "^0.0.15",
     "esbuild": "^0.14.49",
-    "eslint": "^8.19.0",
+    "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.5.0",
     "esno": "^0.16.3",
     "jest": "^28.1.3",
@@ -40,7 +40,7 @@
     "prettier": "^2.7.1",
     "smee-client": "^1.2.3",
     "string.prototype.replaceall": "^1.0.6",
-    "ts-jest": "^28.0.6",
+    "ts-jest": "^28.0.7",
     "typescript": "^4.7.4"
   },
   "dependencies": {
@@ -50,10 +50,10 @@
     "@octokit/oauth-app": "^4.0.6",
     "@octokit/plugin-paginate-rest": "^3.0.0",
     "@octokit/rest": "^19.0.3",
-    "@octokit/webhooks": "^10.0.8",
-    "hono": "^1.6.4",
+    "@octokit/webhooks": "^10.0.9",
+    "hono": "^2.0.2",
     "lodash": "^4.17.21",
     "mri": "^1.2.0",
-    "wrangler": "^2.0.21"
+    "wrangler": "^2.0.22"
   }
 }
