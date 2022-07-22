@@ -1,14 +1,14 @@
 import { doSign, parseCliArgs, send } from '@/ding/utils';
 import { DingKVManager, IDingBotSetting } from './secrets';
 import { cc } from './commands';
-import { compose, text as textWrapper } from './message';
+import { SendMessage, compose, text as textWrapper } from './message';
 import { initApp } from '@/github/app';
 import { App } from '@/lib/octo';
 import { Env } from '@/env';
 import { GitHubKVManager } from '@/github/storage';
 import { Message } from './types';
 
-function sanitize(s: string) {
+function prepare(s: string) {
   return s.toString().trim();
 }
 
@@ -98,7 +98,7 @@ export class DingBot {
 
     // 其实目前钉钉机器人也就支持这一种消息类型
     if (msg.msgtype === 'text') {
-      const text = sanitize(msg.text.content);
+      const text = prepare(msg.text.content);
       console.log(`DingBot ~ handle ~ text`, text);
       const parsed = parseCliArgs(text);
       console.log(`DingBot ~ handle ~ parsed`, JSON.stringify(parsed));
@@ -127,9 +127,8 @@ export class DingBot {
     await this.reply(compose(textWrapper(text), contentExtra));
   }
 
-  async reply(content: Record<string, any>) {
+  async reply(content: SendMessage) {
     console.log(`DingBot ~ reply:`, JSON.stringify(content));
-    const msg = this.msg;
-    await send(content, msg.sessionWebhook);
+    await send(content, this.msg.sessionWebhook);
   }
 }

@@ -27,6 +27,8 @@ export type Text = Base<
   }
 >;
 
+export type SendMessage = Image | Markdown | Text;
+
 export function atDingtalkIds(...atDingtalkIds: string[]): At {
   return {
     at: {
