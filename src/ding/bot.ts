@@ -1,8 +1,7 @@
-import { doSign, send } from '@/ding/utils';
+import { doSign, parseCliArgs, send } from '@/ding/utils';
 import { DingKVManager, IDingBotSetting } from './secrets';
 import { cc } from './commands';
 import { compose, text as textWrapper } from './message';
-import mri from 'mri';
 import { initApp } from '@/github/app';
 import { App } from '@/lib/octo';
 import { Env } from '@/env';
@@ -11,10 +10,6 @@ import { Message } from './types';
 
 function sanitize(s: string) {
   return s.toString().trim();
-}
-
-function parseCliArgs(command: string) {
-  return mri(command.split(' '));
 }
 
 function validateTimestamp(timestamp: string) {
@@ -108,7 +103,7 @@ export class DingBot {
       const parsed = parseCliArgs(text);
       console.log(`DingBot ~ handle ~ parsed`, JSON.stringify(parsed));
 
-      const handler = await cc.resolve(text);
+      const handler = await cc.resolve(parsed._[0]);
       if (handler) {
         try {
           await handler(this, {
