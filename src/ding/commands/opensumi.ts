@@ -1,6 +1,5 @@
 import { equalFunc, startsWith } from '@/command';
 import { DingBot } from '../bot';
-import { getDefaultRepo } from '../secrets';
 import { cc, Context } from './base';
 import { KnownRepo } from './constants';
 import { hasApp, replyIfAppNotDefined } from './utils';
@@ -9,7 +8,7 @@ import { hasApp, replyIfAppNotDefined } from './utils';
  * 拦截本次请求
  */
 async function repoIntercept(bot: DingBot, ctx: Context, repo: string) {
-  const defaultRepo = await getDefaultRepo(bot.id);
+  const defaultRepo = await bot.kvManager.getDefaultRepo(bot.id);
   if (!defaultRepo) {
     return true;
   }

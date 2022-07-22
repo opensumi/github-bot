@@ -119,11 +119,11 @@ export class DingBot {
           });
         } catch (error) {
           await this.replyText(
-            `执行 ${text} 出错: ${(error as Error).message}`,
+            `error when executing ${text}: ${(error as Error).message}`,
           );
         }
       } else {
-        console.log('没有 handler 处理 ', text);
+        console.log('no handler found for', text);
       }
     }
   }

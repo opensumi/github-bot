@@ -92,8 +92,9 @@ export class CommandCenter<T> {
 
     if (!isCommand) {
       console.log(
-        '没有命中前缀 ' + JSON.stringify(this.prefixes),
-        '不当做命令处理',
+        `no prefix found for ${text}, prefixes: ${JSON.stringify(
+          this.prefixes,
+        )}`,
       );
       return;
     }
@@ -109,14 +110,13 @@ export class CommandCenter<T> {
       }
     }
 
-    if (!handler) {
-      console.log(`${text} 没有命中任何 handler`);
-      if (this.fallbackHandler) {
-        console.log(`${text} fallback to *`);
-        handler = this.fallbackHandler;
-      }
+    if (!handler && this.fallbackHandler) {
+      console.log(`${text} fallback to *`);
+      handler = this.fallbackHandler;
     }
-    console.log(`${text} will be handled`);
+    if (handler) {
+      console.log(`${text} will be handled`);
+    }
     return handler;
   }
 }
