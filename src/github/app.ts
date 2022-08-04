@@ -35,7 +35,7 @@ export const appFactory = (ctx: AppContext) => {
       await sendToDing(
         {
           title: '⭐⭐⭐',
-          text: `一个好消息，[${repository.name}](${repository.html_url}) 有 ${starCount} 颗 🌟 了~`,
+          text: `一个好消息，[${repository.full_name}](${repository.html_url}) 有 ${starCount} 颗 🌟 了~`,
         },
         'star.created',
         ctx.setting,

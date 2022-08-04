@@ -1,4 +1,4 @@
-import { Repository, User } from '@octokit/webhooks-types';
+import { Repository } from '@octokit/webhooks-types';
 import { StringBuilder } from '@/utils';
 import _ from 'lodash';
 import { Context } from '../app';
