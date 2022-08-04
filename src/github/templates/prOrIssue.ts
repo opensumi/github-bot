@@ -1,5 +1,10 @@
 import { ExtractPayload } from '../types';
-import { renderUserLink, renderPrOrIssue, titleTpl } from './utils';
+import {
+  renderUserLink,
+  renderPrOrIssueTitleLink,
+  titleTpl,
+  renderPrOrIssueBody,
+} from './utils';
 import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 import { StringBuilder } from '@/utils';
 import { Context } from '../app';
@@ -24,11 +29,13 @@ function render(
   let action = payload.action as string;
 
   let shouldRenderBody = true;
-  if (['closed', 'edited', 'reopened'].includes(action)) {
+  if (['closed', 'edited'].includes(action)) {
     shouldRenderBody = false;
   }
 
-  const subline = [] as string[];
+  const builder = new StringBuilder();
+
+  builder.add(renderPrOrIssueTitleLink(data));
 
   if (name === 'pull_request') {
     if (action === 'closed') {
@@ -42,6 +49,13 @@ function render(
     if (action === 'ready_for_review') {
       action = 'ready for review';
     }
+    // display pr related info, such as pr assignees, base branch, head branch, etc.
+    const base = (data as PullRequest).base;
+    const head = (data as PullRequest).head;
+    const baseLabel = base.label;
+    const headLabel = head.label;
+    const targetInfo = `${baseLabel} <- ${headLabel}`;
+    builder.add(targetInfo, true);
   }
 
   const title = titleTpl(
@@ -53,14 +67,9 @@ function render(
     ctx,
   );
 
-  const builder = new StringBuilder();
-
-  if (subline.length > 0) {
-    builder.add(subline.join(', '), true);
+  if (shouldRenderBody) {
+    builder.add(renderPrOrIssueBody(data, ctx.setting.contentLimit));
   }
-  builder.add(
-    renderPrOrIssue(data, shouldRenderBody, ctx.setting.contentLimit),
-  );
 
   const text = textTpl(
     {

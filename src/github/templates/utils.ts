@@ -49,7 +49,22 @@ export function renderPrOrIssueLink(
   return `[${renderPrOrIssueText(p, prefix)}](${p.html_url})`;
 }
 
-export function renderPrOrIssue(
+export function renderPrOrIssueTitleLink(p: {
+  /**
+   * The title of the pull request.
+   */
+  title: string;
+  /**
+   * Number uniquely identifying the pull request within its repository.
+   */
+  number: number;
+  html_url: string;
+  body: string | null;
+}) {
+  return `> #### ${renderPrOrIssueLink(p)}`;
+}
+
+export function renderPrOrIssueBody(
   p: {
     /**
      * The title of the pull request.
@@ -62,12 +77,11 @@ export function renderPrOrIssue(
     html_url: string;
     body: string | null;
   },
-  renderBody = true,
   bodyLimit = -1,
 ) {
-  const builder = new StringBuilder(`> #### ${renderPrOrIssueLink(p)}`);
+  const builder = new StringBuilder();
 
-  if (renderBody && p.body) {
+  if (p.body) {
     builder.add(`>`);
     builder.add(`${useRef(p.body, bodyLimit)}`);
   }

@@ -1,10 +1,9 @@
 import { StringBuilder } from '@/utils';
 import {
-  renderUserLink,
   StopHandleError,
   useRef,
   titleTpl,
-  renderPrOrIssue,
+  renderPrOrIssueTitleLink,
   textTpl,
   detailTitleTpl,
 } from '.';
@@ -55,7 +54,8 @@ export async function handleReview(
   );
 
   const builder = new StringBuilder();
-  builder.add(renderPrOrIssue(pr, false));
+
+  builder.add(renderPrOrIssueTitleLink(pr));
   builder.add(useRef(review.body, ctx.setting.contentLimit));
 
   const text = textTpl(
