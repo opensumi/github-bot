@@ -25,7 +25,6 @@ KV_PROD_ID=xxxxx
         "": "this is a comments"
       },
       {
-        "secret": "xxxx",
         "url": "xxxxs",
         "": "this is a comments"
       }
@@ -34,4 +33,34 @@ KV_PROD_ID=xxxxx
   }
 }
 
+```
+
+## GitHub App Configuration
+
+```js
+{
+    "appSettings": {
+        "appId": "123123",
+        "privateKey": "xxxxxx"
+    },
+    "githubSecret": "asdasd",
+    "dingWebhooks": [
+        {
+            "url": "xxxxxxx"
+        },
+    ],
+    "contentLimit": 300,
+    "notDisplayRepoName": true
+}
+```
+
+Notice, we should transform the format of private key：
+
+```sh
+// https://github.com/gr2m/cloudflare-worker-github-app-example/blob/main/worker.js
+
+// The private-key.pem file from GitHub needs to be transformed from the
+// PKCS#1 format to PKCS#8, as the crypto APIs do not support PKCS#1:
+
+openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in private-key.pem -out private-key-pkcs8.pem
 ```
