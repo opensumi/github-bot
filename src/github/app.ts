@@ -41,17 +41,6 @@ export const appFactory = (ctx: AppContext) => {
         ctx.setting,
       );
     }
-
-    // Easter Eggs
-    // if (starCount === 1000) {
-    //   await sendContentToDing(
-    //     image(
-    //       'https://img.alicdn.com/imgextra/i3/O1CN01BJvYwd28RX9V5RBlW_!!6000000007929-0-tps-900-383.jpg',
-    //     ),
-    //     'star.created',
-    //     ctx.setting,
-    //   );
-    // }
   });
 
   _app.webhooks.on('issue_comment.created', handleComment);
