@@ -23,7 +23,7 @@ issueCc.on('hello', async (octokit, payload) => {
   );
 });
 
-export const handleComment = async ({
+export const handleCommentCommand = async ({
   octokit,
   payload,
 }: {

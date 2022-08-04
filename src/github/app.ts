@@ -2,7 +2,7 @@ import { App } from '@/lib/octo';
 import { Octokit } from '@octokit/rest';
 import { ISetting, AppSetting, GitHubKVManager } from '@/github/storage';
 import { baseHandler, setupWebhooksSendToDing } from './handler';
-import { handleComment } from './commands';
+import { handleCommentCommand } from './commands';
 import { sendToDing } from './utils';
 import { error } from '@/runtime/response';
 import { Env } from '@/env';
@@ -42,9 +42,9 @@ export const appFactory = (ctx: AppContext) => {
       );
     }
   });
-
-  _app.webhooks.on('issue_comment.created', handleComment);
-  _app.webhooks.on('issue_comment.edited', handleComment);
+  // Execute user comment input
+  _app.webhooks.on('issue_comment.created', handleCommentCommand);
+  _app.webhooks.on('issue_comment.edited', handleCommentCommand);
   return _app;
 };
 
