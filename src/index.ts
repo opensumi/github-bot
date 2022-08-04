@@ -156,7 +156,7 @@ app.post('/webhook/:id', async (c) => {
     return c.error(404, 'id not found');
   }
   if (!setting.githubSecret) {
-    return c.error(401, 'please set webhook secret in settings');
+    return c.error(401, 'please set webhook secret in kv');
   }
 
   const webhooks = webhooksFactory(setting.githubSecret);

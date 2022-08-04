@@ -42,7 +42,10 @@ export async function validateGithub(req: Request<any>, webhooks: Webhooks) {
   }
 
   if (!signatureSHA256) {
-    throw new ValidationError(401, 'please set webhook secret in settings');
+    throw new ValidationError(
+      401,
+      'x-hub-signature-256 is null. please set webhook secret in github app settings',
+    );
   }
 
   const matchesSignature = await webhooks.verify(
@@ -55,6 +58,7 @@ export async function validateGithub(req: Request<any>, webhooks: Webhooks) {
       'signature does not match event payload and secret, please reset webhook secret',
     );
   }
+
   return {
     id,
     event,
@@ -175,7 +179,7 @@ export async function webhookHandler(
     return error(404, 'id not found');
   }
   if (!setting.githubSecret) {
-    return error(401, 'please set webhook secret in settings');
+    return error(401, 'please set webhook secret in kv');
   }
 
   const webhooks = webhooksFactory(setting.githubSecret);
