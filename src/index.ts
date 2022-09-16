@@ -15,7 +15,7 @@ import { DingBot, verifyMessage } from './ding/bot';
 import { GitHubKVManager } from './github/storage';
 import Toucan from 'toucan-js';
 
-const app = new Hono<Env>();
+const app = new Hono<{ Bindings: Env }>();
 
 declare module 'hono' {
   interface Context {
@@ -167,7 +167,7 @@ app.post('/webhook/:id', async (c) => {
   return baseHandler(webhooks, c.req, c.env, c.executionCtx);
 });
 
-app.all('/proxy/?:url', async (c) => {
+app.all('/proxy/:url', async (c) => {
   const _url = c.req.param('url') ?? c.req.query('url');
   if (_url) {
     const candidates = [_url, decodeURIComponent(_url)]
