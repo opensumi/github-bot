@@ -41,7 +41,7 @@ export async function handleReview(
 
   if (action === 'dismissed') {
     did = 'dismissed';
-    something = 'their stale review';
+    something = 'review';
   }
 
   const title = titleTpl(
