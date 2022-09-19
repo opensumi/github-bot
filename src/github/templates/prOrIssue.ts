@@ -49,13 +49,17 @@ function render(
     if (action === 'ready_for_review') {
       action = 'ready for review';
     }
-    // display pr related info, such as pr assignees, base branch, head branch, etc.
-    const base = (data as PullRequest).base;
-    const head = (data as PullRequest).head;
-    const baseLabel = base.label;
-    const headLabel = head.label;
-    const targetInfo = `${baseLabel} <- ${headLabel}`;
-    builder.add(targetInfo, true);
+
+    if (shouldRenderBody) {
+      // display PR related info, such as pr assignees, base branch, head branch, etc.
+      const base = (data as PullRequest).base;
+      const head = (data as PullRequest).head;
+      const baseLabel = base.label;
+      const headLabel = head.label;
+      const targetInfo = `> ${baseLabel} <- ${headLabel}`;
+      builder.add(targetInfo, true);
+      builder.add('---');
+    }
   }
 
   const title = titleTpl(
