@@ -19,6 +19,14 @@ export const NameBlock = {
   [key in Name]: string;
 };
 
+const removeOrgInfo = (orgName: string, label: string) => {
+  const prefix = `${orgName}:`;
+  if (label.startsWith(prefix)) {
+    return label.slice(prefix.length);
+  }
+  return label;
+};
+
 function render(
   name: Name,
   payload: ExtractPayload<Name>,
@@ -54,9 +62,8 @@ function render(
       // display PR related info, such as pr assignees, base branch, head branch, etc.
       const base = (data as PullRequest).base;
       const head = (data as PullRequest).head;
-      const baseLabel = base.label;
-      const headLabel = head.label;
-      const targetInfo = `> ${baseLabel} <- ${headLabel}`;
+      const headLabel = removeOrgInfo(base.user.login, head.label);
+      const targetInfo = `> ${base.ref} <- ${headLabel}`;
       builder.add(targetInfo, true);
       builder.add('---');
     }
