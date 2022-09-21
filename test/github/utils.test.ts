@@ -81,7 +81,7 @@ describe('github utils', () => {
     console.log(urls);
     expect(urls.length).toEqual(2);
 
-    await sendToDing(md, 'test', {
+    await sendToDing(md, 'check_run', {
       githubSecret: '123',
       contentLimit: 300,
       dingWebhooks: [
