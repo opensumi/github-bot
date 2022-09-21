@@ -20,8 +20,12 @@ export interface ISetting {
   githubSecret: string;
   dingWebhooks: IDingWebhookItem[];
   contentLimit: number;
-  // 开启这个选项会只推送社区需要的那几个 event
+  /**
+   * 开启这个选项会只推送社区需要的那几个 event
+   * 因为历史兼容问题，所以默认为 true 了，需要手动关闭
+   */
   isCommunity?: boolean;
+  isOpenSumiCommunity?: boolean;
   // 监听哪些事件
   event?: string[];
   // 不展示 repo 名字，适合单仓库

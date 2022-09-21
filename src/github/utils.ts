@@ -1,5 +1,6 @@
 import { send } from '@/ding/utils';
 import { ISetting } from '@/github/storage';
+import { EmitterWebhookEventName } from '@octokit/webhooks';
 import { MarkdownContent } from './types';
 
 function securityInterception(text: string) {
@@ -9,7 +10,7 @@ function securityInterception(text: string) {
 
 export async function sendContentToDing(
   dingContent: Record<string, unknown>,
-  eventName: string,
+  eventName: EmitterWebhookEventName,
   setting: ISetting,
 ) {
   if (setting.dingWebhooks.length === 0) {
@@ -40,7 +41,7 @@ export async function sendContentToDing(
 
 export async function sendToDing(
   data: MarkdownContent,
-  eventName: string,
+  eventName: EmitterWebhookEventName,
   setting: ISetting,
 ) {
   if (setting.dingWebhooks.length === 0) {

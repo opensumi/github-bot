@@ -23,7 +23,7 @@ describe('can send content to dingtalk', () => {
       {
         a: 1,
       },
-      'some.event',
+      'branch_protection_rule',
       {
         githubSecret: '',
         contentLimit: 300,

@@ -411,7 +411,7 @@ export class APIWrapper {
     const workflow = await this.octo.actions.createWorkflowDispatch({
       owner: 'opensumi',
       repo: 'core',
-      workflow_id: 'manual-release-rc.yml',
+      workflow_id: 'release-rc.yml',
       ref: 'main',
       inputs: {
         ref: branch,
