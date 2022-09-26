@@ -74,7 +74,13 @@ app.use('*', async (c, next) => {
   await next();
 });
 
-app.get('/', (c) => c.text('Nice catch 👍'));
+app.get('/', (c) => c.html(`<p>
+Nice catch 👍
+
+<div>
+  <a href="https://github.com/opensumi/github-bot">https://github.com/opensumi/github-bot</a>
+</div>
+</p>`));
 
 app.get('/favicon.ico', async (c) => {
   return c.body(
