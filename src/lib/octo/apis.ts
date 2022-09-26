@@ -2,6 +2,7 @@
 
 import { Octokit } from '@octokit/rest';
 import { App } from '.';
+import { RC_WORKFLOW_FILE } from '@/opensumi/constants';
 
 const PER_PAGE = 100;
 const HISTORY_RANGE = 2 * 7 * 24 * 60 * 60 * 1000;
@@ -411,7 +412,7 @@ export class APIWrapper {
     const workflow = await this.octo.actions.createWorkflowDispatch({
       owner: 'opensumi',
       repo: 'core',
-      workflow_id: 'release-rc.yml',
+      workflow_id: RC_WORKFLOW_FILE,
       ref: 'main',
       inputs: {
         ref: branch,

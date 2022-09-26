@@ -1,10 +1,11 @@
 import { StringBuilder } from '@/utils';
+import { RC_WORKFLOW_FILE } from '@/opensumi/constants';
 import { renderUserLink, titleTpl, textTpl, StopHandleError } from '.';
 import { Context } from '../app';
 import { ExtractPayload, MarkdownContent } from '../types';
 import { Octokit } from '@octokit/rest';
 
-const workflowToHandle = new Set(['.github/workflows/manual-release-rc.yml']);
+const workflowToHandle = new Set(['.github/workflows/' + RC_WORKFLOW_FILE]);
 
 export async function handleWorkflowRun(
   payload: ExtractPayload<'workflow_run'>,
