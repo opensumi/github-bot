@@ -17,7 +17,7 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    environment: ${{ github.event.inputs.environment }}
     name: Deploy
     steps:
       - uses: actions/checkout@v2
