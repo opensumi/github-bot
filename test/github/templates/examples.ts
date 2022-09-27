@@ -1,25 +1,16 @@
-import WEBHOOKS, { WebhookDefinition } from '@octokit/webhooks-examples';
 import {
   PullRequestClosedEvent,
   PullRequestOpenedEvent,
 } from '@octokit/webhooks-types';
+import pull_request_0_opened from '../../fixtures/generated/pull_request_0_opened.json';
+import pull_request_3_closed from '../../fixtures/generated/pull_request_3_closed.json';
+import _pull_request_edited_wip from '../../fixtures/pull_request_edited_wip.json';
 
-let pull_request = {} as WebhookDefinition<'pull_request'>;
-let pull_request_closed = {} as PullRequestClosedEvent;
-let pull_request_opened = {} as PullRequestOpenedEvent;
+const pull_request_closed =
+  pull_request_3_closed as unknown as PullRequestClosedEvent;
+const pull_request_opened =
+  pull_request_0_opened as unknown as PullRequestOpenedEvent;
+const pull_request_edited_wip =
+  _pull_request_edited_wip as unknown as PullRequestOpenedEvent;
 
-for (const webhook of WEBHOOKS) {
-  if (webhook.name === 'pull_request') {
-    pull_request = webhook as WebhookDefinition<'pull_request'>;
-    pull_request.examples.forEach((v) => {
-      if (v.action === 'closed') {
-        pull_request_closed = v;
-      }
-      if (v.action === 'opened') {
-        pull_request_opened = v;
-      }
-    });
-  }
-}
-
-export { pull_request, pull_request_closed, pull_request_opened };
+export { pull_request_closed, pull_request_opened, pull_request_edited_wip };

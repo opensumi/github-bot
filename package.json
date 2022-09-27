@@ -17,7 +17,8 @@
     "publish:local": "wrangler publish",
     "lint": "eslint . && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
     "lint:fix": "eslint . --fix",
-    "test": "jest --config jest.config.json --verbose"
+    "test": "jest --config jest.config.json --verbose",
+    "extract-fixtures": "esno scripts/extract-webhook-example.ts"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.16.0",

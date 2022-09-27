@@ -1,9 +1,10 @@
-import { ExtractPayload } from '../types';
+import { ExtractPayload, THasChanges } from '../types';
 import {
   renderUserLink,
   renderPrOrIssueTitleLink,
   titleTpl,
   renderPrOrIssueBody,
+  StopHandleError,
 } from './utils';
 import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 import { StringBuilder } from '@/utils';
@@ -118,4 +119,79 @@ export async function handleDiscussion(
   ctx: Context,
 ) {
   return render('discussion', payload, payload.discussion, ctx);
+}
+
+export async function handlePrEdited(
+  payload: ExtractPayload<'pull_request.edited'>,
+  ctx: Context,
+) {
+  const data = payload.pull_request;
+  let oldTitle = '';
+
+  const nameBlock = 'pull request';
+  const shouldRenderBody = false;
+  let action = payload.action as string;
+  if ((payload as THasChanges).changes) {
+    const changes = (payload as THasChanges).changes;
+    if (changes?.title) {
+      // 说明是标题改变
+      oldTitle = changes.title.from;
+      action = 'changed title';
+    } else {
+      throw new StopHandleError('ignore prOrIssue content change');
+    }
+  }
+
+  if (
+    !oldTitle.toLowerCase().includes('wip') &&
+    !data.title.toLowerCase().includes('wip')
+  ) {
+    throw new StopHandleError('only handle wip changes');
+  }
+
+  const builder = new StringBuilder();
+
+  builder.add(renderPrOrIssueTitleLink(data));
+
+  if (oldTitle) {
+    builder.add(`> **from:** ${oldTitle}`);
+  }
+
+  // display PR related info, such as pr assignees, base branch, head branch, etc.
+  const base = (data as PullRequest).base;
+  const head = (data as PullRequest).head;
+  const headLabel = removeOrgInfo(base.user.login, head.label);
+  builder.add(`> ${base.ref} <- ${headLabel}`);
+
+  builder.add('');
+  builder.add('---');
+
+  const title = titleTpl(
+    {
+      repo: payload.repository,
+      event: `${nameBlock}#${data.number}`,
+      action,
+    },
+    ctx,
+  );
+
+  if (shouldRenderBody) {
+    builder.add(renderPrOrIssueBody(data, ctx.setting.contentLimit));
+  }
+
+  const text = textTpl(
+    {
+      title: `${renderUserLink(payload.sender)} ${action} [${nameBlock}](${
+        data.html_url
+      })`,
+      body: builder.build(),
+      repo: payload.repository,
+    },
+    ctx,
+  );
+
+  return {
+    title,
+    text,
+  };
 }
