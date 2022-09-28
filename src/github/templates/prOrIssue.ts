@@ -35,7 +35,7 @@ function render(
   ctx: Context,
 ) {
   const nameBlock = NameBlock[name];
-  let action = payload.action as string;
+  const action = payload.action as string;
 
   let shouldRenderBody = true;
   if (['closed', 'edited'].includes(action)) {
@@ -45,30 +45,6 @@ function render(
   const builder = new StringBuilder();
 
   builder.add(renderPrOrIssueTitleLink(data));
-
-  if (name === 'pull_request') {
-    if (action === 'closed') {
-      const pr = (payload as ExtractPayload<'pull_request.closed'>)
-        .pull_request;
-      if (pr.merged) {
-        // If the action is closed and the merged key is true, the pull request was merged.
-        action = 'merged';
-      }
-    }
-    if (action === 'ready_for_review') {
-      action = 'ready for review';
-    }
-
-    if (shouldRenderBody) {
-      // display PR related info, such as pr assignees, base branch, head branch, etc.
-      const base = (data as PullRequest).base;
-      const head = (data as PullRequest).head;
-      const headLabel = removeOrgInfo(base.user.login, head.label);
-      const targetInfo = `> ${base.ref} <- ${headLabel}`;
-      builder.add(targetInfo, true);
-      builder.add('---');
-    }
-  }
 
   const title = titleTpl(
     {
