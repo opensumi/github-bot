@@ -2,8 +2,8 @@
 import { exec } from 'child_process';
 import { readFileSync } from 'fs';
 
-import minimist from 'minimist';
-const argv = minimist(process.argv.slice(2));
+import mri from 'mri';
+const argv = mri(process.argv.slice(2));
 console.log(argv);
 
 async function main() {

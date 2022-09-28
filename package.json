@@ -12,13 +12,13 @@
     "dev": "yarn gen && yarn dev:preview",
     "dev:preview": "run-p dev:worker dev:proxy",
     "dev:worker": "wrangler dev",
-    "dev:proxy": "esno dev.ts",
-    "gen": "esno ./scripts/generate-wrangler-toml.ts",
+    "dev:proxy": "tsx dev.ts",
+    "gen": "tsx ./scripts/generate-wrangler-toml.ts",
     "publish:local": "wrangler publish",
     "lint": "eslint . && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
     "lint:fix": "eslint . --fix",
     "test": "jest --config jest.config.json --verbose",
-    "extract-fixtures": "esno scripts/extract-webhook-example.ts"
+    "extract-fixtures": "tsx scripts/extract-webhook-example.ts"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.16.0",
@@ -26,7 +26,6 @@
     "@octokit/webhooks-examples": "^6.3.6",
     "@types/jest": "^29.0.3",
     "@types/lodash": "^4.14.185",
-    "@types/minimist": "^1.2.2",
     "@types/node": "^18.7.18",
     "@typescript-eslint/eslint-plugin": "^5.37.0",
     "@typescript-eslint/parser": "^5.37.0",
@@ -35,9 +34,7 @@
     "esbuild": "^0.15.7",
     "eslint": "^8.23.1",
     "eslint-config-prettier": "^8.5.0",
-    "esno": "^0.16.3",
     "jest": "^29.1.0",
-    "minimist": "^1.2.6",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.7.1",
     "smee-client": "^1.2.3",
@@ -57,6 +54,7 @@
     "lodash": "^4.17.21",
     "mri": "^1.2.0",
     "toucan-js": "^2.6.1",
+    "tsx": "^3.9.0",
     "wrangler": "^2.1.4"
   }
 }
