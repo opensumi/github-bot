@@ -1,5 +1,5 @@
 import { StringBuilder } from '@/utils';
-import { RC_WORKFLOW_FILE } from '@/opensumi/constants';
+import { RC_WORKFLOW_FILE } from '@/constants/opensumi';
 import { renderUserLink, titleTpl, textTpl, StopHandleError } from '.';
 import { Context } from '../app';
 import { ExtractPayload, MarkdownContent } from '../types';

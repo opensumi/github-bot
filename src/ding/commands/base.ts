@@ -1,7 +1,7 @@
 import { CommandCenter } from '@/command';
 import type { DingBot } from '../bot';
 import { Message } from '../types';
-import { IApp } from '@/github/app';
+import { App } from '@/github/app';
 import mri from 'mri';
 
 export interface Context<T = any> {
@@ -11,7 +11,7 @@ export interface Context<T = any> {
    * _ 的首位为命令
    */
   parsed: mri.Argv<T>;
-  app?: IApp;
+  app?: App;
 }
 
 export type ContextWithApp<T = any> = Required<Context<T>>;

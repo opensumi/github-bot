@@ -3,7 +3,6 @@ import { DingKVManager, IDingBotSetting } from './secrets';
 import { cc } from './commands';
 import { SendMessage, compose, text as textWrapper } from './message';
 import { initApp, App } from '@/github/app';
-import { Env } from '@/types';
 import { GitHubKVManager } from '@/github/storage';
 import { Message } from './types';
 

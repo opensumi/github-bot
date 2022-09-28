@@ -2,7 +2,6 @@ import { Hono } from 'hono';
 import { prettyJSON } from 'hono/pretty-json';
 import { logger } from 'hono/logger';
 import Toucan from 'toucan-js';
-import { THono } from './types';
 import { ignition } from '@/modules';
 import favicon from './public/favicon.html';
 import html from './public/index.html';

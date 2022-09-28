@@ -5,7 +5,6 @@ import { baseHandler, setupWebhooksTemplate } from './handler';
 import { handleCommentCommand } from './commands';
 import { sendToDing } from './utils';
 import { error } from '@/runtime/response';
-import { Env } from '@/types';
 import { AppService } from './service';
 
 export interface Context {
@@ -82,7 +81,6 @@ export const appFactory = async (setting: AppSetting) => {
   return app;
 };
 
-export type IApp = Awaited<ReturnType<typeof appFactory>>;
 
 export async function initApp(setting: AppSetting) {
   const app = await appFactory(setting);

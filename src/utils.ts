@@ -1,5 +1,3 @@
-import { Env } from '@/types';
-
 export class StringBuilder {
   private array = [] as string[];
   constructor(...initial: string[]) {

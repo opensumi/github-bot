@@ -1,7 +1,7 @@
 import type { App } from '@/github/app';
 import { AppSetting } from '../storage';
 import { Octokit } from '@octokit/rest';
-import { RC_WORKFLOW_FILE } from '@/opensumi/constants';
+import { RC_WORKFLOW_FILE } from '@/constants/opensumi';
 
 export class AppService {
   _octo: Octokit | undefined;

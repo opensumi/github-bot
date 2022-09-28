@@ -1,4 +1,3 @@
-import { THono } from '@/types';
 import { DingController } from './ding/ding.controller';
 import { GitHubController } from './github/github.controller';
 import { WebhookController } from './webhook/webhook.controller';

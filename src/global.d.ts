@@ -10,10 +10,15 @@ declare module 'hono' {
     message(text: string): Response;
   }
 }
-export interface Env {
-  KV_PROD: KVNamespace;
-  HOST: string;
-  SENTRY_DSN?: string;
+
+declare global {
+  interface Env {
+    KV_PROD: KVNamespace;
+    HOST: string;
+    SENTRY_DSN?: string;
+  }
+
+  type THono = Hono<{ Bindings: Env }>;
 }
 
-export type THono = Hono<{ Bindings: Env }>;
+export {};
