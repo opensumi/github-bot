@@ -66,7 +66,7 @@ export async function validateGithub(req: Request<any>, webhooks: Webhooks) {
   };
 }
 
-export const setupWebhooksSendToDing = (
+export const setupWebhooksTemplate = (
   webhooks: Webhooks<{ octokit?: Octokit }>,
   ctx: Context,
 ) => {
@@ -184,7 +184,7 @@ export async function webhookHandler(
 
   const webhooks = webhooksFactory(setting.githubSecret);
 
-  setupWebhooksSendToDing(webhooks as any, {
+  setupWebhooksTemplate(webhooks as any, {
     setting: setting,
   });
   return baseHandler(webhooks, req, env, ctx);

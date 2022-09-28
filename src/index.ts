@@ -1,9 +1,5 @@
 import { getURL } from './proxy';
-import {
-  baseHandler,
-  setupWebhooksSendToDing,
-  webhooksFactory,
-} from './github';
+import { baseHandler, setupWebhooksTemplate, webhooksFactory } from './github';
 import { initApp } from './github/app';
 import { Env } from './env';
 import { Hono } from 'hono';
@@ -74,13 +70,15 @@ app.use('*', async (c, next) => {
   await next();
 });
 
-app.get('/', (c) => c.html(`<p>
+app.get('/', (c) =>
+  c.html(`<p>
 Nice catch 👍
 
 <div>
   <a href="https://github.com/opensumi/github-bot">https://github.com/opensumi/github-bot</a>
 </div>
-</p>`));
+</p>`),
+);
 
 app.get('/favicon.ico', async (c) => {
   return c.body(
@@ -167,7 +165,7 @@ app.post('/webhook/:id', async (c) => {
 
   const webhooks = webhooksFactory(setting.githubSecret);
 
-  setupWebhooksSendToDing(webhooks as any, {
+  setupWebhooksTemplate(webhooks as any, {
     setting: setting,
   });
   return baseHandler(webhooks, c.req, c.env, c.executionCtx);

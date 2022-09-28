@@ -15,7 +15,6 @@ import { webhooks } from './webhooks';
 import { eachInstallationFactory } from './each-installation';
 import { eachRepositoryFactory } from './each-repository';
 import { getInstallationOctokit } from './get-installation-octokit';
-import { APIWrapper } from './apis';
 
 type Constructor<T> = new (...args: any[]) => T;
 
@@ -30,7 +29,6 @@ type OctokitClassType<TOptions extends Options> =
     : typeof OctokitCore;
 
 export class App<TOptions extends Options = Options> {
-  api: APIWrapper;
   static defaults<
     TDefaults extends Options,
     S extends Constructor<App<TDefaults>>,
@@ -143,15 +141,5 @@ export class App<TOptions extends Options = Options> {
     this.eachRepository = eachRepositoryFactory(
       this,
     ) as EachRepositoryInterface<OctokitType<TOptions>>;
-    this.api = new APIWrapper(this);
-  }
-  async getInstallationOcto() {
-    for await (const { octokit } of this.eachInstallation.iterator()) {
-      return octokit;
-    }
-    throw new Error('no app installation found');
-  }
-  async init() {
-    await this.api.init();
   }
 }

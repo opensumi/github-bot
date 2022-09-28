@@ -32,7 +32,7 @@ cc.on(
     }
 
     const { app } = ctx;
-    await app.api.deployBot();
+    await app.service.deployBot();
     await bot.replyText('机器人部署任务分发成功');
   },
   [],
@@ -62,8 +62,8 @@ cc.on(
 
     if (ref) {
       try {
-        await app.api.getRefInfoByRepo(ref, 'opensumi', 'core');
-        await app.api.releaseRCVersion(ref);
+        await app.service.getRefInfoByRepo(ref, 'opensumi', 'core');
+        await app.service.releaseRCVersion(ref);
         await bot.replyText(`在 ${ref} 上发布 Release Candidate 成功`);
       } catch (error) {
         await bot.replyText(`执行出错：${(error as Error).message}`);

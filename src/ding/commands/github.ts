@@ -54,7 +54,7 @@ cc.on(
 
     const posArg = ctx.parsed['_'];
     const { owner, repo } = await getRepoInfoFromCommand(posArg, bot);
-    const payload = await app.api.getRepoStarRecords(owner, repo);
+    const payload = await app.service.getRepoStarRecords(owner, repo);
     const content = code('json', JSON.stringify(payload));
     await bot.reply(content);
   },
@@ -91,7 +91,7 @@ cc.on(
     }
 
     const { command, app } = ctx;
-    const octokit = await app.getInstallationOcto();
+    const octokit = await app.getOcto();
     const url = getUrl(command);
     if (!url) {
       return;
@@ -155,7 +155,7 @@ cc.on(
 
     const posArg = ctx.parsed['_'];
     const { owner, repo } = await getRepoInfoFromCommand(posArg, bot);
-    const payload = await app.api.getRepoHistory(owner, repo);
+    const payload = await app.service.getRepoHistory(owner, repo);
     console.log(`🚀 ~ file: github.ts ~ line 127 ~ payload`, payload);
     const content = code('json', JSON.stringify(payload, null, 2));
     console.log(`🚀 ~ file: github.ts ~ line 128 ~ content`, content);

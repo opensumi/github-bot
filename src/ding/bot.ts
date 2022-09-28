@@ -2,8 +2,7 @@ import { doSign, parseCliArgs, send } from '@/ding/utils';
 import { DingKVManager, IDingBotSetting } from './secrets';
 import { cc } from './commands';
 import { SendMessage, compose, text as textWrapper } from './message';
-import { initApp } from '@/github/app';
-import { App } from '@/lib/octo';
+import { initApp, App } from '@/github/app';
 import { Env } from '@/env';
 import { GitHubKVManager } from '@/github/storage';
 import { Message } from './types';
@@ -92,7 +91,7 @@ export class DingBot {
       JSON.stringify(msg, null, 2),
     );
 
-    let app: App<any> | undefined;
+    let app: App | undefined;
     const setting = await this.githubKVManager.getAppSettingById(this.id);
     if (setting) {
       console.log('has github app settings');

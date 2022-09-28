@@ -1,11 +1,12 @@
-import { App } from '@/lib/octo';
+import { App as OctoApp } from '@/lib/octo';
 import { Octokit } from '@octokit/rest';
 import { ISetting, AppSetting, GitHubKVManager } from '@/github/storage';
-import { baseHandler, setupWebhooksSendToDing } from './handler';
+import { baseHandler, setupWebhooksTemplate } from './handler';
 import { handleCommentCommand } from './commands';
 import { sendToDing } from './utils';
 import { error } from '@/runtime/response';
 import { Env } from '@/env';
+import { AppService } from './service';
 
 export interface Context {
   setting: ISetting;
@@ -13,48 +14,78 @@ export interface Context {
 
 export interface AppContext extends Context {
   setting: AppSetting;
+  service: AppService;
 }
 
-export const appFactory = (ctx: AppContext) => {
-  const { appSettings, githubSecret } = ctx.setting;
-  const _app = new App({
-    appId: appSettings.appId,
-    privateKey: appSettings.privateKey,
-    webhooks: {
-      secret: githubSecret,
-    },
-    Octokit: Octokit,
-  });
+export class App {
+  ctx: {
+    setting: AppSetting;
+  };
+  service: AppService;
+  app: OctoApp;
 
-  setupWebhooksSendToDing(_app.webhooks, ctx);
+  constructor(private setting: AppSetting) {
+    const { appSettings, githubSecret } = setting;
+    this.app = new OctoApp({
+      appId: appSettings.appId,
+      privateKey: appSettings.privateKey,
+      webhooks: {
+        secret: githubSecret,
+      },
+      Octokit: Octokit,
+    });
+    this.ctx = {
+      setting,
+    };
+    setupWebhooksTemplate(this.app.webhooks, this.ctx);
+    this.service = new AppService(this.app, setting);
 
-  _app.webhooks.on('star.created', async ({ payload }) => {
-    const repository = payload.repository;
-    const starCount = repository.stargazers_count;
-    if (starCount % 100 === 0) {
-      await sendToDing(
-        {
-          title: '⭐⭐⭐',
-          text: `一个好消息，[${repository.full_name}](${repository.html_url}) 有 ${starCount} 颗 🌟 了~`,
-        },
-        'star.created',
-        ctx.setting,
-      );
+    this.app.webhooks.on('star.created', async ({ payload }) => {
+      const repository = payload.repository;
+      const starCount = repository.stargazers_count;
+      if (starCount % 100 === 0) {
+        await sendToDing(
+          {
+            title: '⭐⭐⭐',
+            text: `一个好消息，[${repository.full_name}](${repository.html_url}) 有 ${starCount} 颗 🌟 了~`,
+          },
+          'star.created',
+          this.ctx.setting,
+        );
+      }
+    });
+
+    // Execute user comment input
+    this.app.webhooks.on('issue_comment.created', handleCommentCommand);
+    this.app.webhooks.on('issue_comment.edited', handleCommentCommand);
+  }
+
+  get webhooks() {
+    return this.app.webhooks;
+  }
+
+  async getOcto(): Promise<Octokit> {
+    for await (const { octokit } of this.app.eachInstallation.iterator()) {
+      return octokit as any;
     }
-  });
-  // Execute user comment input
-  _app.webhooks.on('issue_comment.created', handleCommentCommand);
-  _app.webhooks.on('issue_comment.edited', handleCommentCommand);
-  return _app;
+    throw new Error('no app installation found');
+  }
+
+  async init() {
+    await this.service.init();
+  }
+}
+
+export const appFactory = async (setting: AppSetting) => {
+  const app = new App(setting);
+  await app.init();
+  return app;
 };
 
-export type IApp = ReturnType<typeof appFactory>;
+export type IApp = Awaited<ReturnType<typeof appFactory>>;
 
 export async function initApp(setting: AppSetting) {
-  const app = appFactory({
-    setting: setting,
-  });
-  await app.init();
+  const app = await appFactory(setting);
   return app;
 }
 
@@ -80,5 +111,5 @@ export async function handler(
   }
 
   const app = await initApp(setting);
-  return baseHandler(app.webhooks, req, env, ctx);
+  return baseHandler(app.app.webhooks, req, env, ctx);
 }

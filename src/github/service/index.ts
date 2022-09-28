@@ -1,46 +1,11 @@
-// source: https://github.com/bytebase/star-history/blob/master/src/helpers/api.ts
-
+import { App } from '@/lib/octo';
+import { AppSetting } from '../storage';
 import { Octokit } from '@octokit/rest';
-import { App } from '.';
 import { RC_WORKFLOW_FILE } from '@/opensumi/constants';
 
-const PER_PAGE = 100;
-const HISTORY_RANGE = 2 * 7 * 24 * 60 * 60 * 1000;
-
-export function range(from: number, to: number): number[] {
-  const r: number[] = [];
-  for (let i = from; i <= to; i++) {
-    r.push(i);
-  }
-  return r;
-}
-
-export function getTimeStampByDate(t: Date | number | string): number {
-  const d = new Date(t);
-
-  return d.getTime();
-}
-
-export function getDateString(
-  t: Date | number | string,
-  format = 'yyyy/MM/dd',
-): string {
-  const d = new Date(getTimeStampByDate(t));
-
-  const year = d.getFullYear();
-  const month = d.getMonth() + 1;
-  const date = d.getDate();
-
-  const formatedString = format
-    .replace('yyyy', String(year))
-    .replace('MM', String(month))
-    .replace('dd', String(date));
-
-  return formatedString;
-}
-export class APIWrapper {
+export class AppService {
   _octo: Octokit | undefined;
-  constructor(private app: App) {}
+  constructor(private app: App, private setting: AppSetting) {}
 
   get octo() {
     return this._octo as Octokit;
@@ -441,4 +406,39 @@ export class APIWrapper {
     });
     return commit;
   }
+}
+
+const PER_PAGE = 100;
+const HISTORY_RANGE = 2 * 7 * 24 * 60 * 60 * 1000;
+
+export function range(from: number, to: number): number[] {
+  const r: number[] = [];
+  for (let i = from; i <= to; i++) {
+    r.push(i);
+  }
+  return r;
+}
+
+export function getTimeStampByDate(t: Date | number | string): number {
+  const d = new Date(t);
+
+  return d.getTime();
+}
+
+export function getDateString(
+  t: Date | number | string,
+  format = 'yyyy/MM/dd',
+): string {
+  const d = new Date(getTimeStampByDate(t));
+
+  const year = d.getFullYear();
+  const month = d.getMonth() + 1;
+  const date = d.getDate();
+
+  const formatedString = format
+    .replace('yyyy', String(year))
+    .replace('MM', String(month))
+    .replace('dd', String(date));
+
+  return formatedString;
 }
