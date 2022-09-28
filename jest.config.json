@@ -1,6 +1,7 @@
 {
   "transform": {
-    "^.+\\.(t|j)sx?$": "ts-jest"
+    "^.+\\.(t|j)sx?$": "ts-jest",
+    "^.+\\.html$": "<rootDir>/test/transforms/html.js"
   },
   "testRegex": "/test/.*\\.test\\.ts$",
   "collectCoverageFrom": ["src/**/*.{ts,js}"],
