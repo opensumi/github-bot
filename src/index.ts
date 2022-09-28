@@ -4,6 +4,8 @@ import { logger } from 'hono/logger';
 import Toucan from 'toucan-js';
 import { THono } from './types';
 import { ignition } from '@/modules';
+import favicon from './public/favicon.html';
+import html from './public/index.html';
 
 const app = new Hono() as THono;
 
@@ -55,27 +57,12 @@ app.use('*', async (c, next) => {
   await next();
 });
 
-app.get('/', (c) =>
-  c.html(`<p>
-Nice catch 👍
-
-<div>
-  <a href="https://github.com/opensumi/github-bot">https://github.com/opensumi/github-bot</a>
-</div>
-</p>`),
-);
+app.get('/', (c) => c.html(html));
 
 app.get('/favicon.ico', async (c) => {
-  return c.body(
-    `<svg xmlns="http://www.w3.org/2000/svg" baseProfile="full" width="200" height="200">
-  <rect width="100%" height="100%" fill="#F38020"/>
-  <text font-size="120" font-family="Arial, Helvetica, sans-serif" text-anchor="end" fill="#FFF" x="185" y="185">H</text>
-</svg>`,
-    200,
-    {
-      'content-type': 'image/svg+xml',
-    },
-  );
+  return c.body(favicon, 200, {
+    'content-type': 'image/svg+xml',
+  });
 });
 
 ignition(app);
