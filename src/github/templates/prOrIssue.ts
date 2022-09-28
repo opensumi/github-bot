@@ -11,10 +11,9 @@ import { StringBuilder } from '@/utils';
 import { Context } from '../app';
 import { textTpl } from '.';
 
-export type Name = 'issues' | 'pull_request' | 'discussion';
+export type Name = 'issues' | 'discussion';
 export const NameBlock = {
   issues: 'issue',
-  pull_request: 'pull request',
   discussion: 'discussion',
 } as {
   [key in Name]: string;
@@ -31,7 +30,7 @@ const removeOrgInfo = (orgName: string, label: string) => {
 function render(
   name: Name,
   payload: ExtractPayload<Name>,
-  data: PullRequest | Issue | Discussion,
+  data: Issue | Discussion,
   ctx: Context,
 ) {
   const nameBlock = NameBlock[name];
@@ -56,6 +55,8 @@ function render(
   );
 
   if (shouldRenderBody) {
+    builder.add('');
+    builder.add('---');
     builder.add(renderPrOrIssueBody(data, ctx.setting.contentLimit));
   }
 
