@@ -157,9 +157,6 @@ export async function handlePr(
     builder.add(`> ${base.ref} <- ${headLabel}  `);
   }
 
-  builder.add('');
-  builder.add('---');
-
   const title = titleTpl(
     {
       repo: payload.repository,
@@ -170,6 +167,9 @@ export async function handlePr(
   );
 
   if (shouldRenderBody) {
+    builder.add('');
+    builder.add('---');
+
     builder.add(renderPrOrIssueBody(data, ctx.setting.contentLimit));
   }
 
