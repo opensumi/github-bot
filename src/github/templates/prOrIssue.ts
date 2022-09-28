@@ -79,7 +79,6 @@ export async function handlePr(
   payload: ExtractPayload<'pull_request'>,
   ctx: Context,
 ) {
-  let oldTitle = '';
   const nameBlock = 'pull request';
   const data = payload.pull_request;
   let action = payload.action as string;
@@ -109,36 +108,53 @@ export async function handlePr(
   if (action === 'ready_for_review') {
     action = 'ready for review';
   }
+  const base = (data as PullRequest).base;
 
+  let oldTitle = '';
+  let oldRef = '';
   if (action === 'edited') {
     if ((payload as THasChanges).changes) {
       const changes = (payload as THasChanges).changes;
       if (changes?.title) {
         // 说明是标题改变
-        oldTitle = changes.title.from;
-        action = 'changed title';
-      } else {
-        throw new StopHandleError('ignore prOrIssue content change');
+        // 我们只接收标题带有 WIP 的改变
+        if (
+          oldTitle.toLowerCase().includes('wip') &&
+          !data.title.toLowerCase().includes('wip')
+        ) {
+          oldTitle = changes.title.from;
+        }
+        if (
+          !oldTitle.toLowerCase().includes('wip') &&
+          data.title.toLowerCase().includes('wip')
+        ) {
+          oldTitle = changes.title.from;
+        }
       }
-      if (
-        !oldTitle.toLowerCase().includes('wip') &&
-        !data.title.toLowerCase().includes('wip')
-      ) {
-        throw new StopHandleError('only handle wip changes');
+      if (changes?.base) {
+        oldRef = changes.base.ref.from;
       }
     }
-  }
 
-  if (oldTitle) {
-    builder.add(`> **from:** ${oldTitle}`);
+    if (oldTitle) {
+      builder.add(`> **changed title from:** ${oldTitle}  `);
+    }
+    if (oldRef) {
+      builder.add(
+        `> **changed the base branch** from ${oldRef} to ${base.ref}  `,
+      );
+    }
+
+    if (!oldRef && !oldTitle) {
+      throw new StopHandleError('ignore pr content change');
+    }
   }
 
   if (shouldRenderMergeInfo) {
     // display PR related info, such as pr assignees, base branch, head branch, etc.
-    const base = (data as PullRequest).base;
     const head = (data as PullRequest).head;
     const headLabel = removeOrgInfo(base.user.login, head.label);
-    builder.add(`> ${base.ref} <- ${headLabel}`);
+    builder.add(`> ${base.ref} <- ${headLabel}  `);
   }
 
   builder.add('');

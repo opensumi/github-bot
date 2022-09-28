@@ -30,6 +30,10 @@ export interface ChangeItem {
 export interface Changes {
   body?: ChangeItem;
   title?: ChangeItem;
+  base?: {
+    ref: ChangeItem;
+    sha: ChangeItem;
+  };
 }
 
 export interface THasChanges {
