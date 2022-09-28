@@ -1,4 +1,4 @@
-import { App } from '@/lib/octo';
+import type { App } from '@/github/app';
 import { AppSetting } from '../storage';
 import { Octokit } from '@octokit/rest';
 import { RC_WORKFLOW_FILE } from '@/opensumi/constants';
@@ -12,7 +12,7 @@ export class AppService {
   }
 
   async init() {
-    this._octo = (await this.app.getInstallationOcto()) as Octokit;
+    this._octo = (await this.app.getOcto()) as Octokit;
   }
 
   async getRepoStargazers(

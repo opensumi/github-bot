@@ -38,7 +38,7 @@ export class App {
       setting,
     };
     setupWebhooksTemplate(this.app.webhooks, this.ctx);
-    this.service = new AppService(this.app, setting);
+    this.service = new AppService(this, setting);
 
     this.app.webhooks.on('star.created', async ({ payload }) => {
       const repository = payload.repository;

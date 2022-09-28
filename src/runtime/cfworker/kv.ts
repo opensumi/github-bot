@@ -1,4 +1,4 @@
-export class KVManager2<T> {
+export class KVManager<T> {
   constructor(private kv: KVNamespace, private prefix: string = '') {}
 
   f(key: string) {

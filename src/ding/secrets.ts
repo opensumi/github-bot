@@ -1,4 +1,4 @@
-import { KVManager2 } from '@/runtime/cfworker/kv';
+import { KVManager } from '@/runtime/cfworker/kv';
 import { Env } from '@/env';
 
 export interface IDingBotSetting {
@@ -14,13 +14,13 @@ const INFO_PREFIX = 'ding/info/';
 
 export class DingKVManager {
   kv: KVNamespace;
-  secretsKV: KVManager2<IDingBotSetting>;
-  infoKV: KVManager2<IDingInfo>;
+  secretsKV: KVManager<IDingBotSetting>;
+  infoKV: KVManager<IDingInfo>;
 
   constructor(private env: Env) {
     this.kv = env.KV_PROD;
-    this.secretsKV = new KVManager2(this.kv, SECRETS_PREFIX);
-    this.infoKV = new KVManager2(this.kv, INFO_PREFIX);
+    this.secretsKV = new KVManager(this.kv, SECRETS_PREFIX);
+    this.infoKV = new KVManager(this.kv, INFO_PREFIX);
   }
 
   getSettingById = async (id: string) => {
