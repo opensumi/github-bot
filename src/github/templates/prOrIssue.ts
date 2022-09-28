@@ -11,13 +11,15 @@ import { StringBuilder } from '@/utils';
 import { Context } from '../app';
 import { textTpl } from '.';
 
-export type Name = 'issues' | 'discussion';
+export type Name = 'issues' | 'pull_request' | 'discussion';
 export const NameBlock = {
   issues: 'issue',
+  pull_request: 'pull request',
   discussion: 'discussion',
 } as {
   [key in Name]: string;
 };
+
 
 const removeOrgInfo = (orgName: string, label: string) => {
   const prefix = `${orgName}:`;
