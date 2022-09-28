@@ -52,3 +52,7 @@ cc.on('help', async (bot) => {
 
   await bot.replyText(text.build());
 });
+
+cc.on('ping', async (bot) => {
+  await bot.replyText("pong");
+});
