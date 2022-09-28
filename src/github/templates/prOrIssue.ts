@@ -99,69 +99,71 @@ function render(
     text,
   };
 }
-
 export async function handlePr(
   payload: ExtractPayload<'pull_request'>,
   ctx: Context,
 ) {
-  return render('pull_request', payload, payload.pull_request, ctx);
-}
-
-export async function handleIssue(
-  payload: ExtractPayload<'issues'>,
-  ctx: Context,
-) {
-  return render('issues', payload, payload.issue, ctx);
-}
-
-export async function handleDiscussion(
-  payload: ExtractPayload<'discussion'>,
-  ctx: Context,
-) {
-  return render('discussion', payload, payload.discussion, ctx);
-}
-
-export async function handlePrEdited(
-  payload: ExtractPayload<'pull_request.edited'>,
-  ctx: Context,
-) {
-  const data = payload.pull_request;
   let oldTitle = '';
-
   const nameBlock = 'pull request';
-  const shouldRenderBody = false;
+  const data = payload.pull_request;
   let action = payload.action as string;
-  if ((payload as THasChanges).changes) {
-    const changes = (payload as THasChanges).changes;
-    if (changes?.title) {
-      // 说明是标题改变
-      oldTitle = changes.title.from;
-      action = 'changed title';
-    } else {
-      throw new StopHandleError('ignore prOrIssue content change');
-    }
+
+  let shouldRenderBody = true;
+  if (['closed', 'edited'].includes(action)) {
+    shouldRenderBody = false;
   }
 
-  if (
-    !oldTitle.toLowerCase().includes('wip') &&
-    !data.title.toLowerCase().includes('wip')
-  ) {
-    throw new StopHandleError('only handle wip changes');
+  let shouldRenderMergeInfo = false;
+  if (['opened', 'edited'].includes(action)) {
+    shouldRenderMergeInfo = true;
   }
 
   const builder = new StringBuilder();
 
   builder.add(renderPrOrIssueTitleLink(data));
 
+  if (action === 'closed') {
+    const pr = (payload as ExtractPayload<'pull_request.closed'>).pull_request;
+    if (pr.merged) {
+      // If the action is closed and the merged key is true, the pull request was merged.
+      action = 'merged';
+    }
+  }
+
+  if (action === 'ready_for_review') {
+    action = 'ready for review';
+  }
+
+  if (action === 'edited') {
+    if ((payload as THasChanges).changes) {
+      const changes = (payload as THasChanges).changes;
+      if (changes?.title) {
+        // 说明是标题改变
+        oldTitle = changes.title.from;
+        action = 'changed title';
+      } else {
+        throw new StopHandleError('ignore prOrIssue content change');
+      }
+      if (
+        !oldTitle.toLowerCase().includes('wip') &&
+        !data.title.toLowerCase().includes('wip')
+      ) {
+        throw new StopHandleError('only handle wip changes');
+      }
+    }
+  }
+
   if (oldTitle) {
     builder.add(`> **from:** ${oldTitle}`);
   }
 
-  // display PR related info, such as pr assignees, base branch, head branch, etc.
-  const base = (data as PullRequest).base;
-  const head = (data as PullRequest).head;
-  const headLabel = removeOrgInfo(base.user.login, head.label);
-  builder.add(`> ${base.ref} <- ${headLabel}`);
+  if (shouldRenderMergeInfo) {
+    // display PR related info, such as pr assignees, base branch, head branch, etc.
+    const base = (data as PullRequest).base;
+    const head = (data as PullRequest).head;
+    const headLabel = removeOrgInfo(base.user.login, head.label);
+    builder.add(`> ${base.ref} <- ${headLabel}`);
+  }
 
   builder.add('');
   builder.add('---');
@@ -194,4 +196,18 @@ export async function handlePrEdited(
     title,
     text,
   };
+}
+
+export async function handleIssue(
+  payload: ExtractPayload<'issues'>,
+  ctx: Context,
+) {
+  return render('issues', payload, payload.issue, ctx);
+}
+
+export async function handleDiscussion(
+  payload: ExtractPayload<'discussion'>,
+  ctx: Context,
+) {
+  return render('discussion', payload, payload.discussion, ctx);
 }

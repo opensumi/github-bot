@@ -20,7 +20,6 @@ import {
 
 import { TemplateMapping } from '@/github/types';
 import { Context } from '../app';
-import { handlePrEdited } from './prOrIssue';
 
 export const getTemplates = (ctx: Context) => {
   let templates = {
@@ -46,11 +45,11 @@ export const getTemplates = (ctx: Context) => {
       'issues.reopened': handleIssue,
       'pull_request.reopened': handlePr,
       'pull_request.closed': handlePr,
-      'pull_request.edited': handlePrEdited,
+      'pull_request.edited': handlePr,
+      'pull_request.ready_for_review': handlePr,
       'discussion_comment.created': handleDiscussionComment,
       'issue_comment.created': handleIssueComment,
       'commit_comment.created': handleCommitComment,
-      'pull_request.ready_for_review': handlePr,
       'pull_request_review.submitted': handleReview,
       'pull_request_review.dismissed': handleReview,
       'pull_request_review_comment.created': handleReviewComment,
