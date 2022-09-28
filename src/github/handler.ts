@@ -10,7 +10,7 @@ import { sendToDing } from './utils';
 import type { MarkdownContent, THasAction } from './types';
 import { Octokit } from '@octokit/core';
 import { Context } from './app';
-import { Env } from '@/env';
+import { Env } from '@/types';
 
 export class ValidationError extends Error {
   constructor(public code: number, message: string) {

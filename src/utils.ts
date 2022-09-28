@@ -1,4 +1,4 @@
-import { Env } from '@/env';
+import { Env } from '@/types';
 
 export class StringBuilder {
   private array = [] as string[];

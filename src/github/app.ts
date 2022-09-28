@@ -5,7 +5,7 @@ import { baseHandler, setupWebhooksTemplate } from './handler';
 import { handleCommentCommand } from './commands';
 import { sendToDing } from './utils';
 import { error } from '@/runtime/response';
-import { Env } from '@/env';
+import { Env } from '@/types';
 import { AppService } from './service';
 
 export interface Context {
