@@ -23,11 +23,5 @@
     "./scripts/**/*.ts",
     "./typings.d.ts"
   ],
-  "exclude": ["node_modules/", "dist/"],
-  "ts-node": {
-    "compilerOptions": {
-      "lib": ["esnext"],
-      "types": ["@types/node"]
-    }
-  }
+  "exclude": ["node_modules/", "dist/"]
 }
