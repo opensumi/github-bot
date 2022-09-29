@@ -2,6 +2,7 @@ import { ExtractPayload, THasChanges } from '../types';
 import {
   renderUserLink,
   renderPrOrIssueTitleLink,
+  renderDeletedPrOrIssueTitleLink,
   titleTpl,
   renderPrOrIssueBody,
   StopHandleError,
@@ -19,7 +20,6 @@ export const NameBlock = {
 } as {
   [key in Name]: string;
 };
-
 
 const removeOrgInfo = (orgName: string, label: string) => {
   const prefix = `${orgName}:`;
@@ -98,8 +98,6 @@ export async function handlePr(
 
   const builder = new StringBuilder();
 
-  builder.add(renderPrOrIssueTitleLink(data));
-
   if (action === 'closed') {
     const pr = (payload as ExtractPayload<'pull_request.closed'>).pull_request;
     if (pr.merged) {
@@ -139,18 +137,30 @@ export async function handlePr(
       }
     }
 
-    if (oldTitle) {
-      builder.add(`> **changed title from:** ${oldTitle}  `);
-    }
-    if (oldRef) {
-      builder.add(
-        `> **changed the base branch** from ${oldRef} to ${base.ref}  `,
-      );
-    }
-
     if (!oldRef && !oldTitle) {
       throw new StopHandleError('ignore pr content change');
     }
+  }
+
+  if (oldTitle) {
+    builder.add(
+      renderDeletedPrOrIssueTitleLink({
+        ...data,
+        title: oldTitle,
+      }),
+    );
+  }
+
+  builder.add(renderPrOrIssueTitleLink(data));
+
+  if (oldTitle) {
+    builder.add(`> **changed title**`);
+  }
+
+  if (oldRef) {
+    builder.add(
+      `> **changed the base branch** from ${oldRef} to ${base.ref}  `,
+    );
   }
 
   if (shouldRenderMergeInfo) {

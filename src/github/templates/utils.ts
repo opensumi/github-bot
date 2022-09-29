@@ -64,6 +64,22 @@ export function renderPrOrIssueTitleLink(p: {
   return `> #### ${renderPrOrIssueLink(p)}`;
 }
 
+export function renderDeletedPrOrIssueTitleLink(p: {
+  /**
+   * The title of the pull request.
+   */
+  title: string;
+  /**
+   * Number uniquely identifying the pull request within its repository.
+   */
+  number: number;
+  html_url: string;
+  body: string | null;
+}) {
+  return `> #### ~~${renderPrOrIssueLink(p)}~~`;
+}
+
+
 export function renderPrOrIssueBody(
   p: {
     /**

@@ -26,7 +26,8 @@ describe('github templates pr or issue', () => {
     console.log(`pull_request_edited_wip ~ result`, result.text);
     expect(result.text).toBeDefined();
     expect(result.text).toContain('<-');
-    expect(result.text).toContain('> **changed title from:**');
+    expect(result.text).toContain('~~');
+    expect(result.text).toContain('> **changed title**');
     expect(result.title).toBeDefined();
   });
   it('can handle pull_request_edited_base', async () => {
