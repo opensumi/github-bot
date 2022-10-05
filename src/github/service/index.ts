@@ -2,9 +2,11 @@ import type { App } from '@/github/app';
 import { AppSetting } from '../storage';
 import { Octokit } from '@octokit/rest';
 import { RC_WORKFLOW_FILE } from '@/constants/opensumi';
+import { SearchService } from './search';
 
 export class AppService {
   _octo: Octokit | undefined;
+  searchService: SearchService | undefined;
   constructor(private app: App, private setting: AppSetting) {}
 
   get octo() {
@@ -13,6 +15,7 @@ export class AppService {
 
   async init() {
     this._octo = (await this.app.getOcto()) as Octokit;
+    this.searchService = new SearchService(this._octo!)
   }
 
   async getRepoStargazers(
