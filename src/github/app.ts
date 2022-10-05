@@ -1,4 +1,4 @@
-import { App as OctoApp } from '@/lib/octo';
+import { App as OctoApp } from '@octokit/app';
 import { Octokit } from '@octokit/rest';
 import { ISetting, AppSetting, GitHubKVManager } from '@/github/storage';
 import { baseHandler, setupWebhooksTemplate } from './handler';
