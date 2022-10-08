@@ -120,13 +120,13 @@ export async function handlePr(
         // 说明是标题改变
         // 我们只接收标题带有 WIP 的改变
         if (
-          oldTitle.toLowerCase().includes('wip') &&
+          changes.title.from.toLowerCase().includes('wip') &&
           !data.title.toLowerCase().includes('wip')
         ) {
           oldTitle = changes.title.from;
         }
         if (
-          !oldTitle.toLowerCase().includes('wip') &&
+          !changes.title.from.toLowerCase().includes('wip') &&
           data.title.toLowerCase().includes('wip')
         ) {
           oldTitle = changes.title.from;
