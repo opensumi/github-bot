@@ -79,7 +79,6 @@ export function renderDeletedPrOrIssueTitleLink(p: {
   return `> #### ~~${renderPrOrIssueLink(p)}~~`;
 }
 
-
 export function renderPrOrIssueBody(
   p: {
     /**
@@ -210,7 +209,7 @@ type DetailTitleTpl = (
   ctx: Context,
 ) => string;
 
-export const detailTitleTpl: DetailTitleTpl = (data, ctx) => {
+export const detailTitleTpl: DetailTitleTpl = (data) => {
   let text = `${renderUserLink(data.somebody)} [${data.did.text}](${
     data.did.html_url
   }) `;

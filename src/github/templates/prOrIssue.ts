@@ -153,21 +153,17 @@ export async function handlePr(
 
   builder.add(renderPrOrIssueTitleLink(data));
 
-  if (oldTitle) {
-    builder.add(`> **changed title**`);
-  }
-
-  if (oldRef) {
-    builder.add(
-      `> **changed the base branch** from ${oldRef} to ${base.ref}  `,
-    );
-  }
-
   if (shouldRenderMergeInfo) {
     // display PR related info, such as pr assignees, base branch, head branch, etc.
     const head = (data as PullRequest).head;
     const headLabel = removeOrgInfo(base.user.login, head.label);
     builder.add(`> ${base.ref} <- ${headLabel}  `);
+  }
+
+  if (oldRef) {
+    builder.add(
+      `> changed the base branch from \`${oldRef}\` to \`${base.ref}\`  `,
+    );
   }
 
   const title = titleTpl(
