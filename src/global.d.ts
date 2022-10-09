@@ -6,8 +6,10 @@ declare module 'hono' {
   interface Context {
     sentry?: Toucan;
     waitUntil: (promise: Promise<any>) => void;
-    error(status: StatusCode, content: string): Response;
-    message(text: string): Response;
+    send: {
+      error(status: StatusCode, content: string): Response;
+      message(text: string): Response;
+    };
   }
 }
 

@@ -22,7 +22,7 @@ export class ProxyController extends BaseController {
           return fetch(url.toString(), c.req);
         }
       }
-      return c.error(401, 'not a valid hostname');
+      return c.send.error(401, 'not a valid hostname');
     });
   }
 }

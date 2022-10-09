@@ -10,16 +10,16 @@ export class DingController extends BaseController {
 
       console.log(`handler ~ id`, id);
       if (!id) {
-        return c.error(401, 'need a valid id');
+        return c.send.error(401, 'need a valid id');
       }
       const kvManager = new DingKVManager(c.env);
       const setting = await kvManager.getSettingById(id);
       if (!setting) {
-        return c.error(404, 'id not found');
+        return c.send.error(404, 'id not found');
       }
 
       if (!setting.outGoingToken) {
-        return c.error(401, 'please set webhook token in bot settings');
+        return c.send.error(401, 'please set webhook token in bot settings');
       }
 
       const errMessage = await verifyMessage(
@@ -28,7 +28,7 @@ export class DingController extends BaseController {
       );
       if (errMessage) {
         console.log(`check sign error:`, errMessage);
-        return c.error(403, errMessage);
+        return c.send.error(403, errMessage);
       }
 
       const bot = new DingBot(
@@ -40,7 +40,7 @@ export class DingController extends BaseController {
         setting,
       );
       c.executionCtx.waitUntil(bot.handle());
-      return c.message('ok');
+      return c.send.message('ok');
     });
   }
 }

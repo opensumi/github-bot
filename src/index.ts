@@ -39,19 +39,21 @@ app.use('*', async (c, next) => {
 app.use('*', logger());
 app.use('*', prettyJSON());
 app.use('*', async (c, next) => {
-  c.error = (status = 500, content = 'Internal Server Error.') => {
-    return c.json(
-      {
+  c.send = {
+    error: (status = 500, content = 'Internal Server Error.') => {
+      return c.json(
+        {
+          status,
+          error: content,
+        },
         status,
-        error: content,
-      },
-      status,
-    );
-  };
-  c.message = (text: string) => {
-    return c.json({
-      message: text,
-    });
+      );
+    },
+    message: (text: string) => {
+      return c.json({
+        message: text,
+      });
+    },
   };
   await next();
 });
@@ -67,13 +69,13 @@ app.get('/favicon.ico', async (c) => {
 ignition(app);
 
 app.notFound((c) => {
-  return c.error(404, 'no router found');
+  return c.send.error(404, 'no router found');
 });
 
 app.onError((err, c) => {
   console.error(err);
   c.sentry?.captureException(err);
-  return c.error(500, 'server internal error');
+  return c.send.error(500, 'server internal error');
 });
 
 export default app;
