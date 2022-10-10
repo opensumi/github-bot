@@ -20,7 +20,6 @@ build({
   platform: 'browser',
   target: 'es2020',
   format: 'esm',
-  metafile: true,
 })
   .then((result) => {
     console.log(result);
