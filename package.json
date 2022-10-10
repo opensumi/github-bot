@@ -8,7 +8,7 @@
   "scripts": {
     "format": "prettier --write '**/*.{js,css,json,md}'",
     "prebuild": "yarn gen",
-    "build": "wrangler publish --dry-run --outdir=dist",
+    "build": "tsx build.ts",
     "dev": "yarn gen && yarn dev:preview",
     "dev:preview": "run-p dev:worker dev:proxy",
     "dev:worker": "wrangler dev",

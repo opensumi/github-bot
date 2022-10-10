@@ -1,10 +1,10 @@
 name = "sumi-webhook-local"
 vars = { ENVIRONMENT = "local" }
 
-main = "src/index.ts"
-compatibility_date = "2022-07-15"
+main = "./index.js"
+compatibility_date = "2022-10-10"
 
-node_compat = true
+node_compat = false
 workers_dev = true
 usage_model = "unbound"
 

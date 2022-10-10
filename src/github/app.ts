@@ -1,4 +1,4 @@
-import { App as OctoApp } from '@octokit/app';
+import { App as OctoApp } from '@/lib/app.js/src';
 import { Octokit } from '@octokit/rest';
 import { ISetting, AppSetting, GitHubKVManager } from '@/github/storage';
 import { baseHandler, setupWebhooksTemplate } from './handler';
@@ -80,7 +80,6 @@ export const appFactory = async (setting: AppSetting) => {
   await app.init();
   return app;
 };
-
 
 export async function initApp(setting: AppSetting) {
   const app = await appFactory(setting);
