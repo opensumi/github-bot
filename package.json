@@ -51,7 +51,7 @@
     "@octokit/oauth-app": "^4.0.8",
     "@octokit/plugin-paginate-rest": "^4.3.0",
     "@octokit/rest": "^19.0.4",
-    "@octokit/webhooks": "^10.1.5",
+    "@octokit/webhooks": "^10.2.0",
     "hono": "^2.1.4",
     "lodash": "^4.17.21",
     "mri": "^1.2.0",

@@ -30,7 +30,7 @@ export async function validateGithub(req: Request<any>, webhooks: Webhooks) {
   }
 
   const event = headers.get('x-github-event') as EmitterWebhookEventName;
-  const signatureSHA256 = headers.get('x-hub-signature-256') as string;
+  const signature = headers.get('x-hub-signature-256') as string;
   const id = headers.get('x-github-delivery') as string;
 
   let payload: any;
@@ -40,17 +40,14 @@ export async function validateGithub(req: Request<any>, webhooks: Webhooks) {
     throw new ValidationError(400, 'Invalid JSON');
   }
 
-  if (!signatureSHA256) {
+  if (!signature) {
     throw new ValidationError(
       401,
       'x-hub-signature-256 is null. please set webhook secret in github app settings',
     );
   }
 
-  const matchesSignature = await webhooks.verify(
-    payload,
-    signatureSHA256.replace('sha256=', ''),
-  );
+  const matchesSignature = await webhooks.verify(payload, signature);
   if (!matchesSignature) {
     throw new ValidationError(
       401,
