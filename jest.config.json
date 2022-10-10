@@ -1,10 +1,15 @@
 {
   "transform": {
     "^.+\\.(t|j)sx?$": "ts-jest",
-    "^.+\\.html$": "<rootDir>/test/transforms/html.js"
+    "^.+\\.html$": "<rootDir>/test/transforms/text.js",
+    "^.+\\.svg$": "<rootDir>/test/transforms/text.js"
   },
   "testRegex": "/test/.*\\.test\\.ts$",
-  "testPathIgnorePatterns": ["<rootDir>/build/","<rootDir>/src/lib/", "<rootDir>/node_modules/"],
+  "testPathIgnorePatterns": [
+    "<rootDir>/build/",
+    "<rootDir>/src/lib/",
+    "<rootDir>/node_modules/"
+  ],
   "collectCoverageFrom": ["src/**/*.{ts,js}"],
   "moduleNameMapper": {
     "@/(.*)$": "<rootDir>/src/$1"
