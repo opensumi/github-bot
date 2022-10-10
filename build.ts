@@ -16,6 +16,7 @@ build({
   watch: argv['watch'],
   loader: {
     '.html': 'text',
+    '.svg': 'text',
   },
   platform: 'browser',
   target: 'es2020',
