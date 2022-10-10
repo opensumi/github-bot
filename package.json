@@ -14,6 +14,7 @@
     "dev:worker": "wrangler dev",
     "dev:proxy": "tsx dev.ts",
     "gen": "tsx ./scripts/generate-wrangler-toml.ts",
+    "prepublish:local": "yarn build",
     "publish:local": "wrangler publish",
     "lint": "eslint . && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
     "lint:fix": "eslint . --fix",
