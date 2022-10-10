@@ -1,7 +1,7 @@
 import { App as OctoApp } from '@/lib/app.js/src';
 import { Octokit } from '@octokit/rest';
 import { ISetting, AppSetting, GitHubKVManager } from '@/github/storage';
-import { baseHandler, setupWebhooksTemplate } from './handler';
+import { webhookHandler, setupWebhooksTemplate } from './handler';
 import { handleCommentCommand } from './commands';
 import { sendToDing } from './utils';
 import { error } from '@/runtime/response';
@@ -108,5 +108,5 @@ export async function handler(
   }
 
   const app = await initApp(setting);
-  return baseHandler(app.app.webhooks, req, env, ctx);
+  return webhookHandler(app.app.webhooks, req, env, ctx);
 }

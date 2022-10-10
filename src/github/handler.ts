@@ -5,7 +5,6 @@ import {
 import { Webhooks } from '@octokit/webhooks';
 import { error, message } from '@/runtime/response';
 import { getTemplates, StopHandleError } from './templates';
-import { GitHubKVManager } from '@/github/storage';
 import { sendToDing } from './utils';
 import type { MarkdownContent, THasAction } from './types';
 import { Octokit } from '@octokit/core';
@@ -107,7 +106,7 @@ export const setupWebhooksTemplate = (
   }
 };
 
-export async function baseHandler(
+export async function webhookHandler(
   webhooks: Webhooks,
   req: Request<any>,
   env: Env,
@@ -149,39 +148,4 @@ export async function baseHandler(
       (err as ValidationError).message ?? 'Unknown error in validation';
     return error(errorCode, message);
   }
-}
-
-export const webhooksFactory = (secret: string) => {
-  return new Webhooks({
-    secret,
-  });
-};
-
-export async function webhookHandler(
-  req: Request & { params?: { id?: string }; query?: { id?: string } },
-  env: Env,
-  ctx: ExecutionContext,
-) {
-  let id = req.params?.id;
-  if (!id) {
-    id = req.query?.id;
-  }
-  if (!id) {
-    return error(401, 'need a valid id');
-  }
-  const githubKVManager = new GitHubKVManager(env);
-  const setting = await githubKVManager.getSettingById(id);
-  if (!setting) {
-    return error(404, 'id not found');
-  }
-  if (!setting.githubSecret) {
-    return error(401, 'please set webhook secret in kv');
-  }
-
-  const webhooks = webhooksFactory(setting.githubSecret);
-
-  setupWebhooksTemplate(webhooks as any, {
-    setting: setting,
-  });
-  return baseHandler(webhooks, req, env, ctx);
 }

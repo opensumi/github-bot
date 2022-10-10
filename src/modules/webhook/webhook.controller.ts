@@ -1,11 +1,12 @@
-import { baseHandler, setupWebhooksTemplate, webhooksFactory } from '@/github';
+import { webhookHandler, setupWebhooksTemplate } from '@/github';
 import { GitHubKVManager } from '@/github/storage';
 import { BaseController } from '../base/base.controller';
+import { Webhooks } from '@octokit/webhooks';
 
 export class WebhookController extends BaseController {
   handle(): void {
     // 接收 Github webhook 事件
-    this.hono.post('/webhook/:id', async (c) => {
+    this.post('/webhook/:id', async (c) => {
       const id = c.req.param('id') ?? c.req.query('id');
       if (!id) {
         return c.send.error(401, 'need a valid id');
@@ -18,13 +19,14 @@ export class WebhookController extends BaseController {
       if (!setting.githubSecret) {
         return c.send.error(401, 'please set webhook secret in kv');
       }
+      const webhooks = new Webhooks<{ octokit: undefined }>({
+        secret: setting.githubSecret,
+      });
 
-      const webhooks = webhooksFactory(setting.githubSecret);
-
-      setupWebhooksTemplate(webhooks as any, {
+      setupWebhooksTemplate(webhooks, {
         setting: setting,
       });
-      return baseHandler(webhooks, c.req, c.env, c.executionCtx);
+      return webhookHandler(webhooks, c.req, c.env, c.executionCtx);
     });
   }
 }

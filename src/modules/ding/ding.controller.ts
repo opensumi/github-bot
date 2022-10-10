@@ -5,7 +5,7 @@ import { BaseController } from '../base/base.controller';
 export class DingController extends BaseController {
   handle() {
     // 接收 DingTalk webhook 事件
-    this.hono.post('/ding/:id', async (c) => {
+    this.post('/ding/:id', async (c) => {
       const id = c.req.param('id') ?? c.req.query('id');
 
       console.log(`handler ~ id`, id);
