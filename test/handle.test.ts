@@ -6,7 +6,7 @@ import app from '@/index';
 declare const FetchEvent: any;
 declare const Request: any;
 
-describe.skip('handle', () => {
+describe('handle', () => {
   beforeEach(() => {
     jest.resetModules();
   });
