@@ -4,6 +4,7 @@
     "^.+\\.html$": "<rootDir>/test/transforms/html.js"
   },
   "testRegex": "/test/.*\\.test\\.ts$",
+  "testPathIgnorePatterns": ["<rootDir>/build/","<rootDir>/src/lib/", "<rootDir>/node_modules/"],
   "collectCoverageFrom": ["src/**/*.{ts,js}"],
   "moduleNameMapper": {
     "@/(.*)$": "<rootDir>/src/$1"
