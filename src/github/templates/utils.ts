@@ -23,12 +23,16 @@ export function renderPrOrIssueText(
     number?: number;
   },
   prefix?: string,
+  suffix?: string,
 ) {
   let text = `${prefix ?? ''}`;
   if (p.number) {
     text += `#${p.number} `;
   }
   text += p.title;
+  if (suffix) {
+    text += suffix;
+  }
   return text;
 }
 
@@ -45,8 +49,9 @@ export function renderPrOrIssueLink(
     html_url: string;
   },
   prefix?: string,
+  suffix?: string,
 ) {
-  return `[${renderPrOrIssueText(p, prefix)}](${p.html_url})`;
+  return `[${renderPrOrIssueText(p, prefix, suffix)}](${p.html_url})`;
 }
 
 export function renderPrOrIssueTitleLink(p: {
@@ -76,7 +81,7 @@ export function renderDeletedPrOrIssueTitleLink(p: {
   html_url: string;
   body: string | null;
 }) {
-  return `> #### ~~${renderPrOrIssueLink(p)}~~`;
+  return `> #### ${renderPrOrIssueLink(p, '~~', '~~')}`;
 }
 
 export function renderPrOrIssueBody(

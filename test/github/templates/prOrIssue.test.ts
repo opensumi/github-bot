@@ -27,7 +27,6 @@ describe('github templates pr or issue', () => {
     expect(result.text).toBeDefined();
     expect(result.text).toContain('<-');
     expect(result.text).toContain('~~');
-    expect(result.text).toContain('> **changed title**');
     expect(result.title).toBeDefined();
   });
   it('can handle pull_request_edited_base', async () => {
@@ -35,7 +34,7 @@ describe('github templates pr or issue', () => {
     console.log(`pull_request_edited_base ~ result`, result.text);
     expect(result.text).toBeDefined();
     expect(result.text).toContain('<-');
-    expect(result.text).toContain('> **changed the base branch**');
+    expect(result.text).toContain('> changed the base branch');
     expect(result.title).toBeDefined();
   });
 });
