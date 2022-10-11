@@ -68,8 +68,9 @@ export class App {
           await sendToDing(
             {
               title: 'Start Sync Version',
-              text: `${workflow.name} ${workflowRun.status}, start sync packages to npmmirror. [see progress here](https://github.com/opensumi/actions/actions/workflows/sync.yml)
-              I will notify you when sync done.`,
+              text: `${workflow.name} ${workflowRun.status}, start sync packages to npmmirror.
+[see progress here](https://github.com/opensumi/actions/actions/workflows/sync.yml)
+I will notify you when sync done.`,
             },
             'star.created',
             this.ctx.setting,
