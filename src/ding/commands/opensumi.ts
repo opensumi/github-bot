@@ -1,5 +1,6 @@
 import { equalFunc, startsWith } from '@/commander';
 import { DingBot } from '../bot';
+import { markdown } from '../message';
 import { cc, Context } from './base';
 import { KnownRepo } from './constants';
 import { hasApp, replyIfAppNotDefined } from './utils';
@@ -135,10 +136,14 @@ cc.on(
     }
     try {
       await app.service.syncVersion(version);
-      await bot.replyText(`start sync packages${
-        version ? `@${version}` : ''
-      } to npmmirror. [see progress here](https://github.com/opensumi/actions/actions/workflows/sync.yml)
-I will notify you when sync done.`);
+      await bot.reply(
+        markdown(
+          'Sync Started',
+          `start sync packages${version ? `@${version}` : ''} to npmmirror. 
+[see progress here](https://github.com/opensumi/actions/actions/workflows/sync.yml)
+I will notify you when sync done.`,
+        ),
+      );
     } catch (error) {
       await bot.replyText(`执行出错：${(error as Error).message}`);
     }
