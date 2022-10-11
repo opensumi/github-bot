@@ -6,6 +6,7 @@ import { handleCommentCommand } from './commands';
 import { sendToDing } from './utils';
 import { error } from '@/runtime/response';
 import { AppService } from './service';
+import { workflowAboutRelease } from '@/constants/opensumi';
 
 export interface Context {
   setting: ISetting;
@@ -21,11 +22,11 @@ export class App {
     setting: AppSetting;
   };
   service: AppService;
-  app: OctoApp;
+  octo: OctoApp;
 
   constructor(private setting: AppSetting) {
     const { appSettings, githubSecret } = setting;
-    this.app = new OctoApp({
+    this.octo = new OctoApp({
       appId: appSettings.appId,
       privateKey: appSettings.privateKey,
       webhooks: {
@@ -36,10 +37,10 @@ export class App {
     this.ctx = {
       setting,
     };
-    setupWebhooksTemplate(this.app.webhooks, this.ctx);
+    setupWebhooksTemplate(this.octo.webhooks, this.ctx);
     this.service = new AppService(this, setting);
 
-    this.app.webhooks.on('star.created', async ({ payload }) => {
+    this.octo.webhooks.on('star.created', async ({ payload }) => {
       const repository = payload.repository;
       const starCount = repository.stargazers_count;
       if (starCount % 100 === 0) {
@@ -55,16 +56,35 @@ export class App {
     });
 
     // Execute user comment input
-    this.app.webhooks.on('issue_comment.created', handleCommentCommand);
-    this.app.webhooks.on('issue_comment.edited', handleCommentCommand);
+    this.octo.webhooks.on('issue_comment.created', handleCommentCommand);
+    this.octo.webhooks.on('issue_comment.edited', handleCommentCommand);
+    this.octo.webhooks.on('workflow_run.completed', async ({ payload }) => {
+      const workflow = payload.workflow;
+      const workflowRun = payload.workflow_run;
+      const repository = payload.repository;
+      if (repository.full_name === 'opensumi/core') {
+        if (workflowAboutRelease.has(workflow.name)) {
+          await this.service.syncVersion();
+          await sendToDing(
+            {
+              title: 'Start Sync Version',
+              text: `${workflow.name} ${workflowRun.status}, start sync packages to npmmirror. [see progress here](https://github.com/opensumi/actions/actions/workflows/sync.yml)
+              I will notify you when sync done.`,
+            },
+            'star.created',
+            this.ctx.setting,
+          );
+        }
+      }
+    });
   }
 
   get webhooks() {
-    return this.app.webhooks;
+    return this.octo.webhooks;
   }
 
   async getOcto(): Promise<Octokit> {
-    for await (const { octokit } of this.app.eachInstallation.iterator()) {
+    for await (const { octokit } of this.octo.eachInstallation.iterator()) {
       return octokit as any;
     }
     throw new Error('no app installation found');
@@ -108,5 +128,5 @@ export async function handler(
   }
 
   const app = await initApp(setting);
-  return webhookHandler(app.app.webhooks, req, env, ctx);
+  return webhookHandler(app.octo.webhooks, req, env, ctx);
 }

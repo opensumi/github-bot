@@ -112,3 +112,37 @@ cc.on(
   [],
   equalFunc,
 );
+
+cc.on(
+  'sync',
+  async (bot, ctx: Context<{ version: string }>) => {
+    if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
+      return;
+    }
+
+    await replyIfAppNotDefined(bot, ctx);
+    if (!hasApp(ctx)) {
+      return;
+    }
+
+    const { app } = ctx;
+
+    let version = ctx.parsed.version;
+    if (!version) {
+      if (ctx.parsed['_'].length > 1) {
+        version = ctx.parsed['_'][1];
+      }
+    }
+    try {
+      await app.service.syncVersion(version);
+      await bot.replyText(`start sync packages${
+        version ? `@${version}` : ''
+      } to npmmirror. [see progress here](https://github.com/opensumi/actions/actions/workflows/sync.yml)
+I will notify you when sync done.`);
+    } catch (error) {
+      await bot.replyText(`执行出错：${(error as Error).message}`);
+    }
+  },
+  [],
+  equalFunc,
+);

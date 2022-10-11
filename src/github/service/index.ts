@@ -375,7 +375,6 @@ export class AppService {
       ...star,
     };
   }
-
   async releaseRCVersion(branch: string) {
     const workflow = await this.octo.actions.createWorkflowDispatch({
       owner: 'opensumi',
@@ -388,7 +387,20 @@ export class AppService {
     });
     return workflow;
   }
-
+  async syncVersion(version?: string) {
+    const inputs = {} as Record<string, any>;
+    if (version) {
+      inputs.version = version;
+    }
+    const workflow = await this.octo.actions.createWorkflowDispatch({
+      owner: 'opensumi',
+      repo: 'actions',
+      workflow_id: 'sync.yml',
+      ref: 'main',
+      inputs,
+    });
+    return workflow;
+  }
   async releaseNextVersion(branch: string) {
     const workflow = await this.octo.actions.createWorkflowDispatch({
       owner: 'opensumi',

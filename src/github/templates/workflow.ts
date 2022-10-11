@@ -1,11 +1,8 @@
 import { StringBuilder } from '@/utils';
-import { RC_WORKFLOW_FILE } from '@/constants/opensumi';
 import { renderUserLink, titleTpl, textTpl, StopHandleError } from '.';
 import { Context } from '../app';
 import { ExtractPayload, MarkdownContent } from '../types';
 import { Octokit } from '@octokit/rest';
-
-const workflowToHandle = new Set(['.github/workflows/' + RC_WORKFLOW_FILE]);
 
 export async function handleWorkflowRun(
   payload: ExtractPayload<'workflow_run'>,
@@ -21,55 +18,60 @@ export async function handleWorkflowRun(
     throw new StopHandleError('need workflow path');
   }
 
-  if (!workflowToHandle.has(workflowRun.path)) {
-    throw new StopHandleError(
-      'only selected path allow to run, receive path: ' + workflowRun.path,
-    );
-  }
-
   if (!ctx.octokit) {
     throw new StopHandleError('should have ctx octokit');
   }
 
-  const checkRunsData = await ctx.octokit.checks.listForSuite({
-    owner: repository.owner.login,
-    repo: repository.name,
-    check_suite_id: workflowRun.check_suite_id,
-  });
+  // 下面就是通知 Workflow 结果的 actions
+  if (
+    (repository.full_name === 'opensumi/actions' && workflow.name === 'Sync') ||
+    (repository.full_name === 'opensumi/core' &&
+      workflow.name === 'Release RC Version')
+  ) {
+    const checkRunsData = await ctx.octokit.checks.listForSuite({
+      owner: repository.owner.login,
+      repo: repository.name,
+      check_suite_id: workflowRun.check_suite_id,
+    });
 
-  const runs = checkRunsData.data.check_runs;
+    const runs = checkRunsData.data.check_runs;
 
-  const title = titleTpl(
-    {
-      repo: payload.repository,
-      event: 'workflow',
-      action,
-    },
-    ctx,
-  );
+    const title = titleTpl(
+      {
+        repo: payload.repository,
+        event: 'workflow',
+        action,
+      },
+      ctx,
+    );
 
-  const builder = new StringBuilder();
-  builder.add(`Name: ${workflow.name}\n`);
+    const builder = new StringBuilder();
+    builder.add(`Name: ${workflow.name}\n`);
 
-  for (const run of runs) {
-    builder.add(`Run: ${run.name}  \n\n`);
+    for (const run of runs) {
+      builder.add(`Run: ${run.name}  \n\n`);
+    }
+
+    builder.add(`[Click me to see detail](${workflowRun.html_url})\n`);
+
+    const text = textTpl(
+      {
+        title: `[workflow](${workflowRun.html_url}) ${
+          workflowRun.status
+        } (created by ${renderUserLink(payload.sender)})`,
+        body: builder.build(),
+        repo: payload.repository,
+      },
+      ctx,
+    );
+
+    return {
+      title,
+      text,
+    };
   }
 
-  builder.add(`[Click me to see detail](${workflowRun.html_url})\n`);
-
-  const text = textTpl(
-    {
-      title: `[workflow](${workflowRun.html_url}) ${
-        workflowRun.status
-      } (created by ${renderUserLink(payload.sender)})`,
-      body: builder.build(),
-      repo: payload.repository,
-    },
-    ctx,
+  throw new StopHandleError(
+    'only selected path allow to run, receive path: ' + workflowRun.path,
   );
-
-  return {
-    title,
-    text,
-  };
 }
