@@ -1,4 +1,4 @@
-import { equalFunc, startsWith } from '@/command';
+import { equalFunc, startsWith } from '@/commander';
 import { DingBot } from '../bot';
 import { cc, Context } from './base';
 import { KnownRepo } from './constants';

@@ -1,4 +1,4 @@
-import { startsWith } from '@/command';
+import { startsWith } from '@/commander';
 import { cc } from './base';
 import { code, markdown } from '../message';
 import { DingBot } from '../bot';

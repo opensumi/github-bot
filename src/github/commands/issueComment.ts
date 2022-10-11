@@ -1,4 +1,4 @@
-import { CommandCenter } from '@/command';
+import { CommandCenter } from '@/commander';
 import { Octokit } from '@octokit/core';
 import { ExtractPayload } from '@/github/types';
 
@@ -32,6 +32,9 @@ export const handleCommentCommand = async ({
 }) => {
   const { comment } = payload;
 
-  const handler = await issueCc.resolve(comment.body);
-  await handler?.(octokit, payload);
+  const result = await issueCc.resolve(comment.body);
+  if (result) {
+    const { handler } = result;
+    await handler(octokit, payload);
+  }
 };

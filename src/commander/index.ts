@@ -1,24 +1,12 @@
-type CompareFunc<T> = (command: T, userInput: string) => boolean;
+import { equalFunc, regex, startsWith } from './rules';
+import type {
+  CompareFunc,
+  IRegexResolveResult,
+  IResolveResult,
+  FuncName,
+} from './types';
 
-export type FuncName = 'equal' | 'startwiths';
-
-export const equalFunc: CompareFunc<string> = (
-  command: string,
-  userInput: string,
-) => {
-  return command === userInput;
-};
-
-export const startsWith: CompareFunc<string> = (
-  command: string,
-  userInput: string,
-) => {
-  return userInput.startsWith(command) || command.startsWith(userInput);
-};
-
-export const regex = (reg: RegExp, userInput: string) => {
-  return Boolean(userInput.match(reg));
-};
+export { CompareFunc, FuncName, equalFunc, regex, startsWith };
 
 class Registry<K, T> {
   private _array = new Map<K, [T, CompareFunc<K>]>();
@@ -27,8 +15,8 @@ class Registry<K, T> {
     return Array.from(this._array.entries());
   }
 
-  add(m: K, handler: T, compareFunc: CompareFunc<K>) {
-    this._array.set(m, [handler, compareFunc]);
+  add(m: K, handler: T, rule: CompareFunc<K>) {
+    this._array.set(m, [handler, rule]);
   }
 
   find(userInput: string) {
@@ -44,42 +32,43 @@ class Registry<K, T> {
 export class CommandCenter<T> {
   fallbackHandler: T | undefined;
 
-  reg = new Registry<string, T>();
-  regexReg = new Registry<RegExp, T>();
+  registry = new Registry<string, T>();
+  regexRegistry = new Registry<RegExp, T>();
 
   prefixes = [] as string[];
   constructor(prefixes?: string[]) {
     this.prefixes.push(...(prefixes ?? ['/']));
   }
 
+  async all(handler: T) {
+    this.fallbackHandler = handler;
+  }
+
   async on(
     text: string,
     handler: T,
     alias?: string[],
-    funcName: CompareFunc<string> = equalFunc,
+    rule: CompareFunc<string> = equalFunc,
   ) {
     if (text) {
-      if (text === '*') {
-        this.fallbackHandler = handler;
-      } else {
-        this.reg.add(text, handler, funcName);
-        if (alias && Array.isArray(alias)) {
-          for (const a of alias) {
-            this.reg.add(a, handler, funcName);
-          }
+      this.registry.add(text, handler, rule);
+      if (alias && Array.isArray(alias)) {
+        for (const a of alias) {
+          this.registry.add(a, handler, rule);
         }
       }
     }
   }
 
   async onRegex(reg: RegExp, handler: T) {
-    this.regexReg.add(reg, handler, regex);
+    this.regexRegistry.add(reg, handler, regex);
   }
 
-  async resolve(text: string) {
+  async resolve(text: string): Promise<IResolveResult | undefined> {
     if (!text) {
       return;
     }
+
     let isCommand = false;
     let command = text;
     for (const prefix of this.prefixes) {
@@ -98,14 +87,17 @@ export class CommandCenter<T> {
       );
       return;
     }
-
-    let { handler } = this.reg.find(command) ?? {};
+    const result = {
+      type: 'text',
+    } as IResolveResult;
+    let { handler } = this.registry.find(command) ?? {};
 
     if (!handler) {
-      const { data, handler: regexHandler } = this.regexReg.find(command) ?? {};
-      if (regexHandler) {
-        (regexHandler as any).type = 'regex';
-        (regexHandler as any).regex = data;
+      const tmp = this.regexRegistry.find(command);
+      if (tmp) {
+        const { data, handler: regexHandler } = tmp;
+        (result as IRegexResolveResult).type = 'regex';
+        (result as IRegexResolveResult).regex = data;
         handler = regexHandler;
       }
     }
@@ -117,6 +109,9 @@ export class CommandCenter<T> {
     if (handler) {
       console.log(`${text} will be handled`);
     }
-    return handler;
+
+    result.handler = handler;
+
+    return result;
   }
 }

@@ -1,7 +1,7 @@
 import { cc, Context } from './base';
 import { code } from '../message';
 import { IDingInfo } from '../secrets';
-import { startsWith } from '@/command';
+import { startsWith } from '@/commander';
 import { StringBuilder } from '@/utils';
 
 cc.on(
@@ -39,11 +39,11 @@ cc.on('help', async (bot) => {
 
   text.add('支持的命令：', true);
 
-  cc.reg.handlers.forEach(([key, [_, compareFunc]]) => {
+  cc.registry.handlers.forEach(([key, [_, compareFunc]]) => {
     text.add(`- ${key}: ${compareFunc.name}`);
   });
 
-  cc.regexReg.handlers.forEach(([key, [_, compareFunc]]) => {
+  cc.regexRegistry.handlers.forEach(([key, [_, compareFunc]]) => {
     text.add(`- ${key}: ${compareFunc.name}`);
   });
   if (cc.fallbackHandler) {
@@ -54,5 +54,5 @@ cc.on('help', async (bot) => {
 });
 
 cc.on('ping', async (bot) => {
-  await bot.replyText("pong");
+  await bot.replyText('pong');
 });

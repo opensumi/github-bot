@@ -1,4 +1,4 @@
-import { CommandCenter } from '@/command';
+import { CommandCenter } from '@/commander';
 import type { DingBot } from '../bot';
 import { Message } from '../types';
 import { App } from '@/github/app';
