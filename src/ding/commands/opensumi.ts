@@ -75,3 +75,40 @@ cc.on(
   [],
   equalFunc,
 );
+
+cc.on(
+  'nx',
+  async (bot, ctx: Context<{ ref: string }>) => {
+    if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
+      return;
+    }
+
+    await replyIfAppNotDefined(bot, ctx);
+    if (!hasApp(ctx)) {
+      return;
+    }
+
+    const { app } = ctx;
+
+    let ref = ctx.parsed.ref;
+    if (!ref) {
+      if (ctx.parsed['_'].length > 1) {
+        ref = ctx.parsed['_'][1];
+      }
+    }
+
+    if (ref) {
+      try {
+        await app.service.getRefInfoByRepo(ref, 'opensumi', 'core');
+        await app.service.releaseRCVersion(ref);
+        await bot.replyText(`在 ${ref} 上发布 Release Candidate 成功`);
+      } catch (error) {
+        await bot.replyText(`执行出错：${(error as Error).message}`);
+      }
+    } else {
+      await bot.replyText(`使用方法 nx --ref v2.xx 或 nx v2.xx`);
+    }
+  },
+  [],
+  equalFunc,
+);

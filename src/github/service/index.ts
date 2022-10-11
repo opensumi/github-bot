@@ -1,7 +1,7 @@
 import type { App } from '@/github/app';
 import { AppSetting } from '../storage';
 import { Octokit } from '@octokit/rest';
-import { RC_WORKFLOW_FILE } from '@/constants/opensumi';
+import { NEXT_WORKFLOW_FILE, RC_WORKFLOW_FILE } from '@/constants/opensumi';
 import { SearchService } from './search';
 
 export class AppService {
@@ -15,7 +15,7 @@ export class AppService {
 
   async init() {
     this._octo = (await this.app.getOcto()) as Octokit;
-    this.searchService = new SearchService(this._octo!)
+    this.searchService = new SearchService(this._octo!);
   }
 
   async getRepoStargazers(
@@ -389,6 +389,19 @@ export class AppService {
     return workflow;
   }
 
+  async releaseNextVersion(branch: string) {
+    const workflow = await this.octo.actions.createWorkflowDispatch({
+      owner: 'opensumi',
+      repo: 'core',
+      workflow_id: NEXT_WORKFLOW_FILE,
+      ref: 'main',
+      inputs: {
+        ref: branch,
+      },
+    });
+    return workflow;
+  }
+
   async deployBot(environment = 'prod') {
     await this.octo.actions.createWorkflowDispatch({
       owner: 'opensumi',
@@ -400,7 +413,13 @@ export class AppService {
       },
     });
   }
-
+  /**
+   * 如果该 ref 不存在则会报错
+   * @param ref
+   * @param owner
+   * @param repo
+   * @returns
+   */
   async getRefInfoByRepo(ref: string, owner: string, repo: string) {
     const commit = await this.octo.repos.getCommit({
       owner,
