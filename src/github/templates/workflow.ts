@@ -24,7 +24,8 @@ export async function handleWorkflowRun(
 
   // 下面就是通知 Workflow 结果的 actions
   if (
-    (repository.full_name === 'opensumi/actions' && workflow.name === 'Sync') ||
+    (repository.full_name === 'opensumi/actions' &&
+      workflow.name === 'sync to npmmirror') ||
     (repository.full_name === 'opensumi/core' &&
       workflow.name === 'Release RC Version')
   ) {

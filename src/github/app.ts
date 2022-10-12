@@ -58,26 +58,26 @@ export class App {
     // Execute user comment input
     this.octo.webhooks.on('issue_comment.created', handleCommentCommand);
     this.octo.webhooks.on('issue_comment.edited', handleCommentCommand);
-    this.octo.webhooks.on('workflow_run.completed', async ({ payload }) => {
-      const workflow = payload.workflow;
-      const workflowRun = payload.workflow_run;
-      const repository = payload.repository;
-      if (repository.full_name === 'opensumi/core') {
-        if (workflowAboutRelease.has(workflow.name)) {
-          await this.service.syncVersion();
-          await sendToDing(
-            {
-              title: 'Start Sync Version',
-              text: `${workflow.name} ${workflowRun.status}, start sync packages to npmmirror.
-[see progress here](https://github.com/opensumi/actions/actions/workflows/sync.yml)
-I will notify you when sync done.`,
-            },
-            'star.created',
-            this.ctx.setting,
-          );
-        }
-      }
-    });
+    //     this.octo.webhooks.on('workflow_run.completed', async ({ payload }) => {
+    //       const workflow = payload.workflow;
+    //       const workflowRun = payload.workflow_run;
+    //       const repository = payload.repository;
+    //       if (repository.full_name === 'opensumi/core') {
+    //         if (workflowAboutRelease.has(workflow.name)) {
+    //           await this.service.syncVersion();
+    //           await sendToDing(
+    //             {
+    //               title: 'Start Sync Version',
+    //               text: `${workflow.name} ${workflowRun.status}, start sync packages to npmmirror.
+    // [see progress here](https://github.com/opensumi/actions/actions/workflows/sync.yml)
+    // I will notify you when sync done.`,
+    //             },
+    //             'star.created',
+    //             this.ctx.setting,
+    //           );
+    //         }
+    //       }
+    //     });
   }
 
   get webhooks() {
