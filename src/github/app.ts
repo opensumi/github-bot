@@ -44,7 +44,16 @@ I will notify you when sync done.`,
   handleCommentCommand = async ({
     payload,
   }: {
-    payload: ExtractPayload<'issue_comment'>;
+    payload: {
+      comment: {
+        url: string;
+        html_url: string;
+        /**
+         * The text of the comment.
+         */
+        body: string;
+      };
+    };
   }) => {
     const { comment } = payload;
 
@@ -94,12 +103,14 @@ I will notify you when sync done.`,
       }
     });
 
-    // Execute user comment input
     this.octoApp.webhooks.on(
       'issue_comment.created',
       this.handleCommentCommand,
     );
-    this.octoApp.webhooks.on('issue_comment.edited', this.handleCommentCommand);
+    this.octoApp.webhooks.on(
+      'commit_comment.created',
+      this.handleCommentCommand,
+    );
   }
 
   get webhooks() {
