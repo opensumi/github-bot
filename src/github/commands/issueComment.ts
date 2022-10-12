@@ -1,18 +1,17 @@
 import { CommandCenter } from '@/commander';
-import { Octokit } from '@octokit/core';
 import { ExtractPayload } from '@/github/types';
+import type { App } from '../app';
 
 type IssueCommentHandler = (
-  octokit: Octokit,
+  app: App,
   payload: ExtractPayload<'issue_comment'>,
 ) => Promise<void>;
 
 export const issueCc = new CommandCenter<IssueCommentHandler>();
 
-issueCc.on('hello', async (octokit, payload) => {
+issueCc.on('hello', async (app, payload) => {
   const { issue, repository } = payload;
-
-  await octokit.request(
+  await app.octoApp.octokit.request(
     'POST /repos/{owner}/{repo}/issues/{issue_number}/comments',
     {
       owner: repository.owner.login,
@@ -22,19 +21,3 @@ issueCc.on('hello', async (octokit, payload) => {
     },
   );
 });
-
-export const handleCommentCommand = async ({
-  octokit,
-  payload,
-}: {
-  octokit: Octokit;
-  payload: ExtractPayload<'issue_comment'>;
-}) => {
-  const { comment } = payload;
-
-  const result = await issueCc.resolve(comment.body);
-  if (result) {
-    const { handler } = result;
-    await handler(octokit, payload);
-  }
-};
