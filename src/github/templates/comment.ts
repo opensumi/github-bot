@@ -137,8 +137,9 @@ export async function handleCommitComment(
   const repo = payload.repository;
   const comment = payload.comment;
   const commitId = comment.commit_id.slice(0, 6);
+  const commitRefInfo = `commit@${commitId}`;
 
-  let commitInfo = `commit@${commitId}`;
+  let commitInfo = 'M: ';
 
   if (ctx.octokit) {
     const resp = await ctx.octokit.request(
@@ -166,9 +167,9 @@ export async function handleCommitComment(
   const text = textTpl(
     {
       repo,
-      title: `${renderUserLink(payload.sender)} commented on [commit](${
-        comment.html_url
-      })`,
+      title: `${renderUserLink(
+        payload.sender,
+      )} commented on [${commitRefInfo}](${comment.html_url})`,
       body: renderCommentBody(
         {
           html_url: comment.html_url,
