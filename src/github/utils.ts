@@ -1,3 +1,4 @@
+import { markdown } from '@/ding/message';
 import { send } from '@/ding/utils';
 import { ISetting } from '@/github/storage';
 import { EmitterWebhookEventName } from '@octokit/webhooks';
@@ -51,13 +52,7 @@ export async function sendToDing(
 
   const text = securityInterception(_text);
 
-  const dingContent = {
-    msgtype: 'markdown',
-    markdown: {
-      title,
-      text,
-    },
-  };
+  const dingContent = markdown(title, text);
 
   await sendContentToDing(dingContent, eventName, setting);
 }

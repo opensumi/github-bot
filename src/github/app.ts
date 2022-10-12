@@ -18,6 +18,8 @@ export interface AppContext extends Context {
   service: AppService;
 }
 
+const PrivilegeEvent = 'star.created';
+
 export class App {
   ctx: {
     setting: AppSetting;
@@ -31,12 +33,12 @@ export class App {
     await sendToDing(
       {
         title: 'Start Sync Version',
-        text: `${tag} completed
-start sync packages${version} to npmmirror.
-[see progress here](https://github.com/opensumi/actions/actions/workflows/sync.yml)
+        text: `${tag} completed.  
+start sync packages${version} to npmmirror.  
+[see progress here](https://github.com/opensumi/actions/actions/workflows/sync.yml)  
 I will notify you when sync done.`,
       },
-      'star.created',
+      PrivilegeEvent,
       this.ctx.setting,
     );
   };
