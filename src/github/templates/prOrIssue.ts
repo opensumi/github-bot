@@ -56,7 +56,7 @@ function render(
     ctx,
   );
 
-  if (shouldRenderBody) {
+  if (shouldRenderBody && data.body) {
     builder.add('');
     builder.add('---');
     builder.add(renderPrOrIssueBody(data, ctx.setting.contentLimit));
@@ -175,7 +175,7 @@ export async function handlePr(
     ctx,
   );
 
-  if (shouldRenderBody) {
+  if (shouldRenderBody && data.body) {
     builder.add('');
     builder.add('---');
 
