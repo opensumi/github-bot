@@ -62,11 +62,17 @@ function render(
     builder.add(renderPrOrIssueBody(data, ctx.setting.contentLimit));
   }
 
+  let textFirstLine = `${renderUserLink(
+    payload.sender,
+  )} ${action} [${nameBlock}](${data.html_url})`;
+
+  if ((data as Issue).state_reason) {
+    textFirstLine += ` as ${(data as Issue).state_reason}`;
+  }
+
   const text = textTpl(
     {
-      title: `${renderUserLink(payload.sender)} ${action} [${nameBlock}](${
-        data.html_url
-      })`,
+      title: textFirstLine,
       body: builder.build(),
       repo: payload.repository,
     },
@@ -182,11 +188,13 @@ export async function handlePr(
     builder.add(renderPrOrIssueBody(data, ctx.setting.contentLimit));
   }
 
+  const firstLine = `${renderUserLink(
+    payload.sender,
+  )} ${action} [${nameBlock}](${data.html_url})`;
+
   const text = textTpl(
     {
-      title: `${renderUserLink(payload.sender)} ${action} [${nameBlock}](${
-        data.html_url
-      })`,
+      title: firstLine,
       body: builder.build(),
       repo: payload.repository,
     },
