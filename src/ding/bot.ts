@@ -106,7 +106,7 @@ export class DingBot {
       console.log(`DingBot ~ handle ~ parsed`, JSON.stringify(parsed));
 
       const result = await cc.resolve(parsed._[0]);
-      if (result) {
+      if (result && result.handler) {
         const { handler } = result;
         try {
           await handler(this, {

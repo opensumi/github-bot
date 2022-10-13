@@ -60,7 +60,7 @@ I will notify you when sync done.`,
     const { comment } = payload;
 
     const result = await issueCc.resolve(comment.body);
-    if (result) {
+    if (result && result.handler) {
       const { handler } = result;
       await handler(this, payload);
     }
