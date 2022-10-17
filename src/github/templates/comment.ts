@@ -8,7 +8,7 @@ import {
 } from '.';
 import { ExtractPayload } from '@/github/types';
 import { Repository, User } from '@octokit/webhooks-types';
-import { Octokit } from '@octokit/core';
+import { Octokit } from '@octokit/rest';
 import { textTpl, titleTpl } from './utils';
 import { Context } from '../types';
 import { StringBuilder } from '@/utils';

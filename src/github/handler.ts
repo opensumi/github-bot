@@ -7,7 +7,7 @@ import { error, json } from '@/runtime/response';
 import { getTemplates, StopHandleError } from './templates';
 import { sendToDing } from './utils';
 import type { MarkdownContent, THasAction, Context } from './types';
-import { Octokit } from '@octokit/core';
+import { Octokit } from '@octokit/rest';
 
 export class ValidationError extends Error {
   constructor(public code: number, message: string) {
