@@ -33,7 +33,7 @@ cc.on(
     }
 
     const { app } = ctx;
-    await app.octoService.deployBot();
+    await app.opensumiOctoService.deployBot();
     await bot.replyText('机器人部署任务分发成功');
   },
   [],
@@ -64,7 +64,7 @@ cc.on(
     if (ref) {
       try {
         await app.octoService.getRefInfoByRepo(ref, 'opensumi', 'core');
-        await app.octoService.releaseRCVersion(ref);
+        await app.opensumiOctoService.releaseRCVersion(ref);
         await bot.replyText(`在 ${ref} 上发布 Release Candidate 成功`);
       } catch (error) {
         await bot.replyText(`执行出错：${(error as Error).message}`);
@@ -101,7 +101,7 @@ cc.on(
     if (ref) {
       try {
         await app.octoService.getRefInfoByRepo(ref, 'opensumi', 'core');
-        await app.octoService.releaseRCVersion(ref);
+        await app.opensumiOctoService.releaseRCVersion(ref);
         await bot.replyText(`在 ${ref} 上发布 Release Candidate 成功`);
       } catch (error) {
         await bot.replyText(`执行出错：${(error as Error).message}`);
@@ -135,7 +135,7 @@ cc.on(
       }
     }
     try {
-      await app.octoService.syncVersion(version);
+      await app.opensumiOctoService.syncVersion(version);
       await bot.reply(
         markdown(
           'Sync Started',

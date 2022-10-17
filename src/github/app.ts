@@ -7,6 +7,7 @@ import { sendToDing } from './utils';
 import { error } from '@/runtime/response';
 import { OctoService } from './service';
 import { parseCommandInMarkdownComments } from './commands/parse';
+import { OpenSumiOctoService } from './service/opensumi';
 
 export interface Context {
   setting: ISetting;
@@ -24,11 +25,12 @@ export class App {
     setting: AppSetting;
   };
   octoService: OctoService;
+  opensumiOctoService: OpenSumiOctoService;
   octoApp: OctoApp;
 
   handleSyncVersion = async (data: string) => {
     const [tag, version] = data.split(' | ');
-    await this.octoService.syncVersion(version);
+    await this.opensumiOctoService.syncVersion(version);
     await sendToDing(
       {
         title: 'Start Sync Version',
@@ -86,7 +88,7 @@ export class App {
     };
     setupWebhooksTemplate(this.octoApp.webhooks, this.ctx);
     this.octoService = new OctoService();
-
+    this.opensumiOctoService = new OpenSumiOctoService();
     this.octoApp.webhooks.on('star.created', async ({ payload }) => {
       const repository = payload.repository;
       const starCount = repository.stargazers_count;
@@ -126,6 +128,7 @@ export class App {
   async init() {
     const octo = await this.getOcto();
     this.octoService.setOcto(octo);
+    this.opensumiOctoService.setOcto(octo);
   }
 }
 
