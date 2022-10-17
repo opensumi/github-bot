@@ -1,6 +1,6 @@
 import { App as OctoApp } from '@/lib/app.js/src';
 import { Octokit } from '@octokit/rest';
-import { ISetting, AppSetting, GitHubKVManager } from '@/github/storage';
+import { AppSetting, GitHubKVManager } from '@/github/storage';
 import { webhookHandler, setupWebhooksTemplate } from './handler';
 import { issueCc } from './commands';
 import { sendToDing } from './utils';
@@ -8,17 +8,8 @@ import { error } from '@/runtime/response';
 import { OctoService } from './service';
 import { parseCommandInMarkdownComments } from './commands/parse';
 import { OpenSumiOctoService } from './service/opensumi';
-
-export interface Context {
-  setting: ISetting;
-}
-
-export interface AppContext extends Context {
-  setting: AppSetting;
-  octoService: OctoService;
-}
-
-const PrivilegeEvent = 'star.created';
+import { PrivilegeEvent } from '@/constants';
+import { VERSION_SYNC_KEYWORD } from '@/constants/opensumi';
 
 export class App {
   ctx: {
@@ -67,8 +58,8 @@ export class App {
     // 开始处理第一行注释中隐含的命令 <!-- versionInfo: RC | 2.20.5-rc-1665562305.0 -->
     const commands = parseCommandInMarkdownComments(comment.body);
     if (commands) {
-      if (commands['versionInfo']) {
-        await this.handleSyncVersion(commands['versionInfo']);
+      if (commands[VERSION_SYNC_KEYWORD]) {
+        await this.handleSyncVersion(commands[VERSION_SYNC_KEYWORD]);
       }
     }
   };

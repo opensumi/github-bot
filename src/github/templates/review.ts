@@ -7,7 +7,7 @@ import {
   textTpl,
   detailTitleTpl,
 } from '.';
-import { Context } from '../app';
+import { Context } from '../types';
 import { ExtractPayload, MarkdownContent } from '../types';
 
 export async function handleReview(

@@ -1,6 +1,9 @@
 import { WebhookEventName, WebhookEventMap } from '@octokit/webhooks-types';
 import { EmitterWebhookEventName } from '@octokit/webhooks/dist-types/types';
-import { Context } from './app';
+import { ISetting } from './storage';
+export interface Context {
+  setting: ISetting;
+}
 
 export type ExtractPayload<TEmitterEvent extends EmitterWebhookEventName> =
   TEmitterEvent extends `${infer TWebhookEvent}.${infer _TAction}`

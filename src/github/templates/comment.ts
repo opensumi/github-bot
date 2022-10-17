@@ -10,7 +10,7 @@ import { ExtractPayload } from '@/github/types';
 import { Repository, User } from '@octokit/webhooks-types';
 import { Octokit } from '@octokit/core';
 import { textTpl, titleTpl } from './utils';
-import { Context } from '../app';
+import { Context } from '../types';
 import { StringBuilder } from '@/utils';
 
 const codeCov = (text: string) => {

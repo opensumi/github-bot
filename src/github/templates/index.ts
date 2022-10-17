@@ -19,7 +19,7 @@ import {
 } from '.';
 
 import { TemplateMapping } from '@/github/types';
-import { Context } from '../app';
+import { Context } from '../types';
 
 export const getTemplates = (ctx: Context) => {
   let templates = {

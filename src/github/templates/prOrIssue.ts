@@ -9,7 +9,7 @@ import {
 } from './utils';
 import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 import { StringBuilder } from '@/utils';
-import { Context } from '../app';
+import { Context } from '../types';
 import { textTpl } from '.';
 
 export type Name = 'issues' | 'pull_request' | 'discussion';

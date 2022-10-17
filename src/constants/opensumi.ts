@@ -11,3 +11,5 @@ export const workflowAboutRelease = new Set([
   'Release RC Version',
   'Release',
 ]);
+
+export const VERSION_SYNC_KEYWORD = 'versionInfo';

@@ -23,6 +23,9 @@ const parsePayload = (body: string) => {
   return result;
 };
 
+/**
+ * 处理形如 <!-- versionInfo: RC | 2.20.5-rc-1665562305.0 --> 的命令
+ */
 export const parseCommandInMarkdownComments = (body: string) => {
   const payload = parsePayload(body);
   if (Object.keys(payload).length === 0) {
