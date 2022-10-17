@@ -3,12 +3,11 @@ import {
   EmitterWebhookEventName,
 } from '@octokit/webhooks/dist-types/types';
 import { Webhooks } from '@octokit/webhooks';
-import { error, message } from '@/runtime/response';
+import { error, json } from '@/runtime/response';
 import { getTemplates, StopHandleError } from './templates';
 import { sendToDing } from './utils';
-import type { MarkdownContent, THasAction } from './types';
+import type { MarkdownContent, THasAction, Context } from './types';
 import { Octokit } from '@octokit/core';
-import { Context } from './types';
 
 export class ValidationError extends Error {
   constructor(public code: number, message: string) {
@@ -127,7 +126,11 @@ export async function webhookHandler(
           payload: payload,
         }),
       );
-      return message('ok');
+      return json({
+        id: id,
+        name: eventName,
+        message: 'ok',
+      });
     } catch (err) {
       let status = 500;
       if ((err as WebhookEventHandlerError).name === 'AggregateError') {
