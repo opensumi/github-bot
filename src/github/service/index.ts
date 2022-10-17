@@ -1,21 +1,15 @@
-import type { App } from '@/github/app';
-import { AppSetting } from '../storage';
 import { Octokit } from '@octokit/rest';
 import { NEXT_WORKFLOW_FILE, RC_WORKFLOW_FILE } from '@/constants/opensumi';
-import { SearchService } from './search';
 
 export class AppService {
-  _octo: Octokit | undefined;
-  searchService: SearchService | undefined;
-  constructor(private app: App, private setting: AppSetting) {}
+  private _octo: Octokit | undefined;
+
+  setOcto(octo: Octokit) {
+    this._octo = octo;
+  }
 
   get octo() {
     return this._octo as Octokit;
-  }
-
-  async init() {
-    this._octo = (await this.app.getOcto()) as Octokit;
-    this.searchService = new SearchService(this._octo!);
   }
 
   async getRepoStargazers(
@@ -197,7 +191,6 @@ export class AppService {
 
     let pageCount = 1;
     const regResult = /next.*page=(\d*).*?last/.exec(headerLink);
-
     if (regResult) {
       if (regResult[1] && Number.isInteger(Number(regResult[1]))) {
         pageCount = Number(regResult[1]);
@@ -221,13 +214,14 @@ export class AppService {
       star_increment += latestStars.data.length;
       latestStars = await this.getRepoStargazers(owner, repo, pageCount--);
     }
+
     // 不需要判断第一位
     let startIndex = 1;
-    for (startIndex = 1; startIndex++; startIndex < latestStars?.data?.length) {
+
+    for (startIndex = 1; startIndex < latestStars.data.length; startIndex++) {
       if (
         latestStars.data[startIndex] &&
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        new Date((latestStars.data[startIndex] as any).starred_at).getTime() <=
+        new Date((latestStars.data[startIndex] as any).starred_at).getTime() >=
           from
       ) {
         break;
@@ -360,7 +354,6 @@ export class AppService {
     const from = Date.now() - HISTORY_RANGE;
     const to = Date.now();
 
-    console.log('getRepoHistory');
     const issues = await this.getRepoIssueStatus(owner, repo, from, to);
     const pulls = await this.getRepoPullStatus(owner, repo, from, to);
     const star = await this.getRepoStarIncrement(owner, repo, from, to);

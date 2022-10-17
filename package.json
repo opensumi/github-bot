@@ -9,6 +9,7 @@
     "format": "prettier --write '**/*.{js,css,json,md}'",
     "prebuild": "yarn gen",
     "build": "tsx build.ts",
+    "watch": "yarn build --watch",
     "dev": "yarn gen && yarn dev:preview",
     "dev:preview": "run-p dev:worker dev:proxy",
     "dev:worker": "wrangler dev",

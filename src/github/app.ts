@@ -6,7 +6,6 @@ import { issueCc } from './commands';
 import { sendToDing } from './utils';
 import { error } from '@/runtime/response';
 import { AppService } from './service';
-import { ExtractPayload } from './types';
 import { parseCommandInMarkdownComments } from './commands/parse';
 
 export interface Context {
@@ -88,7 +87,7 @@ I will notify you when sync done.`,
       setting,
     };
     setupWebhooksTemplate(this.octoApp.webhooks, this.ctx);
-    this.service = new AppService(this, setting);
+    this.service = new AppService();
 
     this.octoApp.webhooks.on('star.created', async ({ payload }) => {
       const repository = payload.repository;
@@ -127,7 +126,8 @@ I will notify you when sync done.`,
   }
 
   async init() {
-    await this.service.init();
+    const octo = await this.getOcto();
+    this.service.setOcto(octo);
   }
 }
 
