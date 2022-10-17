@@ -112,8 +112,8 @@ export class App {
   }
 
   async getOcto(): Promise<Octokit> {
-    for await (const { octokit } of this.octoApp.eachInstallation.iterator()) {
-      return octokit as any;
+    for await (const data of this.octoApp.eachInstallation.iterator()) {
+      return data.octokit;
     }
     throw new Error('no app installation found');
   }
@@ -125,14 +125,9 @@ export class App {
   }
 }
 
-export const appFactory = async (setting: AppSetting) => {
+export async function initApp(setting: AppSetting) {
   const app = new App(setting);
   await app.init();
-  return app;
-};
-
-export async function initApp(setting: AppSetting) {
-  const app = await appFactory(setting);
   return app;
 }
 
