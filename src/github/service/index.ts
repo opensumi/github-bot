@@ -1,7 +1,7 @@
 import { Octokit } from '@octokit/rest';
 import { NEXT_WORKFLOW_FILE, RC_WORKFLOW_FILE } from '@/constants/opensumi';
 
-export class AppService {
+export class OctoService {
   private _octo: Octokit | undefined;
 
   setOcto(octo: Octokit) {

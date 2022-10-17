@@ -5,7 +5,7 @@ import { webhookHandler, setupWebhooksTemplate } from './handler';
 import { issueCc } from './commands';
 import { sendToDing } from './utils';
 import { error } from '@/runtime/response';
-import { AppService } from './service';
+import { OctoService } from './service';
 import { parseCommandInMarkdownComments } from './commands/parse';
 
 export interface Context {
@@ -14,7 +14,7 @@ export interface Context {
 
 export interface AppContext extends Context {
   setting: AppSetting;
-  service: AppService;
+  octoService: OctoService;
 }
 
 const PrivilegeEvent = 'star.created';
@@ -23,12 +23,12 @@ export class App {
   ctx: {
     setting: AppSetting;
   };
-  service: AppService;
+  octoService: OctoService;
   octoApp: OctoApp;
 
   handleSyncVersion = async (data: string) => {
     const [tag, version] = data.split(' | ');
-    await this.service.syncVersion(version);
+    await this.octoService.syncVersion(version);
     await sendToDing(
       {
         title: 'Start Sync Version',
@@ -87,7 +87,7 @@ I will notify you when sync done.`,
       setting,
     };
     setupWebhooksTemplate(this.octoApp.webhooks, this.ctx);
-    this.service = new AppService();
+    this.octoService = new OctoService();
 
     this.octoApp.webhooks.on('star.created', async ({ payload }) => {
       const repository = payload.repository;
@@ -127,7 +127,7 @@ I will notify you when sync done.`,
 
   async init() {
     const octo = await this.getOcto();
-    this.service.setOcto(octo);
+    this.octoService.setOcto(octo);
   }
 }
 

@@ -54,7 +54,7 @@ cc.on(
 
     const posArg = ctx.parsed['_'];
     const { owner, repo } = await getRepoInfoFromCommand(posArg, bot);
-    const payload = await app.service.getRepoStarRecords(owner, repo);
+    const payload = await app.octoService.getRepoStarRecords(owner, repo);
     const content = code('json', JSON.stringify(payload));
     await bot.reply(content);
   },
@@ -155,7 +155,7 @@ cc.on(
 
     const posArg = ctx.parsed['_'];
     const { owner, repo } = await getRepoInfoFromCommand(posArg, bot);
-    const payload = await app.service.getRepoHistory(owner, repo);
+    const payload = await app.octoService.getRepoHistory(owner, repo);
     console.log(`🚀 ~ file: github.ts ~ line 127 ~ payload`, payload);
     const content = code('json', JSON.stringify(payload, null, 2));
     console.log(`🚀 ~ file: github.ts ~ line 128 ~ content`, content);
