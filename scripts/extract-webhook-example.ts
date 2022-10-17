@@ -1,7 +1,8 @@
-import WEBHOOKS, { WebhookDefinition } from '@octokit/webhooks-examples';
 
 import fs from 'fs';
 import path from 'path';
+
+import WEBHOOKS, { WebhookDefinition } from '@octokit/webhooks-examples';
 const baseDir = path.join(__dirname, '../test/fixtures/generated');
 fs.rmSync(baseDir, { recursive: true, force: true });
 fs.mkdirSync(baseDir, { recursive: true });

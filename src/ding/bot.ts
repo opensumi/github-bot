@@ -1,9 +1,10 @@
 import { doSign, parseCliArgs, send } from '@/ding/utils';
-import { DingKVManager, IDingBotSetting } from './secrets';
-import { cc } from './commands';
-import { SendMessage, compose, text as textWrapper } from './message';
 import { initApp, App } from '@/github/app';
 import { GitHubKVManager } from '@/github/storage';
+
+import { cc } from './commands';
+import { SendMessage, compose, text as textWrapper } from './message';
+import { DingKVManager, IDingBotSetting } from './secrets';
 import { Message } from './types';
 
 function prepare(s: string) {

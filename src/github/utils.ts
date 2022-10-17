@@ -1,7 +1,9 @@
+import { EmitterWebhookEventName } from '@octokit/webhooks';
+
 import { markdown } from '@/ding/message';
 import { send } from '@/ding/utils';
 import { ISetting } from '@/github/storage';
-import { EmitterWebhookEventName } from '@octokit/webhooks';
+
 import { MarkdownContent } from './types';
 
 function securityInterception(text: string) {

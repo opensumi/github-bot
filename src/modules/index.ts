@@ -1,8 +1,8 @@
+import { BaseController } from './base/base.controller';
 import { DingController } from './ding/ding.controller';
 import { GitHubController } from './github/github.controller';
-import { WebhookController } from './webhook/webhook.controller';
 import { ProxyController } from './proxy/proxy.controller';
-import { BaseController } from './base/base.controller';
+import { WebhookController } from './webhook/webhook.controller';
 
 export function ignition(hono: THono) {
   const modules = [

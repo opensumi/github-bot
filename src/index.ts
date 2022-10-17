@@ -1,8 +1,10 @@
 import { Hono } from 'hono';
-import { prettyJSON } from 'hono/pretty-json';
 import { logger } from 'hono/logger';
+import { prettyJSON } from 'hono/pretty-json';
 import Toucan from 'toucan-js';
+
 import { ignition } from '@/modules';
+
 import favicon from './public/favicon.svg';
 import html from './public/index.html';
 

@@ -1,10 +1,10 @@
+import * as DingUtils from '@/ding/utils';
 import {
   limitLine,
   useRef,
   limitTextByPosition,
 } from '@/github/templates/utils';
 import { sendToDing } from '@/github/utils';
-import * as DingUtils from '@/ding/utils';
 
 describe('github utils', () => {
   it('can limit lines', () => {

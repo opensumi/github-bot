@@ -1,13 +1,15 @@
+import { Octokit } from '@octokit/rest';
+import { Webhooks } from '@octokit/webhooks';
 import {
   WebhookEventHandlerError,
   EmitterWebhookEventName,
 } from '@octokit/webhooks/dist-types/types';
-import { Webhooks } from '@octokit/webhooks';
+
 import { error, json } from '@/runtime/response';
+
 import { getTemplates, StopHandleError } from './templates';
-import { sendToDing } from './utils';
 import type { MarkdownContent, THasAction, Context } from './types';
-import { Octokit } from '@octokit/rest';
+import { sendToDing } from './utils';
 
 export class ValidationError extends Error {
   constructor(public code: number, message: string) {

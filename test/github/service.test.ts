@@ -1,5 +1,6 @@
-import { OctoService } from '@/github/service';
 import { Octokit } from '@octokit/rest';
+
+import { OctoService } from '@/github/service';
 
 const shouldSkip = !Boolean(process.env['GITHUB_TOKEN']);
 console.log(`🚀 ~ file: service.test.ts ~ line 5 ~ shouldSkip`, shouldSkip);

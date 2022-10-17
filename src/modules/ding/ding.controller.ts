@@ -1,5 +1,6 @@
 import { DingBot, verifyMessage } from '@/ding/bot';
 import { DingKVManager } from '@/ding/secrets';
+
 import { BaseController } from '../base/base.controller';
 
 export class DingController extends BaseController {

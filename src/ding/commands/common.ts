@@ -1,8 +1,10 @@
-import { cc, Context } from './base';
-import { code } from '../message';
-import { IDingInfo } from '../secrets';
 import { startsWith } from '@/commander';
 import { StringBuilder } from '@/utils';
+
+import { code } from '../message';
+import { IDingInfo } from '../secrets';
+
+import { cc, Context } from './base';
 
 cc.on(
   'putData',

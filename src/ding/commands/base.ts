@@ -1,8 +1,10 @@
+import mri from 'mri';
+
 import { CommandCenter } from '@/commander';
+import { App } from '@/github/app';
+
 import type { DingBot } from '../bot';
 import { Message } from '../types';
-import { App } from '@/github/app';
-import mri from 'mri';
 
 export interface Context<T = any> {
   message: Message;

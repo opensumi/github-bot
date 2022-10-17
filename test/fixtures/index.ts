@@ -3,10 +3,11 @@ import {
   PullRequestOpenedEvent,
   PullRequestEditedEvent,
 } from '@octokit/webhooks-types';
+
 import pull_request_0_opened from './generated/pull_request_0_opened.json';
 import pull_request_3_closed from './generated/pull_request_3_closed.json';
-import _pull_request_edited_wip from './pull_request_edited_wip.json';
 import _pull_request_edited_base from './pull_request_edited_base.json';
+import _pull_request_edited_wip from './pull_request_edited_wip.json';
 
 export const pull_request_closed =
   pull_request_3_closed as unknown as PullRequestClosedEvent;

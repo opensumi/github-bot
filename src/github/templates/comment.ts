@@ -1,3 +1,11 @@
+import { Octokit } from '@octokit/rest';
+import { Repository, User } from '@octokit/webhooks-types';
+
+import { ExtractPayload , Context } from '@/github/types';
+import { StringBuilder } from '@/utils';
+
+import { textTpl, titleTpl } from './utils';
+
 import {
   limitLine,
   Name,
@@ -6,12 +14,6 @@ import {
   renderUserLink,
   useRef,
 } from '.';
-import { ExtractPayload } from '@/github/types';
-import { Repository, User } from '@octokit/webhooks-types';
-import { Octokit } from '@octokit/rest';
-import { textTpl, titleTpl } from './utils';
-import { Context } from '../types';
-import { StringBuilder } from '@/utils';
 
 const codeCov = (text: string) => {
   return limitLine(text, 3, 1, (line) => {

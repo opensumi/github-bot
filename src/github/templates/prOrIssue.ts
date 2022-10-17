@@ -1,4 +1,9 @@
-import { ExtractPayload, THasChanges } from '../types';
+import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
+
+import { StringBuilder } from '@/utils';
+
+import { ExtractPayload, THasChanges , Context } from '../types';
+
 import {
   renderUserLink,
   renderPrOrIssueTitleLink,
@@ -7,9 +12,7 @@ import {
   renderPrOrIssueBody,
   StopHandleError,
 } from './utils';
-import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
-import { StringBuilder } from '@/utils';
-import { Context } from '../types';
+
 import { textTpl } from '.';
 
 export type Name = 'issues' | 'pull_request' | 'discussion';

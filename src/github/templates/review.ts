@@ -1,4 +1,7 @@
 import { StringBuilder } from '@/utils';
+
+import { Context , ExtractPayload, MarkdownContent } from '../types';
+
 import {
   StopHandleError,
   useRef,
@@ -7,8 +10,6 @@ import {
   textTpl,
   detailTitleTpl,
 } from '.';
-import { Context } from '../types';
-import { ExtractPayload, MarkdownContent } from '../types';
 
 export async function handleReview(
   payload: ExtractPayload<'pull_request_review'>,

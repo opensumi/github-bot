@@ -1,6 +1,7 @@
 import { webhookHandler } from '@/github';
 import { initApp } from '@/github/app';
 import { GitHubKVManager } from '@/github/storage';
+
 import { BaseController } from '../base/base.controller';
 
 export class GitHubController extends BaseController {

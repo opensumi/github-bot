@@ -1,8 +1,10 @@
 import { StringBuilder } from '@/utils';
-import { renderUserLink, useRef, textTpl } from '.';
-import { Context } from '../types';
-import { ExtractPayload } from '../types';
+
+import { Context , ExtractPayload } from '../types';
+
 import { titleTpl } from './utils';
+
+import { renderUserLink, useRef, textTpl } from '.';
 
 export async function handleRelease(
   payload: ExtractPayload<'release'>,

@@ -1,7 +1,9 @@
+import { Webhooks } from '@octokit/webhooks';
+
 import { webhookHandler, setupWebhooksTemplate } from '@/github';
 import { GitHubKVManager } from '@/github/storage';
+
 import { BaseController } from '../base/base.controller';
-import { Webhooks } from '@octokit/webhooks';
 
 export class WebhookController extends BaseController {
   handle(): void {

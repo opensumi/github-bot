@@ -1,5 +1,6 @@
-import { Context } from './base';
 import { DingBot } from '../bot';
+
+import { Context } from './base';
 
 export function hasApp<T>(
   item: Context<T>,

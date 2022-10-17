@@ -1,15 +1,18 @@
-import { App as OctoApp } from '@/lib/app.js/src';
 import { Octokit } from '@octokit/rest';
-import { AppSetting, GitHubKVManager } from '@/github/storage';
-import { webhookHandler, setupWebhooksTemplate } from './handler';
-import { issueCc } from './commands';
-import { sendToDing } from './utils';
-import { error } from '@/runtime/response';
-import { OctoService } from './service';
-import { parseCommandInMarkdownComments } from './commands/parse';
-import { OpenSumiOctoService } from './service/opensumi';
+
 import { PrivilegeEvent } from '@/constants';
 import { VERSION_SYNC_KEYWORD } from '@/constants/opensumi';
+import { AppSetting, GitHubKVManager } from '@/github/storage';
+import { App as OctoApp } from '@/lib/app.js/src';
+import { error } from '@/runtime/response';
+
+import { issueCc } from './commands';
+import { parseCommandInMarkdownComments } from './commands/parse';
+import { webhookHandler, setupWebhooksTemplate } from './handler';
+import { OctoService } from './service';
+import { OpenSumiOctoService } from './service/opensumi';
+import { sendToDing } from './utils';
+
 
 export class App {
   ctx: {

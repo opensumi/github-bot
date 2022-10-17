@@ -1,9 +1,12 @@
 import { startsWith } from '@/commander';
-import { cc } from './base';
-import { code, markdown } from '../message';
-import { DingBot } from '../bot';
-import { hasApp, replyIfAppNotDefined } from './utils';
 import { proxyThisUrl } from '@/utils';
+
+import { DingBot } from '../bot';
+import { code, markdown } from '../message';
+
+import { cc } from './base';
+import { hasApp, replyIfAppNotDefined } from './utils';
+
 
 // example:
 // 1. star -> opensumi/core

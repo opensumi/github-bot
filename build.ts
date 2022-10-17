@@ -1,11 +1,12 @@
+// eslint-disable-next-line import/order
 import { config } from 'dotenv';
 config();
 
+import { build } from 'esbuild';
 import mri from 'mri';
+
 const argv = mri(process.argv.slice(2));
 console.log(argv);
-
-import { build } from 'esbuild';
 
 build({
   entryPoints: ['./src'],

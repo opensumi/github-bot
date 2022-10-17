@@ -1,7 +1,10 @@
-import { StringBuilder } from '@/utils';
-import { renderUserLink, titleTpl, textTpl, StopHandleError } from '.';
-import { Context, ExtractPayload, MarkdownContent } from '../types';
 import { Octokit } from '@octokit/rest';
+
+import { StringBuilder } from '@/utils';
+
+import { Context, ExtractPayload, MarkdownContent } from '../types';
+
+import { renderUserLink, titleTpl, textTpl, StopHandleError } from '.';
 
 export async function handleWorkflowRun(
   payload: ExtractPayload<'workflow_run'>,

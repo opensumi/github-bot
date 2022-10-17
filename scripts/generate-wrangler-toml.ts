@@ -1,7 +1,8 @@
+import { readFileSync, writeFileSync } from 'fs';
+
 import { config } from 'dotenv';
 config();
 
-import { readFileSync, writeFileSync } from 'fs';
 
 let text = readFileSync('./wrangler.tpl.toml').toString();
 

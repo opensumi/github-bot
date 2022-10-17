@@ -1,5 +1,6 @@
-import { sign } from '@/runtime/cfworker/crypto';
 import mri from 'mri';
+
+import { sign } from '@/runtime/cfworker/crypto';
 
 export async function doSign(secret: string, content: string): Promise<string> {
   const mac = await sign(secret, content);

@@ -1,6 +1,8 @@
 import { equalFunc, startsWith } from '@/commander';
+
 import { DingBot } from '../bot';
 import { markdown } from '../message';
+
 import { cc, Context } from './base';
 import { KnownRepo } from './constants';
 import { hasApp, replyIfAppNotDefined } from './utils';

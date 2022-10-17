@@ -1,5 +1,6 @@
 import { CommandCenter } from '@/commander';
 import { ExtractPayload } from '@/github/types';
+
 import type { App } from '../app';
 
 type IssueCommentHandler = (
