@@ -139,9 +139,7 @@ cc.on(
       await bot.reply(
         markdown(
           'Sync Started',
-          `start sync packages${version ? `@${version}` : ''} to npmmirror. 
-[see progress here](https://github.com/opensumi/actions/actions/workflows/sync.yml)
-I will notify you when sync done.`,
+          `[Start sync packages${version ? `@${version}` : ''} to npmmirror](https://github.com/opensumi/actions/actions/workflows/sync.yml)`,
         ),
       );
     } catch (error) {

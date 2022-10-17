@@ -33,9 +33,7 @@ export class App {
       {
         title: 'Start Sync Version',
         text: `${tag} completed.  
-start sync packages${version} to npmmirror.  
-[see progress here](https://github.com/opensumi/actions/actions/workflows/sync.yml)  
-I will notify you when sync done.`,
+[Start sync packages@${version} to npmmirror](https://github.com/opensumi/actions/actions/workflows/sync.yml)`,
       },
       PrivilegeEvent,
       this.ctx.setting,
