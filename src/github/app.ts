@@ -13,14 +13,13 @@ import { OctoService } from './service';
 import { OpenSumiOctoService } from './service/opensumi';
 import { sendToDing } from './utils';
 
-
 export class App {
   ctx: {
     setting: AppSetting;
   };
   octoService: OctoService;
   opensumiOctoService: OpenSumiOctoService;
-  octoApp: OctoApp;
+  octoApp: OctoApp<{ Octokit: typeof Octokit }>;
 
   handleSyncVersion = async (data: string) => {
     const [tag, version] = data.split(' | ');

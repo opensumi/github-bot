@@ -1,4 +1,4 @@
-import { Context } from '@/github/app';
+import { Context } from '@/github/types';
 
 export const ctx = {
   setting: {
