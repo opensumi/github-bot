@@ -1,7 +1,7 @@
 import { Repository } from '@octokit/webhooks-types';
 import { StringBuilder } from '@/utils';
 import _ from 'lodash';
-import { Context } from '../app';
+import { Context } from '../types';
 
 export function renderRepoLink(repository: Repository) {
   return `[[${repository.name}]](${repository.html_url})`;

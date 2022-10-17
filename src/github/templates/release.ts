@@ -1,6 +1,6 @@
 import { StringBuilder } from '@/utils';
 import { renderUserLink, useRef, textTpl } from '.';
-import { Context } from '../app';
+import { Context } from '../types';
 import { ExtractPayload } from '../types';
 import { titleTpl } from './utils';
 
