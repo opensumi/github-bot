@@ -130,28 +130,3 @@ export async function initApp(setting: AppSetting) {
   await app.init();
   return app;
 }
-
-export async function handler(
-  req: Request & { params?: { id?: string }; query?: { id?: string } },
-  env: Env,
-  ctx: ExecutionContext,
-) {
-  let id = req.params?.id;
-  if (!id) {
-    id = req.query?.id;
-  }
-  if (!id) {
-    return error(401, 'need a valid id');
-  }
-  const githubKVManager = new GitHubKVManager(env);
-  const setting = await githubKVManager.getAppSettingById(id);
-  if (!setting) {
-    return error(404, 'id not found');
-  }
-  if (!setting.githubSecret) {
-    return error(401, 'please set app webhook secret in settings');
-  }
-
-  const app = await initApp(setting);
-  return webhookHandler(app.octoApp.webhooks, req, env, ctx);
-}
