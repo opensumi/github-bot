@@ -29,6 +29,12 @@ const formatByUserLogin = {
     const data = text.split('<br/>');
     return data.slice(1).join('<br/>');
   },
+  'stale[bot]': (text) => {
+    if (text.includes('marked as stale')) {
+      return 'marked as stale';
+    }
+    return text;
+  },
 } as {
   [key: string]: (text: string) => string;
 };
