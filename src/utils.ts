@@ -4,7 +4,7 @@ export class StringBuilder {
     this.array.push(...initial);
   }
   add(str: string, addExtraLine = false) {
-    addExtraLine && this.array.push('');
+    this.array.length > 0 && addExtraLine && this.array.push('');
     this.array.push(str);
     addExtraLine && this.array.push('');
   }
