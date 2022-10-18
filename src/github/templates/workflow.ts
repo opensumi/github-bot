@@ -41,7 +41,7 @@ export async function handleWorkflowRun(
     const builder = new StringBuilder();
 
     builder.add(`Name: ${workflow.name}\n`);
-    builder.add(`Conclusion: ${workflowRun.conclusion}`);
+    builder.add(`Conclusion: ${workflowRun.conclusion}\n`);
     builder.add(`[Click me to see detail](${workflowRun.html_url})\n`);
 
     const text = textTpl(
