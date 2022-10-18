@@ -270,14 +270,22 @@ export class OctoService {
     while (!done && curPage <= pageCount) {
       issues = await this.getRepoIssues(owner, repo, curPage++);
       for (let index = 0; index < issues?.data?.length; index++) {
+        if (issues.data[index]?.pull_request) {
+          // 说明获取到的为 PullRequest 
+          continue;
+        }
+        if (!issues.data[index]) {
+          continue;
+        }
         if (
-          issues.data[index] &&
           new Date(issues.data[index].created_at).getTime() >= from
         ) {
           issue_increment++;
-          if (issues.data[index].closed_at) {
-            issue_closed_increment++;
-          }
+        } else if (
+          issues.data[index].closed_at &&
+          new Date(issues.data[index].closed_at!).getTime() >= from
+        ) {
+          issue_closed_increment++;
         } else {
           done = true;
           continue;
