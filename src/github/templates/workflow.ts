@@ -35,7 +35,7 @@ export async function handleWorkflowRun(
       check_suite_id: workflowRun.check_suite_id,
     });
 
-    const runs = checkRunsData.data.check_runs;
+    // const runs = checkRunsData.data.check_runs;
 
     const title = titleTpl(
       {
@@ -49,9 +49,11 @@ export async function handleWorkflowRun(
     const builder = new StringBuilder();
     builder.add(`Name: ${workflow.name}\n`);
 
-    for (const run of runs) {
-      builder.add(`Run: ${run.name}  \n\n`);
-    }
+    builder.add(`Conclusion: ${workflowRun.conclusion}`)
+
+    // for (const run of runs) {
+    //   builder.add(`Run: ${run.name}  \n\n`);
+    // }
 
     builder.add(`[Click me to see detail](${workflowRun.html_url})\n`);
 
