@@ -29,14 +29,6 @@ export async function handleWorkflowRun(
     repository.full_name === 'opensumi/actions' &&
     workflow.name === 'sync to npmmirror'
   ) {
-    const checkRunsData = await ctx.octokit.checks.listForSuite({
-      owner: repository.owner.login,
-      repo: repository.name,
-      check_suite_id: workflowRun.check_suite_id,
-    });
-
-    // const runs = checkRunsData.data.check_runs;
-
     const title = titleTpl(
       {
         repo: payload.repository,
@@ -47,14 +39,9 @@ export async function handleWorkflowRun(
     );
 
     const builder = new StringBuilder();
+
     builder.add(`Name: ${workflow.name}\n`);
-
-    builder.add(`Conclusion: ${workflowRun.conclusion}`)
-
-    // for (const run of runs) {
-    //   builder.add(`Run: ${run.name}  \n\n`);
-    // }
-
+    builder.add(`Conclusion: ${workflowRun.conclusion}`);
     builder.add(`[Click me to see detail](${workflowRun.html_url})\n`);
 
     const text = textTpl(
