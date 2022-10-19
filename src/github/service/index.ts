@@ -44,6 +44,7 @@ export class OctoService {
       page: page,
       per_page: perPage,
       state: 'all',
+      sort: 'updated',
       headers: {
         Accept: 'application/vnd.github.v3.json',
       },
@@ -270,25 +271,31 @@ export class OctoService {
     while (!done && curPage <= pageCount) {
       issues = await this.getRepoIssues(owner, repo, curPage++);
       for (let index = 0; index < issues?.data?.length; index++) {
-        if (issues.data[index]?.pull_request) {
-          // 说明获取到的为 PullRequest 
-          continue;
-        }
         if (!issues.data[index]) {
           continue;
         }
+        const updateTime = new Date(issues.data[index].updated_at).getTime();
         if (
-          new Date(issues.data[index].created_at).getTime() >= from
-        ) {
-          issue_increment++;
-        } else if (
-          issues.data[index].closed_at &&
-          new Date(issues.data[index].closed_at!).getTime() >= from
-        ) {
-          issue_closed_increment++;
+          updateTime >= from &&
+          updateTime <= to) {
+          if (!issues.data[index].html_url.includes('issues')) {
+            // 说明获取到的为 PullRequest 
+            continue;
+          }
+          if (
+            issues.data[index].closed_at &&
+            new Date(issues.data[index].closed_at!).getTime() >= from
+          ) {
+            issue_closed_increment++;
+          }
+          if (
+            issues.data[index].created_at &&
+            new Date(issues.data[index].created_at!).getTime() >= from
+          ) {
+            issue_increment++;
+          }
         } else {
           done = true;
-          continue;
         }
       }
     }
@@ -334,15 +341,27 @@ export class OctoService {
     let curPage = 1;
     while (!done && curPage <= pageCount) {
       pulls = await this.getRepoPulls(owner, repo, curPage++);
-
+  
       for (let index = 0; index < pulls?.data?.length; index++) {
+        if (!pulls.data[index]) {
+          continue;
+        }
+        const updateTime = new Date(pulls.data[index].updated_at).getTime();
         if (
-          pulls.data[index] &&
-          new Date(pulls.data[index].created_at).getTime() >= from
+          updateTime >= from &&
+          updateTime <= to 
         ) {
-          pull_increment++;
-          if (pulls.data[index].closed_at) {
+          if (
+            pulls.data[index].closed_at &&
+            new Date(pulls.data[index].closed_at!).getTime() >= from
+          ) {
             pull_closed_increment++;
+          }
+          if (
+            pulls.data[index].created_at &&
+            new Date(pulls.data[index].created_at!).getTime() >= from
+          ) {
+            pull_increment++;
           }
         } else {
           done = true;
@@ -357,9 +376,8 @@ export class OctoService {
     };
   }
 
-  async getRepoHistory(owner: string, repo: string) {
-    const from = Date.now() - HISTORY_RANGE;
-    const to = Date.now();
+  async getRepoHistory(owner: string, repo: string, to: number = Date.now()) {
+    const from = to - HISTORY_RANGE;
 
     const issues = await this.getRepoIssueStatus(owner, repo, from, to);
     const pulls = await this.getRepoPullStatus(owner, repo, from, to);
