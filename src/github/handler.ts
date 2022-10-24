@@ -1,5 +1,6 @@
 import { Octokit } from '@octokit/rest';
 import { Webhooks } from '@octokit/webhooks';
+import { User } from '@octokit/webhooks-types';
 import {
   WebhookEventHandlerError,
   EmitterWebhookEventName,
@@ -62,6 +63,8 @@ export async function validateGithub(req: Request<any>, webhooks: Webhooks) {
   };
 }
 
+const blockedUser = new Set(['renovate[bot]']);
+
 export const setupWebhooksTemplate = (
   webhooks: Webhooks<{ octokit?: Octokit }>,
   ctx: Context,
@@ -77,7 +80,15 @@ export const setupWebhooksTemplate = (
   });
   for (const eventName of supportTemplates) {
     webhooks.on(eventName, async ({ id, payload, octokit }) => {
+      if ((payload as { sender: User })?.sender) {
+        const name = (payload as { sender: User }).sender.login;
+        if (blockedUser.has(name)) {
+          return;
+        }
+      }
+
       console.log(eventName, 'handled id:', id);
+
       const handlerCtx = {
         ...ctx,
         octokit,
