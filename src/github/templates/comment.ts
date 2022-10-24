@@ -15,8 +15,8 @@ import {
   useRef,
 } from '.';
 
-const codeCov = (text: string) => {
-  return limitLine(text, 3, 1, (line) => {
+const codecov = (text: string) => {
+  return limitLine(text, 2, 1, (line) => {
     if (line.startsWith('> ')) {
       return line.slice(2);
     }
@@ -25,8 +25,8 @@ const codeCov = (text: string) => {
 };
 
 const formatByUserLogin = {
-  'codecov-commenter': codeCov,
-  'codecov[bot]': codeCov,
+  'codecov-commenter': codecov,
+  'codecov[bot]': codecov,
   CLAassistant: (text) => {
     const data = text.split('<br/>');
     return data.slice(1).join('<br/>');
