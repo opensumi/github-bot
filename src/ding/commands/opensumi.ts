@@ -1,4 +1,5 @@
 import { equalFunc, startsWith } from '@/commander';
+import { RC_WORKFLOW_FILE } from '@/constants/opensumi';
 
 import { DingBot } from '../bot';
 import { markdown } from '../message';
@@ -67,7 +68,7 @@ cc.on(
       try {
         await app.octoService.getRefInfoByRepo(ref, 'opensumi', 'core');
         await app.opensumiOctoService.releaseRCVersion(ref);
-        await bot.replyText(`在 ${ref} 上发布 Release Candidate 成功`);
+        await bot.replyText(`在 ${ref} 上发布 Release Candidate 成功, https://github.com/opensumi/core/actions/workflows/${RC_WORKFLOW_FILE}`);
       } catch (error) {
         await bot.replyText(`执行出错：${(error as Error).message}`);
       }
@@ -104,7 +105,7 @@ cc.on(
       try {
         await app.octoService.getRefInfoByRepo(ref, 'opensumi', 'core');
         await app.opensumiOctoService.releaseRCVersion(ref);
-        await bot.replyText(`在 ${ref} 上发布 Release Candidate 成功`);
+        await bot.replyText(`在 ${ref} 上发布 Release Candidate 成功, https://github.com/opensumi/core/actions/workflows/${RC_WORKFLOW_FILE}`);
       } catch (error) {
         await bot.replyText(`执行出错：${(error as Error).message}`);
       }
