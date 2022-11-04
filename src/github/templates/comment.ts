@@ -1,7 +1,7 @@
 import { Octokit } from '@octokit/rest';
 import { Repository, User } from '@octokit/webhooks-types';
 
-import { ExtractPayload , Context } from '@/github/types';
+import { ExtractPayload, Context } from '@/github/types';
 import { StringBuilder } from '@/utils';
 
 import { textTpl, titleTpl } from './utils';
@@ -215,13 +215,17 @@ export async function handleReviewComment(
     ctx,
   );
 
+  const builder = new StringBuilder();
+  builder.addDivider();
+  builder.add(renderCommentBody(pr, payload.comment, ctx.setting.contentLimit));
+
   const text = textTpl(
     {
       repo,
       title: `${renderUserLink(payload.sender)} ${action} [review comment](${
         comment.html_url
       }) on [${location}](${pr.html_url})`,
-      body: renderCommentBody(pr, payload.comment, ctx.setting.contentLimit),
+      body: builder.toString(),
     },
     ctx,
   );
