@@ -2,7 +2,7 @@ import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 
 import { StringBuilder } from '@/utils';
 
-import { ExtractPayload, THasChanges , Context } from '../types';
+import { ExtractPayload, THasChanges, Context } from '../types';
 
 import {
   renderUserLink,
@@ -60,8 +60,7 @@ function render(
   );
 
   if (shouldRenderBody && data.body) {
-    builder.add('');
-    builder.add('---');
+    builder.addDivider();
     builder.add(renderPrOrIssueBody(data, ctx.setting.contentLimit));
   }
 
@@ -185,9 +184,7 @@ export async function handlePr(
   );
 
   if (shouldRenderBody && data.body) {
-    builder.add('');
-    builder.add('---');
-
+    builder.addDivider();
     builder.add(renderPrOrIssueBody(data, ctx.setting.contentLimit));
   }
 

@@ -8,6 +8,10 @@ export class StringBuilder {
     this.array.push(str);
     addExtraLine && this.array.push('');
   }
+  addDivider() {
+    this.add('');
+    this.add('---');
+  }
   build() {
     return '\n' + this.array.join('\n') + '\n';
   }
