@@ -2,17 +2,16 @@ import { Octokit } from '@octokit/rest';
 
 import { PrivilegeEvent } from '@/constants';
 import { VERSION_SYNC_KEYWORD } from '@/constants/opensumi';
-import { AppSetting, GitHubKVManager } from '@/github/storage';
+import { AppSetting } from '@/github/storage';
 import { App as OctoApp } from '@/lib/app.js/src';
-import { error } from '@/runtime/response';
 
 import { issueCc } from './commands';
 import { parseCommandInMarkdownComments } from './commands/parse';
-import { webhookHandler, setupWebhooksTemplate } from './handler';
+import Configuration from './configuration';
+import { setupWebhooksTemplate } from './handler';
 import { OctoService } from './service';
 import { OpenSumiOctoService } from './service/opensumi';
 import { sendToDing } from './utils';
-import Configuration from './configuration';
 
 export class App {
   ctx: {
@@ -28,8 +27,7 @@ export class App {
     await sendToDing(
       {
         title: 'Start Sync Version',
-        text: `${tag} completed.  
-[Start sync packages@${version} to npmmirror](https://github.com/opensumi/actions/actions/workflows/sync.yml)`,
+        text: `${tag} completed. [Start sync packages@${version} to npmmirror](https://github.com/opensumi/actions/actions/workflows/sync.yml)`,
       },
       PrivilegeEvent,
       this.ctx.setting,
