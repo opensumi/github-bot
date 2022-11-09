@@ -13,6 +13,11 @@ export function renderUserLink(sender: { login: string; html_url: string }) {
   return `[${sender.login}](${sender.html_url})`;
 }
 
+export function renderAtUserLink(sender: { login: string; html_url: string }) {
+  return `[@${sender.login}](${sender.html_url})`;
+}
+
+
 export function renderPrOrIssueText(
   p: {
     /**

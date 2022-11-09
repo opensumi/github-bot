@@ -4,7 +4,7 @@ import { StringBuilder } from '@/utils';
 
 import { Context, ExtractPayload, MarkdownContent } from '../types';
 
-import { renderUserLink, titleTpl, textTpl, StopHandleError } from '.';
+import { renderAtUserLink, titleTpl, textTpl, StopHandleError } from '.';
 
 export async function handleWorkflowRun(
   payload: ExtractPayload<'workflow_run'>,
@@ -41,14 +41,16 @@ export async function handleWorkflowRun(
     const builder = new StringBuilder();
 
     builder.add(`Name: ${workflow.name}\n`);
-    builder.add(`Conclusion: ${workflowRun.conclusion}\n`);
-    builder.add(`[Click me to see detail](${workflowRun.html_url})\n`);
+
+    const status = workflowRun.conclusion;
+
+    builder.add(`[Detail](${workflowRun.html_url})\n`);
 
     const text = textTpl(
       {
-        title: `[workflow](${workflowRun.html_url}) ${
-          workflowRun.status
-        } (created by ${renderUserLink(payload.sender)})`,
+        title: `[workflow](${
+          workflowRun.html_url
+        }) run ${status} (${renderAtUserLink(payload.sender)})`,
         body: builder.build(),
         repo: payload.repository,
       },
