@@ -12,6 +12,7 @@ import { webhookHandler, setupWebhooksTemplate } from './handler';
 import { OctoService } from './service';
 import { OpenSumiOctoService } from './service/opensumi';
 import { sendToDing } from './utils';
+import Configuration from './configuration';
 
 export class App {
   ctx: {
@@ -68,6 +69,8 @@ export class App {
 
   constructor(private setting: AppSetting) {
     const { appSettings, githubSecret } = setting;
+    Configuration.fromSettings(setting);
+
     this.octoApp = new OctoApp({
       appId: appSettings.appId,
       privateKey: appSettings.privateKey,

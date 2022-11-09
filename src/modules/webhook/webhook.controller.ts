@@ -1,6 +1,7 @@
 import { Webhooks } from '@octokit/webhooks';
 
 import { webhookHandler, setupWebhooksTemplate } from '@/github';
+import Configuration from '@/github/configuration';
 import { GitHubKVManager } from '@/github/storage';
 
 import { BaseController } from '../base/base.controller';
@@ -21,6 +22,9 @@ export class WebhookController extends BaseController {
       if (!setting.githubSecret) {
         return c.send.error(401, 'please set webhook secret in kv');
       }
+
+      Configuration.fromSettings(setting);
+
       const webhooks = new Webhooks<{ octokit: undefined }>({
         secret: setting.githubSecret,
       });
