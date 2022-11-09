@@ -4,7 +4,7 @@ import {
   useRef,
   limitTextByPosition,
 } from '@/github/templates/utils';
-import { sendToDing } from '@/github/utils';
+import { sendToDing, replaceGitHubUrlToMarkdown } from '@/github/utils';
 
 describe('github utils', () => {
   it('can limit lines', () => {
@@ -97,5 +97,15 @@ describe('github utils', () => {
       ],
     });
     expect(urls.length).toEqual(3);
+  });
+  it('can transform github related urls', () => {
+    const demoText =
+      "<!-- Release notes generated using configuration in .github/release.yml at v2.21.2 -->\r\n\r\n## What's Changed\r\n\r\n* fix(snippets): register code snippets timing by @Aaaaash in https://github.com/opensumi/core/pull/1920\r\n* fix: workspace dir async watch by @Aaaaash in https://github.com/opensumi/core/pull/1929\r\n* fix: support mousewheel on editor tabs by @erha19 in https://github.com/opensumi/core/pull/1927\r\n* fix: do not active disabled extension by @Aaaaash in https://github.com/opensumi/core/pull/1931\r\n* fix: make watcher can be disposed by @opensumi in https://github.com/opensumi/core/pull/1925\r\n* fix: browser views contribution by @Aaaaash in https://github.com/opensumi/core/pull/1921\r\n* fix: parcel watcher subscribe retry catch by @life2015 in https://github.com/opensumi/core/pull/1932\r\n* fix: update unsupported watch exclude glob by @erha19 in https://github.com/opensumi/core/pull/1926\r\n* chore(release): v2.20.12 by @erha19 in https://github.com/opensumi/core/pull/1938\r\n* fix: make the search references clean up by @yantze in https://github.com/opensumi/core/pull/1923\r\n\r\n**Full Changelog**: https://github.com/opensumi/core/compare/v2.21.1...v2.21.2";
+    const data = replaceGitHubUrlToMarkdown(demoText, {
+      repo: 'core',
+      owner: 'opensumi',
+    });
+    expect(data).toContain('[#1932](https://github.com/opensumi/core/pull/1932)')
+    console.log(`🚀 ~ file: utils.test.ts ~ line 108 ~ it ~ data`, data);
   });
 });

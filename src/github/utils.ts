@@ -11,6 +11,26 @@ function securityInterception(text: string) {
   return text;
 }
 
+interface ReplaceOptions {
+  owner: string;
+  repo: string;
+}
+
+export function replaceGitHubUrlToMarkdown(
+  text: string,
+  options: ReplaceOptions,
+) {
+  console.log(`🚀 ~ file: utils.ts ~ line 23 ~ options`, options);
+  const repoPullToReplace = new RegExp(
+    `(https:\\/\\/github\\.com\\/${options.owner}\\/${options.repo}\\/pull\\/(\\d+))`,
+    "gm"
+  );
+  
+  const replaced = text.replaceAll(repoPullToReplace, '[#$2]($1)')
+
+  return replaced;
+}
+
 export async function sendContentToDing(
   dingContent: Record<string, unknown>,
   eventName: EmitterWebhookEventName,

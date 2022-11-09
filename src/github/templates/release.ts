@@ -1,6 +1,7 @@
 import { StringBuilder } from '@/utils';
 
-import { Context , ExtractPayload } from '../types';
+import { Context, ExtractPayload } from '../types';
+import { replaceGitHubUrlToMarkdown } from '../utils';
 
 import { titleTpl } from './utils';
 
@@ -46,7 +47,10 @@ export async function handleRelease(
       title: `${renderUserLink(payload.sender)} ${action} [${release.name}](${
         release.html_url
       })`,
-      body: builder.build(),
+      body: replaceGitHubUrlToMarkdown(builder.build(), {
+        owner: payload.repository.owner.login ?? '',
+        repo: payload.repository.name,
+      }),
     },
     ctx,
   );
