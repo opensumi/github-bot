@@ -14,8 +14,8 @@ describe('github utils', () => {
   });
 
   it('can ref comments', () => {
-    const comment =
-      '<img width="954" alt="image" src="https://user-images.githubusercontent.com/2226423/153811718-2babbfa7-e63f-4ec7-9fd3-9f450beaad9b.png">\r\n看起来这个分支有个报错关于 TerminalClient 的,有可能是 init 时机有点问题';
+    const comment = `<img width="954" alt="image" src="https://user-images.githubusercontent.com/2226423/153811718-2babbfa7-e63f-4ec7-9fd3-9f450beaad9b.png">
+看起来这个分支有个报错关于 TerminalClient 的,有可能是 init 时机有点问题`;
     const data = useRef(comment);
     console.log(`🚀 ~ file: utils.test.ts ~ line 12 ~ it ~ data`, data);
   });
@@ -99,13 +99,32 @@ describe('github utils', () => {
     expect(urls.length).toEqual(3);
   });
   it('can transform github related urls', () => {
-    const demoText =
-      "<!-- Release notes generated using configuration in .github/release.yml at v2.21.2 -->\r\n\r\n## What's Changed\r\n\r\n* fix(snippets): register code snippets timing by @Aaaaash in https://github.com/opensumi/core/pull/1920\r\n* fix: workspace dir async watch by @Aaaaash in https://github.com/opensumi/core/pull/1929\r\n* fix: support mousewheel on editor tabs by @erha19 in https://github.com/opensumi/core/pull/1927\r\n* fix: do not active disabled extension by @Aaaaash in https://github.com/opensumi/core/pull/1931\r\n* fix: make watcher can be disposed by @opensumi in https://github.com/opensumi/core/pull/1925\r\n* fix: browser views contribution by @Aaaaash in https://github.com/opensumi/core/pull/1921\r\n* fix: parcel watcher subscribe retry catch by @life2015 in https://github.com/opensumi/core/pull/1932\r\n* fix: update unsupported watch exclude glob by @erha19 in https://github.com/opensumi/core/pull/1926\r\n* chore(release): v2.20.12 by @erha19 in https://github.com/opensumi/core/pull/1938\r\n* fix: make the search references clean up by @yantze in https://github.com/opensumi/core/pull/1923\r\n\r\n**Full Changelog**: https://github.com/opensumi/core/compare/v2.21.1...v2.21.2";
+    const demoText = `<!-- Release notes generated using configuration in .github/release.yml at v2.21.2 -->
+
+## What's Changed
+
+* fix(snippets): register code snippets timing by @Aaaaash in https://github.com/opensumi/core/pull/1920
+* fix: workspace dir async watch by @Aaaaash in https://github.com/opensumi/core/pull/1929
+* fix: support mousewheel on editor tabs by @erha19 in https://github.com/opensumi/core/pull/1927
+* fix: do not active disabled extension by @Aaaaash in https://github.com/opensumi/core/pull/1931
+* fix: make watcher can be disposed by @opensumi in https://github.com/opensumi/core/pull/1925
+* fix: browser views contribution by @Aaaaash in https://github.com/opensumi/core/pull/1921
+* fix: parcel watcher subscribe retry catch by @life2015 in https://github.com/opensumi/core/pull/1932
+* fix: update unsupported watch exclude glob by @erha19 in https://github.com/opensumi/core/pull/1926
+* chore(release): v2.20.12 by @erha19 in https://github.com/opensumi/core/pull/1938
+* fix: make the search references clean up by @yantze in https://github.com/opensumi/core/pull/1923
+
+**Full Changelog**: https://github.com/opensumi/core/compare/v2.21.1...v2.21.2`;
     const data = replaceGitHubUrlToMarkdown(demoText, {
       repo: 'core',
       owner: 'opensumi',
     });
-    expect(data).toContain('[#1932](https://github.com/opensumi/core/pull/1932)')
+    expect(data).toContain(
+      '[#1932](https://github.com/opensumi/core/pull/1932)',
+    );
+    expect(data).toContain(
+      '[v2.21.1...v2.21.2](https://github.com/opensumi/core/compare/v2.21.1...v2.21.2)',
+    );
     console.log(`🚀 ~ file: utils.test.ts ~ line 108 ~ it ~ data`, data);
   });
 });

@@ -20,13 +20,18 @@ export function replaceGitHubUrlToMarkdown(
   text: string,
   options: ReplaceOptions,
 ) {
-  console.log(`🚀 ~ file: utils.ts ~ line 23 ~ options`, options);
-  const repoPullToReplace = new RegExp(
+  const pull = new RegExp(
     `(https:\\/\\/github\\.com\\/${options.owner}\\/${options.repo}\\/pull\\/(\\d+))`,
-    "gm"
+    'gm',
   );
-  
-  const replaced = text.replaceAll(repoPullToReplace, '[#$2]($1)')
+
+  let replaced = text.replaceAll(pull, '[#$2]($1)');
+  // https://github.com/opensumi/core/compare/v2.21.3...v2.21.4
+  const compare = new RegExp(
+    `(https:\\/\\/github\\.com\\/${options.owner}\\/${options.repo}\\/compare\\/(.*))`,
+    'gm',
+  );
+  replaced = replaced.replaceAll(compare, '[$2]($1)');
 
   return replaced;
 }
