@@ -83,3 +83,19 @@ export async function sendToDing(
 
   await sendContentToDing(dingContent, eventName, setting);
 }
+
+export function replaceGitHubText(text: string) {
+  const imgRegex = /.*(<img .*src="(.+)"\s?>)/gm;
+  let tmp = text;
+  let regexResult: RegExpExecArray | null = null;
+  do {
+    const imgRegex = /.*(<img .*src="(.+)"\s?>)/gm;
+    regexResult = imgRegex.exec(tmp);
+    if (regexResult) {
+      const newMsg = `![](${regexResult[2]})`;
+      tmp = tmp.replaceAll(regexResult[1], newMsg);
+    }
+  } while (regexResult);
+
+  return tmp;
+}

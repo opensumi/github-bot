@@ -4,6 +4,7 @@ import _ from 'lodash';
 import { StringBuilder } from '@/utils';
 
 import { Context } from '../types';
+import { replaceGitHubText } from '../utils';
 
 export function renderRepoLink(repository: Repository) {
   return `[[${repository.name}]](${repository.html_url})`;
@@ -16,7 +17,6 @@ export function renderUserLink(sender: { login: string; html_url: string }) {
 export function renderAtUserLink(sender: { login: string; html_url: string }) {
   return `[@${sender.login}](${sender.html_url})`;
 }
-
 
 export function renderPrOrIssueText(
   p: {
@@ -120,6 +120,8 @@ export function useRef(text?: string | null, bodyLimit = -1) {
   if (!text) {
     return '';
   }
+
+  text = replaceGitHubText(text);
 
   if (bodyLimit && bodyLimit > 0) {
     text = limitTextByPosition(text, bodyLimit);

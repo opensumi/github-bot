@@ -4,7 +4,11 @@ import {
   useRef,
   limitTextByPosition,
 } from '@/github/templates/utils';
-import { sendToDing, replaceGitHubUrlToMarkdown } from '@/github/utils';
+import {
+  sendToDing,
+  replaceGitHubUrlToMarkdown,
+  replaceGitHubText,
+} from '@/github/utils';
 
 describe('github utils', () => {
   it('can limit lines', () => {
@@ -126,5 +130,33 @@ describe('github utils', () => {
       '[v2.21.1...v2.21.2](https://github.com/opensumi/core/compare/v2.21.1...v2.21.2)',
     );
     console.log(`🚀 ~ file: utils.test.ts ~ line 108 ~ it ~ data`, data);
+  });
+
+  it('can transform github text content image', () => {
+    const msg = `但是不加这个引号的话，我的 zsh 会报错。
+    <img width="470" alt="CleanShot 2022-12-07 at 14 40 03@2x" src="https://user-images.githubusercontent.com/13938334/206107044-9f1ba8ba-9398-44da-8de8-872f600b59d5.png">
+    改成  "watch": "run-p \"watch:*\"" 试下呢？`;
+    const result = replaceGitHubText(msg);
+    expect(result).toEqual(`但是不加这个引号的话，我的 zsh 会报错。
+    ![](https://user-images.githubusercontent.com/13938334/206107044-9f1ba8ba-9398-44da-8de8-872f600b59d5.png)
+    改成  "watch": "run-p \"watch:*\"" 试下呢？`);
+  });
+  it('can transform github text content only message', () => {
+    const msg = `<img width="474" alt="image" src="https://user-images.githubusercontent.com/2226423/206106339-a997fe20-06ff-4e70-b8cd-2a3c4ac475a3.png">`;
+    const result = replaceGitHubText(msg);
+    expect(result).toEqual(
+      `![](https://user-images.githubusercontent.com/2226423/206106339-a997fe20-06ff-4e70-b8cd-2a3c4ac475a3.png)`,
+    );
+  });
+  it('can transform github text content has multiple image', () => {
+    const msg = `但是不加这个引号的话，我的 zsh 会报错。
+    <img width="470" alt="CleanShot 2022-12-07 at 14 40 03@2x" src="https://user-images.githubusercontent.com/13938334/206107044-9f1ba8ba-9398-44da-8de8-872f600b59d5.png">
+    <img width="474" alt="image" src="https://user-images.githubusercontent.com/2226423/206106339-a997fe20-06ff-4e70-b8cd-2a3c4ac475a3.png">
+    改成  "watch": "run-p \"watch:*\"" 试下呢？`;
+    const result = replaceGitHubText(msg);
+    expect(result).toEqual(`但是不加这个引号的话，我的 zsh 会报错。
+    ![](https://user-images.githubusercontent.com/13938334/206107044-9f1ba8ba-9398-44da-8de8-872f600b59d5.png)
+    ![](https://user-images.githubusercontent.com/2226423/206106339-a997fe20-06ff-4e70-b8cd-2a3c4ac475a3.png)
+    改成  "watch": "run-p \"watch:*\"" 试下呢？`);
   });
 });
