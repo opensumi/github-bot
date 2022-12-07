@@ -150,6 +150,36 @@ const ISSUE_REGEX = /^#(?<number>\d+)$/;
 const REPO_REGEX =
   /^(?<owner>[a-zA-Z0-9][a-zA-Z0-9\-]*)\/(?<repo>[a-zA-Z0-9_\-.]+)$/;
 
+cc.onRegex(REPO_REGEX, async (bot: DingBot, ctx: RegexContext) => {
+  await replyIfAppNotDefined(bot, ctx);
+  if (!hasApp(ctx)) {
+    return;
+  }
+
+  const { app, result } = ctx;
+  const regexResult = result.result;
+  const owner = regexResult.groups!['owner'];
+  const repo = regexResult.groups!['repo'];
+
+  const octokit = await app.getOcto();
+  const repoData = await octokit.repos.get({
+    owner,
+    repo,
+  });
+  const full_name = repoData.data?.full_name;
+  if (full_name) {
+    await bot.reply(
+      markdown(
+        `${full_name} Open Graph`,
+        `![](${proxyThisUrl(
+          bot.env,
+          `https://opengraph.githubassets.com/${makeid(16)}/${full_name}`,
+        )})`,
+      ),
+    );
+  }
+});
+
 cc.onRegex(ISSUE_REGEX, async (bot: DingBot, ctx: RegexContext) => {
   await replyIfAppNotDefined(bot, ctx);
   if (!hasApp(ctx)) {
@@ -174,10 +204,6 @@ cc.onRegex(ISSUE_REGEX, async (bot: DingBot, ctx: RegexContext) => {
       `${issueNumber} 不是 ${defaultRepo.owner}/${defaultRepo.repo} 仓库有效的 issue number`,
     );
   }
-});
-
-cc.onRegex(REPO_REGEX, async (bot: DingBot, ctx: Context) => {
-  await bot.replyText(`请你自己打开 GitHub。`);
 });
 
 cc.on(
