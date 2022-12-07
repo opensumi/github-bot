@@ -1,40 +1,35 @@
-name: Deploy to Prod
+name: Deploy to Pre
 
 on:
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Choose an environment to deploy to: <prod> '
-        required: true
-        default: 'prod'
 
 env:
-  BUILD_ENVIRONMENT: ${{ github.event.inputs.environment }}
   CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
   KV_LOCAL_ID: ${{ secrets.KV_LOCAL_ID }}
   KV_PROD_ID: ${{ secrets.KV_PROD_ID }}
 
 jobs:
-  deploy:
+  test:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.inputs.environment }}
-    name: Deploy
+    environment: pre
+    name: Test & Deploy
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js 16
         uses: actions/setup-node@v3
         with:
           node-version: '16'
-      - name: Build & Test
+      - name: Test
         run: |
           yarn
           yarn run build
           yarn run test
-      - name: Publish
+
+      - name: Deploy to Pre
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           preCommands: yarn build
-          command: publish --env ${{ github.event.inputs.environment }}
+          command: publish
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
