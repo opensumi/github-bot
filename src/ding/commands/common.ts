@@ -1,6 +1,7 @@
 import { startsWith } from '@/commander';
 import { StringBuilder } from '@/utils';
 
+import type { DingBot } from '../bot';
 import { code } from '../message';
 import { IDingInfo } from '../secrets';
 
@@ -8,7 +9,7 @@ import { cc, Context } from './base';
 
 cc.on(
   'putData',
-  async (bot, ctx: Context<Partial<IDingInfo>>) => {
+  async (bot: DingBot, ctx: Context<Partial<IDingInfo>>) => {
     const info = {} as IDingInfo;
     if (ctx.parsed['defaultRepo']) {
       info['defaultRepo'] = ctx.parsed['defaultRepo'];
@@ -20,7 +21,7 @@ cc.on(
   startsWith,
 );
 
-cc.on('getGroupInfo', async (bot) => {
+cc.on('getGroupInfo', async (bot: DingBot) => {
   await bot.reply(
     code(
       'json',
@@ -32,7 +33,7 @@ cc.on('getGroupInfo', async (bot) => {
   );
 });
 
-cc.on('help', async (bot) => {
+cc.on('help', async (bot: DingBot) => {
   const text = new StringBuilder();
   const prefix = cc.prefixes.filter(Boolean).join('、');
   if (prefix) {
@@ -55,6 +56,6 @@ cc.on('help', async (bot) => {
   await bot.replyText(text.build());
 });
 
-cc.on('ping', async (bot) => {
+cc.on('ping', async (bot: DingBot) => {
   await bot.replyText('pong');
 });

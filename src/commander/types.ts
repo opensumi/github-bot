@@ -11,6 +11,7 @@ export interface IRegexResolveResult {
   type: 'regex';
   regex: RegExp;
   handler: any;
+  result: RegExpExecArray;
 }
 
 export type IResolveResult = ITextResolveResult | IRegexResolveResult;

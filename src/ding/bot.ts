@@ -115,6 +115,7 @@ export class DingBot {
             command: text,
             parsed,
             app,
+            result,
           });
         } catch (error) {
           await this.replyText(

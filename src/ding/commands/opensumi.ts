@@ -25,7 +25,7 @@ async function repoIntercept(bot: DingBot, ctx: Context, repo: string) {
 
 cc.on(
   'deploy',
-  async (bot, ctx: Context<{ ref: string }>) => {
+  async (bot: DingBot, ctx: Context<{ ref: string }>) => {
     if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
       return;
     }
@@ -45,7 +45,7 @@ cc.on(
 
 cc.on(
   'rc',
-  async (bot, ctx: Context<{ ref: string }>) => {
+  async (bot: DingBot, ctx: Context<{ ref: string }>) => {
     if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
       return;
     }
@@ -68,7 +68,9 @@ cc.on(
       try {
         await app.octoService.getRefInfoByRepo(ref, 'opensumi', 'core');
         await app.opensumiOctoService.releaseRCVersion(ref);
-        await bot.replyText(`在 ${ref} 上发布 Release Candidate 成功, https://github.com/opensumi/core/actions/workflows/${RC_WORKFLOW_FILE}`);
+        await bot.replyText(
+          `在 ${ref} 上发布 Release Candidate 成功, https://github.com/opensumi/core/actions/workflows/${RC_WORKFLOW_FILE}`,
+        );
       } catch (error) {
         await bot.replyText(`执行出错：${(error as Error).message}`);
       }
@@ -82,7 +84,7 @@ cc.on(
 
 cc.on(
   'nx',
-  async (bot, ctx: Context<{ ref: string }>) => {
+  async (bot: DingBot, ctx: Context<{ ref: string }>) => {
     if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
       return;
     }
@@ -105,7 +107,9 @@ cc.on(
       try {
         await app.octoService.getRefInfoByRepo(ref, 'opensumi', 'core');
         await app.opensumiOctoService.releaseRCVersion(ref);
-        await bot.replyText(`在 ${ref} 上发布 Release Candidate 成功, https://github.com/opensumi/core/actions/workflows/${RC_WORKFLOW_FILE}`);
+        await bot.replyText(
+          `在 ${ref} 上发布 Release Candidate 成功, https://github.com/opensumi/core/actions/workflows/${RC_WORKFLOW_FILE}`,
+        );
       } catch (error) {
         await bot.replyText(`执行出错：${(error as Error).message}`);
       }
@@ -119,7 +123,7 @@ cc.on(
 
 cc.on(
   'sync',
-  async (bot, ctx: Context<{ version: string }>) => {
+  async (bot: DingBot, ctx: Context<{ version: string }>) => {
     if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
       return;
     }
@@ -142,7 +146,9 @@ cc.on(
       await bot.reply(
         markdown(
           'Sync Started',
-          `[Start sync packages${version ? `@${version}` : ''} to npmmirror](https://github.com/opensumi/actions/actions/workflows/sync.yml)`,
+          `[Start sync packages${
+            version ? `@${version}` : ''
+          } to npmmirror](https://github.com/opensumi/actions/actions/workflows/sync.yml)`,
         ),
       );
     } catch (error) {

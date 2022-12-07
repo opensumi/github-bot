@@ -1,6 +1,7 @@
 import mri from 'mri';
 
 import { CommandCenter } from '@/commander';
+import { IRegexResolveResult, IResolveResult } from '@/commander/types';
 import { App } from '@/github/app';
 
 import type { DingBot } from '../bot';
@@ -14,10 +15,16 @@ export interface Context<T = any> {
    */
   parsed: mri.Argv<T>;
   app?: App;
+  result: IResolveResult;
+}
+
+export interface RegexContext<T = any> extends Context<T> {
+  result: IRegexResolveResult;
 }
 
 export type ContextWithApp<T = any> = Required<Context<T>>;
 
 export type Handler = (bot: DingBot, ctx: Context) => Promise<void>;
+export type RegexHandler = (bot: DingBot, ctx: RegexContext) => Promise<void>;
 
-export const cc = new CommandCenter<Handler>(['']);
+export const cc = new CommandCenter<Handler | RegexHandler>(['']);

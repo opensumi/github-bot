@@ -1,12 +1,22 @@
 import { startsWith } from '@/commander';
 import { proxyThisUrl } from '@/utils';
 
-import { DingBot } from '../bot';
+import type { DingBot } from '../bot';
 import { code, markdown } from '../message';
 
-import { cc } from './base';
+import { cc, Context, RegexContext } from './base';
 import { hasApp, replyIfAppNotDefined } from './utils';
 
+async function getDefaultRepo(bot: DingBot) {
+  const defaultRepo = await bot.kvManager.getDefaultRepo(bot.id);
+  if (!defaultRepo) {
+    await bot.replyText(
+      'pls set defaultRepo first. e.g. `putData --defaultRepo opensumi/core`',
+    );
+    throw new Error('pls set defaultRepo first');
+  }
+  return defaultRepo;
+}
 
 // example:
 // 1. star -> opensumi/core
@@ -47,7 +57,7 @@ async function getRepoInfoFromCommand(argv: string[], bot: DingBot) {
 
 cc.on(
   'star',
-  async (bot, ctx) => {
+  async (bot: DingBot, ctx: Context) => {
     await replyIfAppNotDefined(bot, ctx);
     if (!hasApp(ctx)) {
       return;
@@ -87,7 +97,7 @@ function makeid(length: number) {
 
 cc.on(
   'http',
-  async (bot, ctx) => {
+  async (bot: DingBot, ctx: Context) => {
     await replyIfAppNotDefined(bot, ctx);
     if (!hasApp(ctx)) {
       return;
@@ -138,17 +148,38 @@ const ISSUE_REGEX = /^#(?<number>\d+)$/;
 const REPO_REGEX =
   /^(?<owner>[a-zA-Z0-9][a-zA-Z0-9\-]*)\/(?<repo>[a-zA-Z0-9_\-.]+)$/;
 
-cc.onRegex(ISSUE_REGEX, async (bot, ctx) => {
-  await bot.replyText(`请你自己打开 GitHub。`);
+cc.onRegex(ISSUE_REGEX, async (bot: DingBot, ctx: RegexContext) => {
+  await replyIfAppNotDefined(bot, ctx);
+  if (!hasApp(ctx)) {
+    return;
+  }
+
+  const { app, result } = ctx;
+  const regexResult = result.result;
+  const issueNumber = Number(regexResult.groups![0]);
+  const defaultRepo = await getDefaultRepo(bot);
+
+  const url = await app.octoService.queryUrlByIssueNumber(
+    defaultRepo.owner,
+    defaultRepo.repo,
+    issueNumber,
+  );
+  if (url) {
+    await bot.replyText(url);
+  } else {
+    await bot.replyText(
+      `输入的值不是 ${defaultRepo.owner}/${defaultRepo.repo} 仓库有效的 issue number`,
+    );
+  }
 });
 
-cc.onRegex(REPO_REGEX, async (bot, ctx) => {
+cc.onRegex(REPO_REGEX, async (bot: DingBot, ctx: Context) => {
   await bot.replyText(`请你自己打开 GitHub。`);
 });
 
 cc.on(
   'history',
-  async (bot, ctx) => {
+  async (bot: DingBot, ctx: Context) => {
     await replyIfAppNotDefined(bot, ctx);
     if (!hasApp(ctx)) {
       return;

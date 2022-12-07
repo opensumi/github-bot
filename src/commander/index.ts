@@ -96,8 +96,10 @@ export class CommandCenter<T> {
       const tmp = this.regexRegistry.find(command);
       if (tmp) {
         const { data, handler: regexHandler } = tmp;
+        const regexResult = data.exec(command)!;
         (result as IRegexResolveResult).type = 'regex';
         (result as IRegexResolveResult).regex = data;
+        (result as IRegexResolveResult).result = regexResult;
         handler = regexHandler;
       }
     }

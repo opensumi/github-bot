@@ -275,11 +275,9 @@ export class OctoService {
           continue;
         }
         const updateTime = new Date(issues.data[index].updated_at).getTime();
-        if (
-          updateTime >= from &&
-          updateTime <= to) {
+        if (updateTime >= from && updateTime <= to) {
           if (!issues.data[index].html_url.includes('issues')) {
-            // 说明获取到的为 PullRequest 
+            // 说明获取到的为 PullRequest
             continue;
           }
           if (
@@ -341,16 +339,13 @@ export class OctoService {
     let curPage = 1;
     while (!done && curPage <= pageCount) {
       pulls = await this.getRepoPulls(owner, repo, curPage++);
-  
+
       for (let index = 0; index < pulls?.data?.length; index++) {
         if (!pulls.data[index]) {
           continue;
         }
         const updateTime = new Date(pulls.data[index].updated_at).getTime();
-        if (
-          updateTime >= from &&
-          updateTime <= to 
-        ) {
+        if (updateTime >= from && updateTime <= to) {
           if (
             pulls.data[index].closed_at &&
             new Date(pulls.data[index].closed_at!).getTime() >= from
@@ -392,6 +387,22 @@ export class OctoService {
       ...pulls,
       ...star,
     };
+  }
+  async queryUrlByIssueNumber(owner: string, repo: string, num: number) {
+    try {
+      const issues = await this.octo.issues.get({
+        owner,
+        repo,
+        issue_number: num,
+      });
+      return issues.data.pull_request?.html_url ?? issues.data.html_url;
+    } catch (error) {
+      console.log(
+        `🚀 ~ file: index.ts:395 ~ OctoService ~ queryUrlByIssueNumber ~ error`,
+        error,
+      );
+      return undefined;
+    }
   }
 
   /**
