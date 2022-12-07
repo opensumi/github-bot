@@ -85,15 +85,15 @@ export async function sendToDing(
 }
 
 export function replaceGitHubText(text: string) {
-  const imgRegex = /.*(<img .*src="(.+)"\s?>)/gm;
   let tmp = text;
   let regexResult: RegExpExecArray | null = null;
   do {
-    const imgRegex = /.*(<img .*src="(.+)"\s?>)/gm;
+    // https://stackoverflow.com/questions/1028362/how-do-i-extract-html-img-sources-with-a-regular-expression
+    const imgRegex = /<img\s.*?src=(?:'|\")([^'\">]+)(?:'|\").*?\/?>/gm;
     regexResult = imgRegex.exec(tmp);
     if (regexResult) {
-      const newMsg = `![](${regexResult[2]})`;
-      tmp = tmp.replaceAll(regexResult[1], newMsg);
+      const newMsg = `![](${regexResult[1]})`;
+      tmp = tmp.replaceAll(regexResult[0], newMsg);
     }
   } while (regexResult);
 
