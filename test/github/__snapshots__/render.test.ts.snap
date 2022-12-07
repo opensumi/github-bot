@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`render can render issue 1`] = `
+{
+  "text": "
+> #### [#2045 [BUG] 插件 context.globalStoragePath 拿到的和 VSCode 不一样](https://github.com/opensumi/core/issues/2045)
+
+---
+
+>
+> vscode 拿到的是有插件名称的子目录的：
+>
+> \`\`\`
+> globalStoragePath /Users/artin/Library/Application Support/Code/User/globalStorage/alipay.minicode
+> \`\`\`
+>
+> OpenSumi 拿到的是：
+> \`\`\`
+> globalStoragePath /Users/artin/.mini-ide/extension-storage
+> \`\`\`
+>
+
+",
+  "title": "Issue 2045",
+}
+`;
+
+exports[`render can render pr 1`] = `
+{
+  "text": "
+> #### [#2060 fix: electron cannot work](https://github.com/opensumi/core/pull/2060)
+> main <- chore/electron-rebuild  
+
+---
+
+>
+> ### Types
+>
+> - [x] 🧹 Chores
+>
+> ### Background or solution
+>
+> ### Changelog
+>
+
+",
+  "title": "Pull Request 2060",
+}
+`;

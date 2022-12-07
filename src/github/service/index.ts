@@ -1,5 +1,7 @@
 import { Octokit } from '@octokit/rest';
 
+import { IIssueDetail, IPrDetail } from './types';
+
 export class OctoService {
   private _octo: Octokit | undefined;
 
@@ -388,17 +390,40 @@ export class OctoService {
       ...star,
     };
   }
-  async queryUrlByIssueNumber(owner: string, repo: string, num: number) {
+  async getIssuePrByNumber(
+    owner: string,
+    repo: string,
+    num: number,
+  ): Promise<IIssueDetail | IPrDetail | undefined> {
     try {
       const issues = await this.octo.issues.get({
         owner,
         repo,
         issue_number: num,
+        headers: {
+          Accept: 'application/vnd.github.full+json',
+        },
       });
-      return issues.data.pull_request?.html_url ?? issues.data.html_url;
+      if (issues.data.pull_request) {
+        const result = await this.octo.pulls.get({
+          owner,
+          repo,
+          pull_number: num,
+        });
+        return {
+          type: 'pr',
+          issue: issues.data,
+          pr: result.data,
+        };
+      }
+
+      return {
+        type: 'issue',
+        issue: issues.data,
+      };
     } catch (error) {
       console.log(
-        `🚀 ~ file: index.ts:395 ~ OctoService ~ queryUrlByIssueNumber ~ error`,
+        `🚀 ~ file: index.ts:395 ~ OctoService ~ getIssueByNumber ~ error`,
         error,
       );
       return undefined;

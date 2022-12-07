@@ -1,4 +1,4 @@
-import { Repository } from '@octokit/webhooks-types';
+import { Repository, PullRequest } from '@octokit/webhooks-types';
 import _ from 'lodash';
 
 import { StringBuilder } from '@/utils';
@@ -6,7 +6,7 @@ import { StringBuilder } from '@/utils';
 import { Context } from '../types';
 import { replaceGitHubText } from '../utils';
 
-export function renderRepoLink(repository: Repository) {
+export function renderRepoLink(repository: { name: string; html_url: string }) {
   return `[[${repository.name}]](${repository.html_url})`;
 }
 
@@ -71,9 +71,27 @@ export function renderPrOrIssueTitleLink(p: {
    */
   number: number;
   html_url: string;
-  body: string | null;
+  body?: string | null | undefined;
 }) {
   return `> #### ${renderPrOrIssueLink(p)}`;
+}
+
+export function renderPrRefInfo(data: {
+  head: {
+    label: string;
+  };
+  base: {
+    ref: string;
+    user: {
+      login: string;
+    };
+  };
+}) {
+  // display PR related info, such as pr assignees, base branch, head branch, etc.
+  const head = data.head;
+  const base = data.base;
+  const headLabel = removeOrgInfo(base.user.login, head.label);
+  return `> ${base.ref} <- ${headLabel}  `;
 }
 
 export function renderDeletedPrOrIssueTitleLink(p: {
@@ -86,7 +104,7 @@ export function renderDeletedPrOrIssueTitleLink(p: {
    */
   number: number;
   html_url: string;
-  body: string | null;
+  body: string | null | undefined;
 }) {
   return `> #### ${renderPrOrIssueLink(p, '~~', '~~')}`;
 }
@@ -102,7 +120,7 @@ export function renderPrOrIssueBody(
      */
     number: number;
     html_url: string;
-    body: string | null;
+    body?: string | null | undefined;
   },
   bodyLimit = -1,
 ) {
@@ -116,7 +134,7 @@ export function renderPrOrIssueBody(
   return builder.build();
 }
 
-export function useRef(text?: string | null, bodyLimit = -1) {
+export function useRef(text?: string | null | undefined, bodyLimit = -1) {
   if (!text) {
     return '';
   }
@@ -131,7 +149,11 @@ export function useRef(text?: string | null, bodyLimit = -1) {
   const newLines = [];
 
   for (const line of arrayOfLines) {
-    newLines.push(`> ${line}`);
+    if (line) {
+      newLines.push(`> ${line}`);
+    } else {
+      newLines.push(`>`);
+    }
   }
 
   return newLines.join('\n');
@@ -236,18 +258,22 @@ export const detailTitleTpl: DetailTitleTpl = (data) => {
 
 type TextTpl = (
   data: {
-    repo: Repository;
+    repo: { name: string; html_url: string };
     title: string;
     body: string;
     notRenderBody?: boolean;
   },
-  ctx: Context,
+  ctx?: {
+    setting?: {
+      notDisplayRepoName?: boolean;
+    };
+  },
 ) => string;
 
 export const textTpl: TextTpl = (data, ctx) => {
   const { repo, title, body } = data;
   let repoInfo = renderRepoLink(repo) + ' ';
-  if (ctx.setting.notDisplayRepoName) {
+  if (ctx?.setting?.notDisplayRepoName) {
     repoInfo = '';
   }
 
@@ -258,4 +284,12 @@ ${body}`;
   }
 
   return text;
+};
+
+export const removeOrgInfo = (orgName: string, label: string) => {
+  const prefix = `${orgName}:`;
+  if (label.startsWith(prefix)) {
+    return label.slice(prefix.length);
+  }
+  return label;
 };

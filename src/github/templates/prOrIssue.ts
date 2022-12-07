@@ -11,6 +11,7 @@ import {
   titleTpl,
   renderPrOrIssueBody,
   StopHandleError,
+  renderPrRefInfo,
 } from './utils';
 
 import { textTpl } from '.';
@@ -22,14 +23,6 @@ export const NameBlock = {
   discussion: 'discussion',
 } as {
   [key in Name]: string;
-};
-
-const removeOrgInfo = (orgName: string, label: string) => {
-  const prefix = `${orgName}:`;
-  if (label.startsWith(prefix)) {
-    return label.slice(prefix.length);
-  }
-  return label;
 };
 
 function render(
@@ -162,10 +155,7 @@ export async function handlePr(
   builder.add(renderPrOrIssueTitleLink(data));
 
   if (shouldRenderMergeInfo) {
-    // display PR related info, such as pr assignees, base branch, head branch, etc.
-    const head = (data as PullRequest).head;
-    const headLabel = removeOrgInfo(base.user.login, head.label);
-    builder.add(`> ${base.ref} <- ${headLabel}  `);
+    builder.add(renderPrRefInfo(data));
   }
 
   if (oldRef) {

@@ -1,3 +1,5 @@
+import { writeFile } from 'fs/promises';
+
 import { Octokit } from '@octokit/rest';
 
 import { OctoService } from '@/github/service';

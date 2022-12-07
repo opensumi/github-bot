@@ -67,6 +67,15 @@ export async function sendContentToDing(
   await Promise.all(toPromise);
 }
 
+export function contentToMarkdown(data: MarkdownContent) {
+  const { text: _text, title } = data;
+
+  const text = securityInterception(_text);
+
+  const dingContent = markdown(title, text);
+  return dingContent;
+}
+
 export async function sendToDing(
   data: MarkdownContent,
   eventName: EmitterWebhookEventName,
@@ -75,12 +84,7 @@ export async function sendToDing(
   if (setting.dingWebhooks.length === 0) {
     return;
   }
-  const { text: _text, title } = data;
-
-  const text = securityInterception(_text);
-
-  const dingContent = markdown(title, text);
-
+  const dingContent = contentToMarkdown(data);
   await sendContentToDing(dingContent, eventName, setting);
 }
 

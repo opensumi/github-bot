@@ -1,4 +1,6 @@
 import { startsWith } from '@/commander';
+import { render } from '@/github/render';
+import { contentToMarkdown } from '@/github/utils';
 import { proxyThisUrl } from '@/utils';
 
 import type { DingBot } from '../bot';
@@ -159,13 +161,14 @@ cc.onRegex(ISSUE_REGEX, async (bot: DingBot, ctx: RegexContext) => {
   const issueNumber = Number(regexResult.groups!['number']);
   const defaultRepo = await getDefaultRepo(bot);
 
-  const url = await app.octoService.queryUrlByIssueNumber(
+  const issue = await app.octoService.getIssuePrByNumber(
     defaultRepo.owner,
     defaultRepo.repo,
     issueNumber,
   );
-  if (url) {
-    await bot.replyText(url);
+  if (issue) {
+    const markdown = render(issue);
+    await bot.reply(contentToMarkdown(markdown));
   } else {
     await bot.replyText(
       `${issueNumber} 不是 ${defaultRepo.owner}/${defaultRepo.repo} 仓库有效的 issue number`,
