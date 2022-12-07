@@ -156,7 +156,7 @@ cc.onRegex(ISSUE_REGEX, async (bot: DingBot, ctx: RegexContext) => {
 
   const { app, result } = ctx;
   const regexResult = result.result;
-  const issueNumber = Number(regexResult.groups![0]);
+  const issueNumber = Number(regexResult.groups!['number']);
   const defaultRepo = await getDefaultRepo(bot);
 
   const url = await app.octoService.queryUrlByIssueNumber(
@@ -168,7 +168,7 @@ cc.onRegex(ISSUE_REGEX, async (bot: DingBot, ctx: RegexContext) => {
     await bot.replyText(url);
   } else {
     await bot.replyText(
-      `输入的值不是 ${defaultRepo.owner}/${defaultRepo.repo} 仓库有效的 issue number`,
+      `${issueNumber} 不是 ${defaultRepo.owner}/${defaultRepo.repo} 仓库有效的 issue number`,
     );
   }
 });
