@@ -16,15 +16,23 @@ export class OpenSumiOctoService extends OctoService {
     return workflow;
   }
 
-  async deployBot(environment = 'prod') {
+  async deployBot() {
     await this.octo.actions.createWorkflowDispatch({
       owner: 'opensumi',
       repo: 'github-bot',
       workflow_id: 'deploy.yml',
       ref: 'main',
       inputs: {
-        environment,
+        environment: 'prod',
       },
+    });
+  }
+  async deployBotPre() {
+    await this.octo.actions.createWorkflowDispatch({
+      owner: 'opensumi',
+      repo: 'github-bot',
+      workflow_id: 'deploy-pre.yml',
+      ref: 'main',
     });
   }
   async releaseRCVersion(branch: string) {

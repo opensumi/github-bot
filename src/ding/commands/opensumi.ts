@@ -37,7 +37,27 @@ cc.on(
 
     const { app } = ctx;
     await app.opensumiOctoService.deployBot();
-    await bot.replyText('机器人部署任务分发成功');
+    await bot.replyText('开始部署机器人');
+  },
+  [],
+  startsWith,
+);
+
+cc.on(
+  'deploypre',
+  async (bot: DingBot, ctx: Context<{ ref: string }>) => {
+    if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
+      return;
+    }
+
+    await replyIfAppNotDefined(bot, ctx);
+    if (!hasApp(ctx)) {
+      return;
+    }
+
+    const { app } = ctx;
+    await app.opensumiOctoService.deployBotPre();
+    await bot.replyText('开始部署预发机器人');
   },
   [],
   startsWith,
