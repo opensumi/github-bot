@@ -1,4 +1,4 @@
-name: Test & Deploy to Pre
+name: Test
 
 on:
   workflow_dispatch:
@@ -17,25 +17,15 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    environment: pre
-    name: Test & Deploy
+    name: Test
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js 16
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: '16'
       - name: Test
         run: |
           yarn
           yarn run build
           yarn run test
-
-      # - name: Deploy to Pre
-      #   uses: cloudflare/wrangler-action@2.0.0
-      #   with:
-      #     apiToken: ${{ secrets.CF_API_TOKEN }}
-      #     preCommands: yarn build
-      #     command: publish
-      #   env:
-      #     CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
