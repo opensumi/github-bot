@@ -7,7 +7,8 @@
   "license": "MIT",
   "scripts": {
     "format": "prettier --write '**/*.{js,css,json,md}'",
-    "prebuild": "yarn gen",
+    "ts:check": "tsc -p . --noEmit",
+    "prebuild": "yarn ts:check && yarn gen",
     "build": "tsx build.ts",
     "watch": "yarn build --watch",
     "dev": "yarn gen && yarn dev:preview",
