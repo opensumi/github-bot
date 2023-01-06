@@ -1,7 +1,7 @@
 import { startsWith } from '@/commander';
 import { App } from '@/github/app';
 import { render } from '@/github/render';
-import { contentToMarkdown } from '@/github/utils';
+import { contentToMarkdown, parseGitHubUrl } from '@/github/utils';
 import { proxyThisUrl } from '@/utils';
 
 import type { DingBot } from '../bot';
@@ -78,15 +78,6 @@ cc.on(
   startsWith,
 );
 
-function getUrl(str: string) {
-  try {
-    const url = new URL(str);
-    return url;
-  } catch (_) {
-    return;
-  }
-}
-
 function makeid(length: number) {
   let result = '';
   const characters =
@@ -130,39 +121,35 @@ cc.on(
 
     const { command, app } = ctx;
     const octokit = await app.getOcto();
-    const url = getUrl(command);
-    if (!url) {
-      return;
-    }
-    if (url.hostname !== 'github.com') {
-      return;
-    }
-
-    const pathname = url.pathname.slice(1);
-    const splitted = pathname.split('/');
-    if (splitted.length === 1) {
-      console.log('is user or org');
-    } else if (splitted.length === 2) {
-      console.log('is repo');
-      const result = await octokit.repos.get({
-        owner: splitted[0],
-        repo: splitted[1],
-      });
-      const full_name = result.data?.full_name;
-      if (full_name) {
-        await bot.reply(
-          markdown(
-            `${full_name} Open Graph`,
-            `![](${proxyThisUrl(
-              bot.env,
-              `https://opengraph.githubassets.com/${makeid(16)}/${full_name}`,
-            )})`,
-          ),
+    const githubUrl = parseGitHubUrl(command);
+    if (githubUrl) {
+      if (githubUrl.type === 'repo') {
+        const result = await octokit.repos.get({
+          owner: githubUrl.owner,
+          repo: githubUrl.repo,
+        });
+        const full_name = result.data?.full_name;
+        if (full_name) {
+          await bot.reply(
+            markdown(
+              `${full_name} Open Graph`,
+              `![](${proxyThisUrl(
+                bot.env,
+                `https://opengraph.githubassets.com/${makeid(16)}/${full_name}`,
+              )})`,
+            ),
+          );
+        }
+        return;
+      } else if (githubUrl.type === 'issue') {
+        return await replyGitHubIssue(
+          bot,
+          app,
+          githubUrl.owner,
+          githubUrl.repo,
+          githubUrl.number,
         );
       }
-      return;
-    } else {
-      console.log('sub');
     }
   },
   [],

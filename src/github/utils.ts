@@ -103,3 +103,57 @@ export function replaceGitHubText(text: string) {
 
   return tmp;
 }
+
+function getUrl(str: string) {
+  try {
+    const url = new URL(str);
+    return url;
+  } catch (_) {
+    return;
+  }
+}
+
+export function parseGitHubUrl(
+  str: string,
+):
+  | { type: 'owner'; owner: string }
+  | { type: 'repo'; owner: string; repo: string }
+  | { type: 'issue'; owner: string; repo: string; number: number }
+  | undefined {
+  const url = getUrl(str);
+  if (!url) {
+    return;
+  }
+  if (url.hostname !== 'github.com') {
+    return;
+  }
+
+  let pathname = url.pathname.slice(1);
+  while (pathname.endsWith('/')) {
+    pathname = pathname.slice(0, pathname.length - 1);
+  }
+  const splitted = pathname.split('/');
+  if (splitted.length === 1) {
+    console.log('is user or org');
+    return {
+      type: 'owner',
+      owner: splitted[0],
+    };
+  } else if (splitted.length === 2) {
+    console.log('is repo');
+    return {
+      type: 'repo',
+      owner: splitted[0],
+      repo: splitted[1],
+    };
+  } else if (splitted.length === 4) {
+    console.log('sub');
+    // https://github.com/opensumi/core/pull/2172
+    return {
+      type: 'issue',
+      owner: splitted[0],
+      repo: splitted[1],
+      number: parseInt(splitted[3]),
+    };
+  }
+}

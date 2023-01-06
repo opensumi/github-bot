@@ -8,6 +8,7 @@ import {
   sendToDing,
   replaceGitHubUrlToMarkdown,
   replaceGitHubText,
+  parseGitHubUrl,
 } from '@/github/utils';
 
 describe('github utils', () => {
@@ -158,5 +159,19 @@ describe('github utils', () => {
     ![](https://user-images.githubusercontent.com/13938334/206107044-9f1ba8ba-9398-44da-8de8-872f600b59d5.png)
     ![](https://user-images.githubusercontent.com/2226423/206106339-a997fe20-06ff-4e70-b8cd-2a3c4ac475a3.png)
     改成  "watch": "run-p \"watch:*\"" 试下呢？`);
+  });
+  it('can parse github url', () => {
+    const result0 = parseGitHubUrl(
+      'https://github.com/opensumi/core/pull/2172',
+    );
+    expect(result0?.type).toEqual('issue');
+    expect((result0 as any)?.number).toEqual(2172);
+    const result1 = parseGitHubUrl('https://github.com/opensumi/core/');
+    expect(result1?.type).toEqual('repo');
+    expect(result1?.owner).toEqual('opensumi');
+    expect((result0 as any)?.repo).toEqual('core');
+    const result2 = parseGitHubUrl('https://github.com/opensumi');
+    expect(result2?.type).toEqual('owner');
+    expect(result2?.owner).toEqual('opensumi');
   });
 });
