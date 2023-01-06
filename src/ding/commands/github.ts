@@ -1,4 +1,5 @@
 import { startsWith } from '@/commander';
+import { App } from '@/github/app';
 import { render } from '@/github/render';
 import { contentToMarkdown } from '@/github/utils';
 import { proxyThisUrl } from '@/utils';
@@ -97,6 +98,28 @@ function makeid(length: number) {
   return result;
 }
 
+async function replyGitHubIssue(
+  bot: DingBot,
+  app: App,
+  owner: string,
+  repo: string,
+  issueNumber: number,
+) {
+  const issue = await app.octoService.getIssuePrByNumber(
+    owner,
+    repo,
+    issueNumber,
+  );
+  if (issue) {
+    const markdown = render(issue);
+    await bot.reply(contentToMarkdown(markdown));
+  } else {
+    await bot.replyText(
+      `${issueNumber} 不是 ${owner}/${repo} 仓库有效的 issue number`,
+    );
+  }
+}
+
 cc.on(
   'http',
   async (bot: DingBot, ctx: Context) => {
@@ -191,19 +214,13 @@ cc.onRegex(ISSUE_REGEX, async (bot: DingBot, ctx: RegexContext) => {
   const issueNumber = Number(regexResult.groups!['number']);
   const defaultRepo = await getDefaultRepo(bot);
 
-  const issue = await app.octoService.getIssuePrByNumber(
+  await replyGitHubIssue(
+    bot,
+    app,
     defaultRepo.owner,
     defaultRepo.repo,
     issueNumber,
   );
-  if (issue) {
-    const markdown = render(issue);
-    await bot.reply(contentToMarkdown(markdown));
-  } else {
-    await bot.replyText(
-      `${issueNumber} 不是 ${defaultRepo.owner}/${defaultRepo.repo} 仓库有效的 issue number`,
-    );
-  }
 });
 
 cc.on(
