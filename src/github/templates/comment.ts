@@ -55,7 +55,23 @@ export function renderCommentBody(
   if (formatter) {
     text = formatter(text);
   }
-  const builder = new StringBuilder(`> #### ${renderPrOrIssueLink(data)}`);
+  let title = data.title;
+  let restText = '';
+  const splitted = title.split('\n');
+  if (splitted.length > 1) {
+    title = splitted[0];
+    restText = splitted.slice(1).join('\n');
+  }
+
+  const builder = new StringBuilder(
+    `> #### ${renderPrOrIssueLink({
+      ...data,
+      title,
+    })}`,
+  );
+  if (restText) {
+    builder.add(useRef(restText, limit));
+  }
   builder.add(`>`);
   builder.add(useRef(text, limit));
   return builder.build();
