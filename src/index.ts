@@ -3,7 +3,7 @@ import { logger } from 'hono/logger';
 import { prettyJSON } from 'hono/pretty-json';
 import Toucan from 'toucan-js';
 
-import { ignition } from '@/modules';
+import { ignition } from '@/api';
 
 import favicon from './public/favicon.svg';
 import html from './public/index.html';
