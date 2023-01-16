@@ -1,4 +1,4 @@
-import { Repository, PullRequest } from '@octokit/webhooks-types';
+import { Repository } from '@octokit/webhooks-types';
 import _ from 'lodash';
 
 import { StringBuilder } from '@/utils';
@@ -268,12 +268,9 @@ type TextTpl = (
       notDisplayRepoName?: boolean;
     };
   },
-  options?: {
-    addDividerBetweenContent?: boolean;
-  },
 ) => string;
 
-export const textTpl: TextTpl = (data, ctx, options) => {
+export const textTpl: TextTpl = (data, ctx) => {
   const { repo, title, body } = data;
   let repoInfo = renderRepoLink(repo) + ' ';
   if (ctx?.setting?.notDisplayRepoName) {
@@ -281,12 +278,12 @@ export const textTpl: TextTpl = (data, ctx, options) => {
   }
   const text = new StringBuilder(`#### ${repoInfo}${title}  `);
 
-  if (options?.addDividerBetweenContent) {
+  const bodyText = body.trimStart();
+
+  if (!data.notRenderBody && bodyText) {
     text.addDivider();
-  }
-  if (!data.notRenderBody) {
     text.addLineIfNecessary();
-    text.add(body.trimStart());
+    text.add(bodyText);
   }
 
   return text.toString();

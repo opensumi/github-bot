@@ -72,9 +72,6 @@ function render(
       repo: payload.repository,
     },
     ctx,
-    {
-      addDividerBetweenContent: true,
-    },
   );
 
   return {
@@ -193,9 +190,6 @@ export async function handlePr(
       repo: payload.repository,
     },
     ctx,
-    {
-      addDividerBetweenContent: true,
-    },
   );
 
   return {
