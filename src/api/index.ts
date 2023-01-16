@@ -1,21 +1,80 @@
-import { BaseController } from './base/base.controller';
-import { DingController } from './ding/ding.controller';
-import { GitHubController } from './github/github.controller';
-import { ProxyController } from './proxy/proxy.controller';
-import { WebhookController } from './webhook/webhook.controller';
+import { logger } from 'hono/logger';
+import { prettyJSON } from 'hono/pretty-json';
+import Toucan from 'toucan-js';
+
+import favicon from '../public/favicon.svg';
+import html from '../public/index.html';
+
+import { registerBlueprint } from './base';
 
 export function ignition(hono: THono) {
-  const modules = [
-    DingController,
-    GitHubController,
-    WebhookController,
-    ProxyController,
-  ] as typeof BaseController[];
+  hono.use('*', async (c, next) => {
+    if (c.env.SENTRY_DSN) {
+      const sentry = new Toucan({
+        dsn: c.env.SENTRY_DSN,
+        context: c.executionCtx,
+        request: c.req,
+        allowedHeaders: ['user-agent'],
+        allowedSearchParams: /(.*)/,
+      });
+      c.sentry = sentry;
 
-  const instances = modules.map((M) => {
-    const instance = new M(hono);
-    return instance;
+      const waitUntil = c.executionCtx.waitUntil.bind(c.executionCtx);
+      c.executionCtx.waitUntil = (promise) => {
+        waitUntil(
+          (async () => {
+            try {
+              await promise;
+            } catch (err) {
+              sentry.captureException(err);
+            }
+          })(),
+        );
+      };
+    }
+
+    await next();
   });
 
-  return instances;
+  hono.use('*', logger());
+  hono.use('*', prettyJSON());
+  hono.use('*', async (c, next) => {
+    c.send = {
+      error: (status = 500, content = 'Internal Server Error.') => {
+        return c.json(
+          {
+            status,
+            error: content,
+          },
+          status,
+        );
+      },
+      message: (text: string) => {
+        return c.json({
+          message: text,
+        });
+      },
+    };
+    await next();
+  });
+
+  hono.get('/', (c) => c.html(html));
+
+  hono.get('/favicon.ico', async (c) => {
+    return c.body(favicon, 200, {
+      'content-type': 'image/svg+xml',
+    });
+  });
+
+  registerBlueprint(hono);
+
+  hono.notFound((c) => {
+    return c.send.error(404, 'no router found');
+  });
+
+  hono.onError((err, c) => {
+    console.error(err);
+    c.sentry?.captureException(err);
+    return c.send.error(500, 'server internal error');
+  });
 }
