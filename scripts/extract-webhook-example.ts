@@ -1,4 +1,3 @@
-
 import fs from 'fs';
 import path from 'path';
 
@@ -14,19 +13,29 @@ function writeFile(name: string, data: any) {
   );
 }
 
-let pull_request = {} as WebhookDefinition<'pull_request'>;
-
 for (const webhook of WEBHOOKS) {
   if (webhook.name === 'pull_request') {
-    pull_request = webhook as WebhookDefinition<'pull_request'>;
+    const pull_request = webhook as WebhookDefinition<'pull_request'>;
     pull_request.examples.forEach((v, i) => {
-      console.log(`🚀 ~ file: extract-webhook-example.ts ~ line 22 ~ pull_request.examples.forEach ~ v`, v.action);
       if (
         v.action === 'edited' ||
         v.action === 'opened' ||
         v.action === 'closed'
       ) {
         writeFile(`pull_request_${i}_${v.action}`, v);
+      }
+    });
+  }
+  if (webhook.name === 'pull_request_review_comment') {
+    const pull_request_review_comment =
+      webhook as WebhookDefinition<'pull_request_review_comment'>;
+    pull_request_review_comment.examples.forEach((v, i) => {
+      if (
+        v.action === 'edited' ||
+        v.action === 'created' ||
+        v.action === 'deleted'
+      ) {
+        writeFile(`pull_request_review_comment_${i}_${v.action}`, v);
       }
     });
   }
