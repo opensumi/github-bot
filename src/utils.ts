@@ -4,15 +4,25 @@ export class StringBuilder {
     this.array.push(...initial);
   }
   add(str: string, addExtraLine = false) {
-    this.array.length > 0 && addExtraLine && this.array.push('');
+    addExtraLine && this.addLineIfNecessary();
     this.array.push(str);
-    addExtraLine && this.array.push('');
+    addExtraLine && this.addLineIfNecessary();
   }
   addDivider() {
-    this.add('');
+    this.addLineIfNecessary();
     this.add('---');
   }
+  /**
+   * 如果当前的最后一行有文字才换行
+   */
+  addLineIfNecessary() {
+    const data = this.array[this.array.length - 1];
+    if (data) {
+      this.array.push('');
+    }
+  }
   build() {
+    // 如果有连续两行以上的空行，移除掉一个
     return '\n' + this.array.join('\n') + '\n';
   }
   toString() {

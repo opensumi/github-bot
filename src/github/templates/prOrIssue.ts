@@ -72,6 +72,9 @@ function render(
       repo: payload.repository,
     },
     ctx,
+    {
+      addDividerBetweenContent: true,
+    },
   );
 
   return {
@@ -79,6 +82,7 @@ function render(
     text,
   };
 }
+
 export async function handlePr(
   payload: ExtractPayload<'pull_request'>,
   ctx: Context,
@@ -189,6 +193,9 @@ export async function handlePr(
       repo: payload.repository,
     },
     ctx,
+    {
+      addDividerBetweenContent: true,
+    },
   );
 
   return {

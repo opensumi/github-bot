@@ -268,22 +268,28 @@ type TextTpl = (
       notDisplayRepoName?: boolean;
     };
   },
+  options?: {
+    addDividerBetweenContent?: boolean;
+  },
 ) => string;
 
-export const textTpl: TextTpl = (data, ctx) => {
+export const textTpl: TextTpl = (data, ctx, options) => {
   const { repo, title, body } = data;
   let repoInfo = renderRepoLink(repo) + ' ';
   if (ctx?.setting?.notDisplayRepoName) {
     repoInfo = '';
   }
+  const text = new StringBuilder(`#### ${repoInfo}${title}  `);
 
-  let text = `#### ${repoInfo}${title}  `;
+  if (options?.addDividerBetweenContent) {
+    text.addDivider();
+  }
   if (!data.notRenderBody) {
-    text += `
-${body}`;
+    text.addLineIfNecessary();
+    text.add(body.trimStart());
   }
 
-  return text;
+  return text.toString();
 };
 
 export const removeOrgInfo = (orgName: string, label: string) => {
