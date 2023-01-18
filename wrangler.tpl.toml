@@ -2,12 +2,11 @@ name = "sumi-webhook-local"
 vars = { ENVIRONMENT = "local" }
 
 main = "./index.js"
-compatibility_date = "2022-10-10"
+compatibility_date = "2022-11-30"
 
 node_compat = false
 workers_dev = true
 usage_model = "unbound"
-logpush = true
 
 kv_namespaces = [
     { binding = "KV_PROD", id = "{{KV_LOCAL_ID}}", preview_id = "{{KV_LOCAL_ID}}" },
@@ -18,3 +17,4 @@ name = "sumi-webhook"
 vars = { ENVIRONMENT = "prod" }
 
 kv_namespaces = [{ binding = "KV_PROD", id = "{{KV_PROD_ID}}" }]
+logpush = true
