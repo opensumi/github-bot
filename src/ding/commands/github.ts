@@ -11,8 +11,8 @@ import { ISSUE_REGEX, REPO_REGEX } from './constants';
 import { Context, DingCommandCenter, RegexContext } from './types';
 import { hasApp, replyIfAppNotDefined } from './utils';
 
-export function registerGitHubCommand(cc: DingCommandCenter) {
-  cc.onRegex(REPO_REGEX, async (bot: DingBot, ctx: RegexContext) => {
+export function registerGitHubCommand(it: DingCommandCenter) {
+  it.onRegex(REPO_REGEX, async (bot: DingBot, ctx: RegexContext) => {
     await replyIfAppNotDefined(bot, ctx);
     if (!hasApp(ctx)) {
       return;
@@ -42,7 +42,7 @@ export function registerGitHubCommand(cc: DingCommandCenter) {
     }
   });
 
-  cc.onRegex(ISSUE_REGEX, async (bot: DingBot, ctx: RegexContext) => {
+  it.onRegex(ISSUE_REGEX, async (bot: DingBot, ctx: RegexContext) => {
     await replyIfAppNotDefined(bot, ctx);
     if (!hasApp(ctx)) {
       return;
@@ -62,7 +62,7 @@ export function registerGitHubCommand(cc: DingCommandCenter) {
     );
   });
 
-  cc.on(
+  it.on(
     'history',
     async (bot: DingBot, ctx: Context) => {
       await replyIfAppNotDefined(bot, ctx);
@@ -85,7 +85,7 @@ export function registerGitHubCommand(cc: DingCommandCenter) {
     startsWith,
   );
 
-  cc.on(
+  it.on(
     'http',
     async (bot: DingBot, ctx: Context) => {
       await replyIfAppNotDefined(bot, ctx);
@@ -131,7 +131,7 @@ export function registerGitHubCommand(cc: DingCommandCenter) {
     [],
     startsWith,
   );
-  cc.on(
+  it.on(
     'star',
     async (bot: DingBot, ctx: Context) => {
       await replyIfAppNotDefined(bot, ctx);

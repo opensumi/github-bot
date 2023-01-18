@@ -23,8 +23,8 @@ async function repoIntercept(bot: DingBot, ctx: Context, repo: string) {
   return false;
 }
 
-export function registerOpenSumiCommand(cc: DingCommandCenter) {
-  cc.on(
+export function registerOpenSumiCommand(it: DingCommandCenter) {
+  it.on(
     'deploy',
     async (bot: DingBot, ctx: Context<{ ref: string }>) => {
       if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
@@ -44,7 +44,7 @@ export function registerOpenSumiCommand(cc: DingCommandCenter) {
     startsWith,
   );
 
-  cc.on(
+  it.on(
     'deploypre',
     async (bot: DingBot, ctx: Context<{ ref: string }>) => {
       if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
@@ -64,7 +64,7 @@ export function registerOpenSumiCommand(cc: DingCommandCenter) {
     startsWith,
   );
 
-  cc.on(
+  it.on(
     'rc',
     async (bot: DingBot, ctx: Context<{ ref: string }>) => {
       if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
@@ -103,7 +103,7 @@ export function registerOpenSumiCommand(cc: DingCommandCenter) {
     equalFunc,
   );
 
-  cc.on(
+  it.on(
     'nx',
     async (bot: DingBot, ctx: Context<{ ref: string }>) => {
       if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
@@ -142,7 +142,7 @@ export function registerOpenSumiCommand(cc: DingCommandCenter) {
     equalFunc,
   );
 
-  cc.on(
+  it.on(
     'sync',
     async (bot: DingBot, ctx: Context<{ version: string }>) => {
       if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {

@@ -9,8 +9,8 @@ import { IDingInfo } from '../secrets';
 
 import { Context, DingCommandCenter } from './types';
 
-export function registerCommonCommand(cc: DingCommandCenter) {
-  cc.on(
+export function registerCommonCommand(it: DingCommandCenter) {
+  it.on(
     'putData',
     async (bot: DingBot, ctx: Context<Partial<IDingInfo>>) => {
       const info = {} as IDingInfo;
@@ -24,7 +24,7 @@ export function registerCommonCommand(cc: DingCommandCenter) {
     startsWith,
   );
 
-  cc.on('getGroupInfo', async (bot: DingBot) => {
+  it.on('getGroupInfo', async (bot: DingBot) => {
     await bot.reply(
       code(
         'json',
@@ -36,34 +36,34 @@ export function registerCommonCommand(cc: DingCommandCenter) {
     );
   });
 
-  cc.on('help', async (bot: DingBot) => {
+  it.on('help', async (bot: DingBot) => {
     const text = new StringBuilder();
-    const prefix = cc.prefixes.filter(Boolean).join('、');
+    const prefix = it.prefixes.filter(Boolean).join('、');
     if (prefix) {
       text.add('前缀：' + prefix);
     }
 
     text.add('支持的命令：', true);
 
-    cc.registry.handlers.forEach(([key, [_, compareFunc]]) => {
+    it.registry.handlers.forEach(([key, [_, compareFunc]]) => {
       text.add(`- ${key}: ${compareFunc.name}`);
     });
 
-    cc.regexRegistry.handlers.forEach(([key, [_, compareFunc]]) => {
+    it.regexRegistry.handlers.forEach(([key, [_, compareFunc]]) => {
       text.add(`- ${key}: ${compareFunc.name}`);
     });
-    if (cc.fallbackHandler) {
+    if (it.fallbackHandler) {
       text.add(`- *: fallbackHandler`);
     }
 
     await bot.replyText(text.build());
   });
 
-  cc.on('ping', async (bot: DingBot) => {
+  it.on('ping', async (bot: DingBot) => {
     await bot.replyText('pong');
   });
 
-  cc.all(async (bot: DingBot, ctx: Context) => {
+  it.all(async (bot: DingBot, ctx: Context) => {
     if (bot.env.OPENAI_API_KEY) {
       console.log('openai api key set');
 
