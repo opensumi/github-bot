@@ -1,4 +1,4 @@
-import { Configuration, OpenAIApi } from 'openai';
+import { OpenAIClient } from 'openai-fetch';
 
 import { startsWith } from '@/commander';
 import { StringBuilder } from '@/utils';
@@ -64,10 +64,7 @@ cc.on('ping', async (bot: DingBot) => {
 
 cc.all(async (bot: DingBot, ctx: Context) => {
   if (bot.env.OPENAI_API_KEY) {
-    const configuration = new Configuration({
-      apiKey: bot.env.OPENAI_API_KEY,
-    });
-    const openai = new OpenAIApi(configuration);
+    const openai = new OpenAIClient({ apiKey: bot.env.OPENAI_API_KEY });
     const response = await openai.createCompletion({
       model: 'text-davinci-003',
       prompt: ctx.command,
@@ -75,7 +72,7 @@ cc.all(async (bot: DingBot, ctx: Context) => {
       max_tokens: 3000, // Maximum completion length. max: 4000-prompt
       frequency_penalty: 0.7, // # between 0 and 1. The higher this value, the bigger the effort the model will make in not repeating itself.
     });
-    const text = response.data.choices[0].text;
+    const text = response.completion;
     if (text) {
       await bot.replyText(text);
     }
