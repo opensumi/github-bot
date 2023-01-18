@@ -7,6 +7,8 @@ import html from '../public/index.html';
 
 import { registerBlueprint } from './base';
 
+import './controllers';
+
 export function ignition(hono: THono) {
   hono.use('*', async (c, next) => {
     if (c.env.SENTRY_DSN) {
