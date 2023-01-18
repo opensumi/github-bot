@@ -41,7 +41,7 @@ export function text(content: string): Text {
   return {
     msgtype: 'text',
     text: {
-      content,
+      content: content ? content.toString().trim() : '',
     },
   };
 }
