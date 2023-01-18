@@ -9,7 +9,6 @@ export class StringBuilder {
     addExtraLine && this.addLineIfNecessary();
   }
   addDivider(prefix = '') {
-    this.addLineIfNecessary();
     this.add(prefix + '---');
   }
   /**

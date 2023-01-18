@@ -148,8 +148,13 @@ export function useRef(text?: string | null | undefined, bodyLimit = -1) {
   const arrayOfLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
   const newLines = [];
 
-  for (const line of arrayOfLines) {
+  for (let line of arrayOfLines) {
     if (line) {
+      if (line === '>') {
+        line = '';
+      } else if (line.startsWith('> ')) {
+        line = line.substring(2);
+      }
       newLines.push(`> ${line}`);
     } else {
       newLines.push(`>`);
@@ -276,14 +281,15 @@ export const textTpl: TextTpl = (data, ctx) => {
   if (ctx?.setting?.notDisplayRepoName) {
     repoInfo = '';
   }
-  const text = new StringBuilder(`#### ${repoInfo}${title}  `);
+  const text = new StringBuilder(`#### ${repoInfo}${title.trim()}  `);
 
-  const bodyText = body.trimStart();
+  const bodyText = body.trim();
 
   if (!data.notRenderBody && bodyText) {
+    text.addLineIfNecessary();
     text.addDivider();
     text.addLineIfNecessary();
-    text.add(bodyText);
+    text.add(useRef(bodyText));
   }
 
   return text.toString();
