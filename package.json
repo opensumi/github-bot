@@ -58,7 +58,7 @@
     "hono": "^2.2.5",
     "lodash": "^4.17.21",
     "mri": "^1.2.0",
-    "openai-fetch": "^1.0.3",
+    "@bytemain/openai-fetch": "^1.0.4",
     "toucan-js": "^2.7.0",
     "tsx": "^3.10.1",
     "wrangler": "^2.1.11"

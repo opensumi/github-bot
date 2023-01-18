@@ -297,6 +297,14 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@bytemain/openai-fetch@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@bytemain/openai-fetch/-/openai-fetch-1.0.4.tgz#b36a226b3696b14e8a0fd509c56dc54ecc1b6a19"
+  integrity sha512-fbANWaFqtolB3Il21w54qevYKUazWTyC2kkjedmBGp1iF7lnezALXSy++B8pKmYwl6vM7lsTQeMETHYDT7n/oA==
+  dependencies:
+    ky "^0.33.1"
+    zod "^3.20.2"
+
 "@cloudflare/kv-asset-handler@^0.2.0":
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/@cloudflare/kv-asset-handler/-/kv-asset-handler-0.2.0.tgz#c9959bbd7a1c40bd7c674adae98aa8c8d0e5ca68"
@@ -4488,14 +4496,6 @@ open@^8.4.0:
     define-lazy-prop "^2.0.0"
     is-docker "^2.1.1"
     is-wsl "^2.2.0"
-
-openai-fetch@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/openai-fetch/-/openai-fetch-1.0.3.tgz#7f4aeff3c2a5cebfffdbad569b4a02df477418ee"
-  integrity sha512-InNc/7TwHv3ihHOfyDTGe5W6U/cfZoF48AUsEpX2cRgR67k3C4PZXv7ssA5M2o8RPNR84BJU7zvsXpsfEP+bLQ==
-  dependencies:
-    ky "^0.33.1"
-    zod "^3.20.2"
 
 optionator@^0.9.1:
   version "0.9.1"

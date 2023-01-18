@@ -1,4 +1,4 @@
-import { OpenAIClient } from 'openai-fetch';
+import { OpenAIClient } from '@bytemain/openai-fetch';
 
 import { startsWith } from '@/commander';
 import { StringBuilder } from '@/utils';
@@ -66,7 +66,14 @@ cc.all(async (bot: DingBot, ctx: Context) => {
   if (bot.env.OPENAI_API_KEY) {
     console.log('openai api key set');
 
-    const openai = new OpenAIClient({ apiKey: bot.env.OPENAI_API_KEY });
+    const openai = new OpenAIClient({
+      apiKey: bot.env.OPENAI_API_KEY,
+      options: {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        credentials: undefined,
+      },
+    });
     const response = await openai.createCompletion({
       model: 'text-davinci-003',
       prompt: ctx.command,
