@@ -1,7 +1,7 @@
 import { renderCommentBody } from '@/github/templates/comment';
 
 describe('comment', () => {
-  it.only('renderCommentBody', () => {
+  it('renderCommentBody', () => {
     const d = renderCommentBody(
       {
         title: '123',
@@ -18,11 +18,11 @@ describe('comment', () => {
       },
       300,
     );
-    console.log(`🚀 ~ file: comments.test.ts ~ line 21 ~ it.only ~ d`, d);
-    expect(d.split('\n').length).toEqual(6);
+    console.log(`🚀 ~ file: comments.test.ts ~ line 21 ~ d`, d);
+    expect(d.split('\n').length).toEqual(4);
     expect(d.trim().split('\n').length).toEqual(4);
   });
-  it.only('render comment with number', () => {
+  it('render comment with number', () => {
     const d = renderCommentBody(
       {
         title: '123',
@@ -35,7 +35,7 @@ describe('comment', () => {
       },
       300,
     );
-    console.log(`🚀 ~ file: comments.test.ts ~ line 21 ~ it.only ~ d`, d);
+    console.log(`🚀 ~ file: comments.test.ts ~ line 21 ~ d`, d);
     expect(d.trim().split('\n').length).toEqual(3);
     expect(d.trim().split('\n')[0]).toEqual('> #### [#1 123](12312)');
   });

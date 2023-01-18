@@ -21,8 +21,7 @@ export class StringBuilder {
     }
   }
   build() {
-    // 如果有连续两行以上的空行，移除掉一个
-    return '\n' + this.array.join('\n') + '\n';
+    return this.array.join('\n');
   }
   toString() {
     return this.build();

@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`github templates pr or issue can handle pull_request_closed 1`] = `
+{
+  "text": "#### [Codertocat](https://github.com/Codertocat) closed [pull request](https://github.com/Codertocat/Hello-World/pull/2)  
+
+---
+
+> #### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)",
+  "title": "Pull request#2 closed",
+}
+`;
+
+exports[`github templates pr or issue can handle pull_request_edit wip 1`] = `
+{
+  "text": "#### [bytemain](https://github.com/bytemain) edited [pull request](https://github.com/opensumi/core/pull/1235)  
+
+---
+
+> #### [~~#1235 ci: add codeql-analysis.yml~~](https://github.com/opensumi/core/pull/1235)
+> #### [#1235 wip: ci: add codeql-analysis.yml](https://github.com/opensumi/core/pull/1235)
+> main <- bytemain-patch-2",
+  "title": "Pull request#1235 edited",
+}
+`;
+
+exports[`github templates pr or issue can handle pull_request_edited_base 1`] = `
+{
+  "text": "#### [bytemain](https://github.com/bytemain) edited [pull request](https://github.com/opensumi/core/pull/1235)  
+
+---
+
+> #### [#1235 wip: ci: add codeql-analysis.yml](https://github.com/opensumi/core/pull/1235)
+> alipay/v2.18 <- bytemain-patch-2  
+> changed the base branch from \`main\` to \`alipay/v2.18\`",
+  "title": "Pull request#1235 edited",
+}
+`;
+
+exports[`github templates pr or issue can handle pull_request_opened 1`] = `
+{
+  "text": "#### [Codertocat](https://github.com/Codertocat) opened [pull request](https://github.com/Codertocat/Hello-World/pull/2)  
+
+---
+
+> #### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)
+> master <- changes  
+> ---
+>
+> This is a pretty simple change that we need to pull into master.",
+  "title": "Pull request#2 opened",
+}
+`;

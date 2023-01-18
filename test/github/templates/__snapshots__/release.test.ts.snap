@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`release related can handle release event 1`] = `
+{
+  "text": "#### [opensumi](https://github.com/opensumi) published [v0.0.0](https://github.com/opensumi/core/releases/tag/v0.0.0)  
+
+---
+
+> Tag: v0.0.0
+>
+>
+> <!-- Release notes generated using configuration in .github/release.yml at v2.21.2 -->
+>
+> ## What's Changed
+>
+> * fix(snippets): register code snippets timing by @Aaaaash in [#1920](https://github.com/opensumi/core/pull/1920)
+> * fix: workspace dir async watch by @Aaaaash in [#1929](https://github.com/opensumi/core/pull/1929)
+> * fix: support mousewheel on editor tabs by @erha19 in [#1927](https://github.com/opensumi/core/pull/1927)
+> * fix: do not active disabled extension by @Aaaaash in [#1931](https://github.com/opensumi/core/pull/1931)
+> * fix: make watcher can be disposed by @opensumi in [#1925](https://github.com/opensumi/core/pull/1925)
+> * fix: browser views contribution by @Aaaaash in [#1921](https://github.com/opensumi/core/pull/1921)
+> * fix: parcel watcher subscribe retry catch by @life2015 in [#1932](https://github.com/opensumi/core/pull/1932)
+> * fix: update unsupported watch exclude glob by @erha19 in [#1926](https://github.com/opensumi/core/pull/1926)
+> * chore(release): v2.20.12 by @erha19 in [#1938](https://github.com/opensumi/core/pull/1938)
+> * fix: make the search references clean up by @yantze in [#1923](https://github.com/opensumi/core/pull/1923)
+>
+> **Full Changelog**: [v2.21.1...v2.21.2](https://github.com/opensumi/core/compare/v2.21.1...v2.21.2)",
+  "title": "v0.0.0 published",
+}
+`;
+
+exports[`release related will transform long url to short link 1`] = `
+{
+  "text": "#### [opensumi](https://github.com/opensumi) published [v0.0.0](https://github.com/opensumi/core/releases/tag/v0.0.0)  
+
+---
+
+> Tag: v0.0.0
+>
+>
+> <!-- Release notes generated using configuration in .github/release.yml at v2.21.2 -->
+>
+> ## What's Changed
+>
+> * fix(snippets): register code snippets timing by @Aaaaash in [#1920](https://github.com/opensumi/core/pull/1920)
+> * fix: workspace dir async watch by @Aaaaash in [#1929](https://github.com/opensumi/core/pull/1929)
+> * fix: support mousewheel on editor tabs by @erha19 in [#1927](https://github.com/opensumi/core/pull/1927)
+> * fix: do not active disabled extension by @Aaaaash in [#1931](https://github.com/opensumi/core/pull/1931)
+> * fix: make watcher can be disposed by @opensumi in [#1925](https://github.com/opensumi/core/pull/1925)
+> * fix: browser views contribution by @Aaaaash in [#1921](https://github.com/opensumi/core/pull/1921)
+> * fix: parcel watcher subscribe retry catch by @life2015 in [#1932](https://github.com/opensumi/core/pull/1932)
+> * fix: update unsupported watch exclude glob by @erha19 in [#1926](https://github.com/opensumi/core/pull/1926)
+> * chore(release): v2.20.12 by @erha19 in [#1938](https://github.com/opensumi/core/pull/1938)
+> * fix: make the search references clean up by @yantze in [#1923](https://github.com/opensumi/core/pull/1923)
+>
+> **Full Changelog**: [v2.21.1...v2.21.2](https://github.com/opensumi/core/compare/v2.21.1...v2.21.2)",
+  "title": "v0.0.0 published",
+}
+`;
