@@ -53,7 +53,7 @@ function render(
   );
 
   if (shouldRenderBody && data.body) {
-    builder.addDivider();
+    builder.addDivider('> ');
     builder.add(renderPrOrIssueBody(data, ctx.setting.contentLimit));
   }
 
@@ -175,7 +175,7 @@ export async function handlePr(
   );
 
   if (shouldRenderBody && data.body) {
-    builder.addDivider();
+    builder.addDivider('> ');
     builder.add(renderPrOrIssueBody(data, ctx.setting.contentLimit));
   }
 

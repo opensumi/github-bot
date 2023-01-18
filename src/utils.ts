@@ -8,9 +8,9 @@ export class StringBuilder {
     this.array.push(str);
     addExtraLine && this.addLineIfNecessary();
   }
-  addDivider() {
+  addDivider(prefix = '') {
     this.addLineIfNecessary();
-    this.add('---');
+    this.add(prefix + '---');
   }
   /**
    * 如果当前的最后一行有文字才换行
