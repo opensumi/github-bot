@@ -1,19 +1,31 @@
 import { readFileSync, writeFileSync } from 'fs';
 
 import { config } from 'dotenv';
+import MagicString from 'magic-string';
+
 config();
 
+const text = readFileSync('./wrangler.tpl.toml').toString();
 
-let text = readFileSync('./wrangler.tpl.toml').toString();
+const magic = new MagicString(text);
 
-const kvLocalId = process.env.KV_LOCAL_ID;
-const kvProdId = process.env.KV_PROD_ID;
+const regex = /{{(.+?)}}/gm;
 
-if (kvLocalId) {
-  text = text.replace(new RegExp('{{KV_LOCAL_ID}}', 'g'), kvLocalId);
+const matches = text.matchAll(regex);
+
+if (!matches) {
+  process.exit(0);
 }
-if (kvProdId) {
-  text = text.replace(new RegExp('{{KV_PROD_ID}}', 'g'), kvProdId);
+
+for (const match of matches) {
+  const key = match[1];
+  const v = process.env[key];
+  if (v && match.index) {
+    magic.update(match.index, match.index + match[0].length, v);
+    console.log(`"${key}" will be replaced to "[redacted]"`);
+  } else {
+    console.warn(`env variable "${key}" not found.`);
+  }
 }
 
-writeFileSync('./wrangler.toml', text);
+writeFileSync('./wrangler.toml', magic.toString());
