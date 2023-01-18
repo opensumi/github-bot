@@ -5,9 +5,14 @@ import Toucan from 'toucan-js';
 import favicon from '../public/favicon.svg';
 import html from '../public/index.html';
 
-import { registerBlueprint } from './base';
+import { Ding, GitHub, Proxy, Webhook } from './controllers';
 
-import './controllers';
+const registerBlueprint = (hono: THono) => {
+  Ding.route(hono);
+  GitHub.route(hono);
+  Proxy.route(hono);
+  Webhook.route(hono);
+};
 
 export function ignition(hono: THono) {
   hono.use('*', async (c, next) => {

@@ -1,5 +1,3 @@
-import { all } from '../base';
-
 export function getURL(_url: string) {
   try {
     return new URL(_url);
@@ -7,18 +5,19 @@ export function getURL(_url: string) {
     return undefined;
   }
 }
+export function route(hono: THono) {
+  hono.all('/proxy/:url', async (c) => {
+    const _url = c.req.param('url') ?? c.req.query('url');
+    if (_url) {
+      const candidates = [_url, decodeURIComponent(_url)]
+        .map(getURL)
+        .filter(Boolean);
 
-all('/proxy/:url', async (c) => {
-  const _url = c.req.param('url') ?? c.req.query('url');
-  if (_url) {
-    const candidates = [_url, decodeURIComponent(_url)]
-      .map(getURL)
-      .filter(Boolean);
-
-    if (candidates.length > 0 && candidates[0]) {
-      const url = candidates[0];
-      return fetch(url.toString(), c.req);
+      if (candidates.length > 0 && candidates[0]) {
+        const url = candidates[0];
+        return fetch(url.toString(), c.req);
+      }
     }
-  }
-  return c.send.error(401, 'not a valid hostname');
-});
+    return c.send.error(401, 'not a valid hostname');
+  });
+}
