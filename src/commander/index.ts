@@ -36,8 +36,9 @@ export class CommandCenter<T> {
   regexRegistry = new Registry<RegExp, T>();
 
   prefixes = [] as string[];
-  constructor(prefixes?: string[]) {
+  constructor(prefixes?: string[], cb?: (it: CommandCenter<T>) => void) {
     this.prefixes.push(...(prefixes ?? ['/']));
+    typeof cb === 'function' && cb(this);
   }
 
   async all(handler: T) {
@@ -45,17 +46,21 @@ export class CommandCenter<T> {
   }
 
   async on(
-    text: string,
+    text: string | RegExp,
     handler: T,
     alias?: string[],
     rule: CompareFunc<string> = equalFunc,
   ) {
     if (text) {
-      this.registry.add(text, handler, rule);
-      if (alias && Array.isArray(alias)) {
-        for (const a of alias) {
-          this.registry.add(a, handler, rule);
+      if (typeof text === 'string') {
+        this.registry.add(text, handler, rule);
+        if (alias && Array.isArray(alias)) {
+          for (const a of alias) {
+            this.registry.add(a, handler, rule);
+          }
         }
+      } else if (typeof text === 'object' && text instanceof RegExp) {
+        this.regexRegistry.add(text, handler, regex);
       }
     }
   }

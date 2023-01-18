@@ -27,4 +27,4 @@ export type ContextWithApp<T = any> = Required<Context<T>>;
 export type Handler = (bot: DingBot, ctx: Context) => Promise<void>;
 export type RegexHandler = (bot: DingBot, ctx: RegexContext) => Promise<void>;
 
-export const cc = new CommandCenter<Handler | RegexHandler>(['']);
+export type DingCommandCenter = CommandCenter<Handler | RegexHandler>;

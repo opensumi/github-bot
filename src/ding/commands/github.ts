@@ -7,8 +7,150 @@ import { proxyThisUrl } from '@/utils';
 import type { DingBot } from '../bot';
 import { code, markdown } from '../message';
 
-import { cc, Context, RegexContext } from './base';
+import { ISSUE_REGEX, REPO_REGEX } from './constants';
+import { Context, DingCommandCenter, RegexContext } from './types';
 import { hasApp, replyIfAppNotDefined } from './utils';
+
+export function registerGitHubCommand(cc: DingCommandCenter) {
+  cc.onRegex(REPO_REGEX, async (bot: DingBot, ctx: RegexContext) => {
+    await replyIfAppNotDefined(bot, ctx);
+    if (!hasApp(ctx)) {
+      return;
+    }
+
+    const { app, result } = ctx;
+    const regexResult = result.result;
+    const owner = regexResult.groups!['owner'];
+    const repo = regexResult.groups!['repo'];
+
+    const octokit = await app.getOcto();
+    const repoData = await octokit.repos.get({
+      owner,
+      repo,
+    });
+    const full_name = repoData.data?.full_name;
+    if (full_name) {
+      await bot.reply(
+        markdown(
+          `${full_name} Open Graph`,
+          `![](${proxyThisUrl(
+            bot.env,
+            `https://opengraph.githubassets.com/${makeid(16)}/${full_name}`,
+          )})`,
+        ),
+      );
+    }
+  });
+
+  cc.onRegex(ISSUE_REGEX, async (bot: DingBot, ctx: RegexContext) => {
+    await replyIfAppNotDefined(bot, ctx);
+    if (!hasApp(ctx)) {
+      return;
+    }
+
+    const { app, result } = ctx;
+    const regexResult = result.result;
+    const issueNumber = Number(regexResult.groups!['number']);
+    const defaultRepo = await getDefaultRepo(bot);
+
+    await replyGitHubIssue(
+      bot,
+      app,
+      defaultRepo.owner,
+      defaultRepo.repo,
+      issueNumber,
+    );
+  });
+
+  cc.on(
+    'history',
+    async (bot: DingBot, ctx: Context) => {
+      await replyIfAppNotDefined(bot, ctx);
+      if (!hasApp(ctx)) {
+        return;
+      }
+
+      const { app } = ctx;
+
+      const posArg = ctx.parsed['_'];
+      const { owner, repo } = await getRepoInfoFromCommand(posArg, bot);
+      const payload = await app.octoService.getRepoHistory(owner, repo);
+      console.log(`🚀 ~ file: github.ts ~ line 127 ~ payload`, payload);
+      const content = code('json', JSON.stringify(payload, null, 2));
+      console.log(`🚀 ~ file: github.ts ~ line 128 ~ content`, content);
+      await bot.reply(content);
+      await bot.replyText('已经发给你啦');
+    },
+    [],
+    startsWith,
+  );
+
+  cc.on(
+    'http',
+    async (bot: DingBot, ctx: Context) => {
+      await replyIfAppNotDefined(bot, ctx);
+      if (!hasApp(ctx)) {
+        return;
+      }
+
+      const { command, app } = ctx;
+      const octokit = await app.getOcto();
+      const githubUrl = parseGitHubUrl(command);
+      if (githubUrl) {
+        if (githubUrl.type === 'repo') {
+          const result = await octokit.repos.get({
+            owner: githubUrl.owner,
+            repo: githubUrl.repo,
+          });
+          const full_name = result.data?.full_name;
+          if (full_name) {
+            await bot.reply(
+              markdown(
+                `${full_name} Open Graph`,
+                `![](${proxyThisUrl(
+                  bot.env,
+                  `https://opengraph.githubassets.com/${makeid(
+                    16,
+                  )}/${full_name}`,
+                )})`,
+              ),
+            );
+          }
+          return;
+        } else if (githubUrl.type === 'issue') {
+          return await replyGitHubIssue(
+            bot,
+            app,
+            githubUrl.owner,
+            githubUrl.repo,
+            githubUrl.number,
+          );
+        }
+      }
+    },
+    [],
+    startsWith,
+  );
+  cc.on(
+    'star',
+    async (bot: DingBot, ctx: Context) => {
+      await replyIfAppNotDefined(bot, ctx);
+      if (!hasApp(ctx)) {
+        return;
+      }
+
+      const { app } = ctx;
+
+      const posArg = ctx.parsed['_'];
+      const { owner, repo } = await getRepoInfoFromCommand(posArg, bot);
+      const payload = await app.octoService.getRepoStarRecords(owner, repo);
+      const content = code('json', JSON.stringify(payload));
+      await bot.reply(content);
+    },
+    ['stars'],
+    startsWith,
+  );
+}
 
 async function getDefaultRepo(bot: DingBot) {
   const defaultRepo = await bot.kvManager.getDefaultRepo(bot.id);
@@ -58,26 +200,6 @@ async function getRepoInfoFromCommand(argv: string[], bot: DingBot) {
   };
 }
 
-cc.on(
-  'star',
-  async (bot: DingBot, ctx: Context) => {
-    await replyIfAppNotDefined(bot, ctx);
-    if (!hasApp(ctx)) {
-      return;
-    }
-
-    const { app } = ctx;
-
-    const posArg = ctx.parsed['_'];
-    const { owner, repo } = await getRepoInfoFromCommand(posArg, bot);
-    const payload = await app.octoService.getRepoStarRecords(owner, repo);
-    const content = code('json', JSON.stringify(payload));
-    await bot.reply(content);
-  },
-  ['stars'],
-  startsWith,
-);
-
 function makeid(length: number) {
   let result = '';
   const characters =
@@ -110,125 +232,3 @@ async function replyGitHubIssue(
     );
   }
 }
-
-cc.on(
-  'http',
-  async (bot: DingBot, ctx: Context) => {
-    await replyIfAppNotDefined(bot, ctx);
-    if (!hasApp(ctx)) {
-      return;
-    }
-
-    const { command, app } = ctx;
-    const octokit = await app.getOcto();
-    const githubUrl = parseGitHubUrl(command);
-    if (githubUrl) {
-      if (githubUrl.type === 'repo') {
-        const result = await octokit.repos.get({
-          owner: githubUrl.owner,
-          repo: githubUrl.repo,
-        });
-        const full_name = result.data?.full_name;
-        if (full_name) {
-          await bot.reply(
-            markdown(
-              `${full_name} Open Graph`,
-              `![](${proxyThisUrl(
-                bot.env,
-                `https://opengraph.githubassets.com/${makeid(16)}/${full_name}`,
-              )})`,
-            ),
-          );
-        }
-        return;
-      } else if (githubUrl.type === 'issue') {
-        return await replyGitHubIssue(
-          bot,
-          app,
-          githubUrl.owner,
-          githubUrl.repo,
-          githubUrl.number,
-        );
-      }
-    }
-  },
-  [],
-  startsWith,
-);
-
-const ISSUE_REGEX = /^#(?<number>\d+)$/;
-const REPO_REGEX =
-  /^(?<owner>[a-zA-Z0-9][a-zA-Z0-9\-]*)\/(?<repo>[a-zA-Z0-9_\-.]+)$/;
-
-cc.onRegex(REPO_REGEX, async (bot: DingBot, ctx: RegexContext) => {
-  await replyIfAppNotDefined(bot, ctx);
-  if (!hasApp(ctx)) {
-    return;
-  }
-
-  const { app, result } = ctx;
-  const regexResult = result.result;
-  const owner = regexResult.groups!['owner'];
-  const repo = regexResult.groups!['repo'];
-
-  const octokit = await app.getOcto();
-  const repoData = await octokit.repos.get({
-    owner,
-    repo,
-  });
-  const full_name = repoData.data?.full_name;
-  if (full_name) {
-    await bot.reply(
-      markdown(
-        `${full_name} Open Graph`,
-        `![](${proxyThisUrl(
-          bot.env,
-          `https://opengraph.githubassets.com/${makeid(16)}/${full_name}`,
-        )})`,
-      ),
-    );
-  }
-});
-
-cc.onRegex(ISSUE_REGEX, async (bot: DingBot, ctx: RegexContext) => {
-  await replyIfAppNotDefined(bot, ctx);
-  if (!hasApp(ctx)) {
-    return;
-  }
-
-  const { app, result } = ctx;
-  const regexResult = result.result;
-  const issueNumber = Number(regexResult.groups!['number']);
-  const defaultRepo = await getDefaultRepo(bot);
-
-  await replyGitHubIssue(
-    bot,
-    app,
-    defaultRepo.owner,
-    defaultRepo.repo,
-    issueNumber,
-  );
-});
-
-cc.on(
-  'history',
-  async (bot: DingBot, ctx: Context) => {
-    await replyIfAppNotDefined(bot, ctx);
-    if (!hasApp(ctx)) {
-      return;
-    }
-
-    const { app } = ctx;
-
-    const posArg = ctx.parsed['_'];
-    const { owner, repo } = await getRepoInfoFromCommand(posArg, bot);
-    const payload = await app.octoService.getRepoHistory(owner, repo);
-    console.log(`🚀 ~ file: github.ts ~ line 127 ~ payload`, payload);
-    const content = code('json', JSON.stringify(payload, null, 2));
-    console.log(`🚀 ~ file: github.ts ~ line 128 ~ content`, content);
-    await bot.reply(content);
-    await bot.replyText('已经发给你啦');
-  },
-  [],
-  startsWith,
-);

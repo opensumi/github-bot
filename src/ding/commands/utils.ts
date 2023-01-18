@@ -1,6 +1,6 @@
 import { DingBot } from '../bot';
 
-import { Context } from './base';
+import { Context } from './types';
 
 export function hasApp<T>(
   item: Context<T>,
