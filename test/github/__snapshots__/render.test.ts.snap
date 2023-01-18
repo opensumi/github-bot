@@ -19,7 +19,6 @@ exports[`render can render issue 1`] = `
 > globalStoragePath /Users/artin/.mini-ide/extension-storage
 > \`\`\`
 >
-
 ",
   "title": "Issue 2045",
 }
@@ -42,7 +41,6 @@ exports[`render can render pr 1`] = `
 >
 > ### Changelog
 >
-
 ",
   "title": "Pull Request 2060",
 }

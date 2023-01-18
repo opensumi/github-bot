@@ -131,7 +131,7 @@ export function renderPrOrIssueBody(
     builder.add(`${useRef(p.body, bodyLimit)}`);
   }
 
-  return builder.build();
+  return builder.build().trim();
 }
 
 export function useRef(text?: string | null | undefined, bodyLimit = -1) {
@@ -151,7 +151,8 @@ export function useRef(text?: string | null | undefined, bodyLimit = -1) {
   for (let line of arrayOfLines) {
     if (line) {
       if (line === '>') {
-        line = '';
+        newLines.push(line);
+        continue;
       } else if (line.startsWith('> ')) {
         line = line.substring(2);
       }

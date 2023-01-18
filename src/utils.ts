@@ -8,8 +8,8 @@ export class StringBuilder {
     this.array.push(str);
     addExtraLine && this.addLineIfNecessary();
   }
-  addDivider(prefix = '') {
-    this.add(prefix + '---');
+  addDivider(prefix = '', addExtraLine = false) {
+    this.add(prefix + '---', addExtraLine);
   }
   /**
    * 如果当前的最后一行有文字才换行

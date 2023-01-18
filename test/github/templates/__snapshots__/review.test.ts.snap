@@ -10,7 +10,6 @@ exports[`github templates pr review can handle pull_request_closed 1`] = `
 > #### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)
 >
 > Maybe you should use more emoji on this line.
-
 ",
   "title": "Review comment created",
 }

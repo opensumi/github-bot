@@ -17,7 +17,7 @@ export function render(data: IIssueDetail | IPrDetail) {
     builder.add(renderPrRefInfo(data.pr));
   }
 
-  builder.addDivider();
+  builder.addDivider(undefined, true);
 
   if (data.type === 'pr') {
     builder.add(renderPrOrIssueBody(data.pr));
