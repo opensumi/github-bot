@@ -3,9 +3,7 @@
 exports[`release related can handle release event 1`] = `
 {
   "text": "#### [opensumi](https://github.com/opensumi) published [v0.0.0](https://github.com/opensumi/core/releases/tag/v0.0.0)  
-
 ---
-
 > Tag: v0.0.0
 >
 >
@@ -32,9 +30,7 @@ exports[`release related can handle release event 1`] = `
 exports[`release related will transform long url to short link 1`] = `
 {
   "text": "#### [opensumi](https://github.com/opensumi) published [v0.0.0](https://github.com/opensumi/core/releases/tag/v0.0.0)  
-
 ---
-
 > Tag: v0.0.0
 >
 >

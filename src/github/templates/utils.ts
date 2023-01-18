@@ -287,9 +287,7 @@ export const textTpl: TextTpl = (data, ctx) => {
   const bodyText = body.trim();
 
   if (!data.notRenderBody && bodyText) {
-    text.addLineIfNecessary();
     text.addDivider();
-    text.addLineIfNecessary();
     text.add(useRef(bodyText));
   }
 
