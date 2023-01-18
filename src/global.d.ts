@@ -18,6 +18,7 @@ declare global {
     KV_PROD: KVNamespace;
     HOST: string;
     SENTRY_DSN?: string;
+    OPENAI_API_KEY?: string;
   }
 
   type THono = Hono<{ Bindings: Env }>;
