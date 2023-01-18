@@ -46,27 +46,23 @@ export class CommandCenter<T> {
   }
 
   async on(
-    text: string | RegExp,
+    pattern: string | RegExp,
     handler: T,
     alias?: string[],
     rule: CompareFunc<string> = equalFunc,
   ) {
-    if (text) {
-      if (typeof text === 'string') {
-        this.registry.add(text, handler, rule);
+    if (pattern) {
+      if (typeof pattern === 'string') {
+        this.registry.add(pattern, handler, rule);
         if (alias && Array.isArray(alias)) {
           for (const a of alias) {
             this.registry.add(a, handler, rule);
           }
         }
-      } else if (typeof text === 'object' && text instanceof RegExp) {
-        this.regexRegistry.add(text, handler, regex);
+      } else if (typeof pattern === 'object' && pattern instanceof RegExp) {
+        this.regexRegistry.add(pattern, handler, regex);
       }
     }
-  }
-
-  async onRegex(reg: RegExp, handler: T) {
-    this.regexRegistry.add(reg, handler, regex);
   }
 
   async resolve(text: string): Promise<IResolveResult | undefined> {

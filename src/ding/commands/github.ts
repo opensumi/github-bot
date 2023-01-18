@@ -12,7 +12,7 @@ import { Context, DingCommandCenter, RegexContext } from './types';
 import { hasApp, replyIfAppNotDefined } from './utils';
 
 export function registerGitHubCommand(it: DingCommandCenter) {
-  it.onRegex(REPO_REGEX, async (bot: DingBot, ctx: RegexContext) => {
+  it.on(REPO_REGEX, async (bot: DingBot, ctx: RegexContext) => {
     await replyIfAppNotDefined(bot, ctx);
     if (!hasApp(ctx)) {
       return;
@@ -42,7 +42,7 @@ export function registerGitHubCommand(it: DingCommandCenter) {
     }
   });
 
-  it.onRegex(ISSUE_REGEX, async (bot: DingBot, ctx: RegexContext) => {
+  it.on(ISSUE_REGEX, async (bot: DingBot, ctx: RegexContext) => {
     await replyIfAppNotDefined(bot, ctx);
     if (!hasApp(ctx)) {
       return;
