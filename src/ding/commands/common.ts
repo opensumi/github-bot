@@ -64,6 +64,8 @@ cc.on('ping', async (bot: DingBot) => {
 
 cc.all(async (bot: DingBot, ctx: Context) => {
   if (bot.env.OPENAI_API_KEY) {
+    console.log('openai api key set');
+
     const openai = new OpenAIClient({ apiKey: bot.env.OPENAI_API_KEY });
     const response = await openai.createCompletion({
       model: 'text-davinci-003',
