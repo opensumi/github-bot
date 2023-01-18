@@ -62,7 +62,7 @@ cc.on('ping', async (bot: DingBot) => {
   await bot.replyText('pong');
 });
 
-cc.on('*', async (bot: DingBot, ctx: Context) => {
+cc.all(async (bot: DingBot, ctx: Context) => {
   if (bot.env.OPENAI_API_KEY) {
     const configuration = new Configuration({
       apiKey: bot.env.OPENAI_API_KEY,
