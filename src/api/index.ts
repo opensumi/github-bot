@@ -1,6 +1,6 @@
 import { logger } from 'hono/logger';
 import { prettyJSON } from 'hono/pretty-json';
-import Toucan from 'toucan-js';
+import { Toucan } from 'toucan-js';
 
 import favicon from '../public/favicon.svg';
 import html from '../public/index.html';
@@ -21,8 +21,6 @@ export function ignition(hono: THono) {
         dsn: c.env.SENTRY_DSN,
         context: c.executionCtx,
         request: c.req,
-        allowedHeaders: ['user-agent'],
-        allowedSearchParams: /(.*)/,
       });
       c.sentry = sentry;
 
