@@ -6,7 +6,7 @@ import {
   EmitterWebhookEventName,
 } from '@octokit/webhooks/dist-types/types';
 
-import { error, json } from '@/runtime/response';
+import { error, json } from '@/api/utils/response';
 
 import { getTemplates, StopHandleError } from './templates';
 import type { MarkdownContent, THasAction, Context } from './types';
