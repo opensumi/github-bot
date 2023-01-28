@@ -5,7 +5,6 @@
   "main": "index.js",
   "repository": "https://github.com/opensumi/github-bot.git",
   "license": "MIT",
-  "type": "module",
   "scripts": {
     "format": "prettier --write '**/*.{js,css,json,md}'",
     "ts:check": "tsc -p ./tsconfig.build.json --noEmit",
