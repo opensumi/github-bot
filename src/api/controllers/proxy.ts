@@ -15,7 +15,7 @@ export function route(hono: THono) {
 
       if (candidates.length > 0 && candidates[0]) {
         const url = candidates[0];
-        return fetch(url.toString(), c.req);
+        return fetch(url.toString(), c.req as any);
       }
     }
     return c.send.error(401, 'not a valid hostname');
