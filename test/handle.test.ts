@@ -1,7 +1,7 @@
 import { makeEdgeEnv, EdgeKVNamespace } from 'edge-mock';
 makeEdgeEnv();
 
-import app from '@/index';
+import app from '@/runtime/cfworker/index';
 
 declare const FetchEvent: any;
 declare const Request: any;
@@ -19,6 +19,7 @@ describe('handle', () => {
       {
         KV_PROD: new EdgeKVNamespace() as any,
         HOST: 'https://localhost',
+        MY_QUEUE: {} as any,
       },
       event,
     );
