@@ -9,7 +9,7 @@ const argv = mri(process.argv.slice(2));
 console.log(argv);
 
 build({
-  entryPoints: ['./src'],
+  entryPoints: ['./src/runtime/cfworker/index.ts'],
   bundle: true,
   outfile: './index.js',
   minify: false,

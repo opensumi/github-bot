@@ -6,4 +6,6 @@ const app = new Hono() as THono;
 
 ignition(app);
 
-export default app;
+export default {
+  ...app,
+};
