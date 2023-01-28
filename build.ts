@@ -2,19 +2,18 @@
 import { config } from 'dotenv';
 config();
 
-import { build } from 'esbuild';
+import { context as createContext } from 'esbuild';
 import mri from 'mri';
 
 const argv = mri(process.argv.slice(2));
 console.log(argv);
 
-build({
+const context = await createContext({
   entryPoints: ['./src/runtime/cfworker/index.ts'],
   bundle: true,
   outfile: './index.js',
   minify: false,
   color: true,
-  watch: argv['watch'],
   loader: {
     '.html': 'text',
     '.svg': 'text',
@@ -22,10 +21,13 @@ build({
   platform: 'browser',
   target: 'es2020',
   format: 'esm',
-})
-  .then((result) => {
-    console.log(result);
-  })
-  .catch((err) => {
-    throw err;
+});
+
+if (argv['watch']) {
+  await context.watch();
+} else {
+  await context.rebuild().then((v) => {
+    console.log(`build ~ result`, v);
+    context.dispose();
   });
+}
