@@ -20,7 +20,7 @@ declare global {
     readonly HOST: string;
     readonly SENTRY_DSN?: string;
     readonly OPENAI_API_KEY?: string;
-    readonly MY_QUEUE: Queue;
+    // readonly MY_QUEUE: Queue;
   }
 
   type THono = Hono<{ Bindings: Env }>;
