@@ -7,7 +7,8 @@ declare module 'hono' {
     sentry?: Toucan;
     waitUntil: (promise: Promise<any>) => void;
     send: {
-      error(status: StatusCode, content: string): Response;
+      error(status: StatusCode | number, content: string): Response;
+      validateError(status: StatusCode | number, data: any): Response;
       message(text: string): Response;
     };
   }

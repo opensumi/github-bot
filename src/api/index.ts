@@ -1,18 +1,16 @@
 import { logger } from 'hono/logger';
 import { prettyJSON } from 'hono/pretty-json';
+import { StatusCode } from 'hono/utils/http-status';
 import { Toucan } from 'toucan-js';
+import { ZodError } from 'zod';
+
+import { ValidationError } from '@/github';
 
 import favicon from '../public/favicon.svg';
 import html from '../public/index.html';
 
-import { Ding, GitHub, Proxy, Webhook } from './controllers';
-
-const registerBlueprint = (hono: THono) => {
-  Ding.route(hono);
-  GitHub.route(hono);
-  Proxy.route(hono);
-  Webhook.route(hono);
-};
+import { registerBlueprint } from './controllers';
+import { useMiddleware } from './middlewares';
 
 export function ignition(hono: THono) {
   hono.use('*', async (c, next) => {
@@ -45,13 +43,25 @@ export function ignition(hono: THono) {
   hono.use('*', prettyJSON());
   hono.use('*', async (c, next) => {
     c.send = {
-      error: (status = 500, content = 'Internal Server Error.') => {
+      error: (
+        status: StatusCode | number = 500,
+        content = 'Internal Server Error.',
+      ) => {
         return c.json(
           {
             status,
             error: content,
           },
-          status,
+          status as StatusCode,
+        );
+      },
+      validateError(status, data) {
+        return c.json(
+          {
+            status,
+            validates: data,
+          },
+          status as StatusCode,
         );
       },
       message: (text: string) => {
@@ -71,6 +81,7 @@ export function ignition(hono: THono) {
     });
   });
 
+  useMiddleware(hono);
   registerBlueprint(hono);
 
   hono.notFound((c) => {
@@ -80,6 +91,12 @@ export function ignition(hono: THono) {
   hono.onError((err, c) => {
     console.error(err);
     c.sentry?.captureException(err);
+    if (err instanceof ValidationError) {
+      return c.send.error(err.code, 'github validation error ' + err.message);
+    }
+    if (err instanceof ZodError) {
+      return c.send.validateError(400, err.errors);
+    }
     return c.send.error(500, 'server internal error');
   });
 }
