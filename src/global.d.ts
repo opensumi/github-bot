@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { StatusCode } from 'hono/utils/http-status';
-import Toucan from 'toucan-js';
+import { Toucan } from 'toucan-js';
 
 declare module 'hono' {
   interface Context {
@@ -15,10 +15,11 @@ declare module 'hono' {
 
 declare global {
   interface Env {
-    KV_PROD: KVNamespace;
-    HOST: string;
-    SENTRY_DSN?: string;
-    OPENAI_API_KEY?: string;
+    readonly KV_PROD: KVNamespace;
+    readonly HOST: string;
+    readonly SENTRY_DSN?: string;
+    readonly OPENAI_API_KEY?: string;
+    readonly MY_QUEUE: Queue;
   }
 
   type THono = Hono<{ Bindings: Env }>;
