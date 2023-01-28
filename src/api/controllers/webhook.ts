@@ -8,15 +8,15 @@ export function route(hono: THono) {
   hono.post('/webhook/:id', async (c) => {
     const id = c.req.param('id') ?? c.req.query('id');
     if (!id) {
-      return c.send.error(401, 'need a valid id');
+      return c.send.error(400, 'need a valid id');
     }
     const githubKVManager = new GitHubKVManager(c.env);
     const setting = await githubKVManager.getSettingById(id);
     if (!setting) {
-      return c.send.error(404, 'id not found');
+      return c.send.error(400, 'id not found in database');
     }
     if (!setting.githubSecret) {
-      return c.send.error(401, 'please set webhook secret in kv');
+      return c.send.error(400, 'please set webhook secret in database');
     }
 
     Configuration.fromSettings(setting);

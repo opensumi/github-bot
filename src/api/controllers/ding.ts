@@ -7,16 +7,16 @@ export function route(hono: THono) {
 
     console.log(`handler ~ id`, id);
     if (!id) {
-      return c.send.error(401, 'need a valid id');
+      return c.send.error(400, 'need a valid id');
     }
     const kvManager = new DingKVManager(c.env);
     const setting = await kvManager.getSettingById(id);
     if (!setting) {
-      return c.send.error(404, 'id not found');
+      return c.send.error(400, 'id not found in database');
     }
 
     if (!setting.outGoingToken) {
-      return c.send.error(401, 'please set webhook token in bot settings');
+      return c.send.error(400, 'please set webhook token in database');
     }
 
     const errMessage = await verifyMessage(
