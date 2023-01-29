@@ -1,4 +1,4 @@
-import { doSign, parseCliArgs, send } from '@/ding/utils';
+import { doSign, send } from '@/ding/utils';
 import { initApp, App } from '@/github/app';
 import { GitHubKVManager } from '@/github/storage';
 
@@ -94,19 +94,17 @@ export class DingBot {
     let app: App | undefined;
     const setting = await this.githubKVManager.getAppSettingById(this.id);
     if (setting) {
-      console.log('has github app settings');
       app = await initApp(setting);
-      console.log('init app success');
     }
 
     // 其实目前钉钉机器人也就支持这一种消息类型
     if (msg.msgtype === 'text') {
       const text = prepare(msg.text.content);
       console.log(`DingBot ~ handle ~ text`, text);
-      const parsed = parseCliArgs(text);
+      const parsed = cc.parseCliArgs(text);
       console.log(`DingBot ~ handle ~ parsed`, JSON.stringify(parsed));
 
-      const result = await cc.resolve(parsed._[0]);
+      const result = await cc.resolve(parsed.arg0);
       if (result && result.handler) {
         const { handler } = result;
         try {

@@ -1,5 +1,3 @@
-import mri from 'mri';
-
 import { sign } from '@/runtime/cfworker/crypto';
 
 export async function doSign(secret: string, content: string): Promise<string> {
@@ -47,10 +45,4 @@ export async function send(
   });
   console.log('response:', await resp.text());
   return resp;
-}
-
-export function parseCliArgs<T extends Record<string, any>>(command: string) {
-  const result = mri<T>(command.split(' '));
-  result['_'] = result._.filter(Boolean);
-  return result;
 }

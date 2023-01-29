@@ -129,5 +129,6 @@ export class App {
 export async function initApp(setting: AppSetting) {
   const app = new App(setting);
   await app.init();
+  console.log('init app success');
   return app;
 }

@@ -1,6 +1,4 @@
-import mri from 'mri';
-
-import { CommandCenter } from '@/commander';
+import { CommandCenter, IArgv } from '@/commander';
 import { IRegexResolveResult, IResolveResult } from '@/commander/types';
 import { App } from '@/github/app';
 
@@ -13,7 +11,7 @@ export interface Context<T = any> {
   /**
    * _ 的首位为命令
    */
-  parsed: mri.Argv<T>;
+  parsed: IArgv<T>;
   app?: App;
   result: IResolveResult;
 }

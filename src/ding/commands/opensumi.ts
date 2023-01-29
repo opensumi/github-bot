@@ -78,7 +78,7 @@ export function registerOpenSumiCommand(it: DingCommandCenter) {
 
       const { app } = ctx;
 
-      let ref = ctx.parsed.ref;
+      let ref = ctx.parsed.raw.ref;
       if (!ref) {
         if (ctx.parsed['_'].length > 1) {
           ref = ctx.parsed['_'][1];
@@ -120,7 +120,7 @@ export function registerOpenSumiCommand(it: DingCommandCenter) {
 
       const { app } = ctx;
 
-      let ref = ctx.parsed.ref;
+      let ref = ctx.parsed.raw.ref;
       if (!ref) {
         if (ctx.parsed['_'].length > 1) {
           ref = ctx.parsed['_'][1];
@@ -162,7 +162,7 @@ export function registerOpenSumiCommand(it: DingCommandCenter) {
 
       const { app } = ctx;
 
-      let version = ctx.parsed.version;
+      let version = ctx.parsed.raw.version;
       if (!version) {
         if (ctx.parsed['_'].length > 1) {
           version = ctx.parsed['_'][1];

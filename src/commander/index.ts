@@ -1,3 +1,5 @@
+import mri from 'mri';
+
 import { equalFunc, regex, startsWith } from './rules';
 import type {
   CompareFunc,
@@ -7,6 +9,17 @@ import type {
 } from './types';
 
 export { CompareFunc, FuncName, equalFunc, regex, startsWith };
+
+export interface IArgv<T> {
+  raw: mri.Argv<T>;
+  arg0: string;
+  _: string[];
+}
+
+interface RegistryItem<K, T> {
+  data: K;
+  handler: T;
+}
 
 class Registry<K, T> {
   private _array = new Map<K, [T, CompareFunc<K>]>();
@@ -19,13 +32,24 @@ class Registry<K, T> {
     this._array.set(m, [handler, rule]);
   }
 
-  find(userInput: string) {
+  find(query: string) {
     for (const [m, h] of this._array) {
       const [handler, compareFunc] = h;
-      if (compareFunc(m, userInput)) {
-        return { data: m, handler };
+      if (compareFunc(m, query)) {
+        return { data: m, handler } as RegistryItem<K, T>;
       }
     }
+  }
+
+  findAll(query: string) {
+    const handlers = [] as RegistryItem<K, T>[];
+    for (const [m, h] of this._array) {
+      const [handler, compareFunc] = h;
+      if (compareFunc(m, query)) {
+        handlers.push({ data: m, handler });
+      }
+    }
+    return handlers;
   }
 }
 
@@ -116,5 +140,15 @@ export class CommandCenter<T> {
     result.handler = handler;
 
     return result;
+  }
+
+  parseCliArgs<T extends Record<string, any>>(command: string): IArgv<T> {
+    const result = mri<T>(command.split(' '));
+    result['_'] = result._.filter(Boolean);
+    return {
+      raw: result,
+      arg0: result._[0],
+      _: result._,
+    };
   }
 }

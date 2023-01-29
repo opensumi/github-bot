@@ -14,8 +14,8 @@ export function registerCommonCommand(it: DingCommandCenter) {
     'putData',
     async (bot: DingBot, ctx: Context<Partial<IDingInfo>>) => {
       const info = {} as IDingInfo;
-      if (ctx.parsed['defaultRepo']) {
-        info['defaultRepo'] = ctx.parsed['defaultRepo'];
+      if (ctx.parsed.raw['defaultRepo']) {
+        info['defaultRepo'] = ctx.parsed.raw['defaultRepo'];
       }
       await bot.kvManager.updateGroupInfo(bot.id, info);
       await bot.replyText('更新信息成功');
