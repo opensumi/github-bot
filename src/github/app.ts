@@ -26,8 +26,8 @@ export class App {
     await this.opensumiOctoService.syncVersion(version);
     await sendToDing(
       {
-        title: 'Start Sync Version',
-        text: `${tag} completed. [Start sync packages@${version} to npmmirror](https://github.com/opensumi/actions/actions/workflows/sync.yml)`,
+        title: 'Starts Synchronizing',
+        text: `${tag} has published. [starts synchronizing packages@${version} to npmmirror](https://github.com/opensumi/actions/actions/workflows/sync.yml)`,
       },
       PrivilegeEvent,
       this.ctx.setting,

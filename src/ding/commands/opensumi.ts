@@ -89,8 +89,11 @@ export function registerOpenSumiCommand(it: DingCommandCenter) {
         try {
           await app.octoService.getRefInfoByRepo(ref, 'opensumi', 'core');
           await app.opensumiOctoService.releaseRCVersion(ref);
-          await bot.replyText(
-            `在 ${ref} 上发布 Release Candidate 成功, https://github.com/opensumi/core/actions/workflows/${RC_WORKFLOW_FILE}`,
+          await bot.reply(
+            markdown(
+              'Starts Releasing Candidate Version',
+              `[Starts Releasing Candidate Version on ${ref}](https://github.com/opensumi/core/actions/workflows/${RC_WORKFLOW_FILE})`,
+            ),
           );
         } catch (error) {
           await bot.replyText(`执行出错：${(error as Error).message}`);
@@ -128,8 +131,11 @@ export function registerOpenSumiCommand(it: DingCommandCenter) {
         try {
           await app.octoService.getRefInfoByRepo(ref, 'opensumi', 'core');
           await app.opensumiOctoService.releaseRCVersion(ref);
-          await bot.replyText(
-            `在 ${ref} 上发布 Release Candidate 成功, https://github.com/opensumi/core/actions/workflows/${RC_WORKFLOW_FILE}`,
+          await bot.reply(
+            markdown(
+              'Starts releasing the release candidate',
+              `[Starts releasing the release candidate on ${ref}](https://github.com/opensumi/core/actions/workflows/${RC_WORKFLOW_FILE})`,
+            ),
           );
         } catch (error) {
           await bot.replyText(`执行出错：${(error as Error).message}`);
@@ -166,8 +172,8 @@ export function registerOpenSumiCommand(it: DingCommandCenter) {
         await app.opensumiOctoService.syncVersion(version);
         await bot.reply(
           markdown(
-            'Sync Started',
-            `[Start sync packages${
+            'starts synchronizing',
+            `[starts synchronizing packages${
               version ? `@${version}` : ''
             } to npmmirror](https://github.com/opensumi/actions/actions/workflows/sync.yml)`,
           ),
