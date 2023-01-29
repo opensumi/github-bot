@@ -1,7 +1,7 @@
 export class KVManager<T> {
   constructor(private kv: KVNamespace, private prefix: string = '') {}
 
-  f(key: string) {
+  private f(key: string) {
     return this.prefix + key;
   }
 

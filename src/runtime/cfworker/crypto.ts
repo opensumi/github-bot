@@ -38,14 +38,13 @@ export function UInt8ArrayToHex(signature: ArrayBuffer) {
 
 async function importKey(secret: string) {
   return crypto.subtle.importKey(
-    'raw', // raw format of the key - should be Uint8Array
+    'raw',
     enc.encode(secret),
     {
-      // algorithm details
       name: 'HMAC',
       hash: { name: 'SHA-256' },
     },
-    false, // export = false
-    ['sign', 'verify'], // what this key can do
+    false,
+    ['sign', 'verify'],
   );
 }
