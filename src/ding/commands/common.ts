@@ -78,9 +78,11 @@ export function registerCommonCommand(it: DingCommandCenter) {
       const response = await openai.createCompletion({
         model: 'text-davinci-003',
         prompt: ctx.command,
-        temperature: 0.8, //A number between 0 and 1 that determines how many creative risks the engine takes when generating text.
-        max_tokens: 1000, // Maximum completion length. max: 4000-prompt
-        frequency_penalty: 0.7, // # between 0 and 1. The higher this value, the bigger the effort the model will make in not repeating itself.
+        top_p: 1.0,
+        temperature: 1,
+        max_tokens: 1024,
+        frequency_penalty: 0.0,
+        presence_penalty: 0.0,
       });
       const text = response.completion;
       if (text) {
