@@ -175,7 +175,7 @@ export async function handlePr(
   );
 
   if (shouldRenderBody && data.body) {
-    builder.addDivider('> ');
+    builder.addDivider('> ', true);
     builder.add(renderPrOrIssueBody(data, ctx.setting.contentLimit));
   }
 

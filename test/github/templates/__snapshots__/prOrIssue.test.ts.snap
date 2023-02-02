@@ -37,6 +37,7 @@ exports[`github templates pr or issue can handle pull_request_opened 1`] = `
 ---
 > #### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)
 > master <- changes  
+>
 > ---
 >
 > This is a pretty simple change that we need to pull into master.",

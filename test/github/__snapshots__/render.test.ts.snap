@@ -6,7 +6,6 @@ exports[`render can render issue 1`] = `
 
 ---
 
->
 > vscode 拿到的是有插件名称的子目录的：
 >
 > \`\`\`
@@ -29,7 +28,6 @@ exports[`render can render pr 1`] = `
 
 ---
 
->
 > ### Types
 >
 > - [x] 🧹 Chores

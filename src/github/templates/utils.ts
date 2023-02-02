@@ -127,7 +127,6 @@ export function renderPrOrIssueBody(
   const builder = new StringBuilder();
 
   if (p.body) {
-    builder.add(`>`);
     builder.add(`${useRef(p.body, bodyLimit)}`);
   }
 
