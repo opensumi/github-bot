@@ -1,3 +1,4 @@
+import { ConversationKVManager } from '@/ai/conversation/kvManager';
 import { doSign, send } from '@/ding/utils';
 import { initApp, App } from '@/github/app';
 import { GitHubKVManager } from '@/github/storage';
@@ -71,8 +72,9 @@ export async function verifyMessage(headers: Headers, token: string) {
 }
 
 export class DingBot {
-  _msg!: Message;
   githubKVManager: GitHubKVManager;
+  conversationKVManager: ConversationKVManager;
+
   constructor(
     public id: string,
     public msg: Message,
@@ -82,6 +84,7 @@ export class DingBot {
     public setting: IDingBotSetting,
   ) {
     this.githubKVManager = new GitHubKVManager(env);
+    this.conversationKVManager = new ConversationKVManager(msg, env);
   }
 
   async handle() {

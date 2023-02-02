@@ -18,4 +18,7 @@ export class KVManager<T> {
     const newData = Object.assign({}, oldData, data);
     return await this.kv.put(this.f(key), JSON.stringify(newData));
   }
+  async delete(key: string) {
+    return await this.kv.delete(this.f(key));
+  }
 }

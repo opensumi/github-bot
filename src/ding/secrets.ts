@@ -6,6 +6,7 @@ export interface IDingBotSetting {
 
 export interface IDingInfo {
   defaultRepo?: string;
+  enableConversation?: boolean;
 }
 
 const SECRETS_PREFIX = 'ding/secrets/';
