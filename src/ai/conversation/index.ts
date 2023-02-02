@@ -27,7 +27,8 @@ export class Conversation {
     );
     builder.addLineIfNecessary();
     builder.add('Human: Hello, who are you?');
-    builder.add('AI: I am an AI created by OpenAI. How can I help you today?');
+    builder.add('AI: I am an AI. How can I help you today?');
+
     if (history) {
       const data = history.data;
       for (const item of data) {
