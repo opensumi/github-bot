@@ -1,15 +1,12 @@
 import { Hono } from 'hono';
-import { StatusCode } from 'hono/utils/http-status';
 import { Toucan } from 'toucan-js';
+
+import { ISend } from '@/api/middlewares/send.ts';
 
 declare module 'hono' {
   interface Context {
     sentry?: Toucan;
-    waitUntil: (promise: Promise<any>) => void;
-    send: {
-      error(status: StatusCode | number, content: string): Response;
-      message(text: string): Response;
-    };
+    send: ISend;
   }
 }
 
@@ -22,7 +19,8 @@ declare global {
     // readonly MY_QUEUE: Queue;
   }
 
-  type THono = Hono<{ Bindings: Env }>;
+  type THonoEnvironment = { Bindings: Env };
+  type THono = Hono<THonoEnvironment>;
 }
 
 export {};

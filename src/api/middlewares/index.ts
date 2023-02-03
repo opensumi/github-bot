@@ -1,5 +1,5 @@
 import * as GitHub from './github';
 
-export function useMiddleware(hono: THono) {
+export function applyMiddleware(hono: THono) {
   GitHub.middleware(hono);
 }

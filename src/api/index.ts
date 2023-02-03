@@ -1,6 +1,5 @@
 import { logger } from 'hono/logger';
 import { prettyJSON } from 'hono/pretty-json';
-import { StatusCode } from 'hono/utils/http-status';
 import { Toucan } from 'toucan-js';
 
 import { ValidationError } from '@/github';
@@ -9,7 +8,8 @@ import favicon from '../public/favicon.svg';
 import html from '../public/index.html';
 
 import { registerBlueprint } from './controllers';
-import { useMiddleware } from './middlewares';
+import { applyMiddleware } from './middlewares';
+import { applySendUtils } from './middlewares/send';
 
 export function ignition(hono: THono) {
   hono.use('*', async (c, next) => {
@@ -40,28 +40,6 @@ export function ignition(hono: THono) {
 
   hono.use('*', logger());
   hono.use('*', prettyJSON());
-  hono.use('*', async (c, next) => {
-    c.send = {
-      error: (
-        status: StatusCode | number = 500,
-        content = 'Internal Server Error.',
-      ) => {
-        return c.json(
-          {
-            status,
-            error: content,
-          },
-          status as StatusCode,
-        );
-      },
-      message: (text: string) => {
-        return c.json({
-          message: text,
-        });
-      },
-    };
-    await next();
-  });
 
   hono.get('/', (c) => c.html(html));
 
@@ -71,7 +49,8 @@ export function ignition(hono: THono) {
     });
   });
 
-  useMiddleware(hono);
+  applySendUtils(hono);
+  applyMiddleware(hono);
   registerBlueprint(hono);
 
   hono.notFound((c) => {

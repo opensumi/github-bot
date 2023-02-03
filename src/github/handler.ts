@@ -1,10 +1,10 @@
 import { Octokit } from '@octokit/rest';
 import { Webhooks } from '@octokit/webhooks';
-import { User } from '@octokit/webhooks-types';
 import {
   WebhookEventHandlerError,
   EmitterWebhookEventName,
 } from '@octokit/webhooks/dist-types/types';
+import { User } from '@octokit/webhooks-types';
 
 import { error, json } from '@/api/utils/response';
 
@@ -125,7 +125,7 @@ export async function webhookHandler(
   webhooks: Webhooks,
   req: Request<any, any, any>,
   env: Env,
-  ctx: ExecutionContext,
+  execContext: ExecutionContext,
 ) {
   try {
     const {
@@ -135,7 +135,7 @@ export async function webhookHandler(
     } = await validateGithub(req, webhooks);
 
     try {
-      ctx.waitUntil(
+      execContext.waitUntil(
         webhooks.receive({
           id: id,
           name: eventName as any,
