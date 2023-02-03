@@ -8,7 +8,6 @@ declare module 'hono' {
     waitUntil: (promise: Promise<any>) => void;
     send: {
       error(status: StatusCode | number, content: string): Response;
-      validateError(status: StatusCode | number, data: any): Response;
       message(text: string): Response;
     };
   }

@@ -2,7 +2,6 @@ import { logger } from 'hono/logger';
 import { prettyJSON } from 'hono/pretty-json';
 import { StatusCode } from 'hono/utils/http-status';
 import { Toucan } from 'toucan-js';
-import { ZodError } from 'zod';
 
 import { ValidationError } from '@/github';
 
@@ -55,15 +54,6 @@ export function ignition(hono: THono) {
           status as StatusCode,
         );
       },
-      validateError(status, data) {
-        return c.json(
-          {
-            status,
-            validates: data,
-          },
-          status as StatusCode,
-        );
-      },
       message: (text: string) => {
         return c.json({
           message: text,
@@ -94,9 +84,7 @@ export function ignition(hono: THono) {
     if (err instanceof ValidationError) {
       return c.send.error(err.code, 'github validation error ' + err.message);
     }
-    if (err instanceof ZodError) {
-      return c.send.validateError(400, err.errors);
-    }
+
     return c.send.error(500, 'server internal error');
   });
 }
