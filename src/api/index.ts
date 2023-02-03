@@ -8,8 +8,7 @@ import favicon from '../public/favicon.svg';
 import html from '../public/index.html';
 
 import { registerBlueprint } from './controllers';
-import { applyMiddleware } from './middlewares';
-import { applySendUtils } from './middlewares/send';
+import { applyMiddleware } from './middleware';
 
 export function ignition(hono: THono) {
   hono.use('*', async (c, next) => {
@@ -49,7 +48,6 @@ export function ignition(hono: THono) {
     });
   });
 
-  applySendUtils(hono);
   applyMiddleware(hono);
   registerBlueprint(hono);
 
