@@ -6,7 +6,7 @@ export interface IConversationSetting {
 }
 
 export interface IConversationData {
-  data: { type: 'AI' | 'Human'; str: string; time: number }[];
+  data: { type: 'AI' | 'Human'; str: string }[];
 }
 
 const SETTINGS_PREFIX = 'ding/conversation/settings/';
@@ -52,7 +52,6 @@ export class ConversationKVManager {
         {
           type: 'Human',
           str: humanText.trim(),
-          time: Date.now(),
         },
       ],
     });
@@ -69,12 +68,10 @@ export class ConversationKVManager {
         {
           type: 'Human',
           str: humanText.trim(),
-          time: Date.now(),
         },
         {
           type: 'AI',
           str: AIText.trim(),
-          time: Date.now(),
         },
       ],
     });
