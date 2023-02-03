@@ -17,3 +17,9 @@ export const startsWith: CompareFunc<string> = (
 export const regex = (reg: RegExp, userInput: string) => {
   return Boolean(userInput.match(reg));
 };
+
+export const rules = {
+  equalFunc: equalFunc.name,
+  startsWith: startsWith.name,
+  regex: regex.name,
+};
