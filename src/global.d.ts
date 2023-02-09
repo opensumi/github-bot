@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { Toucan } from 'toucan-js';
 
-import { ISend } from '@/api/middlewares/send.ts';
+import { ISend } from './api/middleware/send.ts';
 
 declare module 'hono' {
   interface Context {
@@ -9,6 +9,8 @@ declare module 'hono' {
     send: ISend;
   }
 }
+
+declare module '@louwers/marked' {}
 
 declare global {
   interface Env {

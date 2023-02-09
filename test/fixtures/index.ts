@@ -6,6 +6,7 @@ import {
   ReleasePublishedEvent,
 } from '@octokit/webhooks-types';
 
+import _antd_mini_release_published from './antd_mini_release_published.json';
 import pull_request_0_opened from './generated/pull_request_0_opened.json';
 import pull_request_3_closed from './generated/pull_request_3_closed.json';
 import _pull_request_review_comment_0_created from './generated/pull_request_review_comment_0_created.json';
@@ -30,3 +31,6 @@ export const release_published =
   _release_published as unknown as ReleasePublishedEvent;
 export const issue2045 = _issue2045 as any;
 export const pr2060 = _pr2060 as any;
+
+export const antd_mini_release_published =
+  _antd_mini_release_published as ReleasePublishedEvent;

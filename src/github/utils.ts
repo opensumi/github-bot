@@ -1,4 +1,14 @@
 import { EmitterWebhookEventName } from '@octokit/webhooks';
+import { fromMarkdown } from 'mdast-util-from-markdown';
+import {
+  Content,
+  Parent,
+  Link,
+  Text,
+} from 'mdast-util-from-markdown/lib/index';
+import { gfmFromMarkdown, gfmToMarkdown } from 'mdast-util-gfm';
+import { toMarkdown } from 'mdast-util-to-markdown';
+import { gfm } from 'micromark-extension-gfm';
 
 import { markdown } from '@/ding/message';
 import { send } from '@/ding/utils';
@@ -16,24 +26,103 @@ interface ReplaceOptions {
   repo: string;
 }
 
+function createLink(title: string, url: string) {
+  const text = `[${title}](${url})`;
+  const tree = fromMarkdown(text, {
+    extensions: [gfm()],
+    mdastExtensions: [gfmFromMarkdown()],
+  });
+  debugger;
+  return tree;
+}
+
+function checkLinkIsLiteral(link: Link) {
+  if (link.title !== null) {
+    return false;
+  }
+  if (link.children.length !== 1) {
+    return false;
+  }
+  if (link.children[0].type !== 'text') {
+    return false;
+  }
+  const url = link.url;
+  const urlLength = url.length;
+  if (link.position && link.position.start.offset && link.position.end.offset) {
+    const length = link.position.end.offset - link.position.start.offset;
+    if (length === urlLength) {
+      return true;
+    }
+  }
+}
+
+export function walk(root: Parent, cb: (token: Content) => boolean | void) {
+  root.children.forEach((node) => {
+    if (node) {
+      const skip = cb(node);
+      if (!skip) {
+        if ((node as Parent).children) {
+          walk(node as Parent, cb);
+        }
+      }
+    }
+  });
+}
+
 export function replaceGitHubUrlToMarkdown(
   text: string,
   options: ReplaceOptions,
 ) {
-  const pull = new RegExp(
-    `(https:\\/\\/github\\.com\\/${options.owner}\\/${options.repo}\\/pull\\/(\\d+))`,
-    'gm',
-  );
+  const tree = fromMarkdown(text, {
+    extensions: [gfm()],
+    mdastExtensions: [gfmFromMarkdown()],
+  });
+  walk(tree, (node) => {
+    if (node.type === 'link') {
+      if (checkLinkIsLiteral(node)) {
+        debugger;
+        console.log('literal', node);
+        const url = node.url;
+        const pull = new RegExp(
+          `(https:\\/\\/github\\.com\\/(.*?)\\/(.*?)\\/pull\\/(\\d+))`,
+        );
+        const match = url.match(pull);
+        if (match) {
+          // url: 'https://github.com/opensumi/core/pull/1920'
+          // match[1]: 'https://github.com/opensumi/core/pull/1920'
+          // match[2]: 'opensumi'
+          // match[3]: 'core'
+          // match[4]: '1920'
+          let title = `${match[2]}/${match[3]}#${match[4]}`;
+          if (options.owner === match[2] && options.repo === match[3]) {
+            title = `#${match[4]}`;
+          }
+          (node.children[0] as Text).value = title;
+        }
+        // https://github.com/opensumi/core/compare/v2.21.3...v2.21.4
+        const compare = new RegExp(
+          `(https:\\/\\/github\\.com\\/(.*?)\\/(.*?)\\/compare\\/(.*))`,
+        );
+        const match2 = url.match(compare);
+        // url: 'https://github.com/opensumi/core/compare/v2.21.3...v2.21.4'
+        // match2[1]: 'https://github.com/opensumi/core/compare/v2.21.3...v2.21.4'
+        // match2[2]: 'opensumi'
+        // match2[3]: 'core'
+        // match2[4]: 'v2.21.3...v2.21.4'
+        if (match2) {
+          let title = `${match2[2]}/${match2[3]}:${match2[4]}`;
+          if (options.owner === match2[2] && options.repo === match2[3]) {
+            title = `${match2[4]}`;
+          }
+          (node.children[0] as Text).value = title;
+        }
+      }
+      return true;
+    }
+  });
+  text = toMarkdown(tree, { extensions: [gfmToMarkdown()] });
 
-  let replaced = text.replaceAll(pull, '[#$2]($1)');
-  // https://github.com/opensumi/core/compare/v2.21.3...v2.21.4
-  const compare = new RegExp(
-    `(https:\\/\\/github\\.com\\/${options.owner}\\/${options.repo}\\/compare\\/(.*))`,
-    'gm',
-  );
-  replaced = replaced.replaceAll(compare, '[$2]($1)');
-
-  return replaced;
+  return text;
 }
 
 export async function sendContentToDing(
@@ -81,9 +170,11 @@ export async function sendToDing(
   eventName: EmitterWebhookEventName,
   setting: ISetting,
 ) {
-  if (setting.dingWebhooks.length === 0) {
+  if (!setting.dingWebhooks || setting.dingWebhooks.length === 0) {
+    console.error('no ding webhook setting, please check');
     return;
   }
+
   const dingContent = contentToMarkdown(data);
   await sendContentToDing(dingContent, eventName, setting);
 }

@@ -1,12 +1,30 @@
+import fs from 'fs';
+
 // eslint-disable-next-line import/order
 import { config } from 'dotenv';
 config();
 
-import { context as createContext } from 'esbuild';
+import { context as createContext, Plugin } from 'esbuild';
 import mri from 'mri';
 
 const argv = mri(process.argv.slice(2));
 console.log(argv);
+
+const resolvePlugin = {
+  name: 'resolvePlugin',
+  setup(build) {
+    build.onResolve(
+      { filter: /^decode-named-character-reference$/ },
+      async (args) => {
+        const result = {
+          path: require.resolve('decode-named-character-reference'),
+        };
+        console.log(`intercept ${args.path} resolve to ${result.path}`);
+        return result;
+      },
+    );
+  },
+} as Plugin;
 
 async function main() {
   const context = await createContext({
@@ -22,6 +40,7 @@ async function main() {
     platform: 'browser',
     target: 'es2020',
     format: 'esm',
+    plugins: [resolvePlugin],
   });
 
   if (argv['watch']) {

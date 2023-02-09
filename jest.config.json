@@ -1,6 +1,11 @@
 {
   "transform": {
-    "^.+\\.(t|j)sx?$": "ts-jest",
+    "^.+\\.(t|j)sx?$": [
+      "ts-jest",
+      {
+        "useESM": true
+      }
+    ],
     "^.+\\.html$": "<rootDir>/test/transforms/text.js",
     "^.+\\.svg$": "<rootDir>/test/transforms/text.js"
   },
@@ -10,6 +15,8 @@
     "<rootDir>/src/lib/",
     "<rootDir>/node_modules/"
   ],
+  "//": "https://github.com/remarkjs/remark/issues/969",
+  "transformIgnorePatterns": [],
   "collectCoverageFrom": ["src/**/*.{ts,js}"],
   "moduleNameMapper": {
     "@/(.*)$": "<rootDir>/src/$1"

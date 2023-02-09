@@ -112,7 +112,7 @@ export const setupWebhooksTemplate = (
 
         await sendToDing(data, eventName, ctx.setting);
       } catch (err) {
-        console.log('stop handler because: ', (err as Error).message);
+        console.log('stop handler because: ', err);
         if (!(err instanceof StopHandleError)) {
           throw err;
         }
