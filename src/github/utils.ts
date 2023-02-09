@@ -120,7 +120,10 @@ export function replaceGitHubUrlToMarkdown(
       return true;
     }
   });
-  text = toMarkdown(tree, { extensions: [gfmToMarkdown()] });
+  text = toMarkdown(tree, {
+    extensions: [gfmToMarkdown()],
+    listItemIndent: 'one',
+  });
 
   return text;
 }
