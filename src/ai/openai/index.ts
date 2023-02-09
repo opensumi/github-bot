@@ -24,6 +24,7 @@ export class OpenAI {
     prompt: string,
     options?: {
       stop?: string | string[];
+      max_tokens?: number;
     },
   ): Promise<string | undefined> {
     const model =
@@ -34,9 +35,9 @@ export class OpenAI {
       prompt: prompt,
       top_p: 1.0,
       temperature: 1,
-      max_tokens: 1024,
-      frequency_penalty: 0.0,
-      presence_penalty: 0.0,
+      max_tokens: options?.max_tokens ?? 1024,
+      frequency_penalty: 0.5,
+      presence_penalty: 0.6,
     } as CompletionParams;
     if (options?.stop) {
       params.stop = options.stop;

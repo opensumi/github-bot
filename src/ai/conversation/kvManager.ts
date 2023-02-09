@@ -9,8 +9,13 @@ export interface IConversationSetting {
   preferredModel?: ECompletionModel;
 }
 
+export const enum EMessageRole {
+  Human = '人类',
+  AI = 'AI',
+}
+
 export interface IConversationData {
-  data: { type: 'AI' | '人类'; str: string }[];
+  data: { type: EMessageRole; str: string }[];
 }
 
 const SETTINGS_PREFIX = 'ding/conversation/settings/';
@@ -62,7 +67,7 @@ export class ConversationKVManager {
       data: [
         ...history.data,
         {
-          type: '人类',
+          type: EMessageRole.Human,
           str: humanText.trim(),
         },
       ],
@@ -78,11 +83,11 @@ export class ConversationKVManager {
       data: [
         ...history.data,
         {
-          type: '人类',
+          type: EMessageRole.Human,
           str: humanText.trim(),
         },
         {
-          type: 'AI',
+          type: EMessageRole.AI,
           str: AIText.trim(),
         },
       ],
