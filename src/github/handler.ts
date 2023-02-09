@@ -124,7 +124,7 @@ export const setupWebhooksTemplate = (
 export async function webhookHandler(
   webhooks: Webhooks,
   req: Request<any, any, any>,
-  env: Env,
+  env: IRuntimeEnv,
   execContext: ExecutionContext,
 ) {
   try {

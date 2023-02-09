@@ -1,10 +1,11 @@
 import { Conversation } from '@/ai/conversation';
 import { OpenAI } from '@/ai/openai';
+import { ECompletionModel } from '@/ai/openai/shared';
 import { startsWith } from '@/commander';
 import { StringBuilder } from '@/utils';
 
 import type { DingBot } from '../bot';
-import { code, markdown } from '../message';
+import { code } from '../message';
 import { IDingInfo } from '../secrets';
 
 import { Context, DingCommandCenter } from './types';
@@ -75,7 +76,18 @@ export function registerCommonCommand(it: DingCommandCenter) {
     await bot.conversationKVManager.clearConversation();
     await bot.replyText('已清除记忆');
   });
-
+  it.on('使用ChatGPT', async (bot: DingBot) => {
+    await bot.conversationKVManager.setPreferredConversationModel(
+      ECompletionModel.ChatGPT,
+    );
+    await bot.replyText('模型已经切换为 ChatGPT');
+  });
+  it.on('使用GPT3', async (bot: DingBot) => {
+    await bot.conversationKVManager.setPreferredConversationModel(
+      ECompletionModel.GPT3,
+    );
+    await bot.replyText('模型已经切换为 GPT3');
+  });
   it.all(async (bot: DingBot, ctx: Context) => {
     if (bot.env.OPENAI_API_KEY) {
       console.log('openai api key set');
@@ -89,6 +101,7 @@ export function registerCommonCommand(it: DingCommandCenter) {
         await conversation.reply();
         return;
       }
+
       const text = await openai.createCompletion(ctx.command);
       if (text) {
         await openai.reply(text);

@@ -20,13 +20,19 @@ export class Conversation {
   }
 
   async reply() {
+    const currentDate = new Date().toISOString().split('T')[0];
+
     const history = await this.conversationKVManager.getConversation();
     const builder = new StringBuilder();
     builder.add(
-      `The following is a conversation with an AI assistant. The assistant is helpful, creative, clever, and very friendly.`,
+      `你是一个 AI，The AI is designed to respond to user input in a conversational manner, Answer as concisely as possible. AI's training data comes from a diverse range of internet text and AI have been trained to generate human-like responses to various questions and prompts. AI can provide information on a wide range of topics, but AI's knowledge is limited to what was present in AI's training data, which has a cutoff date of 2021. AI strive to provide accurate and helpful information to the best of AI's ability.\nKnowledge cutoff: 2021-09`,
+    );
+    builder.add(`Current date: ${currentDate}\n\n`);
+    builder.add(
+      `以下是人类与AI的对话。该AI非常有帮助、富有创造力、聪明、且非常友好。`,
     );
     builder.addLineIfNecessary();
-    builder.add('Human: Hello, who are you?');
+    builder.add('人类: Hello, who are you?');
     builder.add('AI: I am an AI. How can I help you today?');
 
     if (history) {
@@ -36,7 +42,7 @@ export class Conversation {
       }
     }
 
-    builder.add(`Human: ${this.currentRoundPrompt}`);
+    builder.add(`人类: ${this.currentRoundPrompt}`);
     builder.add('AI:');
 
     const prompt = builder.toString();

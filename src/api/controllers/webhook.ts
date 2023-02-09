@@ -10,7 +10,7 @@ export function route(hono: THono) {
     if (!id) {
       return c.send.error(400, 'need a valid id');
     }
-    const githubKVManager = new GitHubKVManager(c.env);
+    const githubKVManager = new GitHubKVManager();
     const setting = await githubKVManager.getSettingById(id);
     if (!setting) {
       return c.send.error(400, 'id not found in database');

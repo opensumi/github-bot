@@ -10,7 +10,7 @@ node_modules/
 .cargo-ok
 
 workers-site
-index.js
+/index.js
 !src
 
 .env

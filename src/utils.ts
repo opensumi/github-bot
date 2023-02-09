@@ -28,6 +28,6 @@ export class StringBuilder {
   }
 }
 
-export function proxyThisUrl(env: Env, url: string) {
+export function proxyThisUrl(env: IRuntimeEnv, url: string) {
   return `${env.HOST}/proxy/${encodeURIComponent(url)}`;
 }

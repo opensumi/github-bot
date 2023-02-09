@@ -13,7 +13,7 @@ declare module 'hono' {
 declare module '@louwers/marked' {}
 
 declare global {
-  interface Env {
+  interface IRuntimeEnv {
     readonly KV_PROD: KVNamespace;
     readonly HOST: string;
     readonly SENTRY_DSN?: string;
@@ -21,7 +21,7 @@ declare global {
     // readonly MY_QUEUE: Queue;
   }
 
-  type THonoEnvironment = { Bindings: Env };
+  type THonoEnvironment = { Bindings: IRuntimeEnv };
   type THono = Hono<THonoEnvironment>;
 }
 

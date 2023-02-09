@@ -80,11 +80,11 @@ export class DingBot {
     public msg: Message,
     public kvManager: DingKVManager,
     public ctx: ExecutionContext,
-    public env: Env,
+    public env: IRuntimeEnv,
     public setting: IDingBotSetting,
   ) {
-    this.githubKVManager = new GitHubKVManager(env);
-    this.conversationKVManager = new ConversationKVManager(msg, env);
+    this.githubKVManager = new GitHubKVManager();
+    this.conversationKVManager = new ConversationKVManager(msg);
   }
 
   async handle() {

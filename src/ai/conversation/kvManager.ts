@@ -1,12 +1,16 @@
 import { Message } from '@/ding/types';
+import Environment from '@/env';
 import { KVManager } from '@/runtime/cfworker/kv';
+
+import { ECompletionModel } from '../openai/shared';
 
 export interface IConversationSetting {
   enableConversation?: boolean;
+  preferredModel?: ECompletionModel;
 }
 
 export interface IConversationData {
-  data: { type: 'AI' | 'Human'; str: string }[];
+  data: { type: 'AI' | '人类'; str: string }[];
 }
 
 const SETTINGS_PREFIX = 'ding/conversation/settings/';
@@ -18,24 +22,32 @@ export class ConversationKVManager {
   dataKV: KVManager<IConversationData>;
   id: string;
 
-  constructor(private message: Message, private env: Env) {
+  constructor(private message: Message) {
     this.id = message.conversationId;
 
-    this.kv = env.KV_PROD;
-    this.settingsKV = new KVManager(this.kv, SETTINGS_PREFIX);
-    this.dataKV = new KVManager(this.kv, DATA_PREFIX);
+    this.kv = Environment.instance().KV_PROD;
+    this.settingsKV = new KVManager(SETTINGS_PREFIX);
+    this.dataKV = new KVManager(DATA_PREFIX);
   }
-
   toggleConversation = async (enable: boolean) => {
     return await this.settingsKV.updateJSON(this.id, {
       enableConversation: enable,
     });
   };
-
+  setPreferredConversationModel = async (model: ECompletionModel) => {
+    return await this.settingsKV.updateJSON(this.id, {
+      preferredModel: model,
+    });
+  };
   getConversationModeEnabled = async () => {
     const setting = await this.settingsKV.getJSON(this.id);
     return setting?.enableConversation ?? false;
   };
+  getConversationPreferredModel = async () => {
+    const setting = await this.settingsKV.getJSON(this.id);
+    return setting?.preferredModel ?? ECompletionModel.GPT3;
+  };
+
   clearConversation = async () => {
     return await this.dataKV.delete(this.id);
   };
@@ -50,7 +62,7 @@ export class ConversationKVManager {
       data: [
         ...history.data,
         {
-          type: 'Human',
+          type: '人类',
           str: humanText.trim(),
         },
       ],
@@ -66,7 +78,7 @@ export class ConversationKVManager {
       data: [
         ...history.data,
         {
-          type: 'Human',
+          type: '人类',
           str: humanText.trim(),
         },
         {

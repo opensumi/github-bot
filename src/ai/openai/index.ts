@@ -3,8 +3,12 @@ import { OpenAIClient, CompletionParams } from '@bytemain/openai-fetch';
 import { DingBot } from '@/ding/bot';
 import { markdown } from '@/ding/message';
 
+import { ECompletionModel } from './shared';
+
 export class OpenAI {
   openai: OpenAIClient;
+  model = ECompletionModel.GPT3;
+
   constructor(protected bot: DingBot) {
     this.openai = new OpenAIClient({
       apiKey: bot.env.OPENAI_API_KEY,
@@ -22,8 +26,11 @@ export class OpenAI {
       stop?: string | string[];
     },
   ): Promise<string | undefined> {
+    const model =
+      await this.bot.conversationKVManager.getConversationPreferredModel();
+
     const params = {
-      model: 'text-davinci-003',
+      model: model,
       prompt: prompt,
       top_p: 1.0,
       temperature: 1,
@@ -36,6 +43,7 @@ export class OpenAI {
     }
     const response = await this.openai.createCompletion(params);
     const text = response.completion;
+
     return text;
   }
 
