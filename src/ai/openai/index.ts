@@ -50,11 +50,11 @@ export class OpenAI {
     const params = {
       model: model,
       prompt: prompt,
+      temperature: 0.8,
       top_p: 1.0,
-      temperature: 1,
+      presence_penalty: 1.0,
       max_tokens: options?.max_tokens ?? 1024,
       frequency_penalty: 0.5,
-      presence_penalty: 0.6,
     } as CompletionParams;
     if (options?.stop) {
       params.stop = options.stop;

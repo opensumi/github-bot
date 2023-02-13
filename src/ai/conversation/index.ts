@@ -30,17 +30,11 @@ export class Conversation {
     const history = await this.conversationKVManager.getConversation();
     const builder = new StringBuilder();
     builder.add(
-      `你是一个 AI，The AI is designed to respond to user input in a conversational manner, Answer as concisely as possible. AI's training data comes from a diverse range of internet text and AI have been trained to generate human-like responses to various questions and prompts. AI can provide information on a wide range of topics, but AI's knowledge is limited to what was present in AI's training data, which has a cutoff date of 2021. AI strive to provide accurate and helpful information to the best of AI's ability.\nKnowledge cutoff: 2021-09`,
+      `Instructions:\nYou are ${EMessageRole.AI}, a large language model trained by OpenAI.
+      Current date: ${currentDate}${STOP_KEYWORD}\n\n`
     );
-    builder.add(`Current date: ${currentDate}\n\n`);
-    builder.add(
-      `以下是人类与AI的对话。该AI非常有帮助、富有创造力、聪明、且非常友好。`,
-    );
+    builder.add(`${EMessageRole.AI} 和 ${EMessageRole.Human} 使用中文交流。\n`);
     builder.addLineIfNecessary();
-    builder.add(`${EMessageRole.Human}: Hello, who are you?${STOP_KEYWORD}`);
-    builder.add(
-      `${EMessageRole.AI}: I am an AI. How can I help you today?${STOP_KEYWORD}`,
-    );
 
     if (history) {
       const data = history.data;
@@ -48,7 +42,6 @@ export class Conversation {
         builder.add(`${item.type}: ${item.str}${STOP_KEYWORD}`);
       }
     }
-
     builder.add(
       `${EMessageRole.Human}: ${this.currentRoundPrompt}${STOP_KEYWORD}`,
     );
