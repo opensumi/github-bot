@@ -96,7 +96,7 @@ export function registerCommonCommand(it: DingCommandCenter) {
       try {
         const openai = new OpenAI(bot, ctx);
         const text = await pTimeout(openai.getReplyText(), {
-          milliseconds: 15 * 1000,
+          milliseconds: 61 * 1000,
           message: 'openai-timeout',
         });
         if (text) {
@@ -106,7 +106,7 @@ export function registerCommonCommand(it: DingCommandCenter) {
         }
       } catch (error) {
         if (error instanceof TimeoutError) {
-          await bot.replyText('OpenAI 接口调用超时(15s)');
+          await bot.replyText('OpenAI 接口调用超时(60s)');
         }
       }
     }
