@@ -72,7 +72,7 @@ export class Conversation {
 
     if (text) {
       this.conversationKVManager.record(this.currentRoundPrompt, text, history);
-      await this.openai.reply(text);
+      return text;
     } else {
       this.conversationKVManager.recordHuman(this.currentRoundPrompt, history);
     }

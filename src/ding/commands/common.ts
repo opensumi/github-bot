@@ -1,4 +1,5 @@
-import { Conversation } from '@/ai/conversation';
+import pTimeout, { TimeoutError } from 'p-timeout';
+
 import { OpenAI } from '@/ai/openai';
 import { ECompletionModel } from '@/ai/openai/shared';
 import { startsWith } from '@/commander';
@@ -92,19 +93,21 @@ export function registerCommonCommand(it: DingCommandCenter) {
     if (bot.env.OPENAI_API_KEY) {
       console.log('openai api key set');
 
-      const openai = new OpenAI(bot);
-
-      const conversationModeEnabled =
-        await bot.conversationKVManager.getConversationModeEnabled();
-      if (conversationModeEnabled) {
-        const conversation = new Conversation(bot, ctx, openai);
-        await conversation.reply();
-        return;
-      }
-
-      const text = await openai.createCompletion(ctx.command);
-      if (text) {
-        await openai.reply(text);
+      try {
+        const openai = new OpenAI(bot, ctx);
+        const text = await pTimeout(openai.getReplyText(), {
+          milliseconds: 10 * 1000,
+          message: 'openai-timeout',
+        });
+        if (text) {
+          await openai.reply(text);
+        } else {
+          await bot.replyText('OpenAI 接口调用没有返回结果');
+        }
+      } catch (error) {
+        if (error instanceof TimeoutError) {
+          await bot.replyText('OpenAI 接口调用超时');
+        }
       }
     }
   });

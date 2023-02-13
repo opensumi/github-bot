@@ -1,7 +1,10 @@
 import { OpenAIClient, CompletionParams } from '@bytemain/openai-fetch';
 
 import { DingBot } from '@/ding/bot';
+import { Context } from '@/ding/commands';
 import { markdown } from '@/ding/message';
+
+import { Conversation } from '../conversation';
 
 import { ECompletionModel } from './shared';
 
@@ -9,7 +12,7 @@ export class OpenAI {
   openai: OpenAIClient;
   model = ECompletionModel.GPT3;
 
-  constructor(protected bot: DingBot) {
+  constructor(protected bot: DingBot, protected ctx: Context) {
     this.openai = new OpenAIClient({
       apiKey: bot.env.OPENAI_API_KEY,
       options: {
@@ -18,6 +21,20 @@ export class OpenAI {
         credentials: undefined,
       },
     });
+  }
+
+  async getReplyText() {
+    let text: string | undefined;
+
+    const conversationModeEnabled =
+      await this.bot.conversationKVManager.getConversationModeEnabled();
+    if (conversationModeEnabled) {
+      const conversation = new Conversation(this.bot, this.ctx, this);
+      text = await conversation.reply();
+    } else {
+      text = await this.createCompletion(this.ctx.command);
+    }
+    return text;
   }
 
   async createCompletion(
