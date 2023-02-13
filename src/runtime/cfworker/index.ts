@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 
 import { ignition } from '@/api';
 import Environment from '@/env';
+import { RequiredField } from '@/types';
 
 const app = new Hono() as THono;
 
@@ -14,4 +15,4 @@ export default {
 
     return app.fetch(request, env, ctx);
   },
-} as ExportedHandler<IRuntimeEnv>;
+} as RequiredField<ExportedHandler<IRuntimeEnv>, 'fetch'>;
