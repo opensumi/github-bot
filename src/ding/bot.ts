@@ -64,9 +64,7 @@ export async function verifyMessage(headers: Headers, token: string) {
     }
   } else {
     // 好像企业内部的这个机器人发的 headers 不带这俩字段了，这里的逻辑可以暂时不用了
-    console.log('====================================');
-    console.error('not valid ding msg, missing validation field');
-    console.log('====================================');
+    console.error('skip msg verify, missing validation field');
     // return error(403, 'not valid ding msg, missing validation field');
   }
 }
