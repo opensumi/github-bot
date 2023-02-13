@@ -74,18 +74,14 @@ export class ConversationKVManager {
     });
   };
 
-  record = async (
-    humanText: string,
+
+  recordAI = async (
     AIText: string,
     history: IConversationData,
   ) => {
     await this.dataKV.setJSON(this.id, {
       data: [
         ...history.data,
-        {
-          type: EMessageRole.Human,
-          str: humanText.trim(),
-        },
         {
           type: EMessageRole.AI,
           str: AIText.trim(),
