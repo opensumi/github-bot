@@ -1,6 +1,5 @@
 import { logger } from 'hono/logger';
 import { prettyJSON } from 'hono/pretty-json';
-import { Toucan } from 'toucan-js';
 
 import { ValidationError } from '@/github';
 
@@ -12,27 +11,18 @@ import { applyMiddleware } from './middleware';
 
 export function ignition(hono: THono) {
   hono.use('*', async (c, next) => {
-    if (c.env.SENTRY_DSN) {
-      const sentry = new Toucan({
-        dsn: c.env.SENTRY_DSN,
-        context: c.executionCtx,
-        request: c.req,
-      });
-      c.sentry = sentry;
-
-      const waitUntil = c.executionCtx.waitUntil.bind(c.executionCtx);
-      c.executionCtx.waitUntil = (promise) => {
-        waitUntil(
-          (async () => {
-            try {
-              await promise;
-            } catch (err) {
-              sentry.captureException(err);
-            }
-          })(),
-        );
-      };
-    }
+    const waitUntil = c.executionCtx.waitUntil.bind(c.executionCtx);
+    c.executionCtx.waitUntil = (promise) => {
+      waitUntil(
+        (async () => {
+          try {
+            await promise;
+          } catch (err) {
+            console.log('waitUntil error', err);
+          }
+        })(),
+      );
+    };
 
     await next();
   });
@@ -56,8 +46,7 @@ export function ignition(hono: THono) {
   });
 
   hono.onError((err, c) => {
-    console.error(err);
-    c.sentry?.captureException(err);
+    console.error('onError', err);
     if (err instanceof ValidationError) {
       return c.send.error(err.code, 'github validation error ' + err.message);
     }
