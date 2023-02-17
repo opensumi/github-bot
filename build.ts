@@ -1,8 +1,4 @@
-import fs from 'fs';
-
-// eslint-disable-next-line import/order
-import { config } from 'dotenv';
-config();
+import 'dotenv/config';
 
 import { context as createContext, Plugin } from 'esbuild';
 import mri from 'mri';

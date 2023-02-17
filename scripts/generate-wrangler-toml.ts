@@ -1,9 +1,8 @@
+import 'dotenv/config';
+
 import { readFileSync, writeFileSync } from 'fs';
 
-import { config } from 'dotenv';
 import MagicString from 'magic-string';
-
-config();
 
 const text = readFileSync('./wrangler.tpl.toml').toString();
 
