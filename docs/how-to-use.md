@@ -26,10 +26,10 @@ Check the radio: **是否开启 Outgoing 机制**,
 input the worker's address to `POST 地址`：
 
 ```txt
-https://worker.bot/ding_webhook
+https://worker.bot/ding/xxx
 ```
 
-The outgoing `Token` should be set in [Secrets](./secrets.md), [HERE IS A SECRET].
+The outgoing `Token` should be set in [KVManager](./kv.md), [HERE IS A SECRET].
 
 ### Configure Github App
 
