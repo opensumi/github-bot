@@ -4,19 +4,8 @@ import { KVManager } from '@/runtime/cfworker/kv';
 
 import { ECompletionModel } from '../openai/shared';
 
-export interface IConversationSetting {
-  enableConversation?: boolean;
-  preferredModel?: ECompletionModel;
-}
-
-export const enum EMessageRole {
-  Human = '人类',
-  AI = 'AI',
-}
-
-export interface IConversationData {
-  data: { type: EMessageRole; str: string }[];
-}
+import { ConversationHistory } from './history';
+import { IConversationData, IConversationSetting } from './types';
 
 const SETTINGS_PREFIX = 'ding/conversation/settings/';
 const DATA_PREFIX = 'ding/conversation/data/';
@@ -59,34 +48,6 @@ export class ConversationKVManager {
 
   async getConversation() {
     const data = await this.dataKV.getJSON(this.id);
-    return data ?? { data: [] };
+    return new ConversationHistory(data ?? { data: [] }, this.dataKV, this.id);
   }
-
-  recordHuman = async (humanText: string, history: IConversationData) => {
-    await this.dataKV.setJSON(this.id, {
-      data: [
-        ...history.data,
-        {
-          type: EMessageRole.Human,
-          str: humanText.trim(),
-        },
-      ],
-    });
-  };
-
-
-  recordAI = async (
-    AIText: string,
-    history: IConversationData,
-  ) => {
-    await this.dataKV.setJSON(this.id, {
-      data: [
-        ...history.data,
-        {
-          type: EMessageRole.AI,
-          str: AIText.trim(),
-        },
-      ],
-    });
-  };
 }

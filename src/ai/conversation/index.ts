@@ -4,7 +4,8 @@ import { StringBuilder } from '@/utils';
 
 import { OpenAI } from '../openai';
 
-import { ConversationKVManager, EMessageRole } from './kvManager';
+import { ConversationKVManager } from './kvManager';
+import { EMessageRole } from './types';
 // export const STOP_KEYWORD = '<|endoftext|>';
 export const STOP_KEYWORD = '';
 
@@ -27,7 +28,7 @@ export class Conversation {
     const currentDate = new Date().toISOString().split('T')[0];
 
     const history = await this.conversationKVManager.getConversation();
-    this.conversationKVManager.recordHuman(this.currentRoundPrompt, history);
+    await history.recordHuman(this.currentRoundPrompt);
 
     const builder = new StringBuilder();
     builder.add(
@@ -53,7 +54,7 @@ export class Conversation {
     const text = await this.openai.createCompletion(prompt, {});
 
     if (text) {
-      this.conversationKVManager.recordAI(text, history);
+      await history.recordAI(text);
       return text;
     }
   }
