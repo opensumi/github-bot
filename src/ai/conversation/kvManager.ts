@@ -46,6 +46,14 @@ export class ConversationKVManager {
     return setting?.preferredModel ?? ECompletionModel.GPT3;
   };
 
+  async getApiReverseProxyUrl() {
+    const setting = await this.settingsKV.getJSON(this.id);
+    return (
+      setting?.apiReverseProxyUrl ??
+      'https://gpt.pawan.krd/backend-api/conversation'
+    );
+  }
+
   getMessageQueue = async (): Promise<ChatMessage[]> => {
     return (await this.messageKV.getJSON(this.id)) ?? [];
   };

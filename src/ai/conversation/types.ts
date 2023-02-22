@@ -3,6 +3,7 @@ import { ECompletionModel } from '../openai/shared';
 export interface IConversationSetting {
   enableConversation?: boolean;
   preferredModel?: ECompletionModel;
+  apiReverseProxyUrl?: string;
 }
 
 export const enum EMessageRole {

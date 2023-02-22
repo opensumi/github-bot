@@ -39,7 +39,8 @@ export class Conversation {
     const lastMessage = messagQueue[messagQueue.length - 1] ?? {};
 
     const api = new ChatGPTUnofficialProxyAPI({
-      apiReverseProxyUrl: 'https://gpt.pawan.krd/backend-api/conversation',
+      apiReverseProxyUrl:
+        await this.conversationKVManager.getApiReverseProxyUrl(),
       debug: true,
       accessToken: this.bot.env.OPENAI_ACCESS_TOKEN,
     });
