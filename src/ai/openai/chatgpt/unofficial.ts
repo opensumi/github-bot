@@ -157,10 +157,6 @@ export class ChatGPTUnofficialProxyAPI {
         body: JSON.stringify(body),
         signal: abortSignal,
         onMessage: (data: string) => {
-          console.log(
-            `🚀 ~ file: unofficial.ts:189 ~ ChatGPTUnofficialProxyAPI ~ responseP ~ data:`,
-            data,
-          );
           if (data === '[BOT:NO_RESPONSE]') {
             return reject(new Error('No response from OpenAI'));
           }
@@ -194,7 +190,7 @@ export class ChatGPTUnofficialProxyAPI {
             }
           } catch (err) {
             // ignore for now; there seem to be some non-json messages
-            // console.warn('fetchSSE onMessage unexpected error', err)
+            console.warn('fetchSSE onMessage unexpected error', err);
           }
         },
       }).catch((err) => {

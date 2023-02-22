@@ -20,7 +20,6 @@ export async function fetchSSE(
   }
 
   const parser = createParser((event) => {
-    console.log(`🚀 ~ file: fetchSSE.ts:21 ~ parser ~ event:`, event);
     if (event.type === 'event') {
       onMessage(event.data);
     }
