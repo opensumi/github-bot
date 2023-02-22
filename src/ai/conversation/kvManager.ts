@@ -6,6 +6,7 @@ import { ChatMessage } from '../openai/chatgpt/types';
 import { ECompletionModel } from '../openai/shared';
 
 import { ConversationHistory } from './history';
+import { ChatMessageHistory } from './messageHistory';
 import { IConversationData, IConversationSetting } from './types';
 
 const SETTINGS_PREFIX = 'ding/conversation/settings/';
@@ -54,12 +55,16 @@ export class ConversationKVManager {
     );
   }
 
-  getMessageQueue = async (): Promise<ChatMessage[]> => {
-    return (await this.messageKV.getJSON(this.id)) ?? [];
+  getMessageHistory = async (): Promise<ChatMessageHistory> => {
+    const msgs = (await this.messageKV.getJSON(this.id)) ?? [];
+    const history = new ChatMessageHistory(msgs, this.messageKV, this.id);
+
+    return history;
   };
 
   clearConversation = async () => {
-    return await this.dataKV.delete(this.id);
+    await this.dataKV.delete(this.id);
+    await this.messageKV.delete(this.id);
   };
 
   async getConversation() {

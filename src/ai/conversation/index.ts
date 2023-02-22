@@ -35,9 +35,8 @@ export class Conversation {
       return 'OpenAI access token is not set';
     }
 
-    const messagQueue = await this.conversationKVManager.getMessageQueue();
-    const lastMessage = messagQueue[messagQueue.length - 1] ?? {};
-
+    const history = await this.conversationKVManager.getMessageHistory();
+    const lastMessage = history.lastMessage;
     const api = new ChatGPTUnofficialProxyAPI({
       apiReverseProxyUrl:
         await this.conversationKVManager.getApiReverseProxyUrl(),
@@ -52,7 +51,7 @@ export class Conversation {
       this.currentRoundPrompt,
       messageOptions,
     );
-
+    await history.recordChat(message);
     if (message.text) {
       return message.text;
     }
