@@ -65,14 +65,6 @@ export function registerCommonCommand(it: DingCommandCenter) {
     await bot.replyText('pong');
   });
 
-  it.on('开启记忆', async (bot: DingBot) => {
-    await bot.conversationKVManager.toggleConversation(true);
-    await bot.replyText('已开启记忆');
-  });
-  it.on('关闭记忆', async (bot: DingBot) => {
-    await bot.conversationKVManager.toggleConversation(false);
-    await bot.replyText('已关闭记忆');
-  });
   it.on('清除记忆', async (bot: DingBot) => {
     await bot.conversationKVManager.clearConversation();
     await bot.replyText('已清除记忆');

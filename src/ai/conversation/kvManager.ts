@@ -28,19 +28,10 @@ export class ConversationKVManager {
     this.dataKV = new KVManager(DATA_PREFIX);
     this.messageKV = new KVManager(MESSAGE_PREFIX);
   }
-  toggleConversation = async (enable: boolean) => {
-    return await this.settingsKV.updateJSON(this.id, {
-      enableConversation: enable,
-    });
-  };
   setPreferredConversationModel = async (model: ECompletionModel) => {
     return await this.settingsKV.updateJSON(this.id, {
       preferredModel: model,
     });
-  };
-  getConversationModeEnabled = async () => {
-    const setting = await this.settingsKV.getJSON(this.id);
-    return setting?.enableConversation ?? false;
   };
   getConversationPreferredModel = async () => {
     const setting = await this.settingsKV.getJSON(this.id);

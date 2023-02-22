@@ -29,21 +29,10 @@ export class OpenAI {
   }
 
   async getReplyText(): Promise<IOpenAIResponse> {
-    let text: string | undefined;
-
-    const conversationModeEnabled =
-      await this.bot.conversationKVManager.getConversationModeEnabled();
-    if (conversationModeEnabled) {
-      const conversation = new Conversation(this.bot, this.ctx, this);
-      text = await conversation.reply2();
-      return {
-        type: 'chatgpt',
-        text,
-      };
-    }
-    text = await this.createCompletion(this.ctx.command);
+    const conversation = new Conversation(this.bot, this.ctx, this);
+    const text = await conversation.reply2();
     return {
-      type: 'gpt3',
+      type: 'chatgpt',
       text,
     };
   }
