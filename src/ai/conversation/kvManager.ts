@@ -1,6 +1,7 @@
 import { Message } from '@/ding/types';
 import Environment from '@/env';
 import { KVManager } from '@/runtime/cfworker/kv';
+import { randomChoice } from '@/utils';
 
 import { ChatMessage } from '../openai/chatgpt/types';
 import { ECompletionModel } from '../openai/shared';
@@ -40,10 +41,11 @@ export class ConversationKVManager {
 
   async getApiReverseProxyUrl() {
     const setting = await this.settingsKV.getJSON(this.id);
-    return (
-      setting?.apiReverseProxyUrl ??
-      'https://gpt.pawan.krd/backend-api/conversation'
-    );
+    const defaultUrls = [
+      // 'https://gpt.pawan.krd/backend-api/conversation',
+      'https://chat.duti.tech/api/conversation',
+    ];
+    return setting?.apiReverseProxyUrl ?? randomChoice(defaultUrls);
   }
 
   getMessageHistory = async (): Promise<ChatMessageHistory> => {

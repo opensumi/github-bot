@@ -31,3 +31,7 @@ export class StringBuilder {
 export function proxyThisUrl(env: IRuntimeEnv, url: string) {
   return `${env.HOST}/proxy/${encodeURIComponent(url)}`;
 }
+
+export function randomChoice(arr: string[]) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
