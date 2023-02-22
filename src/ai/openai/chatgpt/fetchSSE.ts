@@ -11,8 +11,6 @@ export async function fetchSSE(
   const res = await fetch(url, {
     ...fetchOptions,
   });
-  console.log(`🚀 ~ file: fetchSSE.ts:14 ~ res:`, res);
-  console.log(`🚀 ~ file: fetchSSE.ts:14 ~ res.headers:`, res.headers);
   if (!res.ok) {
     const msg = `ChatGPT error ${res.status || res.statusText}`;
     const error = new types.ChatGPTError(msg, { cause: res });
@@ -27,9 +25,12 @@ export async function fetchSSE(
       onMessage(event.data);
     }
   });
-
+  if (res.body) {
     for await (const chunk of streamAsyncIterable(res.body)) {
       const str = new TextDecoder().decode(chunk);
       parser.feed(str);
     }
+  } else {
+    onMessage('[BOT:NO_RESPONSE]');
+  }
 }

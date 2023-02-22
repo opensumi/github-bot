@@ -93,9 +93,15 @@ export class ChatGPTUnofficialProxyAPI {
       timeoutMs,
       onProgress,
     } = opts;
-    
-    console.log(`🚀 ~ file: unofficial.ts:92 ~ ChatGPTUnofficialProxyAPI ~ messageId:`, messageId);
-    console.log(`🚀 ~ file: unofficial.ts:91 ~ ChatGPTUnofficialProxyAPI ~ parentMessageId:`, parentMessageId);
+
+    console.log(
+      `🚀 ~ file: unofficial.ts:92 ~ ChatGPTUnofficialProxyAPI ~ messageId:`,
+      messageId,
+    );
+    console.log(
+      `🚀 ~ file: unofficial.ts:91 ~ ChatGPTUnofficialProxyAPI ~ parentMessageId:`,
+      parentMessageId,
+    );
     let { abortSignal } = opts;
 
     let abortController: AbortController | null = null;
@@ -145,52 +151,53 @@ export class ChatGPTUnofficialProxyAPI {
         console.log('POST', url, { body, headers });
       }
 
-      fetchSSE(
-        url,
-        {
-          method: 'POST',
-          headers,
-          body: JSON.stringify(body),
-          signal: abortSignal,
-          onMessage: (data: string) => {
-          console.log(`🚀 ~ file: unofficial.ts:189 ~ ChatGPTUnofficialProxyAPI ~ responseP ~ data:`, data);
+      fetchSSE(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body),
+        signal: abortSignal,
+        onMessage: (data: string) => {
+          console.log(
+            `🚀 ~ file: unofficial.ts:189 ~ ChatGPTUnofficialProxyAPI ~ responseP ~ data:`,
+            data,
+          );
+          if (data === '[BOT:NO_RESPONSE]') {
+            return reject(new Error('No response from OpenAI'));
+          }
+          if (data === '[DONE]') {
+            return resolve(result);
+          }
 
-            if (data === '[DONE]') {
-              return resolve(result);
+          try {
+            const convoResponseEvent: types.ConversationResponseEvent =
+              JSON.parse(data);
+            if (convoResponseEvent.conversation_id) {
+              result.conversationId = convoResponseEvent.conversation_id;
             }
 
-            try {
-              const convoResponseEvent: types.ConversationResponseEvent =
-                JSON.parse(data);
-              if (convoResponseEvent.conversation_id) {
-                result.conversationId = convoResponseEvent.conversation_id;
-              }
+            if (convoResponseEvent.message?.id) {
+              result.id = convoResponseEvent.message.id;
+            }
 
-              if (convoResponseEvent.message?.id) {
-                result.id = convoResponseEvent.message.id;
-              }
+            const message = convoResponseEvent.message;
 
-              const message = convoResponseEvent.message;
-              // console.log('event', JSON.stringify(convoResponseEvent, null, 2))
+            if (message) {
+              const text = message?.content?.parts?.[0];
 
-              if (message) {
-                const text = message?.content?.parts?.[0];
+              if (text) {
+                result.text = text;
 
-                if (text) {
-                  result.text = text;
-
-                  if (onProgress) {
-                    onProgress(result);
-                  }
+                if (onProgress) {
+                  onProgress(result);
                 }
               }
-            } catch (err) {
-              // ignore for now; there seem to be some non-json messages
-              // console.warn('fetchSSE onMessage unexpected error', err)
             }
-          },
+          } catch (err) {
+            // ignore for now; there seem to be some non-json messages
+            // console.warn('fetchSSE onMessage unexpected error', err)
+          }
         },
-      ).catch((err) => {
+      }).catch((err) => {
         const errMessageL = err.toString().toLowerCase();
 
         if (
