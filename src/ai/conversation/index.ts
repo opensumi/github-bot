@@ -3,6 +3,8 @@ import { Context } from '@/ding/commands';
 import { StringBuilder } from '@/utils';
 
 import { OpenAI } from '../openai';
+import { SendMessageBrowserOptions } from '../openai/chatgpt/types';
+import { ChatGPTUnofficialProxyAPI } from '../openai/chatgpt/unofficial';
 
 import { ConversationKVManager } from './kvManager';
 import { EMessageRole } from './types';
@@ -15,7 +17,11 @@ export class Conversation {
 
   currentRoundPrompt: string;
 
-  constructor(bot: DingBot, ctx: Context, protected openai: OpenAI) {
+  constructor(
+    protected bot: DingBot,
+    protected ctx: Context,
+    protected openai: OpenAI,
+  ) {
     this.conversationId = bot.msg.conversationId;
     this.conversationKVManager = bot.conversationKVManager;
 
@@ -24,6 +30,36 @@ export class Conversation {
 
   _maxResponseTokens = 1000;
 
+  async reply2() {
+    if (!this.bot.env.OPENAI_ACCESS_TOKEN) {
+      return 'OpenAI access token is not set';
+    }
+
+    const messagQueue = await this.conversationKVManager.getMessageQueue();
+    const lastMessage = messagQueue[messagQueue.length - 1] ?? {};
+
+    const api = new ChatGPTUnofficialProxyAPI({
+      apiReverseProxyUrl: 'https://gpt.pawan.krd/backend-api/conversation',
+      debug: true,
+      accessToken: this.bot.env.OPENAI_ACCESS_TOKEN,
+    });
+    const messageOptions = {
+      parentMessageId: lastMessage?.parentMessageId,
+      conversationId: lastMessage?.conversationId,
+    } as SendMessageBrowserOptions;
+    const message = await api.sendMessage(
+      this.currentRoundPrompt,
+      messageOptions,
+    );
+    console.log(
+      `🚀 ~ file: index.ts:49 ~ Conversation ~ reply2 ~ message:`,
+      message,
+    );
+
+    if (message.text) {
+      return message.text;
+    }
+  }
   async reply() {
     const currentDate = new Date().toISOString().split('T')[0];
 

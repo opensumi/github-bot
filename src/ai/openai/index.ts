@@ -30,7 +30,7 @@ export class OpenAI {
       await this.bot.conversationKVManager.getConversationModeEnabled();
     if (conversationModeEnabled) {
       const conversation = new Conversation(this.bot, this.ctx, this);
-      text = await conversation.reply();
+      text = await conversation.reply2();
     } else {
       text = await this.createCompletion(this.ctx.command);
     }

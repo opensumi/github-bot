@@ -2,6 +2,7 @@ import { Message } from '@/ding/types';
 import Environment from '@/env';
 import { KVManager } from '@/runtime/cfworker/kv';
 
+import { ChatMessage } from '../openai/chatgpt/types';
 import { ECompletionModel } from '../openai/shared';
 
 import { ConversationHistory } from './history';
@@ -9,12 +10,14 @@ import { IConversationData, IConversationSetting } from './types';
 
 const SETTINGS_PREFIX = 'ding/conversation/settings/';
 const DATA_PREFIX = 'ding/conversation/data/';
+const MESSAGE_PREFIX = 'ding/conversation/message/';
 
 export class ConversationKVManager {
   kv: KVNamespace;
   settingsKV: KVManager<IConversationSetting>;
   dataKV: KVManager<IConversationData>;
   id: string;
+  messageKV: KVManager<ChatMessage[]>;
 
   constructor(private message: Message) {
     this.id = message.conversationId;
@@ -22,6 +25,7 @@ export class ConversationKVManager {
     this.kv = Environment.instance().KV_PROD;
     this.settingsKV = new KVManager(SETTINGS_PREFIX);
     this.dataKV = new KVManager(DATA_PREFIX);
+    this.messageKV = new KVManager(MESSAGE_PREFIX);
   }
   toggleConversation = async (enable: boolean) => {
     return await this.settingsKV.updateJSON(this.id, {
@@ -40,6 +44,10 @@ export class ConversationKVManager {
   getConversationPreferredModel = async () => {
     const setting = await this.settingsKV.getJSON(this.id);
     return setting?.preferredModel ?? ECompletionModel.GPT3;
+  };
+
+  getMessageQueue = async (): Promise<ChatMessage[]> => {
+    return (await this.messageKV.getJSON(this.id)) ?? [];
   };
 
   clearConversation = async () => {
