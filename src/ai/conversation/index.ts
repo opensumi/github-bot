@@ -51,10 +51,6 @@ export class Conversation {
       this.currentRoundPrompt,
       messageOptions,
     );
-    console.log(
-      `🚀 ~ file: index.ts:49 ~ Conversation ~ reply2 ~ message:`,
-      message,
-    );
 
     if (message.text) {
       return message.text;
