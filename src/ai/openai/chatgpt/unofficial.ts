@@ -33,7 +33,7 @@ export class ChatGPTUnofficialProxyAPI {
   }) {
     const {
       accessToken,
-      apiReverseProxyUrl = 'https://chat.duti.tech/api/conversation',
+      apiReverseProxyUrl = 'https://chat.openai.com/backend-api/conversation',
       model = 'text-davinci-002-render-sha',
       debug = false,
       headers,
@@ -157,6 +157,11 @@ export class ChatGPTUnofficialProxyAPI {
         body: JSON.stringify(body),
         signal: abortSignal,
         onMessage: (data: string) => {
+          console.log(
+            `🚀 ~ file: unofficial.ts:213 ~ ChatGPTUnofficialProxyAPI ~ responseP ~ data:`,
+            data,
+          );
+
           if (data === '[BOT:NO_RESPONSE]') {
             return reject(new Error('No response from OpenAI'));
           }
@@ -195,6 +200,7 @@ export class ChatGPTUnofficialProxyAPI {
         },
       }).catch((err) => {
         const errMessageL = err.toString().toLowerCase();
+        console.log(`🚀 ~ file: unofficial.ts:203 ~ ChatGPTUnofficialProxyAPI ~ responseP ~ errMessageL:`, errMessageL);
 
         if (
           result.text &&

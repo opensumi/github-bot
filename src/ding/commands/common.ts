@@ -99,7 +99,11 @@ export function registerCommonCommand(it: DingCommandCenter) {
       } catch (error) {
         if (error instanceof TimeoutError) {
           await bot.replyText('OpenAI 接口调用超时(60s)');
+          return;
         }
+        await bot.replyText(
+          'OpenAI 接口返回错误信息：' + (error as Error).message,
+        );
       }
     }
   });

@@ -12,7 +12,8 @@ export async function fetchSSE(
     ...fetchOptions,
   });
   if (!res.ok) {
-    const msg = `ChatGPT error ${res.status || res.statusText}`;
+    const data = await res.text();
+    const msg = `ChatGPT error ${res.status || res.statusText} ${data}`;
     const error = new types.ChatGPTError(msg, { cause: res });
     error.statusCode = res.status;
     error.statusText = res.statusText;

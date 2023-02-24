@@ -40,12 +40,11 @@ export class ConversationKVManager {
   };
 
   async getApiReverseProxyUrl() {
-    const setting = await this.settingsKV.getJSON(this.id);
     const defaultUrls = [
-      // 'https://gpt.pawan.krd/backend-api/conversation',
+      'https://gpt.pawan.krd/backend-api/conversation',
       'https://chat.duti.tech/api/conversation',
     ];
-    return setting?.apiReverseProxyUrl ?? randomChoice(defaultUrls);
+    return Environment.instance().CHATGPT_API_REVERSE_PROXY_URL ?? randomChoice(defaultUrls);
   }
 
   getMessageHistory = async (): Promise<ChatMessageHistory> => {

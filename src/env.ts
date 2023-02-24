@@ -8,6 +8,10 @@ export default class Environment {
     return this.env.KV_PROD;
   }
 
+  get CHATGPT_API_REVERSE_PROXY_URL() {
+    return this.env.CHATGPT_API_REVERSE_PROXY_URL;
+  }
+
   static instance() {
     if (!this.#instance) {
       this.#instance = new Environment();
