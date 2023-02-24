@@ -1,4 +1,5 @@
 import { OpenAIClient, CompletionParams } from '@bytemain/openai-fetch';
+import throttle from 'lodash/throttle';
 
 import { DingBot } from '@/ding/bot';
 import { Context } from '@/ding/commands';
@@ -30,7 +31,20 @@ export class OpenAI {
 
   async getReplyText(): Promise<IOpenAIResponse> {
     const conversation = new Conversation(this.bot, this.ctx, this);
-    const text = await conversation.reply2();
+    let costTime = 0;
+    const throttleWait = 1000;
+    const text = await conversation.reply2({
+      onProgress: throttle((data) => {
+        costTime += throttleWait;
+        this.bot.replyText(
+          'ChatGPT is typing... Current Length: ' +
+            data.text.length +
+            'Cose Time: ' +
+            costTime +
+            'ms',
+        );
+      }, throttleWait),
+    });
     return {
       type: 'chatgpt',
       text,

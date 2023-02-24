@@ -3,12 +3,15 @@ import { Context } from '@/ding/commands';
 import { StringBuilder } from '@/utils';
 
 import { OpenAI } from '../openai';
-import { SendMessageBrowserOptions } from '../openai/chatgpt/types';
+import {
+  ChatMessage,
+  SendMessageBrowserOptions,
+} from '../openai/chatgpt/types';
 import { ChatGPTUnofficialProxyAPI } from '../openai/chatgpt/unofficial';
 
 import { ConversationKVManager } from './kvManager';
 import { EMessageRole } from './types';
-// export const STOP_KEYWORD = '<|endoftext|>';
+
 export const STOP_KEYWORD = '';
 
 export class Conversation {
@@ -30,7 +33,7 @@ export class Conversation {
 
   _maxResponseTokens = 1000;
 
-  async reply2() {
+  async reply2(options?: { onProgress?: (data: ChatMessage) => void }) {
     if (!this.bot.env.OPENAI_ACCESS_TOKEN) {
       return 'OpenAI access token is not set';
     }
@@ -46,6 +49,7 @@ export class Conversation {
     const messageOptions = {
       parentMessageId: lastMessage?.parentMessageId,
       conversationId: lastMessage?.conversationId,
+      onProgress: options?.onProgress,
     } as SendMessageBrowserOptions;
     const message = await api.sendMessage(
       this.currentRoundPrompt,
