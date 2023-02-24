@@ -1,3 +1,4 @@
+import * as ChatGPTProxy from './chatgptProxy';
 import * as Ding from './ding';
 import * as GitHub from './github';
 import * as Proxy from './proxy';
@@ -8,4 +9,5 @@ export const registerBlueprint = (hono: THono) => {
   GitHub.route(hono);
   Proxy.route(hono);
   Webhook.route(hono);
+  ChatGPTProxy.route(hono);
 };
