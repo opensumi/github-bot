@@ -1,4 +1,4 @@
-import { createParser } from 'eventsource-parser';
+import { createParser } from '@/lib/eventsource-parser';
 
 import { streamAsyncIterable } from './stream-async-iterable';
 import * as types from './types';
@@ -20,6 +20,7 @@ export async function fetchSSE(
   }
 
   const parser = createParser((event) => {
+    console.log(`🚀 ~ file: fetchSSE.ts:23 ~ parser ~ event:`, event);
     if (event.type === 'event') {
       onMessage(event.data);
     }
@@ -27,6 +28,23 @@ export async function fetchSSE(
   if (res.body) {
     for await (const chunk of streamAsyncIterable(res.body)) {
       const str = new TextDecoder().decode(chunk);
+      const line = str.slice(2, -1);
+      if (line === 'Internal Server Error') {
+        const error = new types.ChatGPTError(line, { cause: res });
+        throw error;
+      }
+
+      let mayJson: any;
+      try {
+        mayJson = JSON.parse(str);
+      } catch (error) {}
+      if (mayJson) {
+        if (mayJson.detail) {
+          const error = new types.ChatGPTError(mayJson.detail, { cause: res });
+          throw error;
+        }
+      }
+
       parser.feed(str);
     }
   } else {
