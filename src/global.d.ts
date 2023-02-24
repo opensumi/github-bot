@@ -1,4 +1,5 @@
 import { Hono } from 'hono';
+import type { CookieJar } from 'tough-cookie';
 
 import { ISend } from './api/middleware/send.ts';
 
@@ -22,3 +23,9 @@ declare global {
 }
 
 export {};
+
+declare module 'axios' {
+  interface AxiosRequestConfig {
+    jar?: CookieJar;
+  }
+}
