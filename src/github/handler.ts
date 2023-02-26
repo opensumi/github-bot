@@ -5,6 +5,7 @@ import {
   EmitterWebhookEventName,
 } from '@octokit/webhooks/dist-types/types';
 import { User } from '@octokit/webhooks-types';
+import { HonoRequest } from 'hono';
 
 import { error, json } from '@/api/utils/response';
 
@@ -19,7 +20,8 @@ export class ValidationError extends Error {
 }
 
 export async function validateGithub(
-  req: Request<any, any, any>,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  req: HonoRequest<any, {}>,
   webhooks: Webhooks,
 ) {
   const headers = req.headers;
@@ -123,7 +125,8 @@ export const setupWebhooksTemplate = (
 
 export async function webhookHandler(
   webhooks: Webhooks,
-  req: Request<any, any, any>,
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  req: HonoRequest<any, {}>,
   env: IRuntimeEnv,
   execContext: ExecutionContext,
 ) {

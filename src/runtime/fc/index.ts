@@ -1,7 +1,9 @@
-import { serve } from '@hono/node-server'
-import { Hono } from 'hono'
+import { serve } from '@hono/node-server';
+import { Hono } from 'hono';
 
-const app = new Hono()
-app.get('/', (c) => c.text('Hello Node.js!'))
+import { ignition } from '@/api';
 
-serve(app)
+const app = new Hono() as THono;
+ignition(app);
+
+serve(app);

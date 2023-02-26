@@ -17,6 +17,7 @@ declare global {
     readonly OPENAI_ACCESS_TOKEN?: string;
     readonly CHATGPT_API_REVERSE_PROXY_URL?: string;
     // readonly MY_QUEUE: Queue;
+    [key: string]: unknown;
   }
 
   type THonoEnvironment = { Bindings: IRuntimeEnv };
