@@ -2,7 +2,7 @@
 // 如：https://github.com/organizations/riril/settings/apps/ririltestbot
 
 import Environment from '@/env';
-import { KVManager } from '@/runtime/cfworker/kv';
+import { KVManager } from '@/runtime/kv';
 
 export interface IDingWebhookItem {
   // Webhook for the dingtalk bot
@@ -46,11 +46,9 @@ export type AppSetting = ISetting & {
 };
 
 export class GitHubKVManager {
-  kv: KVNamespace<string>;
   appSettingsKV: KVManager<AppSetting>;
   settingsKV: KVManager<ISetting>;
   constructor() {
-    this.kv = Environment.instance().KV_PROD;
     this.appSettingsKV = new KVManager<AppSetting>(GITHUB_APP_SETTINGS_PREFIX);
     this.settingsKV = new KVManager<ISetting>(GITHUB_SETTINGS_PREFIX);
   }

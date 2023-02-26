@@ -1,7 +1,7 @@
 import Environment from '@/env';
 
 export class KVManager<T> {
-  kv: KVNamespace<string>;
+  kv: IKVNamespace;
 
   constructor(private prefix: string = '') {
     this.kv = Environment.instance().KV_PROD;

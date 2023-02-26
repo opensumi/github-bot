@@ -52,7 +52,7 @@ async function buildWorker() {
 
 async function buildNode() {
   const context = await createContext({
-    entryPoints: ['src/runtime/fc/index.ts'],
+    entryPoints: ['src/runtime/node/index.ts'],
     bundle: true,
     outdir: 'dist',
     outbase: 'src/runtime',

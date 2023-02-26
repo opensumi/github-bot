@@ -9,40 +9,30 @@ declare module 'hono' {
   }
 }
 
-interface KVNamespace {
-  get(key: string, options?: { cacheTtl?: number }): KVValue<string>;
-  get(key: string, type: 'text'): KVValue<string>;
-  get<ExpectedValue = unknown>(
-    key: string,
-    type: 'json',
-  ): KVValue<ExpectedValue>;
-
-  put(
-    key: string,
-    value: string | ReadableStream | ArrayBuffer | FormData,
-    options?: {
-      expiration?: string | number;
-      expirationTtl?: string | number;
-      metadata?: any;
-    },
-  ): Promise<void>;
-
-  delete(key: string): Promise<void>;
-
-  list(options?: {
-    prefix?: string;
-    limit?: number;
-    cursor?: string;
-  }): Promise<{
-    keys: { name: string; expiration?: number; metadata?: unknown }[];
-    list_complete: boolean;
-    cursor?: string;
-  }>;
-}
-
 declare global {
+  type TKVValue<Value> = Promise<Value | null>;
+  interface IKVNamespace {
+    get(key: string, type: 'text'): TKVValue<string>;
+    get<ExpectedValue = unknown>(
+      key: string,
+      type: 'json',
+    ): TKVValue<ExpectedValue>;
+
+    put(
+      key: string,
+      value: string | ReadableStream | ArrayBuffer | FormData,
+      options?: {
+        expiration?: string | number;
+        expirationTtl?: string | number;
+        metadata?: any;
+      },
+    ): Promise<void>;
+
+    delete(key: string): Promise<void>;
+  }
+
   interface IRuntimeEnv {
-    readonly KV_PROD: KVNamespace;
+    readonly KV_PROD: IKVNamespace;
     readonly HOST: string;
     readonly OPENAI_API_KEY?: string;
     readonly OPENAI_ACCESS_TOKEN?: string;
