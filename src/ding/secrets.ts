@@ -9,7 +9,7 @@ export interface IDingInfo {
   enableConversation?: boolean;
 }
 
-const SECRETS_PREFIX = 'ding/secrets/';
+export const SECRETS_PREFIX = 'ding/secrets/';
 const INFO_PREFIX = 'ding/info/';
 
 export class DingKVManager {

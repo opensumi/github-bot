@@ -63,9 +63,8 @@ async function buildNode() {
       '.svg': 'text',
     },
     platform: 'node',
-    target: 'es2020',
-    format: 'esm',
-    plugins: [resolvePlugin],
+    target: 'node18',
+    format: 'cjs',
   });
 
   if (argv['watch']) {
@@ -77,8 +76,6 @@ async function buildNode() {
     });
   }
 }
-
-main();
 
 async function main() {
   await Promise.all([buildWorker(), buildNode()]);

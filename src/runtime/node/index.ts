@@ -23,9 +23,26 @@ declare global {
 const app = new Hono() as THono;
 ignition(app);
 
-Environment.from({
-  ...process.env,
-  KV_PROD: new NodeKV(),
+serve({
+  fetch(request) {
+    Environment.from({
+      ...process.env,
+      KV_PROD: new NodeKV(),
+    });
+    return app.fetch(
+      request,
+      {},
+      {
+        waitUntil(promise) {
+          promise;
+        },
+        passThroughOnException() {
+          //
+        },
+      },
+    );
+  },
+  port: 8787,
 });
 
-serve(app);
+console.log('listened on http://localhost:8787');
