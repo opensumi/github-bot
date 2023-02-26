@@ -82,30 +82,25 @@ export function registerCommonCommand(it: DingCommandCenter) {
     await bot.replyText('模型已经切换为 GPT3');
   });
   it.all(async (bot: DingBot, ctx: Context) => {
-    await bot.replyText('ChatGPT 还是在网页上用着舒服...\n因为它的回复太长了...\n聊天页面等这么久会很烦的...\n正在考虑怎么解决这个问题...');
-
-    if (bot.env.OPENAI_API_KEY) {
-      console.log('openai api key set');
-      // try {
-      //   const openai = new OpenAI(bot, ctx);
-      //   const text = await pTimeout(openai.getReplyText(), {
-      //     milliseconds: 61 * 1000,
-      //     message: 'openai-timeout',
-      //   });
-      //   if (text) {
-      //     await openai.reply(text);
-      //   } else {
-      //     await bot.replyText('OpenAI 接口调用没有返回结果');
-      //   }
-      // } catch (error) {
-      //   if (error instanceof TimeoutError) {
-      //     await bot.replyText('OpenAI 接口调用超时(60s)');
-      //     return;
-      //   }
-      //   await bot.replyText(
-      //     'OpenAI 接口返回错误信息：' + (error as Error).message,
-      //   );
-      // }
+    try {
+      const openai = new OpenAI(bot, ctx);
+      const text = await pTimeout(openai.getReplyText(), {
+        milliseconds: 61 * 1000,
+        message: 'openai-timeout',
+      });
+      if (text) {
+        await openai.reply(text);
+      } else {
+        await bot.replyText('OpenAI 接口调用没有返回结果');
+      }
+    } catch (error) {
+      if (error instanceof TimeoutError) {
+        await bot.replyText('OpenAI 接口调用超时(60s)');
+        return;
+      }
+      await bot.replyText(
+        'OpenAI 接口返回错误信息：' + (error as Error).message,
+      );
     }
   });
 }
