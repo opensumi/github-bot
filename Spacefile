@@ -18,3 +18,5 @@ micros:
         - name: CLOUDFLARE_AUTH_TOKEN
         - name: CLOUDFLARE_ACCOUNT_ID
         - name: CLOUDFLARE_NAMESPACE_ID
+    public_routes:
+      - "/*"
