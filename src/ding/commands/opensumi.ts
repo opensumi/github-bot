@@ -36,7 +36,8 @@ export function registerOpenSumiCommand(it: DingCommandCenter) {
 
     const { app } = ctx;
     await app.opensumiOctoService.deployBot();
-    await bot.replyText('开始部署机器人');
+    await app.opensumiOctoService.deployBotPre();
+    await bot.replyText('开始部署机器人 & 预发机器人');
   });
 
   it.on('deploypre', async (bot: DingBot, ctx: Context<{ ref: string }>) => {
