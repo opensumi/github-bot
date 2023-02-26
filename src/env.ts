@@ -1,3 +1,4 @@
+
 export default class Environment {
   private constructor() {
     // noop
