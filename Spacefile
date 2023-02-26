@@ -1,0 +1,20 @@
+# Spacefile Docs: https://go.deta.dev/docs/spacefile/v0
+v: 0
+micros:
+  - name: github-bot
+    src: .
+    engine: nodejs16
+    primary: true
+    commands:
+      - npm run build:node
+    include:
+      - dist
+    run: "node dist/node/index.js"
+    presets:
+      env:
+        - name: HOST
+        - name: OPENAI_ACCESS_TOKEN
+        - name: CHATGPT_API_REVERSE_PROXY_URL
+        - name: CLOUDFLARE_AUTH_TOKEN
+        - name: CLOUDFLARE_ACCOUNT_ID
+        - name: CLOUDFLARE_NAMESPACE_ID

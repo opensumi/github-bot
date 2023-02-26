@@ -9,6 +9,8 @@ import Environment from '@/env';
 
 import { NodeKV } from './kv';
 
+const port = Number(process.env.PORT) || 8787;
+
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
@@ -42,7 +44,7 @@ serve({
       },
     );
   },
-  port: 8787,
+  port: port,
 });
 
-console.log('listened on http://localhost:8787');
+console.log(`listened on http://localhost:${port}`);

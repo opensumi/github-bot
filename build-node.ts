@@ -6,6 +6,21 @@ import mri from 'mri';
 const argv = mri(process.argv.slice(2));
 console.log(argv);
 
+// const envHostsToCopy = [
+//   'HOST',
+//   'OPENAI_ACCESS_TOKEN',
+//   'CHATGPT_API_REVERSE_PROXY_URL',
+//   'CLOUDFLARE_AUTH_TOKEN',
+//   'CLOUDFLARE_ACCOUNT_ID',
+//   'CLOUDFLARE_NAMESPACE_ID',
+// ];
+
+const define = {} as Record<string, string>;
+
+// envHostsToCopy.forEach((v) => {
+//   define[`process.env.${v}`] = JSON.stringify(process.env[v]);
+// });
+
 async function buildNode() {
   const context = await createContext({
     entryPoints: ['src/runtime/node/index.ts'],
@@ -21,6 +36,9 @@ async function buildNode() {
     platform: 'node',
     target: 'node18',
     format: 'cjs',
+    define: {
+      ...define,
+    },
   });
 
   if (argv['watch']) {
