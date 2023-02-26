@@ -1,5 +1,6 @@
 import { DingBot } from '@/ding/bot';
 import { Context } from '@/ding/commands';
+import Environment from '@/env';
 import { StringBuilder } from '@/utils';
 
 import { OpenAI } from '../openai';
@@ -34,7 +35,7 @@ export class Conversation {
   _maxResponseTokens = 1000;
 
   async reply2(options?: { onProgress?: (data: ChatMessage) => void }) {
-    if (!this.bot.env.OPENAI_ACCESS_TOKEN) {
+    if (!Environment.instance().OPENAI_ACCESS_TOKEN) {
       return 'OpenAI access token is not set';
     }
 
@@ -44,7 +45,7 @@ export class Conversation {
       apiReverseProxyUrl:
         await this.conversationKVManager.getApiReverseProxyUrl(),
       debug: true,
-      accessToken: this.bot.env.OPENAI_ACCESS_TOKEN,
+      accessToken: Environment.instance().OPENAI_ACCESS_TOKEN!,
     });
     const messageOptions = {
       parentMessageId: lastMessage?.parentMessageId,

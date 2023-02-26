@@ -129,7 +129,7 @@ export function replaceGitHubUrlToMarkdown(
   return text;
 }
 
-export async function toDingtalkMarkdown(tree: Root) {
+export function toDingtalkMarkdown(tree: Root) {
   return toMarkdown(tree, {
     extensions: [gfmToMarkdown()],
     listItemIndent: 'one',
@@ -140,7 +140,7 @@ export async function toDingtalkMarkdown(tree: Root) {
   });
 }
 
-export async function standardizeMarkdown(text: string) {
+export function standardizeMarkdown(text: string) {
   const tree = fromMarkdown(text, {
     extensions: [gfm()],
     mdastExtensions: [gfmFromMarkdown()],

@@ -94,6 +94,7 @@ export function registerCommonCommand(it: DingCommandCenter) {
         await bot.replyText('OpenAI 接口调用没有返回结果');
       }
     } catch (error) {
+      console.log(`🚀 ~ file: common.ts:97 ~ it.all ~ error:`, error);
       if (error instanceof TimeoutError) {
         await bot.replyText('OpenAI 接口调用超时(60s)');
         return;

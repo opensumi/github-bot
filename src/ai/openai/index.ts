@@ -37,13 +37,15 @@ export class OpenAI {
     const text = await conversation.reply2({
       onProgress: throttle((data) => {
         costTime += throttleWait;
-        this.bot.replyText(
-          'ChatGPT is typing... Current Length: ' +
-            data.text.length +
-            'Cose Time: ' +
-            costTime +
-            'ms',
-        );
+        if (data.text) {
+          this.bot.replyText(
+            'ChatGPT is typing... Current Length: ' +
+              data.text.length +
+              ', Cost Time: ' +
+              costTime +
+              'ms',
+          );
+        }
       }, throttleWait),
     });
     return {
@@ -87,7 +89,9 @@ export class OpenAI {
       await this.bot.reply(
         markdown(
           text.slice(0, 30),
-          `${standardizeMarkdown(text.trim())}\n\n> Powered By OpenAI ${powerBy}`,
+          `${standardizeMarkdown(
+            text.trim(),
+          )}\n\n> Powered By OpenAI ${powerBy}`,
         ),
       );
     }
