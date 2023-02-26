@@ -1,28 +1,45 @@
-import KeyV from 'keyv';
+import { WorkersKV } from '@/lib/workers-kv';
+
+const cfAccountId = process.env.CLOUDFLARE_ACCOUNT_ID!;
+const cfAuthToken = process.env.CLOUDFLARE_AUTH_TOKEN!;
+const cfNamespaceId = process.env.CLOUDFLARE_NAMESPACE_ID!;
 
 export class NodeKV implements IKVNamespace {
-  kv: KeyV<any, Record<string, unknown>>;
+  kv: WorkersKV;
   constructor() {
-    this.kv = new KeyV();
+    this.kv = new WorkersKV({
+      cfAccountId,
+      cfAuthToken,
+      namespaceId: cfNamespaceId,
+    });
   }
-  get(key: string, type: 'text'): TKVValue<string>;
-  get<ExpectedValue = unknown>(
+  async get(key: string, type: 'text'): TKVValue<string>;
+  async get<ExpectedValue = unknown>(
     key: string,
     type: 'json',
   ): TKVValue<ExpectedValue>;
-  get<ExpectedValue = unknown>(
-    key: unknown,
+  async get<ExpectedValue = unknown>(
+    key: string,
     type?: unknown,
-  ): TKVValue<string> | TKVValue<ExpectedValue> {
-    return this.kv.get(key as any, { raw: false });
+  ): Promise<string | Awaited<ExpectedValue> | null> {
+    const result = await this.kv.readKey({
+      key,
+    });
+    if (type === 'json') {
+      return JSON.parse(result);
+    }
+    return result;
   }
   async put(
     key: string,
     value: string | ArrayBuffer | FormData | ReadableStream<any>,
   ): Promise<void> {
-    await this.kv.set(key, value);
+    await this.kv.writeKey({
+      key,
+      value,
+    });
   }
   async delete(key: string): Promise<void> {
-    await this.kv.delete(key);
+    await this.kv.deleteKey({ key });
   }
 }

@@ -12,11 +12,11 @@ export function route(hono: THono) {
     const kvManager = new DingKVManager(c.env);
     const setting = await kvManager.getSettingById(id);
     if (!setting) {
-      return c.send.error(400, `id not found in database: ${SECRETS_PREFIX}/${id}`);
+      return c.send.error(400, `id not found in database: ${SECRETS_PREFIX}${id}`);
     }
 
     if (!setting.outGoingToken) {
-      return c.send.error(400, `please set webhook token in database: ${SECRETS_PREFIX}/${id}`);
+      return c.send.error(400, `please set webhook token in database: ${SECRETS_PREFIX}${id}`);
     }
 
     const errMessage = await verifyMessage(
