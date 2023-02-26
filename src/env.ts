@@ -11,9 +11,6 @@ export default class Environment {
   get CHATGPT_API_REVERSE_PROXY_URL() {
     return this.env.CHATGPT_API_REVERSE_PROXY_URL;
   }
-  get CHATGPT_ENDPOINT() {
-    return this.env.CHATGPT_ENDPOINT;
-  }
   static instance() {
     if (!this.#instance) {
       this.#instance = new Environment();

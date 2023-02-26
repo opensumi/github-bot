@@ -16,7 +16,6 @@ declare global {
     readonly OPENAI_API_KEY?: string;
     readonly OPENAI_ACCESS_TOKEN?: string;
     readonly CHATGPT_API_REVERSE_PROXY_URL?: string;
-    readonly CHATGPT_ENDPOINT?: string;
     // readonly MY_QUEUE: Queue;
   }
 
