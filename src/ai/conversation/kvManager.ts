@@ -1,6 +1,6 @@
 import { Message } from '@/ding/types';
 import Environment from '@/env';
-import { KVManager } from '@/runtime/cfworker/kv';
+import { KVManager } from '@/runtime/kv';
 import { randomChoice } from '@/utils';
 
 import { ChatMessage } from '../openai/chatgpt/types';
@@ -15,7 +15,6 @@ const DATA_PREFIX = 'ding/conversation/data/';
 const MESSAGE_PREFIX = 'ding/conversation/message/';
 
 export class ConversationKVManager {
-  kv: KVNamespace;
   settingsKV: KVManager<IConversationSetting>;
   dataKV: KVManager<IConversationData>;
   id: string;
@@ -24,7 +23,6 @@ export class ConversationKVManager {
   constructor(private message: Message) {
     this.id = message.conversationId;
 
-    this.kv = Environment.instance().KV_PROD;
     this.settingsKV = new KVManager(SETTINGS_PREFIX);
     this.dataKV = new KVManager(DATA_PREFIX);
     this.messageKV = new KVManager(MESSAGE_PREFIX);

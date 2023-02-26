@@ -1,5 +1,5 @@
 import { DingBot, verifyMessage } from '@/ding/bot';
-import { DingKVManager } from '@/ding/secrets';
+import { DingKVManager, SECRETS_PREFIX } from '@/ding/secrets';
 
 export function route(hono: THono) {
   hono.post('/ding/:id', async (c) => {
@@ -12,11 +12,11 @@ export function route(hono: THono) {
     const kvManager = new DingKVManager(c.env);
     const setting = await kvManager.getSettingById(id);
     if (!setting) {
-      return c.send.error(400, 'id not found in database');
+      return c.send.error(400, `id not found in database: ${SECRETS_PREFIX}${id}`);
     }
 
     if (!setting.outGoingToken) {
-      return c.send.error(400, 'please set webhook token in database');
+      return c.send.error(400, `please set webhook token in database: ${SECRETS_PREFIX}${id}`);
     }
 
     const errMessage = await verifyMessage(

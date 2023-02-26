@@ -4,7 +4,7 @@ import { ignition } from '@/api';
 import Environment from '@/env';
 import { RequiredField } from '@/types';
 
-const app = new Hono() as THono;
+const app = new Hono<{ Bindings: IRuntimeEnv }>() as THono;
 
 ignition(app);
 

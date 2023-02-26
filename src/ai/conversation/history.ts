@@ -1,4 +1,4 @@
-import { KVManager } from '@/runtime/cfworker/kv';
+import { KVManager } from '@/runtime/kv';
 
 import {
   EMessageRole,

@@ -22,11 +22,12 @@ const resolvePlugin = {
   },
 } as Plugin;
 
-async function main() {
+async function buildWorker() {
   const context = await createContext({
     entryPoints: ['./src/runtime/cfworker/index.ts'],
     bundle: true,
-    outfile: './index.js',
+    outdir: 'dist',
+    outbase: 'src/runtime',
     minify: false,
     color: true,
     loader: {
@@ -47,6 +48,10 @@ async function main() {
       context.dispose();
     });
   }
+}
+
+async function main() {
+  await Promise.all([buildWorker()]);
 }
 
 main();

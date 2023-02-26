@@ -8,6 +8,10 @@ export default class Environment {
     return this.env.KV_PROD;
   }
 
+  get OPENAI_ACCESS_TOKEN() {
+    return this.env.OPENAI_ACCESS_TOKEN;
+  }
+
   get CHATGPT_API_REVERSE_PROXY_URL() {
     return this.env.CHATGPT_API_REVERSE_PROXY_URL;
   }
