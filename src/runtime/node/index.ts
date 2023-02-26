@@ -9,7 +9,7 @@ import Environment from '@/env';
 
 import { NodeKV } from './kv';
 
-const port = Number(process.env.PORT) || 8787;
+const port = process.env.PORT ? Number(process.env.PORT) : 8787;
 
 declare global {
   namespace NodeJS {
