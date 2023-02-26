@@ -34,7 +34,7 @@ async function buildNode() {
       '.svg': 'text',
     },
     platform: 'node',
-    target: 'node18',
+    target: 'node16',
     format: 'cjs',
     define: {
       ...define,
