@@ -4,6 +4,7 @@ import throttle from 'lodash/throttle';
 import { DingBot } from '@/ding/bot';
 import { Context } from '@/ding/commands';
 import { markdown } from '@/ding/message';
+import { standardizeMarkdown } from '@/github/utils';
 
 import { Conversation } from '../conversation';
 
@@ -86,7 +87,7 @@ export class OpenAI {
       await this.bot.reply(
         markdown(
           text.slice(0, 30),
-          `${text.trim()}\n\n> Powered By OpenAI ${powerBy}`,
+          `${standardizeMarkdown(text.trim())}\n\n> Powered By OpenAI ${powerBy}`,
         ),
       );
     }

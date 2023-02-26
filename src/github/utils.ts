@@ -1,6 +1,7 @@
 import { EmitterWebhookEventName } from '@octokit/webhooks';
 import { fromMarkdown } from 'mdast-util-from-markdown';
 import {
+  Root,
   Content,
   Parent,
   Link,
@@ -126,6 +127,26 @@ export function replaceGitHubUrlToMarkdown(
   });
 
   return text;
+}
+
+export async function toDingtalkMarkdown(tree: Root) {
+  return toMarkdown(tree, {
+    extensions: [gfmToMarkdown()],
+    listItemIndent: 'one',
+    /**
+     * DingTalk 突然间只支持这个了
+     */
+    fence: '~',
+  });
+}
+
+export async function standardizeMarkdown(text: string) {
+  const tree = fromMarkdown(text, {
+    extensions: [gfm()],
+    mdastExtensions: [gfmFromMarkdown()],
+  });
+
+  return toDingtalkMarkdown(tree);
 }
 
 export async function sendContentToDing(

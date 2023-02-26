@@ -13,13 +13,14 @@ export function ignition(hono: THono) {
   hono.use('*', async (c, next) => {
     const waitUntil = c.executionCtx.waitUntil.bind(c.executionCtx);
     c.executionCtx.waitUntil = (promise) => {
-      waitUntil(
+      return waitUntil(
         (async () => {
           try {
             await promise;
           } catch (err) {
             console.log('waitUntil error', err);
           }
+          console.log('wait until complete');
         })(),
       );
     };
