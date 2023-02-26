@@ -1,7 +1,7 @@
 name = "sumi-webhook-local"
 vars = { ENVIRONMENT = "local" }
 
-main = "./index.js"
+main = "./dist/cfworker/index.js"
 compatibility_date = "2022-11-30"
 
 logpush = true
