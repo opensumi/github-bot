@@ -32,16 +32,18 @@ export class OpenAI {
 
   async getReplyText(): Promise<IOpenAIResponse> {
     const conversation = new Conversation(this.bot, this.ctx, this);
-    let costTime = 0;
+    let triggerTimes = 0;
     const throttleWait = 5000;
     const onProgress = throttle((data) => {
-      costTime += throttleWait;
+      triggerTimes++;
       if (data.text) {
         this.bot.replyText(
-          'ChatGPT is typing... Current Length: ' +
+          `ChatGPT ${
+            triggerTimes > 10 ? '仍' : triggerTimes > 5 ? '还' : '正'
+          }在输入中。Length: ` +
             data.text.length +
-            ', Cost Time: ' +
-            costTime +
+            ', 时间花费: ' +
+            Math.floor(triggerTimes * throttleWait) +
             'ms',
         );
       }
