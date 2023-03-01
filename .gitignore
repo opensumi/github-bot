@@ -24,3 +24,5 @@ webhooks.json
 wrangler.toml
 
 example.ts
+
+coverage
