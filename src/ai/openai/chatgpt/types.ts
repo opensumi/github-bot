@@ -103,6 +103,9 @@ export type Prompt = {
    * The role played in the prompt
    */
   role: Role;
+  author: {
+    role: string;
+  };
 };
 
 export type ContentType = 'text';

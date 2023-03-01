@@ -115,6 +115,7 @@ export class ChatGPTUnofficialProxyAPI {
       messages: [
         {
           id: messageId,
+          author: { role: 'user' },
           role: 'user',
           content: {
             content_type: 'text',
