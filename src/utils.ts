@@ -35,3 +35,15 @@ export function proxyThisUrl(env: IRuntimeEnv, url: string) {
 export function randomChoice(arr: string[]) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
+
+export async function errorCallback(
+  promise: Promise<void>,
+  cb: (err: unknown) => void,
+) {
+  try {
+    await promise;
+  } catch (err) {
+    cb(err);
+    throw err;
+  }
+}

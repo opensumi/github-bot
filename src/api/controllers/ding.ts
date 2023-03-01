@@ -1,5 +1,6 @@
 import { DingBot, verifyMessage } from '@/ding/bot';
 import { DingKVManager, SECRETS_PREFIX } from '@/ding/secrets';
+import { errorCallback } from '@/utils';
 
 export function route(hono: THono) {
   hono.post('/ding/:id', async (c) => {
@@ -12,11 +13,17 @@ export function route(hono: THono) {
     const kvManager = new DingKVManager(c.env);
     const setting = await kvManager.getSettingById(id);
     if (!setting) {
-      return c.send.error(400, `id not found in database: ${SECRETS_PREFIX}${id}`);
+      return c.send.error(
+        400,
+        `id not found in database: ${SECRETS_PREFIX}${id}`,
+      );
     }
 
     if (!setting.outGoingToken) {
-      return c.send.error(400, `please set webhook token in database: ${SECRETS_PREFIX}${id}`);
+      return c.send.error(
+        400,
+        `please set webhook token in database: ${SECRETS_PREFIX}${id}`,
+      );
     }
 
     const errMessage = await verifyMessage(
@@ -36,7 +43,11 @@ export function route(hono: THono) {
       c.env,
       setting,
     );
-    c.executionCtx.waitUntil(bot.handle());
+    c.executionCtx.waitUntil(
+      errorCallback(bot.handle(), async (err: unknown) => {
+        await bot.replyText(`处理消息出错: ${(err as Error).message} ${(err as Error).stack}`);
+      }),
+    );
     return c.send.message('ok');
   });
 }
