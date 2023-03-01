@@ -33,7 +33,7 @@ export class OpenAI {
   async getReplyText(): Promise<IOpenAIResponse> {
     const conversation = new Conversation(this.bot, this.ctx, this);
     let costTime = 0;
-    const throttleWait = 1000;
+    const throttleWait = 2000;
     const text = await conversation.reply2({
       onProgress: throttle((data) => {
         costTime += throttleWait;
