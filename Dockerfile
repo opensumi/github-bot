@@ -4,7 +4,7 @@ FROM node:18-alpine AS deps
 WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install
-COPY . /app
+COPY . .
 CMD yarn build:node
 
 FROM node:18-alpine AS runner
