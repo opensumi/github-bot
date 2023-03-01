@@ -95,9 +95,7 @@ export class OpenAI {
       await this.bot.reply(
         markdown(
           text.slice(0, 30),
-          `${standardizeMarkdown(
-            text.trim(),
-          )}\n\n> Powered By OpenAI ${powerBy}`,
+          `${text.trim()}\n\n> Powered By OpenAI ${powerBy}`,
         ),
       );
     }

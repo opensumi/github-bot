@@ -27,16 +27,6 @@ interface ReplaceOptions {
   repo: string;
 }
 
-function createLink(title: string, url: string) {
-  const text = `[${title}](${url})`;
-  const tree = fromMarkdown(text, {
-    extensions: [gfm()],
-    mdastExtensions: [gfmFromMarkdown()],
-  });
-  debugger;
-  return tree;
-}
-
 function checkLinkIsLiteral(link: Link) {
   if (link.title !== null) {
     return false;
@@ -70,14 +60,20 @@ export function walk(root: Parent, cb: (token: Content) => boolean | void) {
   });
 }
 
-export function replaceGitHubUrlToMarkdown(
-  text: string,
-  options: ReplaceOptions,
-) {
+function parseMarkdown(text: string) {
   const tree = fromMarkdown(text, {
     extensions: [gfm()],
     mdastExtensions: [gfmFromMarkdown()],
   });
+  return tree;
+}
+
+export function replaceGitHubUrlToMarkdown(
+  text: string,
+  options: ReplaceOptions,
+) {
+  const tree = parseMarkdown(text);
+
   walk(tree, (node) => {
     if (node.type === 'link') {
       if (checkLinkIsLiteral(node)) {
@@ -137,15 +133,12 @@ export function toDingtalkMarkdown(tree: Root) {
      * DingTalk 突然间只支持这个了
      */
     fence: '~',
+    fences: true,
   });
 }
 
 export function standardizeMarkdown(text: string) {
-  const tree = fromMarkdown(text, {
-    extensions: [gfm()],
-    mdastExtensions: [gfmFromMarkdown()],
-  });
-
+  const tree = parseMarkdown(text);
   return toDingtalkMarkdown(tree);
 }
 
@@ -184,7 +177,6 @@ export function contentToMarkdown(data: MarkdownContent) {
   const { text: _text, title } = data;
 
   const text = securityInterception(_text);
-
   const dingContent = markdown(title, text);
   return dingContent;
 }

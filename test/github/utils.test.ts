@@ -9,6 +9,7 @@ import {
   replaceGitHubUrlToMarkdown,
   replaceGitHubText,
   parseGitHubUrl,
+  standardizeMarkdown,
 } from '@/github/utils';
 
 describe('github utils', () => {
@@ -173,5 +174,14 @@ describe('github utils', () => {
     const result2 = parseGitHubUrl('https://github.com/opensumi');
     expect(result2?.type).toEqual('owner');
     expect(result2?.owner).toEqual('opensumi');
+  });
+  it('can standardizeMarkdown', () => {
+    const text =
+      '{"message": {"id": "587fe888-c9d3-4065-83e9-dc8ee27a567f", "author": {"role": "assistant", "name": null, "metadata": {}}, "create_time": null, "update_time": null, "content": {"content_type": "text", "parts": ["\\u60a8\\u597d\\uff01\\u4ee5\\u4e0b\\u662f\\u4e00\\u4e2a\\u7b80\\u5355\\u7684shell\\u811a\\u672c\\uff0c\\u53ef\\u4ee5\\u5b9e\\u73b0\\u66ff\\u6362\\u6307\\u5b9a\\u6587\\u4ef6\\u4e2d\\u7684\\u5185\\u5bb9\\uff1a\\n\\n```\\n#!/bin/bash\\n\\necho \\"\\u8bf7\\u8f93\\u5165\\u8981\\u66ff\\u6362\\u7684\\u5185\\u5bb9\\uff1a\\"\\nread old_content\\n\\necho \\"\\u8bf7\\u8f93\\u5165\\u66ff\\u6362\\u540e\\u7684\\u5185\\u5bb9\\uff1a\\"\\nread new_content\\n\\necho \\"\\u8bf7\\u8f93\\u5165\\u8981\\u66ff\\u6362\\u7684\\u6587\\u4ef6\\u8def\\u5f84\\uff1a\\"\\nread file_path\\n\\nsed -i \\"s/$old_content/$new_content/g\\" $file_path\\n\\necho \\"\\u66ff\\u6362\\u5b8c\\u6210\\uff01\\"\\n```\\n\\n\\u4ee5\\u4e0a\\u811a\\u672c\\u4e2d\\uff0c`read` \\u547d\\u4ee4\\u7528\\u4e8e\\u8bfb\\u53d6\\u7528\\u6237\\u8f93\\u5165\\u7684\\u5185\\u5bb9\\uff0c`sed` \\u547d\\u4ee4\\u7528\\u4e8e\\u8fdb\\u884c\\u66ff\\u6362\\u64cd\\u4f5c\\u3002\\u5728\\u547d\\u4ee4\\u4e2d\\uff0c`-i` \\u8868\\u793a\\u76f4\\u63a5\\u4fee\\u6539\\u6587\\u4ef6\\u5185\\u5bb9\\uff0c`s` \\u8868\\u793a\\u66ff\\u6362\\u64cd\\u4f5c\\uff0c`g` \\u8868\\u793a\\u5168\\u5c40\\u5339\\u914d\\u3002\\u5176\\u4e2d `$old_content` \\u548c `$new_content` \\u5206\\u522b\\u8868\\u793a\\u7528\\u6237\\u8f93\\u5165\\u7684\\u8981\\u66ff\\u6362\\u7684\\u5185\\u5bb9\\u548c\\u66ff\\u6362\\u540e\\u7684\\u5185\\u5bb9\\u3002"]}, "end_turn": false, "weight": 1.0, "metadata": {"message_type": "next", "model_slug": "text-davinci-002-render-sha", "finish_details": {"type": "stop"}}, "recipient": "all"}, "conversation_id": "80efac16-c3bc-4ca1-b7fd-32536f6bfd72", "error": null}';
+
+    const data = JSON.parse(text);
+    const preText = data.message.content.parts[0];
+    const result = standardizeMarkdown(preText);
+    console.log(`🚀 ~ file: utils.test.ts:183 ~ it ~ result:`, result);
   });
 });

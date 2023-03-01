@@ -1,3 +1,5 @@
+import { standardizeMarkdown } from '@/github/utils';
+
 export interface At {
   at: {
     atDingtalkIds: string[];
@@ -55,7 +57,7 @@ export function markdown(title: string, text: string): Markdown {
     msgtype: 'markdown',
     markdown: {
       title,
-      text,
+      text: standardizeMarkdown(text),
     },
   };
 }
