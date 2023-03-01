@@ -46,9 +46,3 @@ declare global {
 }
 
 export {};
-
-declare module 'axios' {
-  interface AxiosRequestConfig {
-    jar?: CookieJar;
-  }
-}
