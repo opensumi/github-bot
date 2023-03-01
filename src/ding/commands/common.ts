@@ -1,5 +1,3 @@
-import pTimeout, { TimeoutError } from 'p-timeout';
-
 import { OpenAI } from '@/ai/openai';
 import { ECompletionModel } from '@/ai/openai/shared';
 import { startsWith } from '@/commander';
@@ -84,21 +82,13 @@ export function registerCommonCommand(it: DingCommandCenter) {
   it.all(async (bot: DingBot, ctx: Context) => {
     try {
       const openai = new OpenAI(bot, ctx);
-      const text = await pTimeout(openai.getReplyText(), {
-        milliseconds: 61 * 1000,
-        message: 'openai-timeout',
-      });
+      const text = await openai.getReplyText();
       if (text) {
         await openai.reply(text);
       } else {
         await bot.replyText('OpenAI 接口调用没有返回结果');
       }
     } catch (error) {
-      console.log(`🚀 ~ file: common.ts:97 ~ it.all ~ error:`, error);
-      if (error instanceof TimeoutError) {
-        await bot.replyText('OpenAI 接口调用超时(60s)');
-        return;
-      }
       await bot.replyText(
         'OpenAI 接口返回错误信息：' + (error as Error).message,
       );
