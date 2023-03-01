@@ -157,11 +157,6 @@ export class ChatGPTUnofficialProxyAPI {
         body: JSON.stringify(body),
         signal: abortSignal,
         onMessage: (data: string) => {
-          console.log(
-            `🚀 ~ file: unofficial.ts:213 ~ ChatGPTUnofficialProxyAPI ~ responseP ~ data:`,
-            data,
-          );
-
           if (data === '[BOT:NO_RESPONSE]') {
             return reject(new Error('No response from OpenAI'));
           }
@@ -170,17 +165,17 @@ export class ChatGPTUnofficialProxyAPI {
           }
 
           try {
-            const convoResponseEvent: types.ConversationResponseEvent =
+            const responseEvent: types.ConversationResponseEvent =
               JSON.parse(data);
-            if (convoResponseEvent.conversation_id) {
-              result.conversationId = convoResponseEvent.conversation_id;
+            if (responseEvent.conversation_id) {
+              result.conversationId = responseEvent.conversation_id;
             }
 
-            if (convoResponseEvent.message?.id) {
-              result.id = convoResponseEvent.message.id;
+            if (responseEvent.message?.id) {
+              result.id = responseEvent.message.id;
             }
 
-            const message = convoResponseEvent.message;
+            const message = responseEvent.message;
 
             if (message) {
               const text = message?.content?.parts?.[0];
@@ -200,8 +195,6 @@ export class ChatGPTUnofficialProxyAPI {
         },
       }).catch((err) => {
         const errMessageL = err.toString().toLowerCase();
-        console.log(`🚀 ~ file: unofficial.ts:203 ~ ChatGPTUnofficialProxyAPI ~ responseP ~ errMessageL:`, errMessageL);
-
         if (
           result.text &&
           (errMessageL === 'error: typeerror: terminated' ||
