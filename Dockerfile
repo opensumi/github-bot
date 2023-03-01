@@ -5,12 +5,12 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 RUN yarn install
 COPY . /app
-CMD yarn build:node
+RUN yarn build:node
 
 FROM node:18-slim AS runner
 WORKDIR /app
 
-COPY --from=deps /app/dist/node/ ./
+COPY --from=deps /app/dist/node/ .
 
 ENV NODE_ENV production
 
