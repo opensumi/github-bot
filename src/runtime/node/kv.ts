@@ -25,13 +25,17 @@ export class NodeKV implements IKVNamespace {
     const result = await this.kv.readKey({
       key,
     });
-    if (!result) {
-      return result;
+    if (!result.success) {
+      return null;
     }
+
     if (type === 'json') {
-      return JSON.parse(result);
+      if (result.type === 'json') {
+        return result.data;
+      }
+      return JSON.parse(result.data);
     }
-    return result;
+    return result.data;
   }
   async put(
     key: string,

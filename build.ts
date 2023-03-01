@@ -15,7 +15,6 @@ const resolvePlugin = {
         const result = {
           path: require.resolve('decode-named-character-reference'),
         };
-        console.log(`intercept ${args.path} resolve to ${result.path}`);
         return result;
       },
     );

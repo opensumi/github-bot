@@ -1,6 +1,5 @@
 import { IBaseInputs } from './types';
 import {
-  httpsReq,
   checkKey,
   checkKeys,
   checkLimit,
@@ -11,6 +10,7 @@ import {
   getPathWithQueryString,
   MAX_KEYS_LIMIT,
   getAuthHeaders,
+  httpsReq,
 } from './utils';
 
 export class WorkersKV {
@@ -69,12 +69,12 @@ export class WorkersKV {
         prefix,
         cursor,
       });
-      console.log(`🚀 ~ file: index.ts:72 ~ WorkersKV ~ listAllKeys= ~ data:`, data);
-      const { success, result } = data as any;
+
+      const { success, result } = data.data as any;
 
       success && result.forEach((x: any) => results.push(x));
 
-      ({ result_info } = data as any);
+      ({ result_info } = data.data as any);
       ({ cursor } = result_info);
     } while (result_info && result_info.cursor);
 
@@ -134,7 +134,7 @@ export class WorkersKV {
     const method = 'GET';
     const options = { method, host, path, headers };
 
-    return httpsReq(options) as any;
+    return httpsReq(options);
   };
 
   deleteKey = async ({ key }: { key: string }) => {

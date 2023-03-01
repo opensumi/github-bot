@@ -3,7 +3,9 @@ import querystring from 'querystring';
 
 import { IBaseInputs } from './types';
 
-const workersKvDebug = console.debug;
+const workersKvDebug = (...args: any[]) => {
+  console.debug('WorkersKV: ', ...args);
+};
 
 export const MAX_KEYS_LIMIT = 1000;
 export const MIN_KEYS_LIMIT = 10;
@@ -16,14 +18,20 @@ export const ERROR_PREFIX = 'workers-kv';
 export const httpsAgent = new https.Agent({ keepAlive: true });
 
 export const httpsReq = (options: Record<string, any>, reqBody = '') =>
-  new Promise((resolve, reject) => {
+  new Promise<{
+    type: 'stream' | 'text' | 'json';
+    data: any;
+    success: boolean;
+  }>((resolve, reject) => {
     options.agent = httpsAgent;
     const req = https.request(options, (res) => {
-      const { headers } = res;
-      workersKvDebug({ headers });
+      const { headers, statusCode } = res;
+      workersKvDebug({ status: res.statusCode, headers });
       let data = '';
       res.on('data', (chunk) => (data += chunk));
-      res.on('end', () => responseBodyResolver(resolve)(headers, data));
+      res.on('end', () =>
+        responseBodyResolver(resolve)(statusCode, headers, data),
+      );
     });
     req.on('error', (e) => reject(e));
     !!reqBody && req.write(reqBody);
@@ -31,15 +39,34 @@ export const httpsReq = (options: Record<string, any>, reqBody = '') =>
   });
 
 export const responseBodyResolver =
-  (resolve: (data: any) => void) =>
-  (headers: Record<string, any>, data: any) => {
+  (
+    resolve: (data: {
+      type: 'stream' | 'text' | 'json';
+      data: any;
+      success: boolean;
+    }) => void,
+  ) =>
+  (statusCode: number | undefined, headers: Record<string, any>, data: any) => {
+    const success = Boolean(statusCode && statusCode === 200);
     const contentType = headers['content-type'];
     if (contentType.includes('text/plain')) {
-      resolve(data);
+      resolve({
+        type: 'text',
+        success,
+        data,
+      });
     } else if (contentType.includes('application/json')) {
-      resolve(JSON.parse(data));
+      resolve({
+        type: 'json',
+        success,
+        data: JSON.parse(data),
+      });
     } else if (contentType.includes('application/octet-stream')) {
-      resolve(data);
+      resolve({
+        type: 'stream',
+        success,
+        data: data,
+      });
     } else {
       throw new Error(
         `${ERROR_PREFIX} only JSON, octet-stream or plain text content types are expected. Received content-type: ${contentType}.`,
@@ -47,11 +74,11 @@ export const responseBodyResolver =
     }
   };
 
-export const removeUndefineds = (obj: Record<string, any>) =>
+export const removeUndefined = (obj: Record<string, any>) =>
   JSON.parse(JSON.stringify(obj));
 
 export const getQueryString = (obj: Record<string, any>) =>
-  querystring.stringify(removeUndefineds(obj));
+  querystring.stringify(removeUndefined(obj));
 
 export const getPathWithQueryString = (path: string, qs: string) =>
   path + (qs ? `?${qs}` : '');
