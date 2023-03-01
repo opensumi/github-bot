@@ -42,8 +42,7 @@ export class Conversation {
     const history = await this.conversationKVManager.getMessageHistory();
     const lastMessage = history.lastMessage;
     const api = new ChatGPTUnofficialProxyAPI({
-      apiReverseProxyUrl:
-        await this.conversationKVManager.getApiReverseProxyUrl(),
+      apiReverseProxyUrl: this.conversationKVManager.getApiReverseProxyUrl(),
       debug: true,
       accessToken: Environment.instance().OPENAI_ACCESS_TOKEN!,
     });
