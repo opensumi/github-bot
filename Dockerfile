@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-FROM node:18-alpine AS deps
+FROM node:18-slim AS deps
 
 WORKDIR /app
 COPY package.json yarn.lock ./
@@ -7,7 +7,7 @@ RUN yarn install
 COPY . /app
 CMD yarn build:node
 
-FROM node:18-alpine AS runner
+FROM node:18-slim AS runner
 WORKDIR /app
 
 COPY --from=deps /app/dist/node/ ./
