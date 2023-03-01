@@ -33,21 +33,25 @@ export class OpenAI {
   async getReplyText(): Promise<IOpenAIResponse> {
     const conversation = new Conversation(this.bot, this.ctx, this);
     let costTime = 0;
-    const throttleWait = 2000;
+    const throttleWait = 5000;
+    const onProgress = throttle((data) => {
+      costTime += throttleWait;
+      if (data.text) {
+        this.bot.replyText(
+          'ChatGPT is typing... Current Length: ' +
+            data.text.length +
+            ', Cost Time: ' +
+            costTime +
+            'ms',
+        );
+      }
+    }, throttleWait);
+
     const text = await conversation.reply2({
-      onProgress: throttle((data) => {
-        costTime += throttleWait;
-        if (data.text) {
-          this.bot.replyText(
-            'ChatGPT is typing... Current Length: ' +
-              data.text.length +
-              ', Cost Time: ' +
-              costTime +
-              'ms',
-          );
-        }
-      }, throttleWait),
+      onProgress,
     });
+
+    onProgress.cancel();
     return {
       type: 'chatgpt',
       text,
