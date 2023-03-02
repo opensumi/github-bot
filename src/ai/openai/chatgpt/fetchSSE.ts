@@ -1,4 +1,4 @@
-import { createParser } from '@/lib/eventsource-parser';
+import { createParser } from 'eventsource-parser';
 
 import { streamAsyncIterable } from './stream-async-iterable';
 import * as types from './types';
