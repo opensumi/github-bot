@@ -6,13 +6,11 @@ import { randomChoice } from '@/utils';
 import { ChatMessage } from '../openai/chatgpt/types';
 import { ECompletionModel } from '../openai/shared';
 
-import { ConversationHistory } from './history';
 import { ChatMessageHistory } from './messageHistory';
-import { IConversationData, IConversationSetting } from './types';
+import { IConversationSetting } from './types';
 
 export class ConversationKVManager {
   settingsKV: KVManager<IConversationSetting>;
-  dataKV: KVManager<IConversationData>;
   id: string;
   messageKV: KVManager<ChatMessage[]>;
 
@@ -20,7 +18,6 @@ export class ConversationKVManager {
     this.id = message.conversationId;
 
     this.settingsKV = KVManager.for(DingConversation.SETTINGS_PREFIX);
-    this.dataKV = KVManager.for(DingConversation.DATA_PREFIX);
     this.messageKV = KVManager.for(DingConversation.MESSAGE_PREFIX);
   }
   setPreferredConversationModel = async (model: ECompletionModel) => {
@@ -52,12 +49,6 @@ export class ConversationKVManager {
   };
 
   clearConversation = async () => {
-    await this.dataKV.delete(this.id);
     await this.messageKV.delete(this.id);
   };
-
-  async getConversation() {
-    const data = await this.dataKV.getJSON(this.id);
-    return new ConversationHistory(data ?? { data: [] }, this.dataKV, this.id);
-  }
 }

@@ -4,7 +4,7 @@ import {
   EMessageRole,
   IConversationData,
   IConversationHistoryItem,
-} from './types';
+} from '../../conversation/types';
 
 export class ConversationHistory {
   data: IConversationHistoryItem[];
@@ -15,11 +15,13 @@ export class ConversationHistory {
   ) {
     this.data = data.data;
   }
+
   async save() {
     await this.dataKV.setJSON(this.id, {
       data: this.data,
     });
   }
+
   recordHuman = async (humanText: string) => {
     this.data = [
       ...this.data,

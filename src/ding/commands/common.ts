@@ -1,6 +1,6 @@
-import { OpenAI } from '@/ai/openai';
 import { ECompletionModel } from '@/ai/openai/shared';
 import { startsWith } from '@/commander';
+import { OpenAI } from '@/ding/openai';
 import { StringBuilder } from '@/utils';
 
 import type { DingBot } from '../bot';

@@ -1,13 +1,10 @@
-// import { OpenAIClient, CompletionParams } from '@bytemain/openai-fetch';
 import throttle from 'lodash/throttle';
 
+import { Conversation } from '@/ai/conversation';
+import { ECompletionModel } from '@/ai/openai/shared';
 import { DingBot } from '@/ding/bot';
 import { Context } from '@/ding/commands';
 import { markdown } from '@/ding/message';
-
-import { Conversation } from '../conversation';
-
-import { ECompletionModel } from './shared';
 
 export interface IOpenAIResponse {
   type: 'gpt3' | 'chatgpt';
@@ -15,22 +12,13 @@ export interface IOpenAIResponse {
 }
 
 export class OpenAI {
-  // openai: OpenAIClient;
   model = ECompletionModel.GPT3;
 
-  constructor(protected bot: DingBot, protected ctx: Context) {
-    // this.openai = new OpenAIClient({
-    //   apiKey: bot.env.OPENAI_API_KEY,
-    //   options: {
-    //     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //     // @ts-ignore
-    //     credentials: undefined,
-    //   },
-    // });
-  }
+  constructor(protected bot: DingBot, protected ctx: Context) {}
 
   async getReplyText(): Promise<IOpenAIResponse> {
-    const conversation = new Conversation(this.bot, this.ctx, this);
+    const conversation = new Conversation(this.bot, this.ctx);
+
     let triggerTimes = 0;
     const throttleWait = 5000;
     const onProgress = throttle((data) => {
@@ -58,34 +46,6 @@ export class OpenAI {
       text,
     };
   }
-
-  // async createCompletion(
-  //   prompt: string,
-  //   options?: {
-  //     stop?: string | string[];
-  //     max_tokens?: number;
-  //   },
-  // ): Promise<string | undefined> {
-  //   const model =
-  //     await this.bot.conversationKVManager.getConversationPreferredModel();
-
-  //   const params = {
-  //     model: model,
-  //     prompt: prompt,
-  //     temperature: 0.8,
-  //     top_p: 1.0,
-  //     presence_penalty: 1.0,
-  //     frequency_penalty: 0.5,
-  //     max_tokens: options?.max_tokens || 1024,
-  //   } as CompletionParams;
-  //   if (options?.stop) {
-  //     params.stop = options.stop;
-  //   }
-  //   const response = await this.openai.createCompletion(params);
-  //   const text = response.completion;
-
-  //   return text;
-  // }
 
   async reply(response: IOpenAIResponse): Promise<void> {
     if (response.text) {

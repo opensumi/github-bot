@@ -1,9 +1,7 @@
 import { DingBot } from '@/ding/bot';
 import { Context } from '@/ding/commands';
 import Environment from '@/env';
-import { StringBuilder } from '@/utils';
 
-import { OpenAI } from '../openai';
 import {
   ChatMessage,
   SendMessageBrowserOptions,
@@ -11,9 +9,6 @@ import {
 import { ChatGPTUnofficialProxyAPI } from '../openai/chatgpt/unofficial';
 
 import { ConversationKVManager } from './kvManager';
-import { EMessageRole } from './types';
-
-export const STOP_KEYWORD = '';
 
 export class Conversation {
   conversationId: string;
@@ -21,18 +16,12 @@ export class Conversation {
 
   currentRoundPrompt: string;
 
-  constructor(
-    protected bot: DingBot,
-    protected ctx: Context,
-    protected openai: OpenAI,
-  ) {
+  constructor(protected bot: DingBot, protected ctx: Context) {
     this.conversationId = bot.msg.conversationId;
     this.conversationKVManager = bot.conversationKVManager;
 
     this.currentRoundPrompt = ctx.command;
   }
-
-  _maxResponseTokens = 1000;
 
   async reply2(options?: { onProgress?: (data: ChatMessage) => void }) {
     if (!Environment.instance().OPENAI_ACCESS_TOKEN) {
@@ -58,40 +47,6 @@ export class Conversation {
     await history.recordChat(message);
     if (message.text) {
       return message.text;
-    }
-  }
-  async reply() {
-    const currentDate = new Date().toISOString().split('T')[0];
-
-    const history = await this.conversationKVManager.getConversation();
-    await history.recordHuman(this.currentRoundPrompt);
-
-    const builder = new StringBuilder();
-    builder.add(
-      `Instructions:\nYou are ${EMessageRole.AI}, a large language model trained by OpenAI.
-      Current date: ${currentDate}${STOP_KEYWORD}\n\n`,
-    );
-    builder.add(`${EMessageRole.AI} 和 ${EMessageRole.Human} 使用中文交流。\n`);
-    builder.addLineIfNecessary();
-
-    if (history) {
-      const data = history.data;
-      for (const item of data) {
-        builder.add(`${item.type}: ${item.str}${STOP_KEYWORD}`);
-      }
-    }
-    builder.add(
-      `${EMessageRole.Human}: ${this.currentRoundPrompt}${STOP_KEYWORD}`,
-    );
-    builder.add(`${EMessageRole.AI}:${STOP_KEYWORD}`);
-
-    const prompt = builder.toString();
-
-    const text = await this.openai.createCompletion(prompt, {});
-
-    if (text) {
-      await history.recordAI(text);
-      return text;
     }
   }
 }

@@ -16,6 +16,10 @@ export default class Environment {
     return this.env.HOST;
   }
 
+  get OPENAI_API_KEY() {
+    return this.env.OPENAI_API_KEY;
+  }
+
   get OPENAI_ACCESS_TOKEN() {
     return this.env.OPENAI_ACCESS_TOKEN;
   }
