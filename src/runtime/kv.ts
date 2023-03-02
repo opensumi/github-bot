@@ -4,7 +4,7 @@ export class KVManager<T> {
   kv: IKVNamespace;
 
   constructor(private prefix: string = '') {
-    this.kv = Environment.instance().KV_PROD;
+    this.kv = Environment.instance().KV;
   }
 
   private f(key: string) {

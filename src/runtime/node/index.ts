@@ -27,7 +27,7 @@ ignition(app);
 
 serve({
   fetch(request) {
-    Environment.from({
+    Environment.from('node', {
       ...process.env,
       KV_PROD: new NodeKV(),
     });

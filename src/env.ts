@@ -1,10 +1,14 @@
+export type TSupportedRuntime = 'cloudflare' | 'node';
+
 export default class Environment {
-  private constructor() {
-    // noop
-  }
+  private constructor(
+    public readonly runtime: TSupportedRuntime,
+    private env: IRuntimeEnv,
+  ) {}
+
   static #instance: Environment;
 
-  get KV_PROD() {
+  get KV() {
     return this.env.KV_PROD;
   }
 
@@ -15,17 +19,21 @@ export default class Environment {
   get CHATGPT_API_REVERSE_PROXY_URL() {
     return this.env.CHATGPT_API_REVERSE_PROXY_URL;
   }
+
   static instance() {
     if (!this.#instance) {
-      this.#instance = new Environment();
+      throw new Error('Environment not initialized');
     }
     return this.#instance;
   }
 
-  env!: IRuntimeEnv;
-  static from(env: IRuntimeEnv) {
-    const instance = this.instance();
-    instance.env = env;
+  static from(runtime: TSupportedRuntime, env: IRuntimeEnv) {
+    if (this.#instance) {
+      throw new Error('Environment already initialized');
+    }
+    const instance = new Environment(runtime, env);
+
+    this.#instance = instance;
     return instance;
   }
 }
