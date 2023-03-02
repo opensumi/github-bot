@@ -1,4 +1,4 @@
-import { WorkersKV } from '@/lib/workers-kv';
+import { WorkersKV } from '@/runtime/node/workers-kv';
 
 const cfAccountId = process.env.CLOUDFLARE_ACCOUNT_ID!;
 const cfAuthToken = process.env.CLOUDFLARE_AUTH_TOKEN!;
