@@ -1,13 +1,15 @@
 import Environment from '@/env';
 
+export * from './constants';
+
 export class KVManager<T> {
   kv: IKVNamespace;
 
-  constructor(private prefix: string = '') {
+  private constructor(public prefix: string = '') {
     this.kv = Environment.instance().KV;
   }
 
-  private f(key: string) {
+  f(key: string) {
     return this.prefix + key;
   }
 
@@ -26,5 +28,14 @@ export class KVManager<T> {
   }
   async delete(key: string) {
     return await this.kv.delete(this.f(key));
+  }
+
+  static #cache: Map<string, KVManager<any>> = new Map();
+
+  static for<T>(prefix: string): KVManager<T> {
+    if (!this.#cache.has(prefix)) {
+      this.#cache.set(prefix, new KVManager(prefix));
+    }
+    return this.#cache.get(prefix)!;
   }
 }

@@ -1,8 +1,7 @@
 // 在 github app 的设置页面中查看
 // 如：https://github.com/organizations/riril/settings/apps/ririltestbot
 
-import Environment from '@/env';
-import { KVManager } from '@/runtime/kv';
+import { GitHubCommon, KVManager } from '@/kv';
 
 export interface IDingWebhookItem {
   // Webhook for the dingtalk bot
@@ -32,9 +31,6 @@ export interface ISetting {
   notDisplayRepoName?: boolean;
 }
 
-const GITHUB_SETTINGS_PREFIX = 'github/settings/';
-const GITHUB_APP_SETTINGS_PREFIX = 'github/app/settings/';
-
 export type AppSetting = ISetting & {
   // GitHub App related
   appSettings: {
@@ -49,8 +45,12 @@ export class GitHubKVManager {
   appSettingsKV: KVManager<AppSetting>;
   settingsKV: KVManager<ISetting>;
   constructor() {
-    this.appSettingsKV = new KVManager<AppSetting>(GITHUB_APP_SETTINGS_PREFIX);
-    this.settingsKV = new KVManager<ISetting>(GITHUB_SETTINGS_PREFIX);
+    this.appSettingsKV = KVManager.for<AppSetting>(
+      GitHubCommon.GITHUB_APP_SETTINGS_PREFIX,
+    );
+    this.settingsKV = KVManager.for<ISetting>(
+      GitHubCommon.GITHUB_SETTINGS_PREFIX,
+    );
   }
 
   getAppSettingById = async (id: string) => {

@@ -1,5 +1,5 @@
 import { DingBot, verifyMessage } from '@/ding/bot';
-import { DingKVManager, SECRETS_PREFIX } from '@/ding/secrets';
+import { DingKVManager } from '@/ding/secrets';
 import { errorCallback } from '@/utils';
 
 export function route(hono: THono) {
@@ -10,19 +10,19 @@ export function route(hono: THono) {
     if (!id) {
       return c.send.error(400, 'need a valid id');
     }
-    const kvManager = new DingKVManager(c.env);
+    const kvManager = new DingKVManager();
     const setting = await kvManager.getSettingById(id);
     if (!setting) {
       return c.send.error(
         400,
-        `id not found in database: ${SECRETS_PREFIX}${id}`,
+        `id not found in database: ${kvManager.secretsKV.f(id)}`,
       );
     }
 
     if (!setting.outGoingToken) {
       return c.send.error(
         400,
-        `please set webhook token in database: ${SECRETS_PREFIX}${id}`,
+        `please set webhook token in database:  ${kvManager.secretsKV.f(id)}`,
       );
     }
 
@@ -40,12 +40,13 @@ export function route(hono: THono) {
       await c.req.json(),
       kvManager,
       c.executionCtx,
-      c.env,
       setting,
     );
     c.executionCtx.waitUntil(
       errorCallback(bot.handle(), async (err: unknown) => {
-        await bot.replyText(`处理消息出错: ${(err as Error).message} ${(err as Error).stack}`);
+        await bot.replyText(
+          `处理消息出错: ${(err as Error).message} ${(err as Error).stack}`,
+        );
       }),
     );
     return c.send.message('ok');

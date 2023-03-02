@@ -1,6 +1,6 @@
 import { Message } from '@/ding/types';
 import Environment from '@/env';
-import { KVManager } from '@/runtime/kv';
+import { KVManager, DingConversation } from '@/kv';
 import { randomChoice } from '@/utils';
 
 import { ChatMessage } from '../openai/chatgpt/types';
@@ -9,10 +9,6 @@ import { ECompletionModel } from '../openai/shared';
 import { ConversationHistory } from './history';
 import { ChatMessageHistory } from './messageHistory';
 import { IConversationData, IConversationSetting } from './types';
-
-const SETTINGS_PREFIX = 'ding/conversation/settings/';
-const DATA_PREFIX = 'ding/conversation/data/';
-const MESSAGE_PREFIX = 'ding/conversation/message/';
 
 export class ConversationKVManager {
   settingsKV: KVManager<IConversationSetting>;
@@ -23,9 +19,9 @@ export class ConversationKVManager {
   constructor(private message: Message) {
     this.id = message.conversationId;
 
-    this.settingsKV = new KVManager(SETTINGS_PREFIX);
-    this.dataKV = new KVManager(DATA_PREFIX);
-    this.messageKV = new KVManager(MESSAGE_PREFIX);
+    this.settingsKV = KVManager.for(DingConversation.SETTINGS_PREFIX);
+    this.dataKV = KVManager.for(DingConversation.DATA_PREFIX);
+    this.messageKV = KVManager.for(DingConversation.MESSAGE_PREFIX);
   }
   setPreferredConversationModel = async (model: ECompletionModel) => {
     return await this.settingsKV.updateJSON(this.id, {

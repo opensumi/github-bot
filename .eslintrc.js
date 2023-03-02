@@ -10,6 +10,7 @@ module.exports = {
   ],
   rules: {
     '@typescript-eslint/no-var-requires': 'off',
+    "@typescript-eslint/no-namespace": "off",
     'import/order': [
       'error',
       {

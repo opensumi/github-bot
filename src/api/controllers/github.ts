@@ -19,6 +19,6 @@ export function route(hono: THono) {
     }
 
     const app = await initApp(setting);
-    return webhookHandler(app.webhooks, c.req, c.env, c.executionCtx);
+    return webhookHandler(app.webhooks, c.req, c.executionCtx);
   });
 }

@@ -78,7 +78,6 @@ export class DingBot {
     public msg: Message,
     public kvManager: DingKVManager,
     public ctx: ExecutionContext,
-    public env: IRuntimeEnv,
     public setting: IDingBotSetting,
   ) {
     this.githubKVManager = new GitHubKVManager();

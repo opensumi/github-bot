@@ -1,6 +1,6 @@
-import { KVManager } from '@/runtime/kv';
+import { ChatMessage } from '@/ai/openai/chatgpt/types';
+import { KVManager } from '@/kv';
 
-import { ChatMessage } from '../openai/chatgpt/types';
 
 export class ChatMessageHistory {
   constructor(

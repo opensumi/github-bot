@@ -1,3 +1,5 @@
+import Environment from "./env";
+
 export class StringBuilder {
   private array = [] as string[];
   constructor(...initial: string[]) {
@@ -28,8 +30,8 @@ export class StringBuilder {
   }
 }
 
-export function proxyThisUrl(env: IRuntimeEnv, url: string) {
-  return `${env.HOST}/proxy/${encodeURIComponent(url)}`;
+export function proxyThisUrl(url: string) {
+  return `${Environment.instance().HOST}/proxy/${encodeURIComponent(url)}`;
 }
 
 export function randomChoice(arr: string[]) {

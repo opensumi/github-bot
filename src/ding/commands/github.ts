@@ -34,7 +34,6 @@ export function registerGitHubCommand(it: DingCommandCenter) {
         markdown(
           `${full_name} Open Graph`,
           `![](${proxyThisUrl(
-            bot.env,
             `https://opengraph.githubassets.com/${makeid(16)}/${full_name}`,
           )})`,
         ),
@@ -108,7 +107,6 @@ export function registerGitHubCommand(it: DingCommandCenter) {
               markdown(
                 `${full_name} Open Graph`,
                 `![](${proxyThisUrl(
-                  bot.env,
                   `https://opengraph.githubassets.com/${makeid(
                     16,
                   )}/${full_name}`,

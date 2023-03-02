@@ -127,7 +127,6 @@ export async function webhookHandler(
   webhooks: Webhooks,
   // eslint-disable-next-line @typescript-eslint/ban-types
   req: HonoRequest<any, {}>,
-  env: IRuntimeEnv,
   execContext: ExecutionContext,
 ) {
   try {

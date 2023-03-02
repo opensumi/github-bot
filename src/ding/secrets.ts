@@ -1,4 +1,4 @@
-import { KVManager } from '@/runtime/kv';
+import { KVManager, DingCommon } from '@/kv';
 
 export interface IDingBotSetting {
   outGoingToken: string;
@@ -9,16 +9,13 @@ export interface IDingInfo {
   enableConversation?: boolean;
 }
 
-export const SECRETS_PREFIX = 'ding/secrets/';
-const INFO_PREFIX = 'ding/info/';
-
 export class DingKVManager {
   secretsKV: KVManager<IDingBotSetting>;
   infoKV: KVManager<IDingInfo>;
 
-  constructor(private env: IRuntimeEnv) {
-    this.secretsKV = new KVManager(SECRETS_PREFIX);
-    this.infoKV = new KVManager(INFO_PREFIX);
+  constructor() {
+    this.secretsKV = KVManager.for(DingCommon.SECRETS_PREFIX);
+    this.infoKV = KVManager.for(DingCommon.INFO_PREFIX);
   }
 
   getSettingById = async (id: string) => {

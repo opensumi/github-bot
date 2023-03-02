@@ -28,6 +28,6 @@ export function route(hono: THono) {
     setupWebhooksTemplate(webhooks, {
       setting: setting,
     });
-    return webhookHandler(webhooks, c.req, c.env, c.executionCtx);
+    return webhookHandler(webhooks, c.req, c.executionCtx);
   });
 }

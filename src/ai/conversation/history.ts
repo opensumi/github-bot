@@ -1,4 +1,4 @@
-import { KVManager } from '@/runtime/kv';
+import { KVManager } from '@/kv';
 
 import {
   EMessageRole,
