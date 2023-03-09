@@ -1,4 +1,4 @@
-import { OpenAIClient, CompletionParams } from '@bytemain/openai-fetch';
+import { OpenAIClient, CompletionParams } from 'openai-fetch';
 
 import { EMessageRole, IConversationData } from '@/ai/conversation/types';
 import { DingBot } from '@/ding/bot';
@@ -30,9 +30,7 @@ export class OpenAI {
 
     this.openai = new OpenAIClient({
       apiKey: Environment.instance().OPENAI_API_KEY,
-      options: {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
+      fetchOptions: {
         credentials: undefined,
       },
     });

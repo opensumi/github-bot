@@ -410,16 +410,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@bytemain/openai-fetch@npm:^1.0.4":
-  version: 1.0.4
-  resolution: "@bytemain/openai-fetch@npm:1.0.4"
-  dependencies:
-    ky: ^0.33.1
-    zod: ^3.20.2
-  checksum: 37e2a7060254c36bcdda4a6792eeaf5520105867e1ec22c92a6ffef9e653f4482744fbfa7428eb09018163f823e7dd423819c1a27fcdee76058c5258e696d99c
-  languageName: node
-  linkType: hard
-
 "@cloudflare/kv-asset-handler@npm:^0.2.0":
   version: 0.2.0
   resolution: "@cloudflare/kv-asset-handler@npm:0.2.0"
@@ -4270,7 +4260,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "github-bot@workspace:."
   dependencies:
-    "@bytemain/openai-fetch": ^1.0.4
     "@cloudflare/workers-types": ^4.20230228.0
     "@hono/node-server": ^0.2.4
     "@octokit/auth-app": ^4.0.9
@@ -4311,6 +4300,7 @@ __metadata:
     mri: ^1.2.0
     nodemon: ^2.0.20
     npm-run-all: ^4.1.5
+    openai-fetch: ^1.1.0
     p-timeout: ^6.0.0
     prettier: ^2.8.3
     smee-client: ^1.2.3
@@ -5646,7 +5636,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ky@npm:^0.33.1":
+"ky@npm:^0.33.2":
   version: 0.33.2
   resolution: "ky@npm:0.33.2"
   checksum: bb5b1685b7d639dad5fc0a41a218f76c2400d2a9189bcf747f541633af13b68a7ef12bb8aa971bc1667087789ec5965cc3728e24b693897a2d0cc539d7593655
@@ -6955,6 +6945,16 @@ __metadata:
     is-docker: ^2.1.1
     is-wsl: ^2.2.0
   checksum: 6388bfff21b40cb9bd8f913f9130d107f2ed4724ea81a8fd29798ee322b361ca31fa2cdfb491a5c31e43a3996cfe9566741238c7a741ada8d7af1cb78d85cf26
+  languageName: node
+  linkType: hard
+
+"openai-fetch@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "openai-fetch@npm:1.1.0"
+  dependencies:
+    ky: ^0.33.2
+    zod: ^3.21.2
+  checksum: 71f76aaad492c64a15ba9735f3c6f0818e3a95fe63e05f0173401f66eb59f977209fd609738bfdd6bdd23d59978d4d6e2dcbdd3de753daab89a08fe44271ab4f
   languageName: node
   linkType: hard
 
@@ -8836,10 +8836,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.20.2":
-  version: 3.20.6
-  resolution: "zod@npm:3.20.6"
-  checksum: 804b1934b8b5e2fa3750bec90043e8118b201f330b9957b8b768389a971acadf812d2060cf62921086512dab4af691d10490acb03333da58fc485c0791893c89
+"zod@npm:^3.21.2":
+  version: 3.21.4
+  resolution: "zod@npm:3.21.4"
+  checksum: f185ba87342ff16f7a06686767c2b2a7af41110c7edf7c1974095d8db7a73792696bcb4a00853de0d2edeb34a5b2ea6a55871bc864227dace682a0a28de33e1f
   languageName: node
   linkType: hard
 

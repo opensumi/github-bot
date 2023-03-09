@@ -28,7 +28,6 @@
     "extract-fixtures": "tsx scripts/extract-webhook-example.ts"
   },
   "dependencies": {
-    "@bytemain/openai-fetch": "^1.0.4",
     "@hono/node-server": "^0.2.4",
     "@octokit/auth-app": "^4.0.9",
     "@octokit/auth-unauthenticated": "^3.0.4",
@@ -48,6 +47,7 @@
     "micromark-extension-gfm": "^2.0.1",
     "micromark-extension-gfm-autolink-literal": "^1.0.3",
     "mri": "^1.2.0",
+    "openai-fetch": "^1.1.0",
     "p-timeout": "^6.0.0",
     "tsx": "^3.12.2",
     "uuid": "^9.0.0"
