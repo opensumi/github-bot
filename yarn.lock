@@ -433,6 +433,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@dqbd/tiktoken@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "@dqbd/tiktoken@npm:0.4.0"
+  checksum: 2d708e70b86bd09fc9f5a5cb5e9d3bee34574e18b4c28911f311011f6673008b91510eea658e2769e29421c8e8cd7bf2c0938ffdcad58fa082871f696717383f
+  languageName: node
+  linkType: hard
+
 "@esbuild-kit/cjs-loader@npm:^2.4.2":
   version: 2.4.2
   resolution: "@esbuild-kit/cjs-loader@npm:2.4.2"
@@ -4261,6 +4268,7 @@ __metadata:
   resolution: "github-bot@workspace:."
   dependencies:
     "@cloudflare/workers-types": ^4.20230228.0
+    "@dqbd/tiktoken": ^0.4.0
     "@hono/node-server": ^0.2.4
     "@octokit/auth-app": ^4.0.9
     "@octokit/auth-unauthenticated": ^3.0.4

@@ -5,12 +5,22 @@ export * from './constants';
 export class KVManager<T> {
   kv: IKVNamespace;
 
-  private constructor(public prefix: string = '') {
+  private prefix: string;
+  private constructor(prefix = '') {
+    this.prefix = prefix;
     this.kv = Environment.instance().KV;
   }
 
   f(key: string) {
     return this.prefix + key;
+  }
+
+  async get(key: string) {
+    return await this.kv.get(this.f(key), 'text');
+  }
+
+  async set(key: string, data: T) {
+    return await this.kv.put(this.f(key), String(data));
   }
 
   async getJSON(key: string) {

@@ -2,11 +2,11 @@ import { DingBot } from '@/ding/bot';
 import { Context } from '@/ding/commands';
 import Environment from '@/env';
 
+import { ChatGPTAPI } from '../openai/chatgpt';
 import {
   ChatMessage,
   SendMessageBrowserOptions,
 } from '../openai/chatgpt/types';
-import { ChatGPTUnofficialProxyAPI } from '../openai/chatgpt/unofficial';
 
 import { ConversationKVManager } from './kvManager';
 
@@ -28,23 +28,31 @@ export class Conversation {
       return 'OpenAI access token is not set';
     }
 
-    const history = await this.conversationKVManager.getMessageHistory();
-    const lastMessage = history.lastMessage;
-    const api = new ChatGPTUnofficialProxyAPI({
-      apiReverseProxyUrl: this.conversationKVManager.getApiReverseProxyUrl(),
+    const kvManager = await this.conversationKVManager;
+    const api = new ChatGPTAPI({
+      apiKey: Environment.instance().OPENAI_API_KEY!,
       debug: true,
-      accessToken: Environment.instance().OPENAI_ACCESS_TOKEN!,
+      messageStore: {
+        get(key) {
+          return kvManager.getMessage(key);
+        },
+        async set(key, message) {
+          await kvManager.setMessage(key, message);
+        },
+      },
     });
+    const lastMessageId = await kvManager.getLastMessageId();
     const messageOptions = {
-      parentMessageId: lastMessage?.parentMessageId,
-      conversationId: lastMessage?.conversationId,
+      parentMessageId: lastMessageId,
+      conversationId: this.conversationId,
       onProgress: options?.onProgress,
     } as SendMessageBrowserOptions;
+
     const message = await api.sendMessage(
       this.currentRoundPrompt,
       messageOptions,
     );
-    await history.recordChat(message);
+    await this.conversationKVManager.setLastMessage(message);
     if (message.text) {
       return message.text;
     }

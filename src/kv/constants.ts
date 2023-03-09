@@ -2,6 +2,7 @@ export namespace DingConversation {
   export const SETTINGS_PREFIX = 'ding/conversation/settings/';
   export const DATA_PREFIX = 'ding/conversation/data/';
   export const MESSAGE_PREFIX = 'ding/conversation/message/';
+  export const LAST_MESSAGE_PREFIX = 'ding/conversation/lastMessage/';
 }
 
 export namespace DingCommon {

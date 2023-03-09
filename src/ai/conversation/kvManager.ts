@@ -1,24 +1,25 @@
 import { Message } from '@/ding/types';
-import Environment from '@/env';
 import { KVManager, DingConversation } from '@/kv';
-import { randomChoice } from '@/utils';
 
 import { ChatMessage } from '../openai/chatgpt/types';
 import { ECompletionModel } from '../openai/shared';
 
-import { ChatMessageHistory } from './messageHistory';
 import { IConversationSetting } from './types';
 
 export class ConversationKVManager {
   settingsKV: KVManager<IConversationSetting>;
   id: string;
-  messageKV: KVManager<ChatMessage[]>;
+  messageKV: KVManager<ChatMessage>;
+  lastMessageKV: KVManager<string>;
 
   constructor(private message: Message) {
     this.id = message.conversationId;
 
     this.settingsKV = KVManager.for(DingConversation.SETTINGS_PREFIX);
-    this.messageKV = KVManager.for(DingConversation.MESSAGE_PREFIX);
+    this.lastMessageKV = KVManager.for(DingConversation.LAST_MESSAGE_PREFIX);
+    this.messageKV = KVManager.for(
+      `${DingConversation.MESSAGE_PREFIX}${this.id}/`,
+    );
   }
   setPreferredConversationModel = async (model: ECompletionModel) => {
     return await this.settingsKV.updateJSON(this.id, {
@@ -38,23 +39,19 @@ export class ConversationKVManager {
       throttleWait: num,
     });
   };
-  getApiReverseProxyUrl() {
-    const defaultUrls = [
-      'https://gpt.pawan.krd/backend-api/conversation',
-      'https://chat.duti.tech/api/conversation',
-    ];
-    return (
-      Environment.instance().CHATGPT_API_REVERSE_PROXY_URL ??
-      randomChoice(defaultUrls)
-    );
+  async getLastMessageId() {
+    return await this.lastMessageKV.get(this.id);
+  }
+  async setLastMessage(message: ChatMessage) {
+    return await this.lastMessageKV.set(this.id, message.id);
   }
 
-  getMessageHistory = async (): Promise<ChatMessageHistory> => {
-    const msgs = (await this.messageKV.getJSON(this.id)) ?? [];
-    const history = new ChatMessageHistory(msgs, this.messageKV, this.id);
-
-    return history;
-  };
+  async getMessage(parentMessageId: string) {
+    return await this.messageKV.getJSON(parentMessageId);
+  }
+  async setMessage(messageId: string, message: ChatMessage) {
+    return await this.messageKV.setJSON(messageId, message);
+  }
 
   clearConversation = async () => {
     await this.messageKV.delete(this.id);
