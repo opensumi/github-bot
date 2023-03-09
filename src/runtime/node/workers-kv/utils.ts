@@ -3,8 +3,8 @@ import querystring from 'querystring';
 
 import { IBaseInputs } from './types';
 
-const workersKvDebug = (...args: any[]) => {
-  console.debug('WorkersKV: ', ...args);
+export const workersKvDebug = (...args: any[]) => {
+  console.debug('[WorkersKV] ', ...args);
 };
 
 export const MAX_KEYS_LIMIT = 1000;
@@ -24,13 +24,17 @@ export const httpsReq = (options: Record<string, any>, reqBody = '') =>
     success: boolean;
   }>((resolve, reject) => {
     options.agent = httpsAgent;
+    workersKvDebug({ options });
     const req = https.request(options, (res) => {
       const { headers, statusCode } = res;
       workersKvDebug({ status: res.statusCode, headers });
       let data = '';
       res.on('data', (chunk) => (data += chunk));
       res.on('end', () =>
-        responseBodyResolver(resolve)(statusCode, headers, data),
+        responseBodyResolver((result) => {
+          workersKvDebug({ result });
+          resolve(result);
+        })(statusCode, headers, data),
       );
     });
     req.on('error', (e) => reject(e));

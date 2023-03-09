@@ -6,6 +6,7 @@ import SmeeClient from 'smee-client';
 
 const allRoutes = [
   'ding-opensumi',
+  'ding-trs',
   'github-app-opensumi',
   'github-app-qiuqiu',
   'webhook-opensumi',

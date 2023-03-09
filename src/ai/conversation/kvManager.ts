@@ -29,7 +29,15 @@ export class ConversationKVManager {
     const setting = await this.settingsKV.getJSON(this.id);
     return setting?.preferredModel ?? ECompletionModel.GPT3;
   };
-
+  getThrottleWait = async () => {
+    const setting = await this.settingsKV.getJSON(this.id);
+    return setting?.throttleWait ?? 10;
+  };
+  setThrottleWait = async (num: number) => {
+    return await this.settingsKV.updateJSON(this.id, {
+      throttleWait: num,
+    });
+  };
   getApiReverseProxyUrl() {
     const defaultUrls = [
       'https://gpt.pawan.krd/backend-api/conversation',

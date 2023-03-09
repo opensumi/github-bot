@@ -20,7 +20,9 @@ export class OpenAI {
     const conversation = new Conversation(this.bot, this.ctx);
 
     let triggerTimes = 0;
-    const throttleWait = 5000;
+    const throttleWait =
+      await conversation.conversationKVManager.getThrottleWait();
+
     const onProgress = throttle((data) => {
       triggerTimes++;
       if (data.text) {
@@ -31,13 +33,13 @@ export class OpenAI {
             data.text.length +
             ', 时间花费: ' +
             Math.floor(triggerTimes * throttleWait) +
-            'ms',
+            's',
         );
       }
-    }, throttleWait);
+    }, throttleWait * 1000);
 
     const text = await conversation.reply2({
-      onProgress,
+      onProgress: throttleWait > 0 ? onProgress : undefined,
     });
 
     onProgress.cancel();
