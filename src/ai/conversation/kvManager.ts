@@ -55,5 +55,6 @@ export class ConversationKVManager {
 
   clearConversation = async () => {
     await this.messageKV.delete(this.id);
+    await this.lastMessageKV.delete(this.id);
   };
 }
