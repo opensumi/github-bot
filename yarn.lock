@@ -830,14 +830,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@hono/node-server@npm:^0.2.4":
-  version: 0.2.4
-  resolution: "@hono/node-server@npm:0.2.4"
+"@hono/node-server@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@hono/node-server@npm:0.3.0"
   dependencies:
     "@remix-run/web-fetch": ^4.3.2
     "@remix-run/web-file": ^3.0.2
     "@remix-run/web-stream": ^1.0.3
-  checksum: 476d97d97f971199d39a897459cbc6dd50840b4e69699381aaeea39cfbc793bc70232132c217b28116c417ca7f89b10d5ba97d80b080400df5118d4928205246
+  checksum: be59c2f3d9855841073461d562e99bd00d958fc1ff164f14aa4131f2c682e52f1a7b0e91095e7ccad4b091a71f2fbb619fe7cc8ea08afbbd2414e56c22cdcd18
   languageName: node
   linkType: hard
 
@@ -4269,7 +4269,7 @@ __metadata:
   dependencies:
     "@cloudflare/workers-types": ^4.20230228.0
     "@dqbd/tiktoken": ^0.4.0
-    "@hono/node-server": ^0.2.4
+    "@hono/node-server": ^0.3.0
     "@octokit/auth-app": ^4.0.9
     "@octokit/auth-unauthenticated": ^3.0.4
     "@octokit/core": ^4.2.0
@@ -4295,7 +4295,7 @@ __metadata:
     eslint-import-resolver-typescript: ^3.5.3
     eslint-plugin-import: ^2.27.5
     eventsource-parser: ^0.1.0
-    hono: ^3.0.2
+    hono: ^3.0.3
     jest: ^29.4.1
     lodash: ^4.17.21
     magic-string: ^0.27.0
@@ -4531,10 +4531,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hono@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "hono@npm:3.0.2"
-  checksum: f95d70e35f87c7e96e19e3644c613567c4594a34dff14fada8e1af4a660d6bb2b4eb1eeb1d71983ae6baa719b34fe7e504e671b968577d4606249b84597b2899
+"hono@npm:^3.0.3":
+  version: 3.0.3
+  resolution: "hono@npm:3.0.3"
+  checksum: d8f0226c657cf492cf2320c612b299e43417dc7f84989bb832d33642e2b21ea0097cd80f0728c3f3995eddac8bc7fd591a19417d56930bc388116658c02567e7
   languageName: node
   linkType: hard
 

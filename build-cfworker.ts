@@ -3,6 +3,8 @@ import 'dotenv/config';
 import { context as createContext, Plugin } from 'esbuild';
 import mri from 'mri';
 
+import { DEFAULT_BUILD_ARGS } from './build';
+
 const argv = mri(process.argv.slice(2));
 console.log(argv);
 
@@ -37,6 +39,7 @@ async function buildWorker() {
     target: 'es2020',
     format: 'esm',
     plugins: [resolvePlugin],
+    define: DEFAULT_BUILD_ARGS,
   });
 
   if (argv['watch']) {

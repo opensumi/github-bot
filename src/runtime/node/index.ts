@@ -22,15 +22,17 @@ declare global {
   }
 }
 
+Environment.from('node', {
+  ...process.env,
+  KV_PROD: new NodeKV(),
+});
+
 const app = new Hono() as THono;
 ignition(app);
 
+
 serve({
   fetch(request) {
-    Environment.from('node', {
-      ...process.env,
-      KV_PROD: new NodeKV(),
-    });
     return app.fetch(
       request,
       {},

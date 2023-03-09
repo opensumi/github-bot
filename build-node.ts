@@ -1,25 +1,19 @@
 import 'dotenv/config';
 
+import fs from 'fs/promises';
+
 import { context as createContext } from 'esbuild';
 import mri from 'mri';
+
+import { DEFAULT_BUILD_ARGS } from './build';
 
 const argv = mri(process.argv.slice(2));
 console.log(argv);
 
-// const envHostsToCopy = [
-//   'HOST',
-//   'OPENAI_ACCESS_TOKEN',
-//   'CHATGPT_API_REVERSE_PROXY_URL',
-//   'CLOUDFLARE_AUTH_TOKEN',
-//   'CLOUDFLARE_ACCOUNT_ID',
-//   'CLOUDFLARE_NAMESPACE_ID',
-// ];
-
-const define = {} as Record<string, string>;
-
-// envHostsToCopy.forEach((v) => {
-//   define[`process.env.${v}`] = JSON.stringify(process.env[v]);
-// });
+const define = {
+  ...DEFAULT_BUILD_ARGS,
+  IF_DEF_CHATGPT: JSON.stringify(true),
+} as Record<string, string>;
 
 async function buildNode() {
   const context = await createContext({
@@ -51,8 +45,17 @@ async function buildNode() {
   }
 }
 
+async function copyResources() {
+  await fs.copyFile(
+    'node_modules/@dqbd/tiktoken/dist/node/_tiktoken_bg.wasm',
+    'dist/node/_tiktoken_bg.wasm',
+  );
+  console.log('Copied resources.');
+}
+
 async function main() {
-  await Promise.all([buildNode()]);
+  await buildNode();
+  await copyResources();
 }
 
 main();
