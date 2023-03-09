@@ -12,7 +12,7 @@ console.log(argv);
 
 const define = {
   ...DEFAULT_BUILD_ARGS,
-  IF_DEF_CHATGPT: JSON.stringify(true),
+  'process.env.IF_DEF__CHATGPT': JSON.stringify(true),
 } as Record<string, string>;
 
 async function buildNode() {

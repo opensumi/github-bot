@@ -1,3 +1,3 @@
 export const DEFAULT_BUILD_ARGS = {
-  IF_DEF_CHATGPT: JSON.stringify(false),
+  'process.env.IF_DEF__CHATGPT': JSON.stringify(false),
 };

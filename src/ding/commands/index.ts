@@ -13,6 +13,6 @@ registerCommonCommand(cc);
 registerGitHubCommand(cc);
 registerOpenSumiCommand(cc);
 
-if (IF_DEF_CHATGPT) {
+if (process.env.IF_DEF__CHATGPT) {
   require('./chatgpt').registerChatGPTCommand(cc);
 }
