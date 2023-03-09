@@ -27,7 +27,7 @@ export function registerChatGPTCommand(it: DingCommandCenter) {
   it.on(
     'setWaitTime',
     async (bot: DingBot, ctx: Context<Partial<IDingInfo>>) => {
-      const num = Number(ctx.parsed.arg0);
+      const num = Number(ctx.parsed._[1]);
       if (typeof num === 'number' || !isNaN(num)) {
         await bot.conversationKVManager.setThrottleWait(num);
       }
