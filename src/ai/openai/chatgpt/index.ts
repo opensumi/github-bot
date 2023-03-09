@@ -188,9 +188,9 @@ export class ChatGPTAPI {
                 const response: types.openai.CreateChatCompletionDeltaResponse =
                   JSON.parse(data);
 
-                // if (response.id) {
-                //   result.id = response.id;
-                // }
+                if (response.id) {
+                  result.id = response.id;
+                }
 
                 if (response?.choices?.length) {
                   const delta = response.choices[0].delta;
