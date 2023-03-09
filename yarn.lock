@@ -4007,6 +4007,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fetch-undici-polyfill@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "fetch-undici-polyfill@npm:1.2.1"
+  dependencies:
+    undici: latest
+  checksum: 78abe1ee1432e0c79612a01777d4e7e3aa32750f8fe1470419b8ce49abb773a43982b4eda75015b20f85eee91e1e19b093beac89e5d0fc055b99cb1aba23d3c1
+  languageName: node
+  linkType: hard
+
 "file-entry-cache@npm:^6.0.1":
   version: 6.0.1
   resolution: "file-entry-cache@npm:6.0.1"
@@ -4295,6 +4304,7 @@ __metadata:
     eslint-import-resolver-typescript: ^3.5.3
     eslint-plugin-import: ^2.27.5
     eventsource-parser: ^0.1.0
+    fetch-undici-polyfill: ^1.2.1
     hono: ^3.0.3
     jest: ^29.4.1
     lodash: ^4.17.21
@@ -8362,7 +8372,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:5.20.0":
+"undici@npm:5.20.0, undici@npm:latest":
   version: 5.20.0
   resolution: "undici@npm:5.20.0"
   dependencies:
