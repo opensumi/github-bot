@@ -1,4 +1,3 @@
-import { ECompletionModel } from '@/ai/openai/shared';
 import { OpenAI } from '@/ding/openai';
 
 import type { DingBot } from '../bot';
@@ -11,18 +10,6 @@ export function registerChatGPTCommand(it: DingCommandCenter) {
     await bot.conversationKVManager.clearConversation();
     await bot.replyText('已清除记忆');
   });
-  it.on('使用ChatGPT', async (bot: DingBot) => {
-    await bot.conversationKVManager.setPreferredConversationModel(
-      ECompletionModel.ChatGPT,
-    );
-    await bot.replyText('模型已经切换为 ChatGPT');
-  });
-  it.on('使用GPT3', async (bot: DingBot) => {
-    await bot.conversationKVManager.setPreferredConversationModel(
-      ECompletionModel.GPT3,
-    );
-    await bot.replyText('模型已经切换为 GPT3');
-  });
 
   it.on(
     'setWaitTime',
@@ -31,7 +18,7 @@ export function registerChatGPTCommand(it: DingCommandCenter) {
       if (typeof num === 'number' || !isNaN(num)) {
         await bot.conversationKVManager.setThrottleWait(num);
       }
-      await bot.replyText('轮训通报时间已经设置为 ' + num + '秒');
+      await bot.replyText('轮询通报时间已经设置为 ' + num + '秒');
     },
   );
 
