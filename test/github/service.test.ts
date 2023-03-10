@@ -25,7 +25,7 @@ console.log(`🚀 ~ file: service.test.ts ~ line 5 ~ shouldSkip`, shouldSkip);
     const { data: patch } = await octo.pulls.get({
       owner: 'opensumi',
       repo: 'core',
-      pull_number: 2394,
+      pull_number: 2395,
       mediaType: {
         format: 'patch',
       },
