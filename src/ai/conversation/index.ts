@@ -20,7 +20,7 @@ export class Conversation {
   }
 
   async reply2(options?: { onProgress?: (data: ChatMessage) => void }) {
-    if (!Environment.instance().OPENAI_ACCESS_TOKEN) {
+    if (!Environment.instance().OPENAI_API_KEY) {
       return 'OpenAI access token is not set';
     }
 

@@ -1,38 +1,32 @@
 import throttle from 'lodash/throttle';
 
 import { Conversation } from '@/ai/conversation';
-import { ECompletionModel } from '@/ai/openai/shared';
 import { DingBot } from '@/ding/bot';
 import { Context } from '@/ding/commands';
 import { markdown } from '@/ding/message';
 
-export interface IOpenAIResponse {
-  type: 'gpt3' | 'chatgpt';
-  text: string | undefined;
-}
-
 export class OpenAI {
-  model = ECompletionModel.GPT3;
-
   constructor(protected bot: DingBot, protected ctx: Context) {}
 
-  async getReplyText(): Promise<IOpenAIResponse> {
+  async getReplyText(): Promise<string | undefined> {
     const conversation = new Conversation(this.bot, this.ctx);
 
     let triggerTimes = 0;
     const throttleWait =
       await conversation.conversationKVManager.getThrottleWait();
 
+    const timeSpend = Math.floor(triggerTimes * throttleWait);
+
     const onProgress = throttle((data) => {
       triggerTimes++;
       if (data.text) {
         this.bot.replyText(
           `ChatGPT ${
-            triggerTimes > 10 ? '仍' : triggerTimes > 5 ? '还' : '正'
+            timeSpend > 40 ? '仍' : timeSpend > 20 ? '还' : '正'
           }在输入中。Length: ` +
             data.text.length +
             ', 时间花费: ' +
-            Math.floor(triggerTimes * throttleWait) +
+            timeSpend +
             's',
         );
       }
@@ -43,22 +37,15 @@ export class OpenAI {
     });
 
     onProgress.cancel();
-    return {
-      type: 'chatgpt',
-      text,
-    };
+    return text;
   }
 
-  async reply(response: IOpenAIResponse): Promise<void> {
-    if (response.text) {
-      const text = response.text;
-      const powerBy = response.type === 'gpt3' ? 'GPT-3' : 'ChatGPT';
-      await this.bot.reply(
-        markdown(
-          text.slice(0, 30),
-          `${text.trim()}\n\n> Powered By OpenAI ${powerBy}`,
-        ),
-      );
-    }
+  async reply(text: string): Promise<void> {
+    await this.bot.reply(
+      markdown(
+        text.slice(0, 30),
+        `${text.trim()}\n\n> Powered By OpenAI gpt-3.5-turbo`,
+      ),
+    );
   }
 }

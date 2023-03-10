@@ -3,8 +3,6 @@ import { ChatMessage } from 'chatgpt';
 import { Message } from '@/ding/types';
 import { KVManager, DingConversation } from '@/kv';
 
-import { ECompletionModel } from '../openai/shared';
-
 import { IConversationSetting } from './types';
 
 export class ConversationKVManager {
@@ -22,15 +20,6 @@ export class ConversationKVManager {
       `${DingConversation.MESSAGE_PREFIX}${this.id}/`,
     );
   }
-  setPreferredConversationModel = async (model: ECompletionModel) => {
-    return await this.settingsKV.updateJSON(this.id, {
-      preferredModel: model,
-    });
-  };
-  getConversationPreferredModel = async () => {
-    const setting = await this.settingsKV.getJSON(this.id);
-    return setting?.preferredModel ?? ECompletionModel.GPT3;
-  };
   getThrottleWait = async () => {
     const setting = await this.settingsKV.getJSON(this.id);
     return setting?.throttleWait ?? 10;
