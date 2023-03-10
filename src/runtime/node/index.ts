@@ -16,8 +16,6 @@ declare global {
     interface ProcessEnv {
       readonly HOST: string;
       readonly OPENAI_API_KEY?: string;
-      readonly OPENAI_ACCESS_TOKEN?: string;
-      readonly CHATGPT_API_REVERSE_PROXY_URL?: string;
     }
   }
 }
@@ -29,7 +27,6 @@ Environment.from('node', {
 
 const app = new Hono() as THono;
 ignition(app);
-
 
 serve({
   fetch(request) {
