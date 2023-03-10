@@ -1,5 +1,4 @@
 import { Hono } from 'hono';
-import type { CookieJar } from 'tough-cookie';
 
 import { ISend } from './api/middleware/send.ts';
 
