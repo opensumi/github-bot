@@ -1,7 +1,8 @@
+import { ChatMessage } from 'chatgpt';
+
 import { Message } from '@/ding/types';
 import { KVManager, DingConversation } from '@/kv';
 
-import { ChatMessage } from '../openai/chatgpt/types';
 import { ECompletionModel } from '../openai/shared';
 
 import { IConversationSetting } from './types';

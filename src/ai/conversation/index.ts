@@ -1,12 +1,8 @@
+import { ChatGPTAPI, ChatMessage, SendMessageBrowserOptions } from 'chatgpt';
+
 import { DingBot } from '@/ding/bot';
 import { Context } from '@/ding/commands';
 import Environment from '@/env';
-
-import { ChatGPTAPI } from '../openai/chatgpt';
-import {
-  ChatMessage,
-  SendMessageBrowserOptions,
-} from '../openai/chatgpt/types';
 
 import { ConversationKVManager } from './kvManager';
 
@@ -32,13 +28,11 @@ export class Conversation {
     const api = new ChatGPTAPI({
       apiKey: Environment.instance().OPENAI_API_KEY!,
       debug: true,
-      messageStore: {
-        get(key) {
-          return kvManager.getMessage(key);
-        },
-        async set(key, message) {
-          await kvManager.setMessage(key, message);
-        },
+      async upsertMessage(message: ChatMessage) {
+        await kvManager.setMessage(message.id, message);
+      },
+      async getMessageById(key: string): Promise<ChatMessage> {
+        return (await kvManager.getMessage(key)) as ChatMessage;
       },
     });
     const lastMessageId = await kvManager.getLastMessageId();
