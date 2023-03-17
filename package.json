@@ -8,10 +8,9 @@
   "scripts": {
     "format": "prettier --write '**/*.{js,css,json,md}'",
     "ts:check": "tsc -p ./tsconfig.build.json --noEmit",
-    "prebuild": "yarn ts:check && yarn gen",
-    "build": "run-p build:cfworker build:node",
-    "build:cfworker": "tsx build-cfworker.ts",
-    "build:node": "tsx build-node.ts",
+    "build": "wireit",
+    "build:cfworker": "wireit",
+    "build:node": "wireit",
     "watch": "yarn build --watch",
     "watch:node": "yarn build:node --watch",
     "dev": "yarn gen && yarn dev:worker:preview",
@@ -27,6 +26,21 @@
     "test": "jest --config jest.config.json --verbose",
     "test:cov": "yarn test --coverage",
     "extract-fixtures": "tsx scripts/extract-webhook-example.ts"
+  },
+  "wireit": {
+    "build": {
+      "command": "run-p build:cfworker build:node",
+      "dependencies": [
+        "ts:check",
+        "gen"
+      ]
+    },
+    "build:cfworker": {
+      "command": "tsx build-cfworker.ts"
+    },
+    "build:node": {
+      "command": "tsx build-node.ts"
+    }
   },
   "dependencies": {
     "@hono/node-server": "^0.3.0",
@@ -78,6 +92,7 @@
     "string.prototype.replaceall": "^1.0.7",
     "ts-jest": "^29.0.5",
     "typescript": "^4.9.4",
+    "wireit": "^0.9.5",
     "wrangler": "^2.8.1"
   }
 }

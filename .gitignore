@@ -34,3 +34,4 @@ wrangler.toml
 example.ts
 
 coverage
+.wireit
