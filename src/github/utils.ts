@@ -60,8 +60,26 @@ export function walk(root: Parent, cb: (token: Content) => boolean | void) {
   });
 }
 
+function trimLeadingWS(str: string) {
+  /*
+    Get the initial indentation
+    But ignore new line characters
+  */
+  const matcher = /^[\r\n]?(\s+)/;
+  if (matcher.test(str)) {
+    /*
+      Replace the initial whitespace 
+      globally and over multiple lines
+    */
+    return str.replace(new RegExp('^' + str.match(matcher)![1], 'gm'), '');
+  } else {
+    // Regex doesn't match so return the original string
+    return str;
+  }
+}
+
 function parseMarkdown(text: string) {
-  const tree = fromMarkdown(text, {
+  const tree = fromMarkdown(trimLeadingWS(text), {
     extensions: [gfm()],
     mdastExtensions: [gfmFromMarkdown()],
   });

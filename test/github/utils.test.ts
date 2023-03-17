@@ -184,4 +184,61 @@ describe('github utils', () => {
     const result = standardizeMarkdown(preText);
     console.log(`🚀 ~ file: utils.test.ts:183 ~ it ~ result:`, result);
   });
+  it('can standardize markdown code block: ````', () => {
+    const preText = `
+大概是这样的代码示例来注册 \`custom-shceme:///any/thing/you/want\` 的文档内容
+
+\`\`\`\` typescript 
+import { ClientAppContribution, Domain, Emitter, IDisposable, MaybePromise, URI } from "@opensumi/ide-core-browser";
+import { IEditorDocumentModelContentRegistry } from "@opensumi/ide-editor/lib/browser/index";
+import { Autowired} from '@opensumi/di';
+
+
+@Domain(ClientAppContribution)
+export class ExampleContribution implements ClientAppContribution {
+
+  @Autowired(IEditorDocumentModelContentRegistry)
+  private readonly contentRegistry: IEditorDocumentModelContentRegistry;
+
+  onStart() {
+
+    const dataChangeEmitter = new Emitter<URI>();
+
+    this.contentRegistry.registerEditorDocumentModelContentProvider({
+      handlesScheme: (scheme) => {
+        return scheme === 'custom-scheme';
+      },
+      provideEditorDocumentModelContent: async (uri) => {
+        // 这里从服务器拿数据
+        const data = await fetchSomeDataFromServer(uri.toString());
+        return data;
+      },
+      preferLanguageForUri: (uri) => {
+        return 'json';
+      },
+      isReadonly: function (uri: URI): MaybePromise<boolean> {
+        // 返回 true 禁止用户编辑
+        return true;
+      },
+      onDidChangeContent: dataChangeEmitter.event,
+    })
+
+  }
+
+  // 当服务器告诉你要更新数据，这个时候要通知编辑器需要更新
+  WhenServerTellsYouDataNeedToBeUpdated((someUriNeedToBeUpdate: URI) =>{
+    dataChangeEmitter.fire(someUriNeedToBeUpdate);
+  });
+
+}
+\`\`\`\`
+注册完以后就可以在这个组件内显示内容
+
+\`\`\`\`
+<CodeEditor style={{"height": "500px"}} uri={URI.parse('custom-scheme:///path/something')}/>
+\`\`\`\`
+    `;
+    const result = standardizeMarkdown(preText);
+    console.log(`🚀 ~ file: utils.test.ts:183 ~ it ~ result:`, result);
+  });
 });
