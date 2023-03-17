@@ -1,4 +1,7 @@
 {
   "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "types": ["node", "jest", "@cloudflare/workers-types"]
+  },
   "exclude": ["node_modules", "**/*.test.ts"]
 }

@@ -6,15 +6,15 @@ if (!targetPath) {
 
 import { readFile, writeFile } from 'fs/promises';
 
-import execa from 'execa';
+import { execaCommand } from 'execa';
 
 async function main() {
   const cmd = `openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in ${targetPath} -out ${targetPath}.pkcs8`;
-  await execa.command(cmd, { shell: true });
+  await execaCommand(cmd, { shell: true });
   const text = await readFile(`${targetPath}.pkcs8`, 'utf-8');
   const data = text.replaceAll('\n', '\\n');
   await writeFile(`${targetPath}.pkcs8`, data, 'utf-8');
-  await execa.command(`cat ${targetPath}.pkcs8 | pbcopy`, { shell: true });
+  await execaCommand(`cat ${targetPath}.pkcs8 | pbcopy`, { shell: true });
 }
 
 main();
