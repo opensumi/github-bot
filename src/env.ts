@@ -29,7 +29,7 @@ export default class Environment {
 
   static from(runtime: TSupportedRuntime, env: IRuntimeEnv) {
     if (this.#instance) {
-      throw new Error('Environment already initialized');
+      return this.#instance;
     }
     const instance = new Environment(runtime, env);
 
