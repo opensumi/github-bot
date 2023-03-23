@@ -241,4 +241,35 @@ export class ExampleContribution implements ClientAppContribution {
     const result = standardizeMarkdown(preText);
     console.log(`🚀 ~ file: utils.test.ts:183 ~ it ~ result:`, result);
   });
+
+  it('will not transform br/sub', () => {
+    const data = `[![CLA assistant check](https://cla-assistant.io/pull/badge/not_signed)](https://cla-assistant.io/opensumi/core?pullRequest=2482) <br/>Thank you for your submission! We really appreciate it. Like many open source projects, we ask that you all sign our [Contributor License Agreement](https://cla-assistant.io/opensumi/core?pullRequest=2482) before we can accept your contribution.<br/>**1** out of **2** committers have signed the CLA.<br/><br/>:white_check_mark: miserylee<br/>:x: lijifei<br/><hr/>**lijifei** seems not to be a GitHub user. You need a GitHub account to be able to sign the CLA. If you have already a GitHub account, please [add the email address used for this commit to your account](https://help.github.com/articles/why-are-my-commits-linked-to-the-wrong-user/#commits-are-not-linked-to-any-user).<br/><sub>You have signed the CLA already but the status is still pending? Let us [recheck](https://cla-assistant.io/check/opensumi/core?pullRequest=2482) it.</sub>`;
+    const result = standardizeMarkdown(data);
+    console.log(`🚀 ~ file: utils.test.ts:248 ~ it ~ result:`, result);
+  });
+  it('can transform inline code', () => {
+    const data = `
+这里应该需要在框架内注册一个配置项 \`workbench.colorTheme\`，预期是在切换到 HC 主题时，这里的配置项值为：
+\`\`\`
+"workbench.colorTheme": "GitHub Theme High Contrast",
+\`\`\`
+同样的，还有 \`workbench.iconTheme\` 也是一样逻辑
+
+相关代码位置见：
+
+应用颜色主题：https://github.com/opensumi/core/blob/3455b10620badfe7b03a02d66136d3226b7891b8/packages/theme/src/browser/workbench.theme.service.ts#L171
+
+应用图标主题：
+https://github.com/opensumi/core/blob/3455b10620badfe7b03a02d66136d3226b7891b8/packages/theme/src/browser/icon.service.ts#L403
+
+注册默认配置逻辑见：
+
+https://github.com/opensumi/core/blob/3455b10620badfe7b03a02d66136d3226b7891b8/packages/theme/src/browser/icon.service.ts
+
+欢迎开发者贡献代码，或等待我们后续实现。
+
+  `;
+    const result = standardizeMarkdown(data);
+    console.log(`🚀 ~ file: utils.test.ts:248 ~ it ~ result:`, result);
+  });
 });
