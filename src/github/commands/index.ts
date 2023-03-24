@@ -1,20 +1,14 @@
 import { CommandCenter } from '@/commander';
 
+import { registerPullRequestCommand } from './pullRequests';
 import { GitHubCommandCenter } from './types';
 
 export * from './types';
 
-export const issueCc = new CommandCenter(undefined, (it) => {
-  it.on('hello', async (app, payload) => {
-    const { issue, repository } = payload;
-    await app.octoApp.octokit.request(
-      'POST /repos/{owner}/{repo}/issues/{issue_number}/comments',
-      {
-        owner: repository.owner.login,
-        repo: repository.name,
-        issue_number: issue.number,
-        body: 'Hello there 👋',
-      },
-    );
+export const issueCc = new CommandCenter(['/'], (it) => {
+  it.on('hello', async (app, ctx, payload) => {
+    await app.replyComment(payload, 'Hello there 👋');
   });
 }) as GitHubCommandCenter;
+
+registerPullRequestCommand(issueCc);

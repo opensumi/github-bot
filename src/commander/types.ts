@@ -5,6 +5,7 @@ export type FuncName = 'equal' | 'startwiths';
 export interface ITextResolveResult {
   handler: any;
   type: 'text';
+  command: string;
 }
 
 export interface IRegexResolveResult {
@@ -12,6 +13,7 @@ export interface IRegexResolveResult {
   regex: RegExp;
   handler: any;
   result: RegExpExecArray;
+  command: string;
 }
 
 export type IResolveResult = ITextResolveResult | IRegexResolveResult;

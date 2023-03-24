@@ -78,6 +78,7 @@ export class CommandCenter<T> {
     }
     const result = {
       type: 'text',
+      command,
     } as IResolveResult;
     let { handler } = this.registry.find(command) ?? {};
 

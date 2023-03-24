@@ -11,6 +11,7 @@ import Configuration from './configuration';
 import { setupWebhooksTemplate } from './handler';
 import { OctoService } from './service';
 import { OpenSumiOctoService } from './service/opensumi';
+import { ExtractPayload } from './types';
 import { sendToDing } from './utils';
 
 export class App {
@@ -52,8 +53,8 @@ export class App {
 
     const result = await issueCc.resolve(comment.body);
     if (result && result.handler) {
-      const { handler } = result;
-      await handler(this, payload);
+      const { handler, command } = result;
+      await handler(this, { command }, payload);
     }
 
     // 开始处理第一行注释中隐含的命令 <!-- versionInfo: RC | 2.20.5-rc-1665562305.0 -->
@@ -64,6 +65,20 @@ export class App {
       }
     }
   };
+
+  async replyComment(payload: ExtractPayload<'issue_comment'>, text: string) {
+    const { issue, repository } = payload;
+
+    return await this.octoApp.octokit.request(
+      'POST /repos/{owner}/{repo}/issues/{issue_number}/comments',
+      {
+        owner: repository.owner.login,
+        repo: repository.name,
+        issue_number: issue.number,
+        body: text,
+      },
+    );
+  }
 
   constructor(private setting: AppSetting) {
     const { appSettings, githubSecret } = setting;
@@ -110,6 +125,10 @@ export class App {
 
   get webhooks() {
     return this.octoApp.webhooks;
+  }
+
+  async getInstallationOctokit(id: number) {
+    return this.octoApp.getInstallationOctokit(id);
   }
 
   async getOcto(): Promise<Octokit> {

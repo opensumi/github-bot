@@ -1,6 +1,6 @@
 import { Octokit } from '@octokit/rest';
 
-import { IIssueDetail, IPrDetail } from './types';
+import { IIssueDetail, IPrDetail, PrData } from './types';
 
 export class OctoService {
   private _octo: Octokit | undefined;
@@ -390,6 +390,20 @@ export class OctoService {
       ...star,
     };
   }
+
+  async getPrByNumber(
+    owner: string,
+    repo: string,
+    num: number,
+  ): Promise<PrData> {
+    const result = await this.octo.pulls.get({
+      owner,
+      repo,
+      pull_number: num,
+    });
+    return result.data;
+  }
+
   async getIssuePrByNumber(
     owner: string,
     repo: string,
