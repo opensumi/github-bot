@@ -23,8 +23,7 @@ export function registerGitHubCommand(it: DingCommandCenter) {
     const owner = regexResult.groups!['owner'];
     const repo = regexResult.groups!['repo'];
 
-    const octokit = await app.getOcto();
-    const repoData = await octokit.repos.get({
+    const repoData = await app.octoApp.octokit.repos.get({
       owner,
       repo,
     });
@@ -93,11 +92,10 @@ export function registerGitHubCommand(it: DingCommandCenter) {
       }
 
       const { command, app } = ctx;
-      const octokit = await app.getOcto();
       const githubUrl = parseGitHubUrl(command);
       if (githubUrl) {
         if (githubUrl.type === 'repo') {
-          const result = await octokit.repos.get({
+          const result = await app.octoApp.octokit.repos.get({
             owner: githubUrl.owner,
             repo: githubUrl.repo,
           });

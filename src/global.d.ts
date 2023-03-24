@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 
-import { ISend } from './api/middleware/send.ts';
+import { ISend } from './api/middleware';
 
 declare module 'hono' {
   interface Context {

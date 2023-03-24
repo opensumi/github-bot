@@ -137,7 +137,7 @@ export class App {
     });
   }
 
-  async getOcto(): Promise<Octokit> {
+  private async getOcto(): Promise<Octokit> {
     for await (const data of this.octoApp.eachInstallation.iterator()) {
       return data.octokit;
     }

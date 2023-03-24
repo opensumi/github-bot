@@ -51,4 +51,13 @@ console.log(`🚀 ~ file: service.test.ts ~ line 5 ~ shouldSkip`, shouldSkip);
 
     console.log(`🚀 ~ file: service.test.ts:33 ~ it ~ diff:`, diff);
   });
+  it('can auth', async () => {
+    try {
+      const result = await octo.request('GET /users/bytemain');
+      console.log(`🚀 ~ file: service.test.ts:56 ~ it ~ result:`, result);
+    } catch (error) {
+      debugger;
+      console.log(error);
+    }
+  });
 });
