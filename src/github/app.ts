@@ -132,9 +132,14 @@ export class App {
   }
 
   async createInstallationAccessToken(id: number) {
-    return this.octoApp.octokit.apps.createInstallationAccessToken({
-      installation_id: id,
-    });
+    return this.octoApp.octokit.apps
+      .createInstallationAccessToken({
+        installation_id: id,
+      })
+      .then((v) => ({
+        token: v.data.token,
+        expires_at: v.data.expires_at,
+      }));
   }
 
   private async getOcto(): Promise<Octokit> {

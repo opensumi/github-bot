@@ -1,6 +1,5 @@
 import { webhookHandler } from '@/github';
 import { initApp } from '@/github/app';
-import { checkTokenValid } from '@/github/octokit/token';
 import { GitHubKVManager } from '@/kv/github';
 
 export function route(hono: THono) {
@@ -25,17 +24,30 @@ export function route(hono: THono) {
 
   hono.get('/github/installation-token/:id', async (c) => {
     const id = c.req.param('id');
-    const token = c.req.query('token');
     const flag = c.req.query('flag');
-    if (!token || !flag) {
-      return c.send.error(403, 'invalid request');
-    }
-    // 如果这个 token 有对应 id 的指定仓库写权限，意味着可以换出来一个安装 token
-    const isValid = await checkTokenValid(token);
-    if (!isValid) {
-      return c.send.error(401, 'invalid token');
+    if (!id || !flag) {
+      return c.send.error(400, `Bad request(id: ${id} flag:${flag})`);
     }
 
-    return c.send.message(token);
+    // 先查数据库有没有设置这个 id 对应的 installation id
+    const githubKVManager = new GitHubKVManager();
+    const setting = await githubKVManager.getAppSettingById(id);
+
+    if (!setting) {
+      return c.send.error(400, 'id not found in database');
+    }
+
+    if (!setting.installation) {
+      return c.send.error(400, 'no installation id found in database');
+    }
+
+    const { installation } = setting;
+
+    if (installation.flag !== flag) {
+      return c.send.error(400, 'flag not match');
+    }
+
+    const app = await initApp(setting);
+    return c.json(await app.createInstallationAccessToken(installation.id));
   });
 }

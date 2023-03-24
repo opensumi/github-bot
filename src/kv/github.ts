@@ -29,6 +29,13 @@ export interface ISetting {
   event?: string[];
   // 不展示 repo 名字，适合单仓库
   notDisplayRepoName?: boolean;
+
+  installation?: IInstallationSetting;
+}
+
+export interface IInstallationSetting {
+  id: number;
+  flag: string;
 }
 
 export type AppSetting = ISetting & {
@@ -44,6 +51,7 @@ export type AppSetting = ISetting & {
 export class GitHubKVManager {
   appSettingsKV: KVManager<AppSetting>;
   settingsKV: KVManager<ISetting>;
+
   constructor() {
     this.appSettingsKV = KVManager.for<AppSetting>(
       GitHubCommon.GITHUB_APP_SETTINGS_PREFIX,
