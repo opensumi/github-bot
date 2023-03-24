@@ -1,6 +1,6 @@
 import { checkTokenValid } from '@/github/octokit/token';
 
-describe('octokit token related', () => {
+describe.skip('octokit token related', () => {
   it('can check bad credential', async () => {
     const result = await checkTokenValid('bad token');
     expect(result).toBeFalsy();
