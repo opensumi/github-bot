@@ -37,17 +37,17 @@ export function route(hono: THono) {
       return c.send.error(400, 'id not found in database');
     }
 
-    if (!setting.installation) {
+    if (!setting.installation || !setting.installation.flags) {
       return c.send.error(400, 'no installation id found in database');
     }
 
     const { installation } = setting;
-
-    if (installation.flag !== flag) {
+    const installationId = installation.flags[id];
+    if (typeof installationId === 'undefined') {
       return c.send.error(400, 'flag not match');
     }
 
     const app = await initApp(setting);
-    return c.json(await app.createInstallationAccessToken(installation.id));
+    return c.json(await app.createInstallationAccessToken(installationId));
   });
 }

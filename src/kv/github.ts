@@ -34,8 +34,7 @@ export interface ISetting {
 }
 
 export interface IInstallationSetting {
-  id: number;
-  flag: string;
+  flags: Record<string, number>;
 }
 
 export type AppSetting = ISetting & {
