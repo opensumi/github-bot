@@ -20,6 +20,11 @@ console.log(`🚀 ~ file: service.test.ts ~ line 5 ~ shouldSkip`, shouldSkip);
     const data = await service.getRepoHistory('opensumi', 'core');
     console.log(`🚀 ~ file: service.test.ts ~ line 15 ~ it ~ data`, data);
   });
+  it('can get pr info', async () => {
+    jest.setTimeout(9999999999);
+    const result = await service.getPrByNumber('opensumi', 'core', 2463);
+    console.log(`🚀 ~ file: service.test.ts:33 ~ it ~ result:`, result);
+  });
   it('can get patch', async () => {
     jest.setTimeout(9999999999);
     const { data: patch } = await octo.pulls.get({
@@ -43,7 +48,7 @@ console.log(`🚀 ~ file: service.test.ts ~ line 5 ~ shouldSkip`, shouldSkip);
       },
     });
     console.log(typeof diff);
-    
+
     console.log(`🚀 ~ file: service.test.ts:33 ~ it ~ diff:`, diff);
   });
 });
