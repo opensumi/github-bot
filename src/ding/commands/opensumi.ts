@@ -1,4 +1,3 @@
-import { equalFunc, startsWith } from '@/commander';
 import { RC_WORKFLOW_FILE } from '@/constants/opensumi';
 
 import { DingBot } from '../bot';
@@ -161,4 +160,41 @@ export function registerOpenSumiCommand(it: DingCommandCenter) {
       await bot.replyText(`执行出错：${(error as Error).message}`);
     }
   });
+  it.on(
+    'createInstallationAccessToken',
+    async (bot: DingBot, ctx: Context<{ version: string }>) => {
+      if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
+        return;
+      }
+
+      await replyIfAppNotDefined(bot, ctx);
+      if (!hasApp(ctx)) {
+        return;
+      }
+
+      const { app } = ctx;
+
+      let id = ctx.parsed.raw.version;
+      if (!id) {
+        if (ctx.parsed['_'].length > 1) {
+          id = ctx.parsed['_'][1];
+        }
+      }
+      try {
+        const token = await app.createInstallationAccessToken(Number(id));
+        await bot.reply(
+          markdown(
+            'installation',
+            `
+~~~json
+${JSON.stringify(token, null, 2)})}
+~~~
+`,
+          ),
+        );
+      } catch (error) {
+        await bot.replyText(`执行出错：${(error as Error).message}`);
+      }
+    },
+  );
 }

@@ -131,6 +131,12 @@ export class App {
     return this.octoApp.getInstallationOctokit(id);
   }
 
+  async createInstallationAccessToken(id: number) {
+    return this.octoApp.octokit.apps.createInstallationAccessToken({
+      installation_id: id,
+    });
+  }
+
   async getOcto(): Promise<Octokit> {
     for await (const data of this.octoApp.eachInstallation.iterator()) {
       return data.octokit;
