@@ -1,5 +1,5 @@
 import { DingBot, verifyMessage } from '@/ding/bot';
-import { DingKVManager } from '@/ding/secrets';
+import { DingKVManager } from '@/kv/ding';
 import { errorCallback } from '@/utils';
 
 export function route(hono: THono) {

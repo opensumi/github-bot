@@ -2,7 +2,7 @@ import { Webhooks } from '@octokit/webhooks';
 
 import { webhookHandler, setupWebhooksTemplate } from '@/github';
 import Configuration from '@/github/configuration';
-import { GitHubKVManager } from '@/github/storage';
+import { GitHubKVManager } from '@/kv/github';
 
 export function route(hono: THono) {
   hono.post('/webhook/:id', async (c) => {

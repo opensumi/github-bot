@@ -1,4 +1,4 @@
-import { ISetting } from './storage';
+import { ISetting } from '@/kv/github';
 
 export default class Configuration {
   private constructor() {

@@ -2,7 +2,7 @@ import { Octokit } from '@octokit/rest';
 
 import { PrivilegeEvent } from '@/constants';
 import { VERSION_SYNC_KEYWORD } from '@/constants/opensumi';
-import { AppSetting } from '@/github/storage';
+import { AppSetting } from '@/kv/github';
 import { App as OctoApp } from '@/lib/app.js/src';
 
 import { issueCc } from './commands';

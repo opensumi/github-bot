@@ -1,9 +1,9 @@
 import { startsWith } from '@/commander';
+import { IDingInfo } from '@/kv/ding';
 import { StringBuilder } from '@/utils';
 
 import type { DingBot } from '../bot';
 import { code } from '../message';
-import { IDingInfo } from '../secrets';
 
 import { Context, DingCommandCenter } from './types';
 

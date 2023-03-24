@@ -1,7 +1,7 @@
 import { OpenAI } from '@/ding/openai';
+import { IDingInfo } from '@/kv/ding';
 
 import type { DingBot } from '../bot';
-import { IDingInfo } from '../secrets';
 
 import { Context, DingCommandCenter } from './types';
 

@@ -1,7 +1,7 @@
 import { webhookHandler } from '@/github';
 import { initApp } from '@/github/app';
 import { checkTokenValid } from '@/github/octokit/token';
-import { GitHubKVManager } from '@/github/storage';
+import { GitHubKVManager } from '@/kv/github';
 
 export function route(hono: THono) {
   hono.post('/github/app/:id', async (c) => {

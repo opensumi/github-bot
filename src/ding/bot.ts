@@ -1,11 +1,11 @@
 import { ConversationKVManager } from '@/ai/conversation/kvManager';
 import { doSign, send } from '@/ding/utils';
 import { initApp, App } from '@/github/app';
-import { GitHubKVManager } from '@/github/storage';
+import { DingKVManager, IDingBotSetting } from '@/kv/ding';
+import { GitHubKVManager } from '@/kv/github';
 
 import { cc } from './commands';
 import { SendMessage, compose, text as textWrapper } from './message';
-import { DingKVManager, IDingBotSetting } from './secrets';
 import { Message } from './types';
 
 function prepare(s: string) {
