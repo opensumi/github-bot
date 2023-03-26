@@ -40,6 +40,10 @@ export function ignition(hono: THono) {
     });
   });
 
+  hono.get('/robots.txt', async (c) => {
+    return c.text('User-agent: *\nDisallow: /', 200);
+  });
+
   applyMiddleware(hono);
   registerBlueprint(hono);
 
