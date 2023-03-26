@@ -1,14 +1,20 @@
 import { Hono } from 'hono';
 
-import { ISend } from './api/middleware';
+export {};
 
 declare module 'hono' {
   interface Context {
     send: ISend;
+    origin: string;
   }
 }
 
 declare global {
+  interface ISend {
+    error(status: number, content: string): Response;
+    message(text: string): Response;
+  }
+
   type TKVValue<Value> = Promise<Value | null>;
   interface IKVNamespace {
     get(key: string, type: 'text'): TKVValue<string>;
@@ -40,6 +46,14 @@ declare global {
 
   type THonoEnvironment = { Bindings: IRuntimeEnv };
   type THono = Hono<THonoEnvironment>;
-}
 
-export {};
+  declare module '*.svg' {
+    const content: string;
+    export default content;
+  }
+
+  declare module '*.html' {
+    const content: string;
+    export default content;
+  }
+}

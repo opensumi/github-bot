@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/IDingBotSetting",
+  "definitions": {
+    "IDingBotSetting": {
+      "type": "object",
+      "properties": {
+        "outGoingToken": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "outGoingToken"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

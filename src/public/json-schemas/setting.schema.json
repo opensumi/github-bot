@@ -1,0 +1,86 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/ISetting",
+  "definitions": {
+    "ISetting": {
+      "type": "object",
+      "properties": {
+        "githubSecret": {
+          "type": "string",
+          "description": "在 GitHub 上设置的此 webhook 的验证"
+        },
+        "dingWebhooks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IDingWebhookItem"
+          }
+        },
+        "contentLimit": {
+          "type": "number"
+        },
+        "isCommunity": {
+          "type": "boolean",
+          "description": "开启这个选项会只推送社区需要的那几个 event 因为历史兼容问题，所以默认为 true 了，需要手动关闭"
+        },
+        "isOpenSumiCommunity": {
+          "type": "boolean"
+        },
+        "event": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notDisplayRepoName": {
+          "type": "boolean"
+        },
+        "installation": {
+          "$ref": "#/definitions/IInstallationSetting"
+        }
+      },
+      "required": [
+        "githubSecret",
+        "dingWebhooks",
+        "contentLimit"
+      ],
+      "additionalProperties": false
+    },
+    "IDingWebhookItem": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "secret": {
+          "type": "string"
+        },
+        "event": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "url",
+        "secret"
+      ],
+      "additionalProperties": false
+    },
+    "IInstallationSetting": {
+      "type": "object",
+      "properties": {
+        "flags": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        }
+      },
+      "required": [
+        "flags"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -22,7 +22,7 @@
     "./src/**/*.ts",
     "./test/**/*.ts",
     "./scripts/**/*.ts",
-    "./typings.d.ts"
+    "./typings/**/*.d.ts"
   ],
   "exclude": ["node_modules"]
 }

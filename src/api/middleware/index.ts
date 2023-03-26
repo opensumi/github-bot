@@ -2,13 +2,11 @@ import { StatusCode } from 'hono/utils/http-status';
 
 import * as GitHub from './github';
 
-export interface ISend {
-  error(status: StatusCode | number, content: string): Response;
-  message(text: string): Response;
-}
-
 export const enhanceContext = (hono: THono) => {
   hono.use('*', async (c, next) => {
+    const url = new URL(c.req.url);
+    const origin = `${url.origin}/`;
+    c.origin = origin;
     c.send = {
       error: (
         status: StatusCode | number = 500,

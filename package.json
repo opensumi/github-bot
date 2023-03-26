@@ -11,8 +11,8 @@
     "build": "wireit",
     "build:cfworker": "wireit",
     "build:node": "wireit",
-    "watch": "yarn build --watch",
-    "watch:node": "yarn build:node --watch",
+    "watch": "yarn build -- --watch",
+    "watch:node": "yarn build:node -- --watch",
     "dev": "yarn gen && yarn dev:worker:preview",
     "dev:node": "nodemon ./dist/node",
     "dev:worker:preview": "run-p dev:worker dev:proxy",
@@ -91,6 +91,7 @@
     "smee-client": "^1.2.3",
     "string.prototype.replaceall": "^1.0.7",
     "ts-jest": "^29.0.5",
+    "ts-json-schema-generator": "^1.2.0",
     "typescript": "^4.9.4",
     "wireit": "^0.9.5",
     "wrangler": "^2.8.1"

@@ -1,13 +1,6 @@
 import { KVManager, DingCommon } from '@/kv';
 
-export interface IDingBotSetting {
-  outGoingToken: string;
-}
-
-export interface IDingInfo {
-  defaultRepo?: string;
-  enableConversation?: boolean;
-}
+import { IDingBotSetting, IDingInfo } from './types';
 
 export class DingKVManager {
   secretsKV: KVManager<IDingBotSetting>;
