@@ -1,5 +1,5 @@
 import { OpenAI } from '@/ding/openai';
-import { IDingInfo } from '@/kv/ding';
+import { IDingInfo } from '@/kv/types';
 
 import type { DingBot } from '../bot';
 

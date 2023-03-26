@@ -1,4 +1,4 @@
-import { ISetting } from '@/kv/github';
+import { ISetting } from '@/kv/types';
 
 export default class Configuration {
   private constructor() {

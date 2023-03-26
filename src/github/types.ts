@@ -1,7 +1,8 @@
 import { EmitterWebhookEventName } from '@octokit/webhooks/dist-types/types';
 import { WebhookEventName, WebhookEventMap } from '@octokit/webhooks-types';
 
-import { ISetting } from '@/kv/github';
+import { ISetting } from '@/kv/types';
+
 export interface Context {
   setting: ISetting;
 }

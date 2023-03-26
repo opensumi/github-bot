@@ -1,5 +1,5 @@
 import { startsWith } from '@/commander';
-import { IDingInfo } from '@/kv/ding';
+import { IDingInfo } from '@/kv/types';
 import { StringBuilder } from '@/utils';
 
 import type { DingBot } from '../bot';

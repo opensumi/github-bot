@@ -1,8 +1,9 @@
 import { ConversationKVManager } from '@/ai/conversation/kvManager';
 import { doSign, send } from '@/ding/utils';
 import { initApp, App } from '@/github/app';
-import { DingKVManager, IDingBotSetting } from '@/kv/ding';
+import { DingKVManager } from '@/kv/ding';
 import { GitHubKVManager } from '@/kv/github';
+import { IDingBotSetting } from '@/kv/types';
 
 import { cc } from './commands';
 import { SendMessage, compose, text as textWrapper } from './message';
