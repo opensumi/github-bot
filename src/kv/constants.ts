@@ -14,3 +14,7 @@ export namespace GitHubCommon {
   export const GITHUB_SETTINGS_PREFIX = 'github/settings/';
   export const GITHUB_APP_SETTINGS_PREFIX = 'github/app/settings/';
 }
+
+export namespace Common {
+  export const ADMIN_PREFIX = '0common/admin';
+}

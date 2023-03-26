@@ -3,18 +3,6 @@
   <head>
     <meta charset="utf-8" />
     <title>JSON Editor Interactive Example</title>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/spectre.css/dist/spectre.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css"
-    />
     <script src="https://cdn.jsdelivr.net/npm/@json-editor/json-editor@latest/dist/jsoneditor.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.14.0/src-noconflict/ace.js"></script>
 
@@ -26,7 +14,6 @@
       <div class="row columns md:flex">
         <div class="col-8 col-md-8 w-8/12">
           <h1>Editor</h1>
-          <p>Below is the editor generated from the JSON Schema.</p>
           <div id="json-editor-form"></div>
         </div>
         <div class="col-4 col-md-4 w-4/12">
@@ -78,40 +65,8 @@
               <option value="display_required_only">
                 Only show required properties by default
               </option>
-              <option value="show_opt_in">
-                Show optional properties (with checkbox)
-              </option>
               <option value="no_additional_properties">
                 No additional object properties
-              </option>
-              <option value="ajax">Allow loading schemas via Ajax</option>
-              <option value="disable_edit_json">
-                Disable "Edit JSON" buttons
-              </option>
-              <option value="disable_collapse">Disable collapse buttons</option>
-              <option value="disable_properties">
-                Disable properties buttons
-              </option>
-              <option value="disable_array_add">
-                Disable array add buttons
-              </option>
-              <option value="disable_array_reorder">
-                Disable array move buttons
-              </option>
-              <option value="disable_array_delete">
-                Disable array delete buttons
-              </option>
-              <option value="enable_array_copy">
-                Add copy buttons to arrays
-              </option>
-              <option value="array_controls_top">
-                Array controls will be displayed at top of list
-              </option>
-              <option value="disable_array_delete_all_rows">
-                Disable array delete all rows buttons
-              </option>
-              <option value="disable_array_delete_last_row">
-                Disable array delete last row buttons
               </option>
             </select>
           </div>
@@ -144,16 +99,6 @@
               <option value="jqueryui">jQuery UI</option>
               <option value="openiconic">Open Iconic</option>
               <option value="spectre">Spectre</option>
-            </select>
-          </div>
-          <div>
-            <label for="object-layout-select">Object Layout</label><br />
-            <select
-              id="object-layout-select"
-              class="form-control browser-default"
-            >
-              <option value="normal">normal</option>
-              <option value="grid">grid</option>
             </select>
           </div>
           <div>
@@ -210,8 +155,6 @@
       </div>
     </div>
     <script type="module">
-      import defaultSchema from 'http://127.0.0.1:8080/json-schemas/github/app-settings.schema.json' assert { type: 'json' };
-
       // parse url -> merge options -> refreshUI() -> initJsoneditor() -> direct link
 
       /* ------------------------------------------------------------------- data */
@@ -219,11 +162,13 @@
       var data = {};
 
       var defaultOptions = {
-        iconlib: 'spectre',
-        theme: 'spectre',
+        iconlib: 'fontawesome5',
+        theme: 'bootstrap5',
         object_layout: 'normal',
-        schema: defaultSchema,
         show_errors: 'always',
+        enable_array_copy: true,
+        show_opt_in: true,
+        array_controls_top: true,
       };
 
       var jsoneditor = null;
@@ -236,7 +181,6 @@
       var iconlibLink = document.querySelector('#iconlib-link');
       var libSelect = document.querySelector('#lib-select');
       var jsonEditorForm = document.querySelector('#json-editor-form');
-      var objectLayoutSelect = document.querySelector('#object-layout-select');
       var setSchema = document.querySelector('#setschema');
       var setValue = document.querySelector('#setvalue');
       var showErrorsSelect = document.querySelector('#show-errors-select');
@@ -257,7 +201,7 @@
 
       /* -------------------------------------------------------------- parse url */
 
-      var parseUrl = function () {
+      var parseData = function () {
         var url = window.location.search;
         var queryParamsString = url.substring(1, url.length);
         var queryParams = queryParamsString.split('&');
@@ -267,23 +211,20 @@
             var splittedParam = queryParam.split('=');
             var param = splittedParam[0];
             var value = splittedParam[1];
-
-            // data query param
-            if (param === 'data') {
-              // compress schema and value
-              try {
-              } catch (reason) {}
-            }
           });
         }
 
         mergeOptions();
       };
-
+      window.parseData = parseData;
       /* ----------------------------------------------------------- mergeOptions */
 
       var mergeOptions = function () {
-        data.options = Object.assign(defaultOptions, data.options);
+        data.options = Object.assign(
+          defaultOptions,
+          data.options,
+          window._options,
+        );
         refreshUI();
       };
 
@@ -325,9 +266,6 @@
         };
         iconlibLink.href = iconLibMap[data.options.iconlib];
         iconlibSelect.value = data.options.iconlib;
-
-        // object_layout
-        objectLayoutSelect.value = data.options.object_layout;
 
         // show_errors
         showErrorsSelect.value = data.options.show_errors;
@@ -505,6 +443,25 @@
             const result = jsoneditor.validate();
             console.log(`🚀 ~ file: index.html:72 ~ result:`, result);
             console.log(jsoneditor.getValue());
+            if (result.length) {
+              alert('Invalid JSON' + JSON.stringify(result, null, 2));
+              return;
+            }
+
+            fetch(window.submit_url, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(jsoneditor.getValue()),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                console.log('Success:', data);
+              })
+              .catch((error) => {
+                console.error('Error:', error);
+              });
           });
 
         // Hook up the Restore to Default button
@@ -560,11 +517,6 @@
         refreshUI();
       });
 
-      objectLayoutSelect.addEventListener('change', function () {
-        data.options.object_layout = this.value || '';
-        refreshUI();
-      });
-
       showErrorsSelect.addEventListener('change', function () {
         data.options.show_errors = this.value || '';
         refreshUI();
@@ -593,8 +545,6 @@
         }
         refreshUI();
       });
-
-      parseUrl();
     </script>
   </body>
 </html>

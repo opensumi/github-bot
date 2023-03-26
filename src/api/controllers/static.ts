@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 
+import { SettingType } from '@/kv/types';
 import AppSettings from '@/public/json-schemas/app-settings.schema.json';
 import DingInfo from '@/public/json-schemas/ding-info.schema.json';
 import DingSetting from '@/public/json-schemas/ding-setting.schema.json';
@@ -10,18 +11,18 @@ const map = {
   'ding-info': DingInfo,
   'ding-setting': DingSetting,
   setting: Setting,
-} as Record<string, object>;
+} as Record<SettingType, object>;
 
 export function route(hono: THono) {
-  const files = new Hono();
+  const group = new Hono();
 
-  files.get('/json-schemas/:id', (c) => {
+  group.get('/json-schemas/:id', (c) => {
     const id = c.req.param('id');
     if (id in map) {
-      return c.json(map[id]);
+      return c.json(map[id as SettingType]);
     }
     return c.text('Not Found', 404);
   });
 
-  hono.route('/static', files);
+  hono.route('/static', group);
 }

@@ -1,3 +1,4 @@
+import { HTTPException } from 'hono/http-exception';
 import { logger } from 'hono/logger';
 import { prettyJSON } from 'hono/pretty-json';
 
@@ -51,7 +52,9 @@ export function ignition(hono: THono) {
     if (err instanceof ValidationError) {
       return c.send.error(err.code, 'github validation error ' + err.message);
     }
-
+    if (err instanceof HTTPException) {
+      return c.send.error(err.status, err.message);
+    }
     return c.send.error(500, 'server internal error');
   });
 }

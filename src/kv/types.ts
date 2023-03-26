@@ -50,3 +50,20 @@ export interface IDingInfo {
   defaultRepo?: string;
   enableConversation?: boolean;
 }
+
+export type SettingType =
+  | 'app-settings'
+  | 'ding-info'
+  | 'ding-setting'
+  | 'setting';
+
+export const settingsTypes = [
+  'app-settings',
+  'ding-info',
+  'ding-setting',
+  'setting',
+] as const;
+
+export interface IAdminInfo {
+  token: string;
+}

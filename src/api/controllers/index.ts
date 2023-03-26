@@ -1,3 +1,4 @@
+import * as Configuration from './configuration';
 import * as Ding from './ding';
 import * as GitHub from './github';
 import * as Proxy from './proxy';
@@ -10,4 +11,5 @@ export const registerBlueprint = (hono: THono) => {
   Proxy.route(hono);
   Webhook.route(hono);
   Static.route(hono);
+  Configuration.route(hono);
 };

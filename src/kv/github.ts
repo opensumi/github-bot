@@ -18,6 +18,14 @@ export class GitHubKVManager {
     );
   }
 
+  setAppSettingById(id: string, data: AppSetting) {
+    return this.appSettingsKV.setJSON(id, data);
+  }
+
+  setSettingById(id: string, data: ISetting) {
+    return this.settingsKV.setJSON(id, data);
+  }
+
   getAppSettingById = async (id: string) => {
     return await this.appSettingsKV.getJSON(id);
   };

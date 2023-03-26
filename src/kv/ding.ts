@@ -15,8 +15,16 @@ export class DingKVManager {
     return await this.secretsKV.getJSON(id);
   };
 
-  getGroupInfo = async (id: string) => {
+  setSettingById = async (id: string, data: IDingBotSetting) => {
+    return await this.secretsKV.setJSON(id, data);
+  };
+
+  getDingInfo = async (id: string) => {
     return await this.infoKV.getJSON(id);
+  };
+
+  setDingInfo = async (id: string, data: IDingInfo) => {
+    return await this.infoKV.setJSON(id, data);
   };
 
   setGroupInfo = async (id: string, info: IDingInfo) => {
@@ -28,7 +36,7 @@ export class DingKVManager {
   };
 
   getDefaultRepo = async (id: string) => {
-    const info = await this.getGroupInfo(id);
+    const info = await this.getDingInfo(id);
     if (info?.defaultRepo) {
       const data = info.defaultRepo.split('/');
       return {
