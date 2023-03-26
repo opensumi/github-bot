@@ -3,7 +3,7 @@ import 'dotenv/config';
 import { context as createContext, Plugin } from 'esbuild';
 import mri from 'mri';
 
-import { DEFAULT_BUILD_ARGS } from './build';
+import { buildParams, DEFAULT_BUILD_ARGS } from './build';
 
 const argv = mri(process.argv.slice(2));
 console.log(argv);
@@ -25,16 +25,8 @@ const resolvePlugin = {
 
 async function buildWorker() {
   const context = await createContext({
+    ...buildParams,
     entryPoints: ['./src/runtime/cfworker/index.ts'],
-    bundle: true,
-    outdir: 'dist',
-    outbase: 'src/runtime',
-    minify: false,
-    color: true,
-    loader: {
-      '.html': 'text',
-      '.svg': 'text',
-    },
     platform: 'browser',
     target: 'es2020',
     format: 'esm',

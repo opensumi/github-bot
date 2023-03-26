@@ -6,7 +6,6 @@ export function route(hono: THono) {
   hono.post('/ding/:id', async (c) => {
     const id = c.req.param('id') ?? c.req.query('id');
 
-    console.log(`handler ~ id`, id);
     if (!id) {
       return c.send.error(400, 'need a valid id');
     }

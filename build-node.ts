@@ -5,7 +5,7 @@ import fs from 'fs/promises';
 import { context as createContext } from 'esbuild';
 import mri from 'mri';
 
-import { DEFAULT_BUILD_ARGS } from './build';
+import { buildParams, DEFAULT_BUILD_ARGS } from './build';
 
 const argv = mri(process.argv.slice(2));
 console.log(argv);
@@ -17,16 +17,9 @@ const define = {
 
 async function buildNode() {
   const context = await createContext({
+    ...buildParams,
     entryPoints: ['src/runtime/node/index.ts'],
-    bundle: true,
-    outdir: 'dist',
     outbase: 'src/runtime',
-    minify: false,
-    color: true,
-    loader: {
-      '.html': 'text',
-      '.svg': 'text',
-    },
     platform: 'node',
     target: 'node16',
     format: 'cjs',
