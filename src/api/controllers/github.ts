@@ -42,7 +42,7 @@ export function route(hono: THono) {
     }
 
     const { installation } = setting;
-    const installationId = installation.flags[id];
+    const installationId = installation.flags[flag];
     if (typeof installationId === 'undefined') {
       return c.send.error(400, 'flag not match');
     }
