@@ -25,13 +25,19 @@ export function route(hono: THono) {
 
   hono.get('/configuration', async (c) => {
     const token = c.req.query('token');
+    const id = c.req.query('id');
+    const params = new URLSearchParams();
+    if (id) params.append('id', id);
+    if (token) params.append('token', token);
+
     return c.html(
       html`<!DOCTYPE html>
         <h1>Hello!</h1>
 
         ${settingsTypes.map(
           (v) =>
-            html`<a href="/configuration/${v}?token=${token}">${v}</a><br />`,
+            html`<a href="/configuration/${v}?${params.toString()}">${v}</a
+              ><br />`,
         )} `,
     );
   });
