@@ -4,7 +4,7 @@ import { ValidationError } from '@/github';
 import { objectRequired } from '../utils/validator';
 
 export function middleware(hono: THono) {
-  hono.use('/github/*', async (c, next) => {
+  hono.use('/github/app/*', async (c, next) => {
     const headers = c.req.headers;
 
     assert(
