@@ -1,9 +1,15 @@
 export interface IDingWebhookItem {
-  // Webhook for the dingtalk bot
+  /**
+   * Webhook for the dingtalk bot
+   */
   url: string;
-  // You should select **signed mode(加签模式)** in the security settings of the bot. and you will see this secret.
+  /**
+   * You should select **signed mode(加签模式)** in the security settings of the bot. and you will see this secret.
+   */
   secret: string;
-  // 该 webhook 仅接收哪些事件的推送
+  /**
+   * 该 webhook 仅接收哪些事件的推送
+   */
   event?: string[];
 }
 
@@ -20,9 +26,13 @@ export interface ISetting {
    */
   isCommunity?: boolean;
   isOpenSumiCommunity?: boolean;
-  // 监听哪些事件
+  /**
+   * 监听哪些事件
+   */
   event?: string[];
-  // 不展示 repo 名字，适合单仓库
+  /**
+   * 不展示 repo 名字，适合单仓库
+   */
   notDisplayRepoName?: boolean;
 
   installation?: IInstallationSetting;
@@ -33,11 +43,18 @@ export interface IInstallationSetting {
 }
 
 export type AppSetting = ISetting & {
-  // GitHub App related
+  /**
+   * GitHub App related
+   */
   appSettings: {
-    // The appId of your GitHub App.
+    /**
+     * The appId of your GitHub App.
+     */
     appId: string;
-    // Generate a private key in GitHub App Settings.
+    /**
+     * Generate a private key in GitHub App Settings.
+     * @format textarea
+     */
     privateKey: string;
   };
 };

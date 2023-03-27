@@ -10,17 +10,21 @@
           "type": "object",
           "properties": {
             "appId": {
-              "type": "string"
+              "type": "string",
+              "description": "The appId of your GitHub App."
             },
             "privateKey": {
-              "type": "string"
+              "type": "string",
+              "description": "Generate a private key in GitHub App Settings.",
+              "format": "textarea"
             }
           },
           "required": [
             "appId",
             "privateKey"
           ],
-          "additionalProperties": false
+          "additionalProperties": false,
+          "description": "GitHub App related"
         },
         "githubSecret": {
           "type": "string",
@@ -46,10 +50,12 @@
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "监听哪些事件"
         },
         "notDisplayRepoName": {
-          "type": "boolean"
+          "type": "boolean",
+          "description": "不展示 repo 名字，适合单仓库"
         },
         "installation": {
           "$ref": "#/definitions/IInstallationSetting"
@@ -66,16 +72,19 @@
       "type": "object",
       "properties": {
         "url": {
-          "type": "string"
+          "type": "string",
+          "description": "Webhook for the dingtalk bot"
         },
         "secret": {
-          "type": "string"
+          "type": "string",
+          "description": "You should select **signed mode(加签模式)** in the security settings of the bot. and you will see this secret."
         },
         "event": {
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "description": "该 webhook 仅接收哪些事件的推送"
         }
       },
       "required": [
