@@ -2,12 +2,12 @@ import { startsWith } from '@/commander';
 import { App } from '@/github/app';
 import { render } from '@/github/render';
 import { contentToMarkdown, parseGitHubUrl } from '@/github/utils';
-import { proxyThisUrl } from '@/utils';
+import { formatDate, proxyThisUrl } from '@/utils';
 
 import type { DingBot } from '../bot';
 import { code, markdown } from '../message';
 
-import { ISSUE_REGEX, REPO_REGEX } from './constants';
+import { ISSUE_REGEX, REPO_REGEX, TEAM_MEMBERS, TEAM_MEMBER_PR_REQUIREMENT } from './constants';
 import { Context, DingCommandCenter, RegexContext } from './types';
 import { hasApp, replyIfAppNotDefined } from './utils';
 
@@ -127,6 +127,7 @@ export function registerGitHubCommand(it: DingCommandCenter) {
     [],
     startsWith,
   );
+
   it.on(
     'star',
     async (bot: DingBot, ctx: Context) => {
@@ -144,6 +145,120 @@ export function registerGitHubCommand(it: DingCommandCenter) {
       await bot.reply(content);
     },
     ['stars'],
+    startsWith,
+  );
+
+  it.on(
+    'report',
+    async (bot: DingBot, ctx: Context) => {
+      await replyIfAppNotDefined(bot, ctx);
+      if (!hasApp(ctx)) {
+        return;
+      }
+
+      const { app } = ctx;
+      const now = new Date();
+      // 获取一个月前的日期对象
+      const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() -1, now.getDate());
+
+      const posArg = ctx.parsed['_'];
+      const { owner, repo } = await getRepoInfoFromCommand(posArg, bot);
+      const results = await app.octoService.getOrganizationPRCount(owner);
+      let substandards = [];
+      let content = '# Monthly Report of OpenSumi\n'
+      content += `> This report counts OpenSumi organization data from ${formatDate(oneMonthAgo)} to ${formatDate(now)}.\n\n`;
+      content += 'The monthly report aims to provide an overview of the [OpenSumi](https://github.com/opensumi), it contains the basis of all projects within the [OpenSumi](https://github.com/opensumi) organization, as well as a summary of the most significant changes and improvements made during the month.\n'
+      content += '## Overview\n';
+      const contributors = await app.octoService.getContributors(owner, repo);
+      const newContributors = await app.octoService.getOrganizationNewContributors(owner);
+      const contributionIncrement = newContributors[`${owner}/${repo}`];
+
+      const history = await app.octoService.getRepoHistory(owner, repo, oneMonthAgo.getTime(), now.getTime());
+
+      content += '### Basic (opensumi/core)\n';
+      content += 'This content will show how the star, watch, fork and contributors count changed in the passed month.\n';
+
+      content += '| Star | Watch | Fork | Contributors |\n';
+      content += '| ---- | ----- | ---- | ------------ |\n';
+      content += `| ${history.star_count}(↑${history.star_increment}) | - | - | ${contributors.length}${contributionIncrement ? `(↑${contributionIncrement.length})` : ''} |\n`;
+
+
+      content += '### Issues & PRS (opensumi/core)\n';
+      content += 'Issues & PRs show the new/closed issues/pull requests count in the passed month.\n';
+
+      content += '| New Issues | Closed Issues | New PR | Merged PR |\n';
+      content += '| ---------- | ------------- | ------ | --------- |\n';
+      content += `| ${history.issue_increment} | ${history.issue_closed_increment} | ${history.pull_increment} | ${history.pull_closed_increment} |\n`;
+      content += '\n';
+      content += '## Contributors\n';
+      content += 'This section will show the contribution of each developer in the OpenSumi organization in the passed month.\n';
+
+      content += '| Contributor ID | Role | Working On | PRs Count |\n';
+      content += '| -------------- | ---- | ---------- | --------- |\n';
+
+      for (const login of Object.keys(results)) {
+        const role = await app.octoService.getMemberRole(owner, login);
+        content += `| [@${login}](https://github.com/${login}) | ${role.toUpperCase()} | ${results[login].details.join(',')} | ${results[login].total} |\n`;
+
+        if (role === TEAM_MEMBERS.MENTOR && results[login].total < TEAM_MEMBER_PR_REQUIREMENT[TEAM_MEMBERS.MENTOR]) {
+          substandards.push({
+            login,
+            role,
+            total: results[login].total,
+            requirement: TEAM_MEMBER_PR_REQUIREMENT[TEAM_MEMBERS.MENTOR],
+          });
+        } else if (role === TEAM_MEMBERS.CORE_MEMBER && results[login].total < TEAM_MEMBER_PR_REQUIREMENT[TEAM_MEMBERS.CORE_MEMBER]) {
+          substandards.push({
+            login,
+            role,
+            total: results[login].total,
+            requirement: TEAM_MEMBER_PR_REQUIREMENT[TEAM_MEMBERS.CORE_MEMBER],
+          });
+        } else if (role === TEAM_MEMBERS.CONTRIBUTOR && results[login].total < TEAM_MEMBER_PR_REQUIREMENT[TEAM_MEMBERS.CONTRIBUTOR]) {
+          substandards.push({
+            login,
+            role,
+            total: results[login].total,
+            requirement: TEAM_MEMBER_PR_REQUIREMENT[TEAM_MEMBERS.CONTRIBUTOR],
+          });
+        }
+      }
+      content += '\n';
+      content += '## TeamMember requrement\n';
+      content += 'We require each team member to have corresponding contribution requirements while enjoying permissions.\n';
+      content += '| Team Role | Requirement (PRs) |\n';
+      content += '| --------- | ----------------- |\n';
+      content += '| Mentor | 10 |\n';
+      content += '| Core Member | 5 |\n';
+      content += '| Contributor | 3 |\n';
+      content += '\n';
+      content += 'Some team members did not meet the standard this month.\n'
+
+      content += '| Contributor ID | Team Role | Count | Requirement (PRs) |\n';
+      content += '| -------------- | --------- | --------- | ----------------- |\n';
+      content += substandards.map((standard) => `| ${standard.login} | ${standard.role.toUpperCase()} | ${standard.total} | **${standard.requirement}** |`).join('\n');
+      content += '\n';
+
+      content += '## New Contributors\n';
+      content += `It is OpenSumi team's great honor to have new contributors from community. We really appreciate your contributions. Feel free to tell us if you have any opinion and please share this open source project with more people if you could. If you hope to be a contributor as well, please start from [如何贡献代码](https://opensumi.com/zh/docs/develop/how-to-contribute) or [How To Contribute](https://opensumi.com/en/docs/develop/how-to-contribute).\n\n`;
+      content += `Here is the list of new contributors:\n\n`;
+
+      for(const repo of Object.keys(newContributors)) {
+        if (newContributors[repo].length) {
+          content += `**${repo}:**\n\n`;
+          content += newContributors[repo].map((contributor: any) => `@${contributor.login}`).join('\n');
+          content += '\n\n';
+        }
+      }
+      content += '\n';
+      content += 'Thanks goes to these wonderful people!'
+
+      const title = `Monthly Report of OpenSumi from ${formatDate(oneMonthAgo)} to ${formatDate(now)}`;
+
+      await bot.reply(markdown(title, content));
+      await bot.replyText(title);
+    },
+    [],
     startsWith,
   );
 }
