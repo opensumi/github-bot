@@ -52,9 +52,16 @@ function render(
     ctx,
   );
 
+  let contentLimit = ctx.setting.contentLimit;
+  if (name === 'issues') {
+    if ((data as Issue).labels?.find((v) => v.name === 'monthly-report')) {
+      contentLimit = -1;
+    }
+  }
+
   if (shouldRenderBody && data.body) {
     builder.addDivider('> ');
-    builder.add(renderPrOrIssueBody(data, ctx.setting.contentLimit));
+    builder.add(renderPrOrIssueBody(data, contentLimit));
   }
 
   let textFirstLine = `${renderUserLink(
