@@ -187,7 +187,7 @@ export function registerOpenSumiCommand(it: DingCommandCenter) {
             'installation',
             `
 ~~~json
-${JSON.stringify(token, null, 2)})}
+${JSON.stringify(token, null, 2)}
 ~~~
 `,
           ),
