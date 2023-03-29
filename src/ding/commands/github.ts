@@ -1,4 +1,4 @@
-import { startsWith } from '@/commander';
+import { startsWith, equalFunc } from '@/commander';
 import { App } from '@/github/app';
 import { render } from '@/github/render';
 import { contentToMarkdown, parseGitHubUrl } from '@/github/utils';
@@ -259,7 +259,7 @@ export function registerGitHubCommand(it: DingCommandCenter) {
       await bot.replyText(title);
     },
     [],
-    startsWith,
+    equalFunc,
   );
 }
 
