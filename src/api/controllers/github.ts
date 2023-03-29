@@ -24,9 +24,20 @@ export function route(hono: THono) {
 
   hono.get('/github/installation-token/:id', async (c) => {
     const id = c.req.param('id');
-    const flag = c.req.query('flag');
-    if (!id || !flag) {
-      return c.send.error(400, `Bad request(id: ${id} flag:${flag})`);
+    if (!id) {
+      return c.send.error(400, `Bad request(id: ${id})`);
+    }
+
+    const authorization = c.req.header('Authorization');
+    let flag: string | undefined;
+    if (authorization) {
+      if (authorization.startsWith('flag ')) {
+        flag = authorization.slice('flag '.length);
+      }
+    }
+
+    if (!flag) {
+      return c.send.error(401, 'Unauthorized: missing flag');
     }
 
     // 先查数据库有没有设置这个 id 对应的 installation id
