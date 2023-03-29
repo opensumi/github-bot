@@ -1,6 +1,7 @@
 import { startsWith, equalFunc } from '@/commander';
 import { App } from '@/github/app';
 import { render } from '@/github/render';
+import { IOrganizationNewContributionsResult } from '@/github/service/types';
 import { contentToMarkdown, parseGitHubUrl } from '@/github/utils';
 import { formatDate, proxyThisUrl } from '@/utils';
 
@@ -293,7 +294,10 @@ export function registerGitHubCommand(it: DingCommandCenter) {
         if (newContributors[repo].length) {
           content += `**${repo}:**\n\n`;
           content += newContributors[repo]
-            .map((contributor: any) => `@${contributor.login}`)
+            .map(
+              (contributor: IOrganizationNewContributionsResult) =>
+                `@${contributor.login}`,
+            )
             .join('\n');
           content += '\n\n';
         }
@@ -301,12 +305,17 @@ export function registerGitHubCommand(it: DingCommandCenter) {
       content += '\n';
       content += 'Thanks goes to these wonderful people!';
 
-      const title = `Monthly Report of OpenSumi from ${formatDate(
+      const title = `[Monthly Report] Monthly Report of OpenSumi from ${formatDate(
         oneMonthAgo,
       )} to ${formatDate(now)}`;
 
-      await bot.reply(markdown(title, content));
-      await bot.replyText(title);
+      await app.octoService.octo.issues.create({
+        owner: 'opensumi',
+        repo: 'reports',
+        title,
+        body: content,
+        labels: ['monthly-report'],
+      });
     },
     [],
     equalFunc,
