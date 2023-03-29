@@ -1,5 +1,8 @@
+import { createCancelablePromise } from '@opensumi/ide-utils/lib/async';
+
 import { ConversationKVManager } from '@/ai/conversation/kvManager';
 import { doSign, send } from '@/ding/utils';
+import Environment from '@/env';
 import { initApp, App } from '@/github/app';
 import { DingKVManager } from '@/kv/ding';
 import { GitHubKVManager } from '@/kv/github';
@@ -108,19 +111,35 @@ export class DingBot {
       const result = await cc.resolve(parsed.arg0);
       if (result && result.handler) {
         const { handler } = result;
-        try {
+        const p = createCancelablePromise(async (token) => {
           await handler(this, {
             message: msg,
             command: text,
             parsed,
             app,
             result,
+            token,
           });
-        } catch (error) {
+        });
+
+        let timeout: number | NodeJS.Timeout;
+
+        if (Environment.instance().runtime === 'cfworker') {
+          // cloudflare worker 会在 30s 后强制结束 worker，所以这里设置 29s 的超时
+          timeout = setTimeout(() => {
+            p.cancel();
+          }, 29 * 1000);
+        }
+
+        p.then(() => {
+          timeout && clearTimeout(timeout);
+        }).catch(async (error) => {
           await this.replyText(
             `error when executing ${text}: ${(error as Error).message}`,
           );
-        }
+        });
+
+        await p;
       } else {
         console.log('no handler found for', text);
       }

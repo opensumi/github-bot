@@ -1,4 +1,4 @@
-export type TSupportedRuntime = 'cloudflare' | 'node';
+export type TSupportedRuntime = 'cfworker' | 'node';
 
 export default class Environment {
   private constructor(

@@ -11,7 +11,7 @@ ignition(app);
 export default {
   ...app,
   fetch: async (request: Request, env: IRuntimeEnv, ctx: ExecutionContext) => {
-    Environment.from('cloudflare', env);
+    Environment.from('cfworker', env);
 
     return app.fetch(request, env, ctx);
   },

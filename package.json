@@ -51,6 +51,7 @@
     "@octokit/plugin-paginate-rest": "^6.0.0",
     "@octokit/rest": "^19.0.7",
     "@octokit/webhooks": "^10.7.0",
+    "@opensumi/ide-utils": "^2.23.1",
     "chatgpt": "^5.0.9",
     "hono": "^3.0.3",
     "lodash": "^4.17.21",

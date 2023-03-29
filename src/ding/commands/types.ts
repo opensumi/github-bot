@@ -1,3 +1,5 @@
+import { CancellationToken } from '@opensumi/ide-utils/lib/cancellation';
+
 import { CommandCenter, IArgv } from '@/commander';
 import { IRegexResolveResult, IResolveResult } from '@/commander/types';
 import { App } from '@/github/app';
@@ -14,6 +16,7 @@ export interface Context<T = any> {
   parsed: IArgv<T>;
   app?: App;
   result: IResolveResult;
+  token: CancellationToken;
 }
 
 export interface RegexContext<T = any> extends Context<T> {

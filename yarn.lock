@@ -1695,6 +1695,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@opensumi/ide-utils@npm:^2.23.1":
+  version: 2.23.1
+  resolution: "@opensumi/ide-utils@npm:2.23.1"
+  dependencies:
+    iconv-lite: ^0.6.3
+    jschardet: 3.0.0
+    mri: ^1.2.0
+    nanoid: 3.3.4
+    vscode-uri: 3.0.2
+  checksum: 2d781fc01e4cb501eaa64461c92c00fea678e0db0727780c12e50d81ee931424ba857d5b9edb6827d0c3e42fa3a954237be19ae3fe700b737263e2a367627d3a
+  languageName: node
+  linkType: hard
+
 "@pkgr/utils@npm:^2.3.1":
   version: 2.3.1
   resolution: "@pkgr/utils@npm:2.3.1"
@@ -4388,6 +4401,7 @@ __metadata:
     "@octokit/types": ^9.0.0
     "@octokit/webhooks": ^10.7.0
     "@octokit/webhooks-examples": ^6.10.0
+    "@opensumi/ide-utils": ^2.23.1
     "@types/jest": ^29.4.0
     "@types/lodash": ^4.14.191
     "@types/node": ^18.11.18
@@ -4751,7 +4765,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"iconv-lite@npm:^0.6.2":
+"iconv-lite@npm:^0.6.2, iconv-lite@npm:^0.6.3":
   version: 0.6.3
   resolution: "iconv-lite@npm:0.6.3"
   dependencies:
@@ -5649,6 +5663,13 @@ __metadata:
   bin:
     js-yaml: bin/js-yaml.js
   checksum: c7830dfd456c3ef2c6e355cc5a92e6700ceafa1d14bba54497b34a99f0376cecbb3e9ac14d3e5849b426d5a5140709a66237a8c991c675431271c4ce5504151a
+  languageName: node
+  linkType: hard
+
+"jschardet@npm:3.0.0":
+  version: 3.0.0
+  resolution: "jschardet@npm:3.0.0"
+  checksum: f391df4512bbd7edf97f82be09ba841a80cb4408c3ab96cf7e9c307737bd08cd8b3d10986f3db844d04151530395dcd174b3288f17144206d42675ecf482c286
   languageName: node
   linkType: hard
 
@@ -6889,7 +6910,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nanoid@npm:^3.3.3":
+"nanoid@npm:3.3.4, nanoid@npm:^3.3.3":
   version: 3.3.4
   resolution: "nanoid@npm:3.3.4"
   bin:
@@ -8945,6 +8966,13 @@ __metadata:
   version: 1.1.2
   resolution: "vary@npm:1.1.2"
   checksum: ae0123222c6df65b437669d63dfa8c36cee20a504101b2fcd97b8bf76f91259c17f9f2b4d70a1e3c6bbcee7f51b28392833adb6b2770b23b01abec84e369660b
+  languageName: node
+  linkType: hard
+
+"vscode-uri@npm:3.0.2":
+  version: 3.0.2
+  resolution: "vscode-uri@npm:3.0.2"
+  checksum: 5ed2c95a483a43398df40c31d23e44f138e9c8bed384fa4edf0fd97396ce18ae8dae173c5d55e69b47205e2108e165cb165b12843a74e8b35c066d9f3810fb6c
   languageName: node
   linkType: hard
 

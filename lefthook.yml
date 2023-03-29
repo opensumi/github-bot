@@ -5,4 +5,5 @@ pre-commit:
       glob: '*.{js,ts,jsx,tsx}'
       run: yarn eslint {staged_files}
     prettier:
+      glob: '*.{js,ts,jsx,tsx,css,less,scss,vue,json,gql,md}'
       run: yarn prettier {staged_files} -w
