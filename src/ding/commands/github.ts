@@ -173,7 +173,7 @@ export function registerGitHubCommand(it: DingCommandCenter) {
       const posArg = ctx.parsed['_'];
       const { owner, repo } = await getRepoInfoFromCommand(posArg, bot);
       const results = await app.octoService.getOrganizationPRCount(owner);
-      const substandards = [];
+      const notUpToStandards = [];
       let content = '# Monthly Report of OpenSumi\n';
       content += `> This report counts OpenSumi organization data from ${formatDate(
         oneMonthAgo,
@@ -230,7 +230,7 @@ export function registerGitHubCommand(it: DingCommandCenter) {
           role === TEAM_MEMBERS.MENTOR &&
           results[login].total < TEAM_MEMBER_PR_REQUIREMENT[TEAM_MEMBERS.MENTOR]
         ) {
-          substandards.push({
+          notUpToStandards.push({
             login,
             role,
             total: results[login].total,
@@ -241,7 +241,7 @@ export function registerGitHubCommand(it: DingCommandCenter) {
           results[login].total <
             TEAM_MEMBER_PR_REQUIREMENT[TEAM_MEMBERS.CORE_MEMBER]
         ) {
-          substandards.push({
+          notUpToStandards.push({
             login,
             role,
             total: results[login].total,
@@ -252,7 +252,7 @@ export function registerGitHubCommand(it: DingCommandCenter) {
           results[login].total <
             TEAM_MEMBER_PR_REQUIREMENT[TEAM_MEMBERS.CONTRIBUTOR]
         ) {
-          substandards.push({
+          notUpToStandards.push({
             login,
             role,
             total: results[login].total,
@@ -275,7 +275,7 @@ export function registerGitHubCommand(it: DingCommandCenter) {
       content += '| Contributor ID | Team Role | Count | Requirement (PRs) |\n';
       content +=
         '| -------------- | --------- | --------- | ----------------- |\n';
-      content += substandards
+      content += notUpToStandards
         .map(
           (standard) =>
             `| ${standard.login} | ${standard.role.toUpperCase()} | ${
