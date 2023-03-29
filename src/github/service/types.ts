@@ -14,3 +14,14 @@ export interface IIssueDetail {
   type: 'issue';
   issue: IssueData;
 }
+
+export interface IOrganizationPrResult {
+  [login: string]: {
+    details: string[];
+    total: number;
+  }
+}
+
+export interface IOrganizationNewContributionsResult {
+  [full_name: string]: any;
+}

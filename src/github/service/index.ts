@@ -1,6 +1,7 @@
+import { TEAM_MEMBERS } from '@/ding/commands/constants';
 import { Octokit } from '@octokit/rest';
 
-import { IIssueDetail, IPrDetail, PrData } from './types';
+import { IOrganizationPrResult, IIssueDetail, IPrDetail, PrData, IOrganizationNewContributionsResult } from './types';
 
 export class OctoService {
   private _octo: Octokit | undefined;
@@ -373,9 +374,7 @@ export class OctoService {
     };
   }
 
-  async getRepoHistory(owner: string, repo: string, to: number = Date.now()) {
-    const from = to - HISTORY_RANGE;
-
+  async getRepoHistory(owner: string, repo: string, from: number = Date.now() - HISTORY_RANGE, to = Date.now()) {
     const issues = await this.getRepoIssueStatus(owner, repo, from, to);
     const pulls = await this.getRepoPullStatus(owner, repo, from, to);
     const star = await this.getRepoStarIncrement(owner, repo, from, to);
@@ -389,6 +388,170 @@ export class OctoService {
       ...pulls,
       ...star,
     };
+  }
+
+  async getOrganizationRepos(org: string, isPrivate: boolean = false) {
+    const result = await this.octo.repos.listForOrg({
+      org,
+    });
+    if (isPrivate) {
+      return result.data.filter((repo) => repo.private)
+    }
+    return result.data.filter((repo) => !repo.private);
+  }
+
+  async getOrganizationPRCount(
+    owner: string,
+    startDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).getTime(), // 最近30天的时间戳
+  ) {
+    const results: IOrganizationPrResult = {};
+    const repos = await this.getOrganizationRepos(owner);
+    for(const repo of repos) {
+      if (repo.owner.login && repo.name) {
+        const pulls = await this.octo.pulls.list({
+          owner: repo.owner.login,
+          repo: repo.name,
+          state: 'all',
+          per_page: 100,
+          sort: 'created',
+          direction: 'desc',
+        });
+        if(pulls.data.length <= 0) {
+          continue;
+        }
+        for (const pull of pulls.data) {
+          if (!pull.merged_at || !(new Date(pull.merged_at).getTime() >= startDate)) {
+            continue;
+          }
+          if (pull.user?.type === 'Bot') {
+            continue;
+          }
+          const login = pull.user?.login;
+          if (!login) {
+            continue;
+          }
+          if (!results[login]) {
+            results[login] = { details: [], total: 0 };
+          }
+          if (!results[login].details.includes(repo.full_name)) {
+            results[login].details.push(repo.full_name);
+          }
+          results[login].total += 1;
+        }
+      }
+    }
+    return results;
+  }
+
+  async getOrganizationNewContributors(
+    owner: string,
+    startDate = new Date(Date.now() - 30 *24 *60 *60 *1000).toISOString(), // 最近30天的时间戳
+  ) {
+    const results: IOrganizationNewContributionsResult = {};
+    const repos = await this.getOrganizationRepos(owner);
+    for(const repo of repos) {
+      console.log(`Get new contributions from ${repo.full_name}`)
+      const newContributors = await this.getNewContributions(repo.owner.login, repo.name, startDate);
+      results[repo.full_name] = newContributors;
+    }
+    return results;
+  }
+
+  async getContributors(owner: string, repo: string, page = 1) {
+    try {
+      const { data } = await this.octo.repos.listContributors({
+        owner,
+        repo,
+        page,
+        per_page: 100,
+      });
+      return data;
+    } catch(e) { };
+    return [];
+  }
+
+  async getCommits(owner: string, repo: string, page = 1, since: string) {
+    try {
+      const { data } = await this.octo.repos.listCommits({
+        owner,
+        repo,
+        per_page: 100, // 每页返回最多100条记录
+        page,
+        since,
+      });
+      return data;
+    } catch(e) { };
+    return [];
+  }
+
+  async getNewContributions(
+    owner: string,
+    repo: string,
+    startDate = new Date(Date.now() - 30 *24 *60 *60 *1000).toISOString(), // 最近30天的时间戳
+  ) {
+    let page = 1;
+    let allContributors = await this.getContributors(owner, repo, page);
+    while(allContributors && allContributors.length && allContributors.length % 100 === 0) {
+      page ++;
+      allContributors = allContributors.concat(await this.getContributors(owner, repo, page))
+    }
+    page = 1;
+    let allCommits = await this.getCommits(owner, repo, page, startDate);
+    while(allCommits.length && allCommits.length % 100 === 0) {
+      page ++;
+      allCommits = allCommits.concat(await this.getCommits(owner, repo, page, startDate))
+    }
+    const monthlyContributors = new Map();
+    for (const commit of allCommits) {
+      const login = commit.author?.login || commit.commit.committer?.name;
+      if (
+        !(commit.commit.committer?.date && new Date(commit.commit.committer?.date).getTime() >= new Date(startDate).getTime())
+      ) {
+        break;
+      }
+      monthlyContributors.set(login, (monthlyContributors.get(login) || 0) + 1);
+    }
+    const newContributions = [];
+    if (Array.isArray(allContributors)) {
+      for (const contributor of allContributors) {
+        if (contributor.contributions === monthlyContributors.get(contributor.login)) {
+          newContributions.push(contributor);
+        }
+      }
+    }
+    console.log(`${owner}/${repo} 仓库新增贡献者数量：${newContributions.length}`);
+    return newContributions;
+  }
+
+  async getMembershipForUserInOrg(org: string, team_slug: string, username: string) {
+    const result = await this.octo.teams.getMembershipForUserInOrg({
+      org,
+      team_slug,
+      username,
+    });
+    return result.data;
+  }
+
+  async getMemberRole(org: string, username: string) {
+    try {
+      const isMentor = (await this.getMembershipForUserInOrg(org, TEAM_MEMBERS.MENTOR, username)).state === 'active';
+      if (isMentor) {
+        return TEAM_MEMBERS.MENTOR;
+      }
+    } catch(e) {};
+    try {
+      const isCoreMember = (await this.getMembershipForUserInOrg(org, TEAM_MEMBERS.CORE_MEMBER, username)).state === 'active';
+      if (isCoreMember) {
+        return TEAM_MEMBERS.CORE_MEMBER;
+      }
+    } catch(e) {};
+    try {
+      const isContributor = (await this.getMembershipForUserInOrg(org, TEAM_MEMBERS.CONTRIBUTOR, username)).state === 'active';
+      if (isContributor) {
+        return TEAM_MEMBERS.CONTRIBUTOR;
+      }
+    } catch(e) {};
+    return TEAM_MEMBERS.NONE;
   }
 
   async getPrByNumber(
