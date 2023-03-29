@@ -1,0 +1,8 @@
+pre-commit:
+  parallel: true
+  commands:
+    eslint:
+      glob: '*.{js,ts,jsx,tsx}'
+      run: yarn eslint {staged_files}
+    prettier:
+      run: yarn prettier {staged_files} -w
