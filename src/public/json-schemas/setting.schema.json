@@ -40,11 +40,7 @@
           "$ref": "#/definitions/IInstallationSetting"
         }
       },
-      "required": [
-        "githubSecret",
-        "dingWebhooks",
-        "contentLimit"
-      ],
+      "required": ["githubSecret", "dingWebhooks", "contentLimit"],
       "additionalProperties": false
     },
     "IDingWebhookItem": {
@@ -66,10 +62,7 @@
           "description": "该 webhook 仅接收哪些事件的推送"
         }
       },
-      "required": [
-        "url",
-        "secret"
-      ],
+      "required": ["url", "secret"],
       "additionalProperties": false
     },
     "IInstallationSetting": {
@@ -82,9 +75,7 @@
           }
         }
       },
-      "required": [
-        "flags"
-      ],
+      "required": ["flags"],
       "additionalProperties": false
     }
   }

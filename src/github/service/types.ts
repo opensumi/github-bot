@@ -19,7 +19,7 @@ export interface IOrganizationPrResult {
   [login: string]: {
     details: string[];
     total: number;
-  }
+  };
 }
 
 export interface IOrganizationNewContributionsResult {

@@ -3,5 +3,5 @@ services:
   bot:
     build: .
     ports:
-      - "9099:8080"
+      - '9099:8080'
     env_file: .env

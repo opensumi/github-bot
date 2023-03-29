@@ -3,8 +3,8 @@ module.exports = {
     {
       script: './dist/node',
       watch: './dist/node',
-      instances : "3",
-      exec_mode : "cluster"
+      instances: '3',
+      exec_mode: 'cluster',
     },
   ],
 };

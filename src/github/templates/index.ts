@@ -5,7 +5,7 @@ export * from './review';
 export * from './utils';
 export * from './workflow';
 
-import { TemplateMapping , Context } from '@/github/types';
+import { TemplateMapping, Context } from '@/github/types';
 
 import {
   handlePr,
@@ -19,7 +19,6 @@ import {
   handleReviewComment,
   handleDiscussionComment,
 } from '.';
-
 
 export const getTemplates = (ctx: Context) => {
   let templates = {

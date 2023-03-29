@@ -24,7 +24,6 @@ for (const routeName of allRoutes) {
     logger: console,
   });
 
-
   smee.start();
 
   allClients.push(smee);

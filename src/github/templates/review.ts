@@ -1,6 +1,6 @@
 import { StringBuilder } from '@/utils';
 
-import { Context , ExtractPayload, MarkdownContent } from '../types';
+import { Context, ExtractPayload, MarkdownContent } from '../types';
 
 import {
   StopHandleError,

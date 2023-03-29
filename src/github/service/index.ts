@@ -1,7 +1,14 @@
-import { TEAM_MEMBERS } from '@/ding/commands/constants';
 import { Octokit } from '@octokit/rest';
 
-import { IOrganizationPrResult, IIssueDetail, IPrDetail, PrData, IOrganizationNewContributionsResult } from './types';
+import { TEAM_MEMBERS } from '@/ding/commands/constants';
+
+import {
+  IOrganizationPrResult,
+  IIssueDetail,
+  IPrDetail,
+  PrData,
+  IOrganizationNewContributionsResult,
+} from './types';
 
 export class OctoService {
   private _octo: Octokit | undefined;
@@ -374,7 +381,12 @@ export class OctoService {
     };
   }
 
-  async getRepoHistory(owner: string, repo: string, from: number = Date.now() - HISTORY_RANGE, to = Date.now()) {
+  async getRepoHistory(
+    owner: string,
+    repo: string,
+    from: number = Date.now() - HISTORY_RANGE,
+    to = Date.now(),
+  ) {
     const issues = await this.getRepoIssueStatus(owner, repo, from, to);
     const pulls = await this.getRepoPullStatus(owner, repo, from, to);
     const star = await this.getRepoStarIncrement(owner, repo, from, to);
@@ -390,12 +402,12 @@ export class OctoService {
     };
   }
 
-  async getOrganizationRepos(org: string, isPrivate: boolean = false) {
+  async getOrganizationRepos(org: string, isPrivate = false) {
     const result = await this.octo.repos.listForOrg({
       org,
     });
     if (isPrivate) {
-      return result.data.filter((repo) => repo.private)
+      return result.data.filter((repo) => repo.private);
     }
     return result.data.filter((repo) => !repo.private);
   }
@@ -406,7 +418,7 @@ export class OctoService {
   ) {
     const results: IOrganizationPrResult = {};
     const repos = await this.getOrganizationRepos(owner);
-    for(const repo of repos) {
+    for (const repo of repos) {
       if (repo.owner.login && repo.name) {
         const pulls = await this.octo.pulls.list({
           owner: repo.owner.login,
@@ -416,11 +428,14 @@ export class OctoService {
           sort: 'created',
           direction: 'desc',
         });
-        if(pulls.data.length <= 0) {
+        if (pulls.data.length <= 0) {
           continue;
         }
         for (const pull of pulls.data) {
-          if (!pull.merged_at || !(new Date(pull.merged_at).getTime() >= startDate)) {
+          if (
+            !pull.merged_at ||
+            !(new Date(pull.merged_at).getTime() >= startDate)
+          ) {
             continue;
           }
           if (pull.user?.type === 'Bot') {
@@ -445,13 +460,17 @@ export class OctoService {
 
   async getOrganizationNewContributors(
     owner: string,
-    startDate = new Date(Date.now() - 30 *24 *60 *60 *1000).toISOString(), // 最近30天的时间戳
+    startDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), // 最近30天的时间戳
   ) {
     const results: IOrganizationNewContributionsResult = {};
     const repos = await this.getOrganizationRepos(owner);
-    for(const repo of repos) {
-      console.log(`Get new contributions from ${repo.full_name}`)
-      const newContributors = await this.getNewContributions(repo.owner.login, repo.name, startDate);
+    for (const repo of repos) {
+      console.log(`Get new contributions from ${repo.full_name}`);
+      const newContributors = await this.getNewContributions(
+        repo.owner.login,
+        repo.name,
+        startDate,
+      );
       results[repo.full_name] = newContributors;
     }
     return results;
@@ -466,7 +485,7 @@ export class OctoService {
         per_page: 100,
       });
       return data;
-    } catch(e) { };
+    } catch (e) {}
     return [];
   }
 
@@ -480,32 +499,44 @@ export class OctoService {
         since,
       });
       return data;
-    } catch(e) { };
+    } catch (e) {}
     return [];
   }
 
   async getNewContributions(
     owner: string,
     repo: string,
-    startDate = new Date(Date.now() - 30 *24 *60 *60 *1000).toISOString(), // 最近30天的时间戳
+    startDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(), // 最近30天的时间戳
   ) {
     let page = 1;
     let allContributors = await this.getContributors(owner, repo, page);
-    while(allContributors && allContributors.length && allContributors.length % 100 === 0) {
-      page ++;
-      allContributors = allContributors.concat(await this.getContributors(owner, repo, page))
+    while (
+      allContributors &&
+      allContributors.length &&
+      allContributors.length % 100 === 0
+    ) {
+      page++;
+      allContributors = allContributors.concat(
+        await this.getContributors(owner, repo, page),
+      );
     }
     page = 1;
     let allCommits = await this.getCommits(owner, repo, page, startDate);
-    while(allCommits.length && allCommits.length % 100 === 0) {
-      page ++;
-      allCommits = allCommits.concat(await this.getCommits(owner, repo, page, startDate))
+    while (allCommits.length && allCommits.length % 100 === 0) {
+      page++;
+      allCommits = allCommits.concat(
+        await this.getCommits(owner, repo, page, startDate),
+      );
     }
     const monthlyContributors = new Map();
     for (const commit of allCommits) {
       const login = commit.author?.login || commit.commit.committer?.name;
       if (
-        !(commit.commit.committer?.date && new Date(commit.commit.committer?.date).getTime() >= new Date(startDate).getTime())
+        !(
+          commit.commit.committer?.date &&
+          new Date(commit.commit.committer?.date).getTime() >=
+            new Date(startDate).getTime()
+        )
       ) {
         break;
       }
@@ -514,16 +545,25 @@ export class OctoService {
     const newContributions = [];
     if (Array.isArray(allContributors)) {
       for (const contributor of allContributors) {
-        if (contributor.contributions === monthlyContributors.get(contributor.login)) {
+        if (
+          contributor.contributions ===
+          monthlyContributors.get(contributor.login)
+        ) {
           newContributions.push(contributor);
         }
       }
     }
-    console.log(`${owner}/${repo} 仓库新增贡献者数量：${newContributions.length}`);
+    console.log(
+      `${owner}/${repo} 仓库新增贡献者数量：${newContributions.length}`,
+    );
     return newContributions;
   }
 
-  async getMembershipForUserInOrg(org: string, team_slug: string, username: string) {
+  async getMembershipForUserInOrg(
+    org: string,
+    team_slug: string,
+    username: string,
+  ) {
     const result = await this.octo.teams.getMembershipForUserInOrg({
       org,
       team_slug,
@@ -534,23 +574,44 @@ export class OctoService {
 
   async getMemberRole(org: string, username: string) {
     try {
-      const isMentor = (await this.getMembershipForUserInOrg(org, TEAM_MEMBERS.MENTOR, username)).state === 'active';
+      const isMentor =
+        (
+          await this.getMembershipForUserInOrg(
+            org,
+            TEAM_MEMBERS.MENTOR,
+            username,
+          )
+        ).state === 'active';
       if (isMentor) {
         return TEAM_MEMBERS.MENTOR;
       }
-    } catch(e) {};
+    } catch (e) {}
     try {
-      const isCoreMember = (await this.getMembershipForUserInOrg(org, TEAM_MEMBERS.CORE_MEMBER, username)).state === 'active';
+      const isCoreMember =
+        (
+          await this.getMembershipForUserInOrg(
+            org,
+            TEAM_MEMBERS.CORE_MEMBER,
+            username,
+          )
+        ).state === 'active';
       if (isCoreMember) {
         return TEAM_MEMBERS.CORE_MEMBER;
       }
-    } catch(e) {};
+    } catch (e) {}
     try {
-      const isContributor = (await this.getMembershipForUserInOrg(org, TEAM_MEMBERS.CONTRIBUTOR, username)).state === 'active';
+      const isContributor =
+        (
+          await this.getMembershipForUserInOrg(
+            org,
+            TEAM_MEMBERS.CONTRIBUTOR,
+            username,
+          )
+        ).state === 'active';
       if (isContributor) {
         return TEAM_MEMBERS.CONTRIBUTOR;
       }
-    } catch(e) {};
+    } catch (e) {}
     return TEAM_MEMBERS.NONE;
   }
 

@@ -67,13 +67,15 @@ openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in private-key.pem -out 
 
 ## Ding Bot Configuration
 
-````json
+```json
 {
   "ding/secrets/xxx": {
     "outGoingToken": "xxxxx"
   },
   "ding/info/xxx": {}
 }
-````
+```
+
 You need set your bot outGoingToken to KV Namespace, key is `ding/secrets/xxx` xxx is you post url path.
-> eg. post url: https://worker.bot/ding/test  key: ding/secrets/test
+
+> eg. post url: https://worker.bot/ding/test key: ding/secrets/test
