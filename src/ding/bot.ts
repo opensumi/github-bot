@@ -1,4 +1,5 @@
 import { createCancelablePromise } from '@opensumi/ide-utils/lib/async';
+import { isPromiseCanceledError } from '@opensumi/ide-utils/lib/errors';
 
 import { ConversationKVManager } from '@/ai/conversation/kvManager';
 import { doSign, send } from '@/ding/utils';
@@ -134,8 +135,13 @@ export class DingBot {
         p.then(() => {
           timeout && clearTimeout(timeout);
         }).catch(async (error) => {
+          if (isPromiseCanceledError(error)) {
+            await this.replyText(`executing [${text}] timeout`);
+            return;
+          }
+
           await this.replyText(
-            `error when executing ${text}: ${(error as Error).message}`,
+            `error when executing [${text}]: ${(error as Error).message}`,
           );
         });
 
