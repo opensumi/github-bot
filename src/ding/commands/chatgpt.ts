@@ -16,12 +16,12 @@ export function registerChatGPTCommand(it: DingCommandCenter) {
     await bot.replyText('轮询通报时间已经设置为 ' + num + '秒');
   });
 
-  it.all(async ({ bot, ctx }) => {
+  it.all(async ({ bot, ctx, text }) => {
     try {
-      const openai = new OpenAI(bot, ctx);
-      const text = await openai.getReplyText();
-      if (text) {
-        await openai.reply(text);
+      const openai = new OpenAI(text, bot, ctx);
+      const t = await openai.getReplyText();
+      if (t) {
+        await openai.reply(t);
       } else {
         await bot.replyText('OpenAI 接口调用没有返回结果');
       }

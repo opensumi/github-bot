@@ -10,13 +10,13 @@ export class Conversation {
   conversationId: string;
   conversationKVManager: ConversationKVManager;
 
-  currentRoundPrompt: string;
-
-  constructor(protected bot: DingBot, protected ctx: Context) {
+  constructor(
+    protected currentRoundPrompt: string,
+    protected bot: DingBot,
+    protected ctx: Context,
+  ) {
     this.conversationId = bot.msg.conversationId;
     this.conversationKVManager = bot.conversationKVManager;
-
-    this.currentRoundPrompt = ctx.command;
   }
 
   async reply2(options?: { onProgress?: (data: ChatMessage) => void }) {

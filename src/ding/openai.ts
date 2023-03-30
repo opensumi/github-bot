@@ -6,10 +6,14 @@ import { Context } from '@/ding/commands';
 import { markdown } from '@/ding/message';
 
 export class OpenAI {
-  constructor(protected bot: DingBot, protected ctx: Context) {}
+  constructor(
+    protected text: string,
+    protected bot: DingBot,
+    protected ctx: Context,
+  ) {}
 
   async getReplyText(): Promise<string | undefined> {
-    const conversation = new Conversation(this.bot, this.ctx);
+    const conversation = new Conversation(this.text, this.bot, this.ctx);
 
     let triggerTimes = 0;
     const throttleWait =
