@@ -23,3 +23,24 @@ export const MONTHLY_REPORT_WORKFLOW = {
   workflow_id: MONTHLY_REPORT_FILE,
   ref: 'main',
 };
+
+export const BACKPORT_PR_FILE = 'backport-pr.yml';
+
+export const BACKPORT_PR_WORKFLOW = {
+  owner: 'opensumi',
+  repo: 'actions',
+  workflow_id: BACKPORT_PR_FILE,
+  ref: 'main',
+};
+
+export function getActionsUrl({
+  owner,
+  repo,
+  workflow_id,
+}: {
+  owner: string;
+  repo: string;
+  workflow_id: string;
+}) {
+  return `https://github.com/${owner}/${repo}/actions/workflows/${workflow_id}`;
+}

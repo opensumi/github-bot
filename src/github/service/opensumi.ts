@@ -52,9 +52,9 @@ export class OpenSumiOctoService extends OctoService {
     return workflow;
   }
   async monthlyReport() {
-    const workflow = await this.octo.actions.createWorkflowDispatch({
-      ...MONTHLY_REPORT_WORKFLOW,
-    });
+    const workflow = await this.octo.actions.createWorkflowDispatch(
+      MONTHLY_REPORT_WORKFLOW,
+    );
     return workflow;
   }
   async syncVersion(version?: string) {
@@ -68,6 +68,23 @@ export class OpenSumiOctoService extends OctoService {
       workflow_id: 'sync.yml',
       ref: 'main',
       inputs,
+    });
+    return workflow;
+  }
+
+  async backportPr({
+    pull_number,
+    target_branch,
+  }: {
+    pull_number: number;
+    target_branch: string;
+  }) {
+    const workflow = await this.octo.actions.createWorkflowDispatch({
+      ...MONTHLY_REPORT_WORKFLOW,
+      inputs: {
+        pull_number: pull_number.toString(),
+        target_branch,
+      },
     });
     return workflow;
   }

@@ -1,3 +1,5 @@
+import { BACKPORT_PR_WORKFLOW, getActionsUrl } from '@/constants/opensumi';
+
 import { GitHubCommandCenter } from '../types';
 
 function extractTargetBranchNameFromCommand(comment: string) {
@@ -7,6 +9,7 @@ function extractTargetBranchNameFromCommand(comment: string) {
 }
 
 export function registerPullRequestCommand(it: GitHubCommandCenter) {
+  // backport to v2.23
   it.on('backport', async (app, ctx, payload) => {
     const { issue } = payload;
     const pull_request = issue.pull_request;
@@ -14,8 +17,18 @@ export function registerPullRequestCommand(it: GitHubCommandCenter) {
       // only handle pull request
       return;
     }
-    // Q: how to get the target branch info(such as) from the payload? payload is IssueCommentEvent?
-    // A: https://docs.github.com/en/developers/webhooks-and-events/webhooks/webhook-events-and-payloads#issue_comment
+    const result = await app.octoService.getPrByNumber(
+      payload.repository.owner.login,
+      payload.repository.name,
+      issue.number,
+    );
+    if (!result) {
+      await app.replyComment(
+        payload,
+        'Cannot get pull request info from ' + `#${issue.number}`,
+      );
+      return;
+    }
 
     const { command } = ctx;
     const targetBranch = extractTargetBranchNameFromCommand(command);
@@ -23,18 +36,23 @@ export function registerPullRequestCommand(it: GitHubCommandCenter) {
     if (!targetBranch) {
       await app.replyComment(
         payload,
-        'Cannot find the target branch from ' + command,
+        'Cannot extract the target branch from ' +
+          command +
+          '\n\n' +
+          'Example: `backport to v2.23`',
       );
       return;
     }
 
-    const result = await app.octoService.getPrByNumber(
-      payload.repository.owner.login,
-      payload.repository.name,
-      issue.number,
+    await app.opensumiOctoService.backportPr({
+      pull_number: issue.number,
+      target_branch: targetBranch,
+    });
+
+    await app.replyComment(
+      payload,
+      `Backporting to \`${targetBranch}\` branch is started.  
+Please see: <${getActionsUrl(BACKPORT_PR_WORKFLOW)}>`,
     );
-    if (!result) {
-      return;
-    }
   });
 }
