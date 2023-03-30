@@ -8,7 +8,6 @@ import mri from 'mri';
 import { buildParams, DEFAULT_BUILD_ARGS } from './build';
 
 const argv = mri(process.argv.slice(2));
-console.log(argv);
 
 const define = {
   ...DEFAULT_BUILD_ARGS,
@@ -23,9 +22,7 @@ async function buildNode() {
     platform: 'node',
     target: 'node16',
     format: 'cjs',
-    define: {
-      ...define,
-    },
+    define,
   });
 
   if (argv['watch']) {

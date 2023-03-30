@@ -6,14 +6,13 @@ import mri from 'mri';
 import { buildParams, DEFAULT_BUILD_ARGS } from './build';
 
 const argv = mri(process.argv.slice(2));
-console.log(argv);
 
 const resolvePlugin = {
   name: 'resolvePlugin',
   setup(build) {
     build.onResolve(
       { filter: /^decode-named-character-reference$/ },
-      async (args) => {
+      async () => {
         const result = {
           path: require.resolve('decode-named-character-reference'),
         };
@@ -45,7 +44,7 @@ async function buildWorker() {
 }
 
 async function main() {
-  await Promise.all([buildWorker()]);
+  await buildWorker();
 }
 
 main();
