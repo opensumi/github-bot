@@ -1,3 +1,4 @@
+import { equalFunc } from '@/commander';
 import { RC_WORKFLOW_FILE } from '@/constants/opensumi';
 
 import { DingBot } from '../bot';
@@ -160,6 +161,21 @@ export function registerOpenSumiCommand(it: DingCommandCenter) {
       await bot.replyText(`执行出错：${(error as Error).message}`);
     }
   });
+  it.on(
+    'report',
+    async (bot: DingBot, ctx: Context) => {
+      await replyIfAppNotDefined(bot, ctx);
+      if (!hasApp(ctx)) {
+        return;
+      }
+      const { app } = ctx;
+
+      await app.opensumiOctoService.monthlyReport();
+      await bot.replyText('Starts generating the monthly report.');
+    },
+    [],
+    equalFunc,
+  );
   it.on(
     'createInstallationAccessToken',
     async (bot: DingBot, ctx: Context<{ version: string }>) => {

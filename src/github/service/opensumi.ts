@@ -1,4 +1,8 @@
-import { NEXT_WORKFLOW_FILE, RC_WORKFLOW_FILE } from '@/constants/opensumi';
+import {
+  MONTHLY_REPORT_WORKFLOW,
+  NEXT_WORKFLOW_FILE,
+  RC_WORKFLOW_FILE,
+} from '@/constants/opensumi';
 
 import { OctoService } from '.';
 
@@ -44,6 +48,12 @@ export class OpenSumiOctoService extends OctoService {
       inputs: {
         ref: branch,
       },
+    });
+    return workflow;
+  }
+  async monthlyReport() {
+    const workflow = await this.octo.actions.createWorkflowDispatch({
+      ...MONTHLY_REPORT_WORKFLOW,
     });
     return workflow;
   }

@@ -1,4 +1,5 @@
 export const RC_WORKFLOW_FILE = 'release-rc.yml';
+
 export const NEXT_WORKFLOW_FILE = 'release-rc.yml';
 
 export const RELEASE_FILE = 'release-rc.yml';
@@ -13,3 +14,12 @@ export const workflowAboutRelease = new Set([
 ]);
 
 export const VERSION_SYNC_KEYWORD = 'versionInfo';
+
+export const MONTHLY_REPORT_FILE = 'monthly-report.yml';
+
+export const MONTHLY_REPORT_WORKFLOW = {
+  owner: 'opensumi',
+  repo: 'actions',
+  workflow_id: MONTHLY_REPORT_FILE,
+  ref: 'main',
+};
