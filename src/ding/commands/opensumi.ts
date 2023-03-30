@@ -171,7 +171,7 @@ export function registerOpenSumiCommand(it: DingCommandCenter) {
       const { app } = ctx;
 
       await app.opensumiOctoService.monthlyReport();
-      await bot.replyText('Starts generating the monthly report.');
+      await bot.replyText('Starts generating monthly report.');
     },
     [],
     equalFunc,
