@@ -1,13 +1,12 @@
-import { createCancelablePromise } from '@opensumi/ide-utils/lib/async';
-import { isPromiseCanceledError } from '@opensumi/ide-utils/lib/errors';
+import { Context } from 'hono';
 
 import { ConversationKVManager } from '@/ai/conversation/kvManager';
 import { doSign, send } from '@/ding/utils';
-import Environment from '@/env';
 import { initApp, App } from '@/github/app';
 import { DingKVManager } from '@/kv/ding';
 import { GitHubKVManager } from '@/kv/github';
 import { IDingBotSetting } from '@/kv/types';
+import { proxyThisUrl } from '@/utils';
 
 import { cc } from './commands';
 import { SendMessage, compose, text as textWrapper } from './message';
@@ -80,6 +79,7 @@ export class DingBot {
 
   constructor(
     public id: string,
+    public c: Context<THonoEnvironment>,
     public msg: Message,
     public kvManager: DingKVManager,
     public ctx: ExecutionContext,
@@ -127,5 +127,9 @@ export class DingBot {
   async reply(content: SendMessage) {
     console.log(`DingBot ~ reply:`, JSON.stringify(content));
     await send(content, this.msg.sessionWebhook);
+  }
+
+  async proxyThisUrl(url: string) {
+    return proxyThisUrl(this.c.origin, url);
   }
 }

@@ -36,11 +36,13 @@ export function route(hono: THono) {
 
     const bot = new DingBot(
       id,
+      c,
       await c.req.json(),
       kvManager,
       c.executionCtx,
       setting,
     );
+
     c.executionCtx.waitUntil(
       errorCallback(bot.handle(), async (err: unknown) => {
         await bot.replyText(

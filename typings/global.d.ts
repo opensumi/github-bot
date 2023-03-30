@@ -38,7 +38,6 @@ declare global {
 
   interface IRuntimeEnv {
     readonly KV_PROD: IKVNamespace;
-    readonly HOST: string;
     readonly OPENAI_API_KEY?: string;
     readonly TIMEOUT?: string;
     [key: string]: unknown;

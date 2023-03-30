@@ -6,7 +6,6 @@ import Environment from '@/env';
 
 const testEnv: IRuntimeEnv = {
   KV_PROD: new EdgeKVNamespace(),
-  HOST: 'host',
 };
 
 describe('command center', () => {

@@ -14,7 +14,6 @@ const port = process.env.PORT ? Number(process.env.PORT) : 8787;
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
-      readonly HOST: string;
       readonly OPENAI_API_KEY?: string;
     }
   }

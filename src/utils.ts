@@ -30,8 +30,8 @@ export class StringBuilder {
   }
 }
 
-export function proxyThisUrl(url: string) {
-  return `${Environment.instance().HOST}/proxy/${encodeURIComponent(url)}`;
+export function proxyThisUrl(origin: string, url: string) {
+  return `${origin}/proxy/${encodeURIComponent(url)}`;
 }
 
 export function randomChoice(arr: string[]) {

@@ -12,10 +12,6 @@ export default class Environment {
     return this.env.KV_PROD;
   }
 
-  get HOST() {
-    return this.env.HOST;
-  }
-
   get OPENAI_API_KEY() {
     return this.env.OPENAI_API_KEY;
   }

@@ -18,7 +18,6 @@ describe('handle', () => {
       request,
       {
         KV_PROD: new EdgeKVNamespace() as any,
-        HOST: 'https://localhost',
         // MY_QUEUE: {} as any,
       },
       event,

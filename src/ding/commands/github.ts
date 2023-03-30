@@ -1,20 +1,13 @@
-import { startsWith, equalFunc } from '@/commander';
+import { startsWith } from '@/commander';
 import { App } from '@/github/app';
 import { render } from '@/github/render';
-import { IOrganizationNewContributionsResult } from '@/github/service/types';
 import { contentToMarkdown, parseGitHubUrl } from '@/github/utils';
-import { formatDate, proxyThisUrl } from '@/utils';
 
 import type { DingBot } from '../bot';
 import { code, markdown } from '../message';
 
-import {
-  ISSUE_REGEX,
-  REPO_REGEX,
-  TEAM_MEMBERS,
-  TEAM_MEMBER_PR_REQUIREMENT,
-} from './constants';
-import { Context, DingCommandCenter } from './types';
+import { ISSUE_REGEX, REPO_REGEX } from './constants';
+import { DingCommandCenter } from './types';
 import { hasApp, replyIfAppNotDefined } from './utils';
 
 export function registerGitHubCommand(it: DingCommandCenter) {
@@ -38,7 +31,7 @@ export function registerGitHubCommand(it: DingCommandCenter) {
       await bot.reply(
         markdown(
           `${full_name} Open Graph`,
-          `![](${proxyThisUrl(
+          `![](${bot.proxyThisUrl(
             `https://opengraph.githubassets.com/${makeid(16)}/${full_name}`,
           )})`,
         ),
@@ -110,7 +103,7 @@ export function registerGitHubCommand(it: DingCommandCenter) {
             await bot.reply(
               markdown(
                 `${full_name} Open Graph`,
-                `![](${proxyThisUrl(
+                `![](${bot.proxyThisUrl(
                   `https://opengraph.githubassets.com/${makeid(
                     16,
                   )}/${full_name}`,
