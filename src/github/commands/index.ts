@@ -5,10 +5,21 @@ import { GitHubCommandCenter } from './types';
 
 export * from './types';
 
-export const issueCc = new CommandCenter(['/'], (it) => {
-  it.on('hello', async (app, ctx, payload) => {
-    await app.replyComment(payload, 'Hello there 👋');
-  });
+export const issueCc = new CommandCenter({
+  prefix: ['/'],
 }) as GitHubCommandCenter;
+
+issueCc.on('hello', async (ctx) => {
+  const { app, payload } = ctx;
+  await app.replyComment(payload, 'Hello there 👋');
+});
+
+issueCc.setReplyTextHandler((ctx) => {
+  const { app, payload } = ctx;
+
+  return async (text: string) => {
+    await app.replyComment(payload, text);
+  };
+});
 
 registerPullRequestCommand(issueCc);

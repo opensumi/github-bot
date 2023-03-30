@@ -109,46 +109,14 @@ export class DingBot {
       const parsed = cc.parseCliArgs(text);
       console.log(`DingBot ~ handle ~ parsed`, JSON.stringify(parsed));
 
-      const result = await cc.resolve(parsed.arg0);
-      if (result && result.handler) {
-        const { handler } = result;
-        const p = createCancelablePromise(async (token) => {
-          await handler(this, {
-            message: msg,
-            command: text,
-            parsed,
-            app,
-            result,
-            token,
-          });
-        });
-
-        let timeout: number | NodeJS.Timeout;
-
-        if (Environment.instance().runtime === 'cfworker') {
-          // cloudflare worker 会在 30s 后强制结束 worker，所以这里设置 29s 的超时
-          timeout = setTimeout(() => {
-            p.cancel();
-          }, 29 * 1000);
-        }
-
-        p.then(() => {
-          timeout && clearTimeout(timeout);
-        }).catch(async (error) => {
-          if (isPromiseCanceledError(error)) {
-            await this.replyText(`executing [${text}] timeout`);
-            return;
-          }
-
-          await this.replyText(
-            `error when executing [${text}]: ${(error as Error).message}`,
-          );
-        });
-
-        await p;
-      } else {
-        console.log('no handler found for', text);
-      }
+      await cc.tryHandle(parsed.arg0, {
+        bot: this,
+        ctx: {
+          message: msg,
+          parsed,
+          app,
+        },
+      });
     }
   }
 

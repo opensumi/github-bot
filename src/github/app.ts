@@ -5,7 +5,7 @@ import { VERSION_SYNC_KEYWORD } from '@/constants/opensumi';
 import { AppSetting } from '@/kv/types';
 import { App as OctoApp } from '@/lib/app.js/src';
 
-import { issueCc } from './commands';
+import { CommandContext, issueCc } from './commands';
 import { parseCommandInMarkdownComments } from './commands/parse';
 import Configuration from './configuration';
 import { setupWebhooksTemplate } from './handler';
@@ -51,11 +51,10 @@ export class App {
   }) => {
     const { comment } = payload;
 
-    const result = await issueCc.resolve(comment.body);
-    if (result && result.handler) {
-      const { handler, command } = result;
-      await handler(this, { command }, payload);
-    }
+    await issueCc.tryHandle(comment.body, {
+      app: this,
+      payload,
+    } as unknown as CommandContext);
 
     // 开始处理第一行注释中隐含的命令 <!-- versionInfo: RC | 2.20.5-rc-1665562305.0 -->
     const commands = parseCommandInMarkdownComments(comment.body);

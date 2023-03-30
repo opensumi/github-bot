@@ -24,7 +24,7 @@ async function repoIntercept(bot: DingBot, ctx: Context, repo: string) {
 }
 
 export function registerOpenSumiCommand(it: DingCommandCenter) {
-  it.on('deploy', async (bot: DingBot, ctx: Context<{ ref: string }>) => {
+  it.on('deploy', async ({ bot, ctx }) => {
     if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
       return;
     }
@@ -40,7 +40,7 @@ export function registerOpenSumiCommand(it: DingCommandCenter) {
     await bot.replyText('开始部署机器人 & 预发机器人');
   });
 
-  it.on('deploypre', async (bot: DingBot, ctx: Context<{ ref: string }>) => {
+  it.on('deploypre', async ({ bot, ctx }) => {
     if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
       return;
     }
@@ -55,7 +55,7 @@ export function registerOpenSumiCommand(it: DingCommandCenter) {
     await bot.replyText('开始部署预发机器人');
   });
 
-  it.on('rc', async (bot: DingBot, ctx: Context<{ ref: string }>) => {
+  it.on('rc', async ({ bot, ctx }) => {
     if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
       return;
     }
@@ -92,7 +92,7 @@ export function registerOpenSumiCommand(it: DingCommandCenter) {
     }
   });
 
-  it.on('nx', async (bot: DingBot, ctx: Context<{ ref: string }>) => {
+  it.on('nx', async ({ bot, ctx }) => {
     if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
       return;
     }
@@ -129,7 +129,7 @@ export function registerOpenSumiCommand(it: DingCommandCenter) {
     }
   });
 
-  it.on('sync', async (bot: DingBot, ctx: Context<{ version: string }>) => {
+  it.on('sync', async ({ bot, ctx }) => {
     if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
       return;
     }
@@ -163,7 +163,7 @@ export function registerOpenSumiCommand(it: DingCommandCenter) {
   });
   it.on(
     'report',
-    async (bot: DingBot, ctx: Context) => {
+    async ({ bot, ctx }) => {
       await replyIfAppNotDefined(bot, ctx);
       if (!hasApp(ctx)) {
         return;
@@ -176,41 +176,38 @@ export function registerOpenSumiCommand(it: DingCommandCenter) {
     [],
     equalFunc,
   );
-  it.on(
-    'createInstallationAccessToken',
-    async (bot: DingBot, ctx: Context<{ version: string }>) => {
-      if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
-        return;
-      }
+  it.on('createInstallationAccessToken', async ({ bot, ctx }) => {
+    if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
+      return;
+    }
 
-      await replyIfAppNotDefined(bot, ctx);
-      if (!hasApp(ctx)) {
-        return;
-      }
+    await replyIfAppNotDefined(bot, ctx);
+    if (!hasApp(ctx)) {
+      return;
+    }
 
-      const { app } = ctx;
+    const { app } = ctx;
 
-      let id = ctx.parsed.raw.version;
-      if (!id) {
-        if (ctx.parsed['_'].length > 1) {
-          id = ctx.parsed['_'][1];
-        }
+    let id = ctx.parsed.raw.version;
+    if (!id) {
+      if (ctx.parsed['_'].length > 1) {
+        id = ctx.parsed['_'][1];
       }
-      try {
-        const token = await app.createInstallationAccessToken(Number(id));
-        await bot.reply(
-          markdown(
-            'installation',
-            `
+    }
+    try {
+      const token = await app.createInstallationAccessToken(Number(id));
+      await bot.reply(
+        markdown(
+          'installation',
+          `
 ~~~json
 ${JSON.stringify(token, null, 2)}
 ~~~
 `,
-          ),
-        );
-      } catch (error) {
-        await bot.replyText(`执行出错：${(error as Error).message}`);
-      }
-    },
-  );
+        ),
+      );
+    } catch (error) {
+      await bot.replyText(`执行出错：${(error as Error).message}`);
+    }
+  });
 }

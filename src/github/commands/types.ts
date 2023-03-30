@@ -3,17 +3,11 @@ import { ExtractPayload } from '@/github/types';
 
 import type { App } from '../app';
 
-export interface GitHubContext {
-  /**
-   * 去除了 prefix 的原始命令
-   */
-  command: string;
+export type IssueCommentHandler = () => Promise<void>;
+
+export interface CommandContext {
+  app: App;
+  payload: ExtractPayload<'issue_comment'>;
 }
 
-export type IssueCommentHandler = (
-  app: App,
-  ctx: GitHubContext,
-  payload: ExtractPayload<'issue_comment'>,
-) => Promise<void>;
-
-export type GitHubCommandCenter = CommandCenter<IssueCommentHandler>;
+export type GitHubCommandCenter = CommandCenter<CommandContext>;

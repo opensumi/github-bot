@@ -10,13 +10,16 @@ function extractTargetBranchNameFromCommand(comment: string) {
 
 export function registerPullRequestCommand(it: GitHubCommandCenter) {
   // backport to v2.23
-  it.on('backport', async (app, ctx, payload) => {
+  it.on('backport', async (ctx) => {
+    const { app, payload } = ctx;
+
     const { issue } = payload;
     const pull_request = issue.pull_request;
     if (!pull_request) {
       // only handle pull request
       return;
     }
+
     const result = await app.octoService.getPrByNumber(
       payload.repository.owner.login,
       payload.repository.name,
@@ -30,14 +33,15 @@ export function registerPullRequestCommand(it: GitHubCommandCenter) {
       return;
     }
 
-    const { command } = ctx;
+    const { text } = ctx;
+    const { command } = ctx.result;
     const targetBranch = extractTargetBranchNameFromCommand(command);
 
     if (!targetBranch) {
       await app.replyComment(
         payload,
         'Cannot extract the target branch from ' +
-          command +
+          text +
           '\n\n' +
           'Example: `backport to v2.23`',
       );

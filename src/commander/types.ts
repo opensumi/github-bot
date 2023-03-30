@@ -5,6 +5,9 @@ export type FuncName = 'equal' | 'startwiths';
 export interface ITextResolveResult {
   handler: any;
   type: 'text';
+  /**
+   * removed prefix
+   */
   command: string;
 }
 

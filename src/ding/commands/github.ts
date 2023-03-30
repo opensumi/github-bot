@@ -14,17 +14,17 @@ import {
   TEAM_MEMBERS,
   TEAM_MEMBER_PR_REQUIREMENT,
 } from './constants';
-import { Context, DingCommandCenter, RegexContext } from './types';
+import { Context, DingCommandCenter } from './types';
 import { hasApp, replyIfAppNotDefined } from './utils';
 
 export function registerGitHubCommand(it: DingCommandCenter) {
-  it.on(REPO_REGEX, async (bot: DingBot, ctx: RegexContext) => {
+  it.on(REPO_REGEX, async ({ bot, ctx, result }) => {
     await replyIfAppNotDefined(bot, ctx);
     if (!hasApp(ctx)) {
       return;
     }
 
-    const { app, result } = ctx;
+    const { app } = ctx;
     const regexResult = result.result;
     const owner = regexResult.groups!['owner'];
     const repo = regexResult.groups!['repo'];
@@ -46,13 +46,13 @@ export function registerGitHubCommand(it: DingCommandCenter) {
     }
   });
 
-  it.on(ISSUE_REGEX, async (bot: DingBot, ctx: RegexContext) => {
+  it.on(ISSUE_REGEX, async ({ bot, ctx, result }) => {
     await replyIfAppNotDefined(bot, ctx);
     if (!hasApp(ctx)) {
       return;
     }
 
-    const { app, result } = ctx;
+    const { app } = ctx;
     const regexResult = result.result;
     const issueNumber = Number(regexResult.groups!['number']);
     const defaultRepo = await getDefaultRepo(bot);
@@ -68,7 +68,7 @@ export function registerGitHubCommand(it: DingCommandCenter) {
 
   it.on(
     'history',
-    async (bot: DingBot, ctx: Context) => {
+    async ({ bot, ctx }) => {
       await replyIfAppNotDefined(bot, ctx);
       if (!hasApp(ctx)) {
         return;
@@ -91,14 +91,14 @@ export function registerGitHubCommand(it: DingCommandCenter) {
 
   it.on(
     'http',
-    async (bot: DingBot, ctx: Context) => {
+    async ({ bot, ctx, text }) => {
       await replyIfAppNotDefined(bot, ctx);
       if (!hasApp(ctx)) {
         return;
       }
 
-      const { command, app } = ctx;
-      const githubUrl = parseGitHubUrl(command);
+      const { app } = ctx;
+      const githubUrl = parseGitHubUrl(text);
       if (githubUrl) {
         if (githubUrl.type === 'repo') {
           const result = await app.octoApp.octokit.repos.get({
@@ -136,7 +136,7 @@ export function registerGitHubCommand(it: DingCommandCenter) {
 
   it.on(
     'star',
-    async (bot: DingBot, ctx: Context) => {
+    async ({ bot, ctx }) => {
       await replyIfAppNotDefined(bot, ctx);
       if (!hasApp(ctx)) {
         return;

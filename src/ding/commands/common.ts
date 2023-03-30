@@ -10,7 +10,7 @@ import { Context, DingCommandCenter } from './types';
 export function registerCommonCommand(it: DingCommandCenter) {
   it.on(
     'putData',
-    async (bot: DingBot, ctx: Context<Partial<IDingInfo>>) => {
+    async ({ bot, ctx }) => {
       const info = {} as IDingInfo;
       if (ctx.parsed.raw['defaultRepo']) {
         info['defaultRepo'] = ctx.parsed.raw['defaultRepo'];
@@ -22,7 +22,7 @@ export function registerCommonCommand(it: DingCommandCenter) {
     startsWith,
   );
 
-  it.on('getGroupInfo', async (bot: DingBot) => {
+  it.on('getGroupInfo', async ({ bot }) => {
     await bot.reply(
       code(
         'json',
@@ -34,7 +34,7 @@ export function registerCommonCommand(it: DingCommandCenter) {
     );
   });
 
-  it.on('help', async (bot: DingBot) => {
+  it.on('help', async ({ bot }) => {
     const text = new StringBuilder();
     const prefix = it.prefixes.filter(Boolean).join('、');
     if (prefix) {
@@ -57,7 +57,7 @@ export function registerCommonCommand(it: DingCommandCenter) {
     await bot.replyText(text.build());
   });
 
-  it.on('ping', async (bot: DingBot) => {
+  it.on('ping', async ({ bot }) => {
     await bot.replyText('pong');
   });
 }

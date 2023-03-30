@@ -7,7 +7,9 @@ import { registerGitHubCommand } from './github';
 import { registerOpenSumiCommand } from './opensumi';
 import { DingCommandCenter } from './types';
 
-export const cc = new CommandCenter(['']) as DingCommandCenter;
+export const cc = new CommandCenter({
+  prefix: [''],
+}) as DingCommandCenter;
 
 registerCommonCommand(cc);
 registerGitHubCommand(cc);

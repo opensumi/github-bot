@@ -40,7 +40,7 @@ declare global {
     readonly KV_PROD: IKVNamespace;
     readonly HOST: string;
     readonly OPENAI_API_KEY?: string;
-    // readonly MY_QUEUE: Queue;
+    readonly TIMEOUT?: string;
     [key: string]: unknown;
   }
 

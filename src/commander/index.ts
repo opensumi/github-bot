@@ -1,4 +1,9 @@
+import { CancellationToken } from '@opensumi/ide-utils';
+import { createCancelablePromise } from '@opensumi/ide-utils/lib/async';
+import { isPromiseCanceledError } from '@opensumi/ide-utils/lib/errors';
 import mri from 'mri';
+
+import Environment from '@/env';
 
 import { Registry } from './registry';
 import { equalFunc, regex, startsWith } from './rules';
@@ -7,6 +12,7 @@ import type {
   IRegexResolveResult,
   IResolveResult,
   FuncName,
+  ITextResolveResult,
 } from './types';
 
 export { CompareFunc, FuncName, equalFunc, regex, startsWith };
@@ -17,25 +23,63 @@ export interface IArgv<T> {
   _: string[];
 }
 
-export class CommandCenter<T> {
-  fallbackHandler: T | undefined;
+export interface BaseContext<Result> {
+  /**
+   * the original string
+   */
+  text: string;
+  token: CancellationToken;
+  result: Result;
+  cc: CommandCenter<any>;
+  [key: string]: any;
+}
 
-  registry = new Registry<string, T>();
-  regexRegistry = new Registry<RegExp, T>();
+type TRegexHandler<C> = (
+  ctx: C & BaseContext<IRegexResolveResult>,
+  argv: IArgv<any>,
+) => Promise<void>;
+
+type TTextHandler<C> = (
+  ctx: C & BaseContext<ITextResolveResult>,
+  argv: IArgv<any>,
+) => Promise<void>;
+
+type TFallbackHandler<C> = (
+  ctx: C & BaseContext<void>,
+  argv: IArgv<any>,
+) => Promise<void>;
+
+type THandler<C> = TRegexHandler<C> | TTextHandler<C> | TFallbackHandler<C>;
+
+export interface ICommandCenterOptions<C> {
+  prefix?: string[];
+  replyText?: (c: C) => (text: string) => Promise<void>;
+}
+
+export class CommandCenter<C extends Record<string, any>> {
+  fallbackHandler: TFallbackHandler<C> | undefined;
+
+  registry = new Registry<string, THandler<C>>();
+  regexRegistry = new Registry<RegExp, THandler<C>>();
 
   prefixes = [] as string[];
-  constructor(prefixes?: string[], cb?: (it: CommandCenter<T>) => void) {
-    this.prefixes.push(...(prefixes ?? ['/']));
-    typeof cb === 'function' && cb(this);
+  constructor(private options: ICommandCenterOptions<C> = {}) {
+    this.prefixes = options.prefix ?? ['/'];
   }
 
-  async all(handler: T) {
+  async all(handler: TFallbackHandler<C>) {
     this.fallbackHandler = handler;
   }
-
+  async on(pattern: RegExp, handler: TRegexHandler<C>): Promise<void>;
+  async on(
+    pattern: string,
+    handler: TTextHandler<C>,
+    alias?: string[],
+    rule?: CompareFunc<string>,
+  ): Promise<void>;
   async on(
     pattern: string | RegExp,
-    handler: T,
+    handler: THandler<C>,
     alias?: string[],
     rule: CompareFunc<string> = equalFunc,
   ) {
@@ -59,10 +103,10 @@ export class CommandCenter<T> {
     }
 
     let isCommand = false;
-    let command = text;
+    let toResolve = text;
     for (const prefix of this.prefixes) {
       if (text.startsWith(prefix)) {
-        command = text.slice(prefix.length);
+        toResolve = text.slice(prefix.length);
         isCommand = true;
         break;
       }
@@ -78,15 +122,15 @@ export class CommandCenter<T> {
     }
     const result = {
       type: 'text',
-      command,
+      command: toResolve,
     } as IResolveResult;
-    let { handler } = this.registry.find(command) ?? {};
+    let { handler } = this.registry.find(toResolve) ?? {};
 
     if (!handler) {
-      const tmp = this.regexRegistry.find(command);
+      const tmp = this.regexRegistry.find(toResolve);
       if (tmp) {
         const { data, handler: regexHandler } = tmp;
-        const regexResult = data.exec(command)!;
+        const regexResult = data.exec(toResolve)!;
         (result as IRegexResolveResult).type = 'regex';
         (result as IRegexResolveResult).regex = data;
         (result as IRegexResolveResult).result = regexResult;
@@ -115,5 +159,58 @@ export class CommandCenter<T> {
       arg0: result._[0],
       _: result._,
     };
+  }
+
+  async replyText(c: C, text: string) {
+    await this.options?.replyText?.(c)(text);
+  }
+
+  async setReplyTextHandler(
+    handler: (c: C) => (text: string) => Promise<void>,
+  ) {
+    this.options.replyText = handler;
+  }
+
+  async tryHandle(str: string, payload: C) {
+    const result = await this.resolve(str);
+    const c = {
+      ...payload,
+      text: str,
+      result,
+      cc: this,
+    } as unknown as C & BaseContext<IResolveResult>;
+    if (result && result.handler) {
+      const { handler } = result;
+      const p = createCancelablePromise(async (token) => {
+        c.token = token;
+        await handler(c);
+      });
+
+      let timeout: number | NodeJS.Timeout;
+
+      if (Environment.instance().timeout) {
+        timeout = setTimeout(() => {
+          p.cancel();
+        }, Environment.instance().timeout);
+      }
+
+      p.then(() => {
+        timeout && clearTimeout(timeout);
+      }).catch(async (error) => {
+        if (isPromiseCanceledError(error)) {
+          await this.replyText(c, `executing [${str}] timeout`);
+          return;
+        }
+
+        await this.replyText(
+          c,
+          `error when executing [${str}]: ${(error as Error).message}`,
+        );
+      });
+
+      await p;
+    } else {
+      console.log('no handler found for', str);
+    }
   }
 }
