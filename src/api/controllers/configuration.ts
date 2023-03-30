@@ -23,11 +23,10 @@ export function route(hono: THono) {
     throw new HTTPException(401, { res });
   });
 
-  hono.get('/configuration', async (c) => {
+  hono.get('/configuration/:id', async (c) => {
+    const id = c.req.param('id');
     const token = c.req.query('token');
-    const id = c.req.query('id');
     const params = new URLSearchParams();
-    if (id) params.append('id', id);
     if (token) params.append('token', token);
 
     return c.html(
@@ -36,13 +35,15 @@ export function route(hono: THono) {
 
         ${settingsTypes.map(
           (v) =>
-            html`<a href="/configuration/${v}?${params.toString()}">${v}</a
+            html`<a href="/configuration/${id}/${v}?${params.toString()}"
+                >${v}</a
               ><br />`,
         )} `,
     );
   });
-  hono.post('/configuration/:type', async (c) => {
-    const id = c.req.query('id');
+
+  hono.post('/configuration/:id/:type', async (c) => {
+    const id = c.req.param('id');
 
     if (!id) {
       return c.send.error(404, 'Not Found: id in query');
@@ -68,9 +69,10 @@ export function route(hono: THono) {
     return c.json({ success: true });
   });
 
-  hono.get('/configuration/:type', async (c) => {
+  hono.get('/configuration/:id/:type', async (c) => {
+    const id = c.req.param('id');
+
     const token = c.req.query('token')!;
-    const id = c.req.query('id');
 
     if (!id) {
       return c.text('Not Found: id in query', 404);
@@ -97,20 +99,14 @@ export function route(hono: THono) {
       data = await kvManager.getDingInfo(id);
     }
 
-    if (!data) {
-      return c.text(`no configuration found for: type(${type}) id(${id})`, 404);
-    }
-
     return c.html(
       ConfigurationHTML +
         `
 <script type="module">
   import defaultSchema from '${schemaUrl}' assert { type: 'json' };
 
-  window.starting_value = ${JSON.stringify(data)};
-  window.submit_url = '${
-    c.origin
-  }configuration/${type}?id=${id}&token=${token}';
+  window.starting_value = ${JSON.stringify(data ?? {})};
+  window.submit_url = '${c.origin}configuration/${id}/${type}?token=${token}';
   window._options = {
     schema: defaultSchema,
     startval: window.starting_value,
