@@ -433,9 +433,11 @@
             })
               .then((response) => response.json())
               .then((data) => {
+                alert('Success:\n' + JSON.stringify(data, null, 2));
                 console.log('Success:', data);
               })
               .catch((error) => {
+                alert('Error:\n' + JSON.stringify(error, null, 2));
                 console.error('Error:', error);
               });
           });
