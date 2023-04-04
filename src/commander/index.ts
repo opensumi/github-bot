@@ -188,7 +188,7 @@ export class CommandCenter<C extends Record<string, any>> {
 
       let timeout: number | NodeJS.Timeout;
 
-      if (Environment.instance().timeout) {
+      if (typeof Environment.instance().timeout === 'number') {
         timeout = setTimeout(() => {
           p.cancel();
         }, Environment.instance().timeout);

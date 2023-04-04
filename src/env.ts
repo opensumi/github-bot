@@ -35,11 +35,12 @@ export default class Environment {
     }
     const instance = new Environment(runtime, env);
 
+    if (runtime === 'cfworker') {
+      // cloudflare worker 会在 30s 后强制结束 worker，所以这里设置 29s 的超时
+      instance._timeout = 29 * 1000;
+    }
+
     if (env.TIMEOUT) {
-      if (runtime === 'cfworker') {
-        // cloudflare worker 会在 30s 后强制结束 worker，所以这里设置 29s 的超时
-        instance._timeout = 29 * 1000;
-      }
       const timeout = parseInt(env.TIMEOUT, 10);
       if (!isNaN(timeout)) {
         instance._timeout = timeout;
