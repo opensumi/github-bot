@@ -60,4 +60,22 @@ console.log(`🚀 ~ file: service.test.ts ~ line 5 ~ shouldSkip`, shouldSkip);
       console.log(error);
     }
   });
+
+  it('can trigger workflow', async () => {
+    try {
+      const result = await octo.actions.createWorkflowDispatch({
+        owner: 'opensumi',
+        repo: 'core',
+        workflow_id: 'manual-release-rc.yml',
+        ref: 'alipay/v2.20',
+        inputs: {
+          ref: 'alipay/v2.20',
+        },
+      });
+      console.log(`🚀 ~ file: service.test.ts:56 ~ it ~ result:`, result);
+    } catch (error) {
+      debugger;
+      console.log(error);
+    }
+  });
 });
