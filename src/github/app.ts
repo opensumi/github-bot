@@ -126,10 +126,6 @@ export class App {
     return this.octoApp.webhooks;
   }
 
-  async getInstallationOctokit(id: number) {
-    return this.octoApp.getInstallationOctokit(id);
-  }
-
   async createInstallationAccessToken(id: number) {
     return this.octoApp.octokit.apps
       .createInstallationAccessToken({
