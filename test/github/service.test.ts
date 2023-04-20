@@ -78,4 +78,18 @@ console.log(`🚀 ~ file: service.test.ts ~ line 5 ~ shouldSkip`, shouldSkip);
       console.log(error);
     }
   });
+  it('can get pr commits', async () => {
+    const commits = (
+      await octo.paginate(
+        'GET /repos/{owner}/{repo}/pulls/{pull_number}/commits',
+        {
+          pull_number: 2605,
+          per_page: 100,
+          owner: 'opensumi',
+          repo: 'core',
+        },
+      )
+    ).map((commit) => commit.sha);
+    console.log(`🚀 ~ file: service.test.ts:93 ~ it ~ commits:`, commits);
+  });
 });
