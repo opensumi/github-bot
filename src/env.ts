@@ -19,7 +19,7 @@ export default class Environment {
   private _timeout: number | null = null;
 
   get timeout() {
-    return this._timeout ?? 1000;
+    return this._timeout;
   }
 
   static instance() {

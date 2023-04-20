@@ -1,4 +1,5 @@
 import { Octokit } from '@octokit/rest';
+import { HandlerFunction } from '@octokit/webhooks/dist-types/types';
 
 import { PrivilegeEvent } from '@/constants';
 import { VERSION_SYNC_KEYWORD } from '@/constants/opensumi';
@@ -11,7 +12,6 @@ import Configuration from './configuration';
 import { setupWebhooksTemplate } from './handler';
 import { OctoService } from './service';
 import { OpenSumiOctoService } from './service/opensumi';
-import { ExtractPayload } from './types';
 import { sendToDing } from './utils';
 
 export class App {
@@ -20,64 +20,8 @@ export class App {
   };
   octoService: OctoService;
   opensumiOctoService: OpenSumiOctoService;
+
   octoApp: OctoApp<{ Octokit: typeof Octokit }>;
-
-  handleSyncVersion = async (data: string) => {
-    const [tag, version] = data.split(' | ');
-    await this.opensumiOctoService.syncVersion(version);
-    await sendToDing(
-      {
-        title: 'Starts Synchronizing',
-        text: `${tag} has published. [starts synchronizing packages@${version} to npmmirror](https://github.com/opensumi/actions/actions/workflows/sync.yml)`,
-      },
-      PrivilegeEvent,
-      this.ctx.setting,
-    );
-  };
-
-  handleCommentCommand = async ({
-    payload,
-  }: {
-    payload: {
-      comment: {
-        url: string;
-        html_url: string;
-        /**
-         * The text of the comment.
-         */
-        body: string;
-      };
-    };
-  }) => {
-    const { comment } = payload;
-
-    await issueCc.tryHandle(comment.body, {
-      app: this,
-      payload,
-    } as unknown as CommandContext);
-
-    // 开始处理第一行注释中隐含的命令 <!-- versionInfo: RC | 2.20.5-rc-1665562305.0 -->
-    const commands = parseCommandInMarkdownComments(comment.body);
-    if (commands) {
-      if (commands[VERSION_SYNC_KEYWORD]) {
-        await this.handleSyncVersion(commands[VERSION_SYNC_KEYWORD]);
-      }
-    }
-  };
-
-  async replyComment(payload: ExtractPayload<'issue_comment'>, text: string) {
-    const { issue, repository } = payload;
-
-    return await this.octoApp.octokit.request(
-      'POST /repos/{owner}/{repo}/issues/{issue_number}/comments',
-      {
-        owner: repository.owner.login,
-        repo: repository.name,
-        issue_number: issue.number,
-        body: text,
-      },
-    );
-  }
 
   constructor(private setting: AppSetting) {
     const { appSettings, githubSecret } = setting;
@@ -122,6 +66,64 @@ export class App {
     );
   }
 
+  handleSyncVersion = async (data: string) => {
+    const [tag, version] = data.split(' | ');
+    await this.opensumiOctoService.syncVersion(version);
+    await sendToDing(
+      {
+        title: 'Starts Synchronizing',
+        text: `${tag} has published. [starts synchronizing packages@${version} to npmmirror](https://github.com/opensumi/actions/actions/workflows/sync.yml)`,
+      },
+      PrivilegeEvent,
+      this.ctx.setting,
+    );
+  };
+
+  handleCommentCommand = async ({
+    payload,
+    octokit,
+    id,
+    name,
+  }: Parameters<
+    HandlerFunction<
+      'issue_comment.created' | 'commit_comment.created',
+      {
+        octokit: Octokit;
+      }
+    >
+  >[0]) => {
+    const { comment } = payload;
+
+    await issueCc.tryHandle(comment.body, {
+      app: this,
+      id,
+      name,
+      payload,
+      octokit,
+    } as unknown as CommandContext);
+
+    // 开始处理第一行注释中隐含的命令 <!-- versionInfo: RC | 2.20.5-rc-1665562305.0 -->
+    const commands = parseCommandInMarkdownComments(comment.body);
+    if (commands) {
+      if (commands[VERSION_SYNC_KEYWORD]) {
+        await this.handleSyncVersion(commands[VERSION_SYNC_KEYWORD]);
+      }
+    }
+  };
+
+  async replyComment(ctx: CommandContext, text: string) {
+    const { payload, octokit } = ctx;
+    const { issue, repository } = payload;
+    return await octokit.request(
+      'POST /repos/{owner}/{repo}/issues/{issue_number}/comments',
+      {
+        owner: repository.owner.login,
+        repo: repository.name,
+        issue_number: issue.number,
+        body: text,
+      },
+    );
+  }
   get webhooks() {
     return this.octoApp.webhooks;
   }

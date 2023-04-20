@@ -7,19 +7,17 @@ export * from './types';
 
 export const issueCc = new CommandCenter({
   prefix: ['/'],
+  replyText(ctx) {
+    const { app } = ctx;
+
+    return async (text: string) => {
+      await app.replyComment(ctx, text);
+    };
+  },
 }) as GitHubCommandCenter;
 
 issueCc.on('hello', async (ctx) => {
-  const { app, payload } = ctx;
-  await app.replyComment(payload, 'Hello there 👋');
-});
-
-issueCc.setReplyTextHandler((ctx) => {
-  const { app, payload } = ctx;
-
-  return async (text: string) => {
-    await app.replyComment(payload, text);
-  };
+  await issueCc.replyText(ctx, 'Hello there 👋');
 });
 
 registerPullRequestCommand(issueCc);

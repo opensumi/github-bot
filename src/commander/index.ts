@@ -165,12 +165,6 @@ export class CommandCenter<C extends Record<string, any>> {
     await this.options?.replyText?.(c)(text);
   }
 
-  async setReplyTextHandler(
-    handler: (c: C) => (text: string) => Promise<void>,
-  ) {
-    this.options.replyText = handler;
-  }
-
   async tryHandle(str: string, payload: C) {
     const result = await this.resolve(str);
     const c = {
@@ -180,22 +174,22 @@ export class CommandCenter<C extends Record<string, any>> {
       cc: this,
     } as unknown as C & BaseContext<IResolveResult>;
     if (result && result.handler) {
-      const { handler } = result;
-      const p = createCancelablePromise(async (token) => {
+      const p = createCancelablePromise((token) => {
         c.token = token;
-        await handler(c);
+        return result.handler(c);
       });
 
-      let timeout: number | NodeJS.Timeout;
-
-      if (typeof Environment.instance().timeout === 'number') {
-        timeout = setTimeout(() => {
+      let timeoutToClear: number | NodeJS.Timeout;
+      const timeoutNumber = Environment.instance().timeout;
+      if (typeof timeoutNumber === 'number') {
+        console.log('command center timeout:', timeoutNumber);
+        timeoutToClear = setTimeout(() => {
           p.cancel();
-        }, Environment.instance().timeout);
+        }, timeoutNumber);
       }
 
       p.then(() => {
-        timeout && clearTimeout(timeout);
+        timeoutToClear && clearTimeout(timeoutToClear);
       }).catch(async (error) => {
         if (isPromiseCanceledError(error)) {
           await this.replyText(c, `executing [${str}] timeout`);
