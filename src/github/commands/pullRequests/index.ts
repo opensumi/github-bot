@@ -1,3 +1,4 @@
+import { startsWith } from '@/commander';
 import { BACKPORT_PR_WORKFLOW, getActionsUrl } from '@/constants/opensumi';
 
 import { GitHubCommandCenter } from '../types';
@@ -10,55 +11,60 @@ function extractTargetBranchNameFromCommand(comment: string) {
 
 export function registerPullRequestCommand(it: GitHubCommandCenter) {
   // backport to v2.23
-  it.on('backport', async (ctx) => {
-    const { app, payload } = ctx;
+  it.on(
+    'backport',
+    async (ctx) => {
+      const { app, payload } = ctx;
 
-    const { issue } = payload;
-    const pull_request = issue.pull_request;
-    if (!pull_request) {
-      // only handle pull request
-      return;
-    }
+      const { issue } = payload;
+      const pull_request = issue.pull_request;
+      if (!pull_request) {
+        // only handle pull request
+        return;
+      }
 
-    const result = await app.octoService.getPrByNumber(
-      payload.repository.owner.login,
-      payload.repository.name,
-      issue.number,
-    );
-    if (!result) {
+      const result = await app.octoService.getPrByNumber(
+        payload.repository.owner.login,
+        payload.repository.name,
+        issue.number,
+      );
+      if (!result) {
+        await app.replyComment(
+          ctx,
+          'Cannot get pull request info from ' + `#${issue.number}`,
+        );
+        return;
+      }
+
+      const { text } = ctx;
+      const { command } = ctx.result;
+      const targetBranch = extractTargetBranchNameFromCommand(command);
+
+      if (!targetBranch) {
+        await app.replyComment(
+          ctx,
+          'Cannot extract the target branch from ' +
+            text +
+            '\n\n' +
+            'Example: `backport to v2.23`',
+        );
+        return;
+      }
+
+      await app.opensumiOctoService.backportPr({
+        pull_number: issue.number,
+        target_branch: targetBranch,
+      });
+
       await app.replyComment(
         ctx,
-        'Cannot get pull request info from ' + `#${issue.number}`,
-      );
-      return;
-    }
-
-    const { text } = ctx;
-    const { command } = ctx.result;
-    const targetBranch = extractTargetBranchNameFromCommand(command);
-
-    if (!targetBranch) {
-      await app.replyComment(
-        ctx,
-        'Cannot extract the target branch from ' +
-          text +
-          '\n\n' +
-          'Example: `backport to v2.23`',
-      );
-      return;
-    }
-
-    await app.opensumiOctoService.backportPr({
-      pull_number: issue.number,
-      target_branch: targetBranch,
-    });
-
-    await app.replyComment(
-      ctx,
-      `Backporting to \`${targetBranch}\` branch is started.  
+        `Backporting to \`${targetBranch}\` branch is started.  
 Please see: <${getActionsUrl(BACKPORT_PR_WORKFLOW)}>`,
-    );
-  });
+      );
+    },
+    undefined,
+    startsWith,
+  );
 
   it.on('next', async (ctx) => {
     const { app, payload } = ctx;
