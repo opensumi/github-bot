@@ -683,6 +683,35 @@ export class OctoService {
     });
     return commit;
   }
+
+  async checkRepoPermission(
+    owner: string,
+    repo: string,
+    username: string,
+    requestLevel: string,
+  ) {
+    // Permission levels higher in the array have higher access to the repo.
+    const perms = ['none', 'read', 'write', 'admin'];
+
+    const result = await this.octo.repos.getCollaboratorPermissionLevel({
+      owner,
+      repo,
+      username,
+    });
+
+    const perm = result.data.permission;
+    const requestPermIndex = perms.indexOf(requestLevel);
+    const userPermIndex = perms.indexOf(perm);
+    return userPermIndex >= requestPermIndex;
+  }
+
+  async checkRepoWritePermission(
+    owner: string,
+    repo: string,
+    username: string,
+  ) {
+    return this.checkRepoPermission(owner, repo, username, 'write');
+  }
 }
 
 const PER_PAGE = 100;

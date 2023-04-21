@@ -57,6 +57,11 @@ export type AppSetting = ISetting & {
      */
     privateKey: string;
   };
+
+  /**
+   * github id of the user who can release
+   */
+  userWhoCanRelease?: string[];
 };
 
 export interface IDingBotSetting {

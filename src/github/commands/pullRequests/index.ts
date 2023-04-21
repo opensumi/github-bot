@@ -62,6 +62,31 @@ Please see: <${getActionsUrl(BACKPORT_PR_WORKFLOW)}>`,
 
   it.on('next', async (ctx) => {
     const { app, payload } = ctx;
+    const owner = payload.repository.owner.login;
+    const repo = payload.repository.name;
+
+    const user = payload.sender.login;
+    let userHaveWritePerm = await app.octoService.checkRepoWritePermission(
+      owner,
+      repo,
+      user,
+    );
+    if (!userHaveWritePerm) {
+      if (
+        app.ctx.setting.userWhoCanRelease &&
+        app.ctx.setting.userWhoCanRelease.includes(user)
+      ) {
+        userHaveWritePerm = true;
+      }
+    }
+
+    if (!userHaveWritePerm) {
+      await app.replyComment(
+        ctx,
+        `You don't have permission to release version on \`${owner}/${repo}\`.`,
+      );
+      return;
+    }
 
     const { issue } = payload;
     const pull_request = issue.pull_request;
