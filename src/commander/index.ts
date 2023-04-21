@@ -166,6 +166,8 @@ export class CommandCenter<C extends Record<string, any>> {
   }
 
   async tryHandle(str: string, payload: C) {
+    // remove redundant \r\n
+    str = str.trim();
     const result = await this.resolve(str);
     const c = {
       ...payload,
