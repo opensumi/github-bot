@@ -147,10 +147,7 @@ export function toDingtalkMarkdown(tree: Root) {
   return toMarkdown(tree, {
     extensions: [gfmToMarkdown()],
     listItemIndent: 'one',
-    /**
-     * DingTalk 突然间只支持这个了
-     */
-    fence: '~',
+    fence: '`',
     fences: true,
   });
 }
