@@ -16,11 +16,19 @@ export const workflowAboutRelease = new Set([
 export const VERSION_SYNC_KEYWORD = 'versionInfo';
 
 export const MONTHLY_REPORT_FILE = 'monthly-report.yml';
+export const PR_NEXT_RELEASE_FILE = 'release-next.yml';
 
 export const MONTHLY_REPORT_WORKFLOW = {
   owner: 'opensumi',
   repo: 'actions',
   workflow_id: MONTHLY_REPORT_FILE,
+  ref: 'main',
+};
+
+export const PR_NEXT_WORKFLOW = {
+  owner: 'opensumi',
+  repo: 'actions',
+  workflow_id: PR_NEXT_RELEASE_FILE,
   ref: 'main',
 };
 

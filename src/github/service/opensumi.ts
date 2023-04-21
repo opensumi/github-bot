@@ -1,6 +1,8 @@
 import {
   MONTHLY_REPORT_WORKFLOW,
   NEXT_WORKFLOW_FILE,
+  PR_NEXT_RELEASE,
+  PR_NEXT_WORKFLOW,
   RC_WORKFLOW_FILE,
 } from '@/constants/opensumi';
 
@@ -84,6 +86,16 @@ export class OpenSumiOctoService extends OctoService {
       inputs: {
         pull_number: pull_number.toString(),
         target_branch,
+      },
+    });
+    return workflow;
+  }
+
+  async prNextRelease({ pull_number }: { pull_number: number }) {
+    const workflow = await this.octo.actions.createWorkflowDispatch({
+      ...PR_NEXT_WORKFLOW,
+      inputs: {
+        pull_number: pull_number.toString(),
       },
     });
     return workflow;

@@ -27,7 +27,7 @@ export function registerPullRequestCommand(it: GitHubCommandCenter) {
     );
     if (!result) {
       await app.replyComment(
-        payload,
+        ctx,
         'Cannot get pull request info from ' + `#${issue.number}`,
       );
       return;
@@ -39,7 +39,7 @@ export function registerPullRequestCommand(it: GitHubCommandCenter) {
 
     if (!targetBranch) {
       await app.replyComment(
-        payload,
+        ctx,
         'Cannot extract the target branch from ' +
           text +
           '\n\n' +
@@ -54,9 +54,39 @@ export function registerPullRequestCommand(it: GitHubCommandCenter) {
     });
 
     await app.replyComment(
-      payload,
+      ctx,
       `Backporting to \`${targetBranch}\` branch is started.  
 Please see: <${getActionsUrl(BACKPORT_PR_WORKFLOW)}>`,
     );
+  });
+
+  it.on('next', async (ctx) => {
+    const { app, payload } = ctx;
+
+    const { issue } = payload;
+    const pull_request = issue.pull_request;
+    if (!pull_request) {
+      // only handle pull request
+      return;
+    }
+
+    const result = await app.octoService.getPrByNumber(
+      payload.repository.owner.login,
+      payload.repository.name,
+      issue.number,
+    );
+    if (!result) {
+      await app.replyComment(
+        ctx,
+        'Cannot get pull request info from ' + `#${issue.number}`,
+      );
+      return;
+    }
+
+    await app.opensumiOctoService.prNextRelease({
+      pull_number: issue.number,
+    });
+
+    await app.replyComment(ctx, 'Starting to release next version.');
   });
 }
