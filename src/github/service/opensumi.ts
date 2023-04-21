@@ -1,4 +1,5 @@
 import {
+  BACKPORT_PR_WORKFLOW,
   MONTHLY_REPORT_WORKFLOW,
   NEXT_WORKFLOW_FILE,
   PR_NEXT_RELEASE,
@@ -82,7 +83,7 @@ export class OpenSumiOctoService extends OctoService {
     target_branch: string;
   }) {
     const workflow = await this.octo.actions.createWorkflowDispatch({
-      ...MONTHLY_REPORT_WORKFLOW,
+      ...BACKPORT_PR_WORKFLOW,
       inputs: {
         pull_number: pull_number.toString(),
         target_branch,
