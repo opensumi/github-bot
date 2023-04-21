@@ -23,6 +23,13 @@
           "additionalProperties": false,
           "description": "GitHub App related"
         },
+        "userWhoCanRelease": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "github id of the user who can release"
+        },
         "githubSecret": {
           "type": "string",
           "description": "在 GitHub 上设置的此 webhook 的验证"

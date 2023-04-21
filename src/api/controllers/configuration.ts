@@ -17,10 +17,23 @@ export function route(hono: THono) {
       return;
     }
 
-    const res = new Response('Unauthorized', {
-      status: 401,
-    });
-    throw new HTTPException(401, { res });
+    return c.html(
+      html`<!DOCTYPE html>
+        <h1>Unauthorized!</h1>
+
+        <input type="password" id="token" />
+        <button onclick="submit()">Submit</button>
+
+        <script>
+          function submit() {
+            const token = document.getElementById('token').value;
+            const params = new URLSearchParams(window.location.search);
+            params.set('token', token);
+            window.location.search = params.toString();
+          }
+        </script> `,
+      401,
+    );
   });
 
   hono.get('/configuration/:id', async (c) => {
