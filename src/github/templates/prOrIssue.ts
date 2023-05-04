@@ -53,8 +53,14 @@ function render(
   );
 
   let contentLimit = ctx.setting.contentLimit;
+
   if (name === 'issues') {
-    if ((data as Issue).labels?.find((v) => v.name === 'monthly-report')) {
+    // if the issue has label `monthly-report`, we will render all content
+    if (
+      (data as Issue).labels?.find(
+        (v) => v.name && v.name.includes('monthly-report'),
+      )
+    ) {
       contentLimit = -1;
     }
   }
