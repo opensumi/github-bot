@@ -124,6 +124,29 @@ export class App {
       },
     );
   }
+
+  async createReactionForIssueComment(
+    ctx: CommandContext,
+    reaction:
+      | '+1'
+      | '-1'
+      | 'laugh'
+      | 'confused'
+      | 'heart'
+      | 'hooray'
+      | 'rocket'
+      | 'eyes',
+  ) {
+    const { payload, octokit } = ctx;
+    const { comment } = payload;
+    return await octokit.reactions.createForIssueComment({
+      owner: payload.repository.owner.login,
+      repo: payload.repository.name,
+      comment_id: comment.id,
+      content: reaction,
+    });
+  }
+
   get webhooks() {
     return this.octoApp.webhooks;
   }

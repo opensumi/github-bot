@@ -117,7 +117,6 @@ Please see: <${getActionsUrl(BACKPORT_PR_WORKFLOW)}>`,
     await app.opensumiOctoService.prNextRelease({
       pull_number: issue.number,
     });
-
-    await app.replyComment(ctx, 'Starting to release next version.');
+    await app.createReactionForIssueComment(ctx, 'laugh');
   });
 }
