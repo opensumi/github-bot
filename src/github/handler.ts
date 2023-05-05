@@ -10,7 +10,7 @@ import { HonoRequest } from 'hono';
 import { error, json } from '@/api/utils/response';
 
 import { getTemplates, StopHandleError } from './templates';
-import type { MarkdownContent, THasAction, Context } from './types';
+import type { MarkdownContent, THasAction, Context, ITemplateResult } from './types';
 import { sendToDing } from './utils';
 
 export class ValidationError extends Error {
@@ -77,12 +77,13 @@ export const setupWebhooksTemplate = (
   const templates = getTemplates(ctx);
   const supportTemplates = Object.keys(templates) as EmitterWebhookEventName[];
 
-  webhooks.onAny(async ({ id, name, payload }) => {
-    console.log('Receive Github Webhook, id: ', id, ', name: ', name);
-    if ((payload as THasAction)?.action) {
-      console.log('payload.action: ', (payload as THasAction).action);
-    }
-  });
+  // webhooks.onAny(async ({ id, name, payload }) => {
+  //   console.log('Receive Github Webhook, id: ', id, ', name: ', name);
+  //   if ((payload as THasAction)?.action) {
+  //     console.log('payload.action: ', (payload as THasAction).action);
+  //   }
+  // });
+
   for (const eventName of supportTemplates) {
     webhooks.on(eventName, async ({ id, payload, octokit }) => {
       if ((payload as { sender: User })?.sender) {
@@ -94,10 +95,6 @@ export const setupWebhooksTemplate = (
 
       console.log(eventName, 'handled id:', id);
 
-      const handlerCtx = {
-        ...ctx,
-        octokit,
-      };
       const handler = templates[eventName] as (
         payload: any,
         ctx: any,
@@ -109,8 +106,16 @@ export const setupWebhooksTemplate = (
       try {
         console.log('run handler:', handler?.name);
 
-        const data = await handler(payload, handlerCtx);
+        const data = await handler(payload, {
+          ...ctx,
+          octokit,
+        });
         console.log('get data from handler: ', data);
+
+        const result = {
+          data,
+          eventName,
+        } as ITemplateResult;
 
         await sendToDing(data, eventName, ctx.setting);
       } catch (err) {

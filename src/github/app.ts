@@ -25,7 +25,7 @@ export class App {
 
   constructor(private setting: AppSetting) {
     const { appSettings, githubSecret } = setting;
-    Configuration.fromSettings(setting);
+    Configuration.init(setting);
 
     this.octoApp = new OctoApp({
       appId: appSettings.appId,

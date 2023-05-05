@@ -14,7 +14,7 @@ export default class Configuration {
 
   contentLimit = 300;
 
-  static fromSettings(setting: ISetting) {
+  static init(setting: ISetting) {
     const instance = this.instance();
     if (setting.contentLimit) {
       instance.contentLimit = setting.contentLimit;

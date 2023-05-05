@@ -12,6 +12,7 @@ export function route(hono: THono) {
     }
     const githubKVManager = new GitHubKVManager();
     const setting = await githubKVManager.getSettingById(id);
+
     if (!setting) {
       return c.send.error(400, 'id not found in database');
     }
@@ -19,7 +20,7 @@ export function route(hono: THono) {
       return c.send.error(400, 'please set webhook secret in database');
     }
 
-    Configuration.fromSettings(setting);
+    Configuration.init(setting);
 
     const webhooks = new Webhooks<{ octokit: undefined }>({
       secret: setting.githubSecret,

@@ -1,5 +1,3 @@
-import Environment from './env';
-
 export class StringBuilder {
   private array = [] as string[];
   constructor(...initial: string[]) {
@@ -14,7 +12,7 @@ export class StringBuilder {
     this.add(prefix + '---', addExtraLine);
   }
   /**
-   * 如果当前的最后一行有文字才换行
+   * if there are content in the last line, then add a new line
    */
   addLineIfNecessary() {
     const data = this.array[this.array.length - 1];
@@ -50,7 +48,7 @@ export async function errorCallback(
   }
 }
 
-// 格式化日期为 "yyyy-mm-dd" 的字符串
+// format Date to "yyyy-mm-dd" style
 export const formatDate = (date: Date) => {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');

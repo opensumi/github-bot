@@ -17,6 +17,11 @@ export type MarkdownContent = {
   text: string;
 };
 
+export interface ITemplateResult {
+  data: MarkdownContent;
+  eventName: string;
+}
+
 export type TemplateMapping = {
   [TEmitterEvent in EmitterWebhookEventName]?: (
     payload: ExtractPayload<TEmitterEvent>,

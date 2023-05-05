@@ -166,7 +166,7 @@ export async function sendContentToDing(
     return;
   }
 
-  const toPromise = [] as Promise<void>[];
+  const promises = [] as Promise<void>[];
 
   for (const webhook of setting.dingWebhooks) {
     console.log(`webhook`, webhook);
@@ -178,14 +178,14 @@ export async function sendContentToDing(
       }
     }
 
-    toPromise.push(
+    promises.push(
       (async () => {
         console.log('send to ', webhook.url);
         await send(dingContent, webhook.url, webhook.secret);
       })(),
     );
   }
-  await Promise.all(toPromise);
+  await Promise.all(promises);
 }
 
 export function contentToMarkdown(data: MarkdownContent) {
