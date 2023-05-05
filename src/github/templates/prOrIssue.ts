@@ -106,11 +106,6 @@ export async function handlePr(
     shouldRenderBody = false;
   }
 
-  let shouldRenderMergeInfo = false;
-  if (['opened', 'edited'].includes(action)) {
-    shouldRenderMergeInfo = true;
-  }
-
   const builder = new StringBuilder();
 
   if (action === 'closed') {
@@ -124,6 +119,12 @@ export async function handlePr(
   if (action === 'ready_for_review') {
     action = 'ready for review';
   }
+
+  let shouldRenderMergeInfo = false;
+  if (['opened', 'edited', 'merged'].includes(action)) {
+    shouldRenderMergeInfo = true;
+  }
+
   const base = (data as PullRequest).base;
 
   let oldTitle = '';
