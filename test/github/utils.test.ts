@@ -245,7 +245,7 @@ export class ExampleContribution implements ClientAppContribution {
   it('will not transform br/sub', () => {
     const data = `[![CLA assistant check](https://cla-assistant.io/pull/badge/not_signed)](https://cla-assistant.io/opensumi/core?pullRequest=2482) <br/>Thank you for your submission! We really appreciate it. Like many open source projects, we ask that you all sign our [Contributor License Agreement](https://cla-assistant.io/opensumi/core?pullRequest=2482) before we can accept your contribution.<br/>**1** out of **2** committers have signed the CLA.<br/><br/>:white_check_mark: miserylee<br/>:x: lijifei<br/><hr/>**lijifei** seems not to be a GitHub user. You need a GitHub account to be able to sign the CLA. If you have already a GitHub account, please [add the email address used for this commit to your account](https://help.github.com/articles/why-are-my-commits-linked-to-the-wrong-user/#commits-are-not-linked-to-any-user).<br/><sub>You have signed the CLA already but the status is still pending? Let us [recheck](https://cla-assistant.io/check/opensumi/core?pullRequest=2482) it.</sub>`;
     const result = standardizeMarkdown(data);
-    console.log(`🚀 ~ file: utils.test.ts:248 ~ it ~ result:`, result);
+    console.log(`it ~ result:`, result);
   });
   it('can transform inline code', () => {
     const data = `
@@ -270,6 +270,19 @@ https://github.com/opensumi/core/blob/3455b10620badfe7b03a02d66136d3226b7891b8/p
 
   `;
     const result = standardizeMarkdown(data);
-    console.log(`🚀 ~ file: utils.test.ts:248 ~ it ~ result:`, result);
+    console.log(`it ~ result:`, result);
+  });
+  it('can not handle img tag', () => {
+    const data = `
+    <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google" width="272" height="92">
+    `;
+    const result = standardizeMarkdown(data);
+    console.log(`it ~ result:`, result);
+  });
+  it('will escape some markdown syntax', () => {
+    const data = `hi~`;
+    const result = standardizeMarkdown(data);
+    expect(result).toContain(`hi\\~`);
+    console.log(`it ~ result:`, result);
   });
 });
