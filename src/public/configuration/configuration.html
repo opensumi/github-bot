@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>JSON Editor Interactive Example</title>
+    <title>Preference Editor</title>
     <script src="https://cdn.jsdelivr.net/npm/@json-editor/json-editor@latest/dist/jsoneditor.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/ace-builds@1.14.0/src-noconflict/ace.js"></script>
 
@@ -18,9 +18,7 @@
         </div>
         <div class="col-4 col-md-4 w-4/12">
           <div>
-            <button id="submit" class="btn btn-primary">
-              Submit
-            </button>
+            <button id="submit" class="btn btn-primary">Submit</button>
             <button id="restore" class="btn btn-secondary">Reset</button>
             <span id="valid_indicator" class="label label-success"></span>
           </div>
@@ -70,7 +68,7 @@
               </option>
             </select>
           </div> -->
-          <div>
+          <!-- <div>
             <label for="theme-select">theme</label><br />
             <select
               id="theme-select"
@@ -96,7 +94,7 @@
               <option value="fontawesome5">fontawesome 5</option>
               <option value="spectre">Spectre</option>
             </select>
-          </div>
+          </div> -->
           <!-- <div>
             <label for="show-errors-select">Show Errors</label><br />
             <select
@@ -158,7 +156,7 @@
 
       var defaultOptions = {
         iconlib: 'spectre',
-        theme: 'bootstrap3',
+        theme: 'spectre',
         object_layout: 'normal',
         show_errors: 'always',
         enable_array_copy: true,
@@ -172,14 +170,14 @@
       //   '#boolean-options-select',
       // );
       var head = document.getElementsByTagName('head')[0];
-      var iconlibSelect = document.querySelector('#iconlib-select');
+      // var iconlibSelect = document.querySelector('#iconlib-select');
       var iconlibLink = document.querySelector('#iconlib-link');
       // var libSelect = document.querySelector('#lib-select');
       var jsonEditorForm = document.querySelector('#json-editor-form');
       var setSchema = document.querySelector('#setschema');
       var setValue = document.querySelector('#setvalue');
       // var showErrorsSelect = document.querySelector('#show-errors-select');
-      var themeSelect = document.querySelector('#theme-select');
+      // var themeSelect = document.querySelector('#theme-select');
       var themeLink = document.querySelector('#theme-link');
       var validateTextarea = document.querySelector('#validate-textarea');
 
@@ -243,7 +241,7 @@
           tailwind: 'https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css',
         };
         themeLink.href = themeMap[data.options.theme];
-        themeSelect.value = data.options.theme;
+        // themeSelect.value = data.options.theme;
 
         // iconlLib
         var iconLibMap = {
@@ -252,7 +250,7 @@
           spectre: 'https://unpkg.com/spectre.css/dist/spectre-icons.min.css',
         };
         iconlibLink.href = iconLibMap[data.options.iconlib];
-        iconlibSelect.value = data.options.iconlib;
+        // iconlibSelect.value = data.options.iconlib;
 
         // show_errors
         // showErrorsSelect.value = data.options.show_errors;
@@ -485,15 +483,15 @@
         refreshUI();
       });
 
-      themeSelect.addEventListener('change', function () {
-        data.options.theme = this.value || '';
-        refreshUI();
-      });
+      // themeSelect.addEventListener('change', function () {
+      //   data.options.theme = this.value || '';
+      //   refreshUI();
+      // });
 
-      iconlibSelect.addEventListener('change', function () {
-        data.options.iconlib = this.value || '';
-        refreshUI();
-      });
+      // iconlibSelect.addEventListener('change', function () {
+      //   data.options.iconlib = this.value || '';
+      //   refreshUI();
+      // });
 
       // showErrorsSelect.addEventListener('change', function () {
       //   data.options.show_errors = this.value || '';
