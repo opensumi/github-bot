@@ -106,4 +106,8 @@ export const settingsTypes = [
 
 export interface IAdminInfo {
   token: string;
+  /**
+   * 各 webhook 配置项的 token
+   */
+  tokenByScope?: Record<string, string>;
 }

@@ -1,5 +1,4 @@
 import { html } from 'hono/html';
-import { HTTPException } from 'hono/http-exception';
 
 import { CommonKVManager } from '@/kv/admin';
 import { DingKVManager } from '@/kv/ding';
@@ -8,11 +7,13 @@ import { settingsTypes, SettingType } from '@/kv/types';
 import ConfigurationHTML from '@/public/configuration/configuration.html';
 
 export function route(hono: THono) {
-  hono.use('/configuration/*', async (c, next) => {
+  hono.use('/configuration/:id/*', async (c, next) => {
     const token = c.req.query('token');
+    const id = c.req.param('id');
+
     const kv = new CommonKVManager();
-    const adminToken = await kv.getToken();
-    if (adminToken && token === adminToken) {
+    const valid = await kv.isTokenValidFor(token, id);
+    if (valid) {
       await next();
       return;
     }
