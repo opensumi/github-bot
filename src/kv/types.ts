@@ -1,40 +1,58 @@
 export interface IDingWebhookItem {
   /**
-   * Webhook for the dingtalk bot
+   * Webhook url
    */
   url: string;
   /**
-   * You should select **signed mode(加签模式)** in the security settings of the bot. and you will see this secret.
+   * You should select **signed mode(加签模式)** in the security settings of the bot. and you will see the secret.
    */
   secret: string;
   /**
-   * 该 webhook 仅接收哪些事件的推送
+   * 哪些事件需要推送到这个 webhook，如：`release.released`。
+   * 不填写则推送所有事件
    */
   event?: string[];
+  /**
+   * 备注。你可以在这个空里备注下这个 webhook 是属于哪个群的。
+   * @format textarea
+   */
+  remark?: string;
 }
 
 export interface ISetting {
   /**
-   * 在 GitHub 上设置的此 webhook 的验证
+   * 此 webhook 的 secret. 你要在 GitHub 的 webhook 设置里面设置这个 secret
    */
   githubSecret: string;
+  /**
+   * 需要推送通知的钉钉机器人的 webhook 地址
+   */
   dingWebhooks: IDingWebhookItem[];
+  /**
+   * 通知的内容长度限制，超过这个长度的内容会被截断
+   */
   contentLimit: number;
   /**
-   * 开启这个选项会只推送社区需要的那几个 event
-   * 因为历史兼容问题，所以默认为 true 了，需要手动关闭
+   * 只推送预制的社区需要的那几个 event，event 列表见：https://github.com/opensumi/github-bot/blob/main/src/github/templates/index.ts#L25
+   *
+   * @default true
    */
   isCommunity?: boolean;
-  isOpenSumiCommunity?: boolean;
   /**
    * 监听哪些事件
    */
   event?: string[];
   /**
-   * 不展示 repo 名字，适合单仓库
+   * 不在消息中展示 repo 名字，适合单仓库
    */
   notDisplayRepoName?: boolean;
-
+  /**
+   * 一般不需要配置这个，仅用于 OpenSumi 社区
+   */
+  isOpenSumiCommunity?: boolean;
+  /**
+   * 一般不需要配置这个，仅用于 OpenSumi 社区
+   */
   installation?: IInstallationSetting;
 }
 
