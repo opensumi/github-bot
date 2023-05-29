@@ -33,9 +33,8 @@ export interface ISetting {
    */
   contentLimit: number;
   /**
-   * 只推送预制的社区需要的那几个 event，event 列表见：https://github.com/opensumi/github-bot/blob/main/src/github/templates/index.ts#L25
-   *
-   * @default true
+   * 只推送内置的社区需要的那几个 event，event 列表见：https://github.com/opensumi/github-bot/blob/main/src/github/templates/index.ts#L25
+   * @default false
    */
   isCommunity?: boolean;
   /**
@@ -44,12 +43,9 @@ export interface ISetting {
   event?: string[];
   /**
    * 不在消息中展示 repo 名字，适合单仓库
+   * @default false
    */
   notDisplayRepoName?: boolean;
-  /**
-   * 一般不需要配置这个，仅用于 OpenSumi 社区
-   */
-  isOpenSumiCommunity?: boolean;
   /**
    * 一般不需要配置这个，仅用于 OpenSumi 社区
    */

@@ -36,12 +36,6 @@ export class GitHubKVManager {
       if (webhooks.contentLimit === undefined) {
         webhooks.contentLimit = 300;
       }
-      if (webhooks.isCommunity === undefined) {
-        webhooks.isCommunity = true;
-      }
-      if (webhooks.notDisplayRepoName === undefined) {
-        webhooks.notDisplayRepoName = true;
-      }
     }
 
     return webhooks;

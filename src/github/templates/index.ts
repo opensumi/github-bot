@@ -28,14 +28,6 @@ export const getTemplates = (ctx: Context) => {
     'release.released': handleRelease,
   } as TemplateMapping;
 
-  if (ctx.setting.isOpenSumiCommunity) {
-    // OpenSumi 社区专用配置项
-    templates = {
-      ...templates,
-      'discussion_comment.created': handleDiscussionComment,
-    };
-  }
-
   if (!ctx.setting.isCommunity) {
     // 社区不开启这些
     templates = {
