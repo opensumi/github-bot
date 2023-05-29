@@ -1,18 +1,31 @@
 import { startsWith } from '@/commander';
+import { removeCommandPrefix } from '@/commander/utils';
 import { BACKPORT_PR_WORKFLOW, getActionsUrl } from '@/constants/opensumi';
 
 import { GitHubCommandCenter } from '../types';
 
-function extractTargetBranchNameFromCommand(comment: string) {
-  // Q: write a regex to match `backport to v2.23`
-  const match = comment.match(/^backport to (\S+)/);
-  return match && match.length > 1 ? match[1] : null;
+const kBackportKeyword = 'backport';
+
+export function extractTargetBranchNameFromCommand(str: string) {
+  const text = removeCommandPrefix(str, kBackportKeyword);
+
+  // /backport to v2.23
+  const match = text.match(/^to (\S+)/);
+  if (match && match.length > 1) {
+    return match[1];
+  }
+  // /backport v2.23
+  const match2 = text.match(/^(\S+)/);
+  if (match2 && match2.length > 1) {
+    return match2[1];
+  }
+  return;
 }
 
 export function registerPullRequestCommand(it: GitHubCommandCenter) {
   // backport to v2.23
   it.on(
-    'backport',
+    kBackportKeyword,
     async (ctx) => {
       const { app, payload } = ctx;
 

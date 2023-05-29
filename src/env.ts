@@ -24,7 +24,7 @@ export default class Environment {
 
   static instance() {
     if (!this.#instance) {
-      throw new Error('Environment not initialized');
+      throw new Error('Environment is not initialized');
     }
     return this.#instance;
   }
