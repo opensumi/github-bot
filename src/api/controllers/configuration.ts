@@ -4,6 +4,7 @@ import { CommonKVManager } from '@/kv/admin';
 import { DingKVManager } from '@/kv/ding';
 import { GitHubKVManager } from '@/kv/github';
 import { settingsTypes, SettingType } from '@/kv/types';
+import UnauthorizedHTML from '@/public/configuration/401.html';
 import ConfigurationHTML from '@/public/configuration/configuration.html';
 
 export function route(hono: THono) {
@@ -18,23 +19,8 @@ export function route(hono: THono) {
       return;
     }
 
-    return c.html(
-      html`<!DOCTYPE html>
-        <h1>Unauthorized!</h1>
-
-        <input type="password" id="token" />
-        <button onclick="submit()">Submit</button>
-
-        <script>
-          function submit() {
-            const token = document.getElementById('token').value;
-            const params = new URLSearchParams(window.location.search);
-            params.set('token', token);
-            window.location.search = params.toString();
-          }
-        </script> `,
-      401,
-    );
+    console.log('Unauthorized', token, id);
+    return c.html(html`${UnauthorizedHTML}`, 401);
   });
 
   hono.get('/configuration/:id', async (c) => {
