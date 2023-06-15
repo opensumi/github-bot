@@ -176,38 +176,4 @@ export function registerOpenSumiCommand(it: DingCommandCenter) {
     [],
     equalFunc,
   );
-  it.on('createInstallationAccessToken', async ({ bot, ctx }) => {
-    if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
-      return;
-    }
-
-    await replyIfAppNotDefined(bot, ctx);
-    if (!hasApp(ctx)) {
-      return;
-    }
-
-    const { app } = ctx;
-
-    let id = ctx.parsed.raw.version;
-    if (!id) {
-      if (ctx.parsed['_'].length > 1) {
-        id = ctx.parsed['_'][1];
-      }
-    }
-    try {
-      const token = await app.createInstallationAccessToken(Number(id));
-      await bot.reply(
-        markdown(
-          'installation',
-          `
-~~~json
-${JSON.stringify(token, null, 2)}
-~~~
-`,
-        ),
-      );
-    } catch (error) {
-      await bot.replyText(`执行出错：${(error as Error).message}`);
-    }
-  });
 }
