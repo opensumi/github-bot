@@ -1,4 +1,4 @@
-import { DingBot, verifyMessage } from '@/ding/bot';
+import { DingBot, verifyMessage } from '@/im/bot';
 import { DingKVManager } from '@/kv/ding';
 import { errorCallback } from '@/utils';
 

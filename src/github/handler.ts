@@ -10,7 +10,12 @@ import { HonoRequest } from 'hono';
 import { error, json } from '@/api/utils/response';
 
 import { getTemplates, StopHandleError } from './templates';
-import type { MarkdownContent, THasAction, Context, ITemplateResult } from './types';
+import type {
+  MarkdownContent,
+  THasAction,
+  Context,
+  ITemplateResult,
+} from './types';
 import { sendToDing } from './utils';
 
 export class ValidationError extends Error {

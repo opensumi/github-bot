@@ -1,4 +1,3 @@
-import * as DingUtils from '@/ding/utils';
 import {
   limitLine,
   useRef,
@@ -11,6 +10,7 @@ import {
   parseGitHubUrl,
   standardizeMarkdown,
 } from '@/github/utils';
+import * as DingUtils from '@/im/utils';
 
 describe('github utils', () => {
   it('can limit lines', () => {

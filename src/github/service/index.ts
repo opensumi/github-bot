@@ -1,6 +1,6 @@
 import { Octokit } from '@octokit/rest';
 
-import { TEAM_MEMBERS } from '@/ding/commands/constants';
+import { TEAM_MEMBERS } from '@/im/commands/constants';
 
 import {
   IOrganizationPrResult,

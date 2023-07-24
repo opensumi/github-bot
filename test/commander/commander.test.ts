@@ -1,8 +1,8 @@
 import { EdgeKVNamespace } from 'edge-mock';
 
 import { CommandCenter } from '@/commander';
-import { ISSUE_REGEX } from '@/ding/commands/constants';
 import Environment from '@/env';
+import { ISSUE_REGEX } from '@/im/commands/constants';
 
 const testEnv: IRuntimeEnv = {
   KV_PROD: new EdgeKVNamespace(),

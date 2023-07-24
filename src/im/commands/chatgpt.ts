@@ -1,4 +1,4 @@
-import { OpenAI } from '@/ding/openai';
+import { OpenAI } from '@/im/openai';
 
 import { DingCommandCenter } from './types';
 

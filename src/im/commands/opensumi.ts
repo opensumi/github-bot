@@ -176,4 +176,19 @@ export function registerOpenSumiCommand(it: DingCommandCenter) {
     [],
     equalFunc,
   );
+  it.on(
+    '我达标了吗',
+    async ({ bot, ctx }) => {
+      await replyIfAppNotDefined(bot, ctx);
+      if (!hasApp(ctx)) {
+        return;
+      }
+      const { app } = ctx;
+
+      await app.opensumiOctoService.monthlyReport();
+      await bot.replyText('Starts generating monthly report.');
+    },
+    ['达标查询'],
+    equalFunc,
+  );
 }

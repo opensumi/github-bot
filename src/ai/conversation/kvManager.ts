@@ -1,6 +1,6 @@
 import { ChatMessage } from 'chatgpt';
 
-import { Message } from '@/ding/types';
+import { Message } from '@/im/types';
 import { KVManager, DingConversation } from '@/kv';
 
 import { IConversationSetting } from './types';

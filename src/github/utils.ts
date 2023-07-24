@@ -11,8 +11,8 @@ import { gfmFromMarkdown, gfmToMarkdown } from 'mdast-util-gfm';
 import { toMarkdown } from 'mdast-util-to-markdown';
 import { gfm } from 'micromark-extension-gfm';
 
-import { markdown } from '@/ding/message';
-import { send } from '@/ding/utils';
+import { markdown } from '@/im/message';
+import { send } from '@/im/utils';
 import { ISetting } from '@/kv/types';
 
 import { MarkdownContent } from './types';

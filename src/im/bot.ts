@@ -1,8 +1,8 @@
 import { Context } from 'hono';
 
 import { ConversationKVManager } from '@/ai/conversation/kvManager';
-import { doSign, send } from '@/ding/utils';
 import { initApp, App } from '@/github/app';
+import { doSign, send } from '@/im/utils';
 import { DingKVManager } from '@/kv/ding';
 import { GitHubKVManager } from '@/kv/github';
 import { IDingBotSetting } from '@/kv/types';
