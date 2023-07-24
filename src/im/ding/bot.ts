@@ -6,7 +6,6 @@ import { doSign, send } from '@/im/utils';
 import { DingKVManager } from '@/kv/ding';
 import { GitHubKVManager } from '@/kv/github';
 import { IDingBotSetting } from '@/kv/types';
-import { proxyThisUrl } from '@/utils';
 
 import { cc } from '../commands';
 import { SendMessage, compose, text as textWrapper } from '../message';
@@ -129,7 +128,7 @@ export class DingBot {
     await send(content, this.msg.sessionWebhook);
   }
 
-  async proxyThisUrl(url: string) {
-    return proxyThisUrl(this.c.origin, url);
+  proxyThisUrl(url: string) {
+    return this.c.getProxiedUrl(url);
   }
 }

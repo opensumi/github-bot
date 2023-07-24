@@ -6,6 +6,7 @@ declare module 'hono' {
   interface Context {
     send: ISend;
     origin: string;
+    getProxiedUrl(url: string): string;
   }
 }
 
