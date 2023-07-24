@@ -1,8 +1,8 @@
 import { ChatGPTAPI, ChatMessage, SendMessageBrowserOptions } from 'chatgpt';
 
 import Environment from '@/env';
-import { DingBot } from '@/im/bot';
 import { Context } from '@/im/commands';
+import { DingBot } from '@/im/ding/bot';
 
 import { ConversationKVManager } from './kvManager';
 

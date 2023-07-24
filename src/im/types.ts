@@ -1,3 +1,5 @@
+import { SendMessage } from './message';
+
 export interface TextMessage {
   content: string;
 }
@@ -54,4 +56,9 @@ export function isGroupMessage(message: any): message is GroupMessage {
     message.conversationType &&
     message.conversationType === ConversationType.group
   );
+}
+
+export interface IBotImpl {
+  replyText(text: string, contentExtra?: Record<string, any>): Promise<void>;
+  reply(content: SendMessage): Promise<void>;
 }

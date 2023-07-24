@@ -1,7 +1,7 @@
 import { equalFunc } from '@/commander';
 import { RC_WORKFLOW_FILE } from '@/constants/opensumi';
 
-import { DingBot } from '../bot';
+import { DingBot } from '../ding/bot';
 import { markdown } from '../message';
 
 import { KnownRepo } from './constants';

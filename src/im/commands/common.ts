@@ -2,7 +2,7 @@ import { startsWith } from '@/commander';
 import { IDingInfo } from '@/kv/types';
 import { StringBuilder } from '@/utils';
 
-import type { DingBot } from '../bot';
+import type { DingBot } from '../ding/bot';
 import { code } from '../message';
 
 import { Context, DingCommandCenter } from './types';

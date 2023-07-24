@@ -1,8 +1,8 @@
 import throttle from 'lodash/throttle';
 
 import { Conversation } from '@/ai/conversation';
-import { DingBot } from '@/im/bot';
 import { Context } from '@/im/commands';
+import { DingBot } from '@/im/ding/bot';
 import { markdown } from '@/im/message';
 
 export class OpenAI {

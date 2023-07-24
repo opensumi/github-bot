@@ -4,7 +4,7 @@ import { CommandCenter, IArgv } from '@/commander';
 import { IRegexResolveResult, IResolveResult } from '@/commander/types';
 import { App } from '@/github/app';
 
-import type { DingBot } from '../bot';
+import type { DingBot } from '../ding/bot';
 import { Message } from '../types';
 
 export interface Context<T = any> {

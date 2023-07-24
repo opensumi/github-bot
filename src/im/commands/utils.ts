@@ -1,4 +1,4 @@
-import { DingBot } from '../bot';
+import { DingBot } from '../ding/bot';
 
 import { Context } from './types';
 

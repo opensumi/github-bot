@@ -3,7 +3,7 @@ import { App } from '@/github/app';
 import { render } from '@/github/render';
 import { contentToMarkdown, parseGitHubUrl } from '@/github/utils';
 
-import type { DingBot } from '../bot';
+import type { DingBot } from '../ding/bot';
 import { code, markdown } from '../message';
 
 import { ISSUE_REGEX, REPO_REGEX } from './constants';
