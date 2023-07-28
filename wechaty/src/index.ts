@@ -1,19 +1,14 @@
-/**
- * Wechaty - WeChat Bot SDK for Personal Account, Powered by TypeScript, Docker, and 💖
- *  - https://github.com/wechaty/wechaty
- */
-import qrTerm from 'qrcode-terminal';
+import 'dotenv/config';
+
+import qrcodeTerminal from 'qrcode-terminal';
 import { Contact, Message, ScanStatus, WechatyBuilder, log } from 'wechaty';
 
 function onScan(qrcode: string, status: ScanStatus) {
   if (status === ScanStatus.Waiting || status === ScanStatus.Timeout) {
-    qrTerm.generate(qrcode, { small: true }); // show qrcode on console
-
     const qrcodeImageUrl = [
       'https://wechaty.js.org/qrcode/',
       encodeURIComponent(qrcode),
     ].join('');
-
     log.info(
       'StarterBot',
       'onScan: %s(%s) - %s',
@@ -21,6 +16,8 @@ function onScan(qrcode: string, status: ScanStatus) {
       status,
       qrcodeImageUrl,
     );
+
+    qrcodeTerminal.generate(qrcode, { small: true }); // show qrcode on console
   } else {
     log.info('StarterBot', 'onScan: %s(%s)', ScanStatus[status], status);
   }
@@ -44,21 +41,10 @@ async function onMessage(msg: Message) {
 
 const bot = WechatyBuilder.build({
   name: 'ding-dong-bot',
-  /**
-   * Specify a `puppet` for a specific protocol (Web/Pad/Mac/Windows, etc).
-   *
-   * You can use the following providers:
-   *  - wechaty-puppet-hostie
-   *  - wechaty-puppet-wechat
-   *  - wechaty-puppet-padplus
-   *  - etc.
-   *
-   * Learn more about Wechaty Puppet Providers at:
-   *  https://github.com/wechaty/wechaty-puppet/wiki/Directory
-   */
-
-  // puppet: 'wechaty-puppet-hostie',
   puppet: 'wechaty-puppet-wechat',
+  puppetOptions: {
+    uos: true,
+  },
 });
 
 bot.on('scan', onScan);

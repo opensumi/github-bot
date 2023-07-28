@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-namespace */
 import 'dotenv/config';
 
 import { serve } from '@hono/node-server';
