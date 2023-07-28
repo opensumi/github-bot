@@ -1,10 +1,11 @@
-import { handlePr } from '@/github/templates';
+import { handlePr, handleIssue } from '@/github/templates';
 
 import {
   pull_request_closed,
   pull_request_opened,
   pull_request_edited_wip,
   pull_request_edited_base,
+  issue_opened_event,
 } from '../../fixtures';
 import { ctx } from '../ctx';
 
@@ -40,6 +41,12 @@ describe('github templates pr or issue', () => {
     expect(result.text).toBeDefined();
     expect(result.text).toContain('<-');
     expect(result.text).toContain('> changed the base branch');
+    expect(result.title).toBeDefined();
+  });
+  it('can handle issue', async () => {
+    const result = await handleIssue(issue_opened_event, ctx);
+    expect(result).toMatchSnapshot();
+    expect(result.text).toBeDefined();
     expect(result.title).toBeDefined();
   });
 });

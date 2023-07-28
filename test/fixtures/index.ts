@@ -4,6 +4,7 @@ import {
   PullRequestEditedEvent,
   PullRequestReviewCommentCreatedEvent,
   ReleasePublishedEvent,
+  IssuesOpenedEvent,
 } from '@octokit/webhooks-types';
 
 import _antd_mini_release_published from './antd_mini_release_published.json';
@@ -11,6 +12,7 @@ import pull_request_0_opened from './generated/pull_request_0_opened.json';
 import pull_request_3_closed from './generated/pull_request_3_closed.json';
 import _pull_request_review_comment_0_created from './generated/pull_request_review_comment_0_created.json';
 import _issue2045 from './issue-2045.json';
+import _issue_opened from './issue_opened.json';
 import _pr2060 from './pr-2060.json';
 import _pull_request_edited_base from './pull_request_edited_base.json';
 import _pull_request_edited_wip from './pull_request_edited_wip.json';
@@ -34,3 +36,5 @@ export const pr2060 = _pr2060 as any;
 
 export const antd_mini_release_published =
   _antd_mini_release_published as ReleasePublishedEvent;
+
+export const issue_opened_event = _issue_opened as IssuesOpenedEvent;

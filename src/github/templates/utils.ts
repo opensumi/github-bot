@@ -94,6 +94,16 @@ export function renderPrRefInfo(data: {
   return `> ${base.ref} <- ${headLabel}  `;
 }
 
+export function renderAssigneeInfo(
+  assignees: {
+    login: string;
+    html_url: string;
+  }[],
+) {
+  const assigneeNames = assignees.map((v) => renderUserLink(v)).join(', ');
+  return `> Assignees: ${assigneeNames}  `;
+}
+
 export function renderDeletedPrOrIssueTitleLink(p: {
   /**
    * The title of the pull request.

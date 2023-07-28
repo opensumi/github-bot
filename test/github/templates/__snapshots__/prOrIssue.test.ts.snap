@@ -1,5 +1,25 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`github templates pr or issue can handle issue 1`] = `
+{
+  "text": "#### [bytemain](https://github.com/bytemain) opened [issue](https://github.com/opensumi/core/issues/2960)  
+---
+> #### [#2960 [BUG]  Problem 面板闪烁](https://github.com/opensumi/core/issues/2960)
+> Assignees: [bytemain](https://github.com/bytemain)  
+> ---
+> 打开 settings.json，打开问题面板，操作的时候发现有闪烁现象。
+>
+> 看起来是不同的插件给某个文件做 diagnose 时，传的 uri 没有合并起来？
+>
+> https://github.com/opensumi/core/assets/13938334/8eb4bd97-5594-4428-9000-915546e33e63
+>
+>
+>
+>",
+  "title": "Issue#2960 opened",
+}
+`;
+
 exports[`github templates pr or issue can handle pull_request_closed 1`] = `
 {
   "text": "#### [Codertocat](https://github.com/Codertocat) closed [pull request](https://github.com/Codertocat/Hello-World/pull/2)  

@@ -12,6 +12,7 @@ import {
   renderPrOrIssueBody,
   StopHandleError,
   renderPrRefInfo,
+  renderAssigneeInfo,
 } from './utils';
 
 import { textTpl } from '.';
@@ -43,15 +44,6 @@ function render(
 
   builder.add(renderPrOrIssueTitleLink(data));
 
-  const title = titleTpl(
-    {
-      repo: payload.repository,
-      event: `${nameBlock}#${data.number}`,
-      action,
-    },
-    ctx,
-  );
-
   let contentLimit = ctx.setting.contentLimit;
 
   if (name === 'issues') {
@@ -62,6 +54,9 @@ function render(
       )
     ) {
       contentLimit = -1;
+    }
+    if ((data as Issue).assignees?.length) {
+      builder.add(renderAssigneeInfo((data as Issue).assignees));
     }
   }
 
@@ -83,6 +78,15 @@ function render(
       title: textFirstLine,
       body: builder.build(),
       repo: payload.repository,
+    },
+    ctx,
+  );
+
+  const title = titleTpl(
+    {
+      repo: payload.repository,
+      event: `${nameBlock}#${data.number}`,
+      action,
     },
     ctx,
   );
@@ -173,20 +177,15 @@ export async function handlePr(
     builder.add(renderPrRefInfo(data));
   }
 
+  if (data.assignees?.length) {
+    builder.add(renderAssigneeInfo(data.assignees));
+  }
+
   if (oldRef) {
     builder.add(
       `> changed the base branch from \`${oldRef}\` to \`${base.ref}\`  `,
     );
   }
-
-  const title = titleTpl(
-    {
-      repo: payload.repository,
-      event: `${nameBlock}#${data.number}`,
-      action,
-    },
-    ctx,
-  );
 
   if (shouldRenderBody && data.body) {
     builder.addDivider('> ', true);
@@ -206,6 +205,14 @@ export async function handlePr(
     ctx,
   );
 
+  const title = titleTpl(
+    {
+      repo: payload.repository,
+      event: `${nameBlock}#${data.number}`,
+      action,
+    },
+    ctx,
+  );
   return {
     title,
     text,
