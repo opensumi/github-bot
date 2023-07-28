@@ -41,6 +41,7 @@ declare global {
     readonly KV_PROD: IKVNamespace;
     readonly OPENAI_API_KEY?: string;
     readonly TIMEOUT?: string;
+    readonly wechaty?: any;
     [key: string]: unknown;
   }
 

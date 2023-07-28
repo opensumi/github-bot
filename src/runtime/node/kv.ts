@@ -40,3 +40,30 @@ export class NodeKV implements IKVNamespace {
     await this.kv.delete(key);
   }
 }
+
+export class LocalKV implements IKVNamespace {
+  map: Map<any, any>;
+  constructor() {
+    this.map = new Map();
+  }
+
+  get(key: unknown, type: unknown): TKVValue<string> {
+    return Promise.resolve(this.map.get(key));
+  }
+  async put(
+    key: string,
+    value: string | ArrayBuffer | FormData | ReadableStream<any>,
+    options?:
+      | {
+          expiration?: string | number | undefined;
+          expirationTtl?: string | number | undefined;
+          metadata?: any;
+        }
+      | undefined,
+  ): Promise<void> {
+    this.map.set(key, value);
+  }
+  async delete(key: string): Promise<void> {
+    this.map.delete(key);
+  }
+}
