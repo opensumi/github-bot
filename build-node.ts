@@ -36,10 +36,6 @@ async function buildNode() {
 }
 
 async function copyResources() {
-  await fs.copyFile(
-    'node_modules/@dqbd/tiktoken/dist/node/_tiktoken_bg.wasm',
-    'dist/node/_tiktoken_bg.wasm',
-  );
   console.log('Copied resources.');
 }
 
