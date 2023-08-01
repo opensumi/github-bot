@@ -1,7 +1,7 @@
 let content: any | undefined;
-jest.mock('@/ding/utils', () => {
+jest.mock('@/im/utils', () => {
   // Require the original module to not be mocked...
-  const originalModule = jest.requireActual('@/ding/utils');
+  const originalModule = jest.requireActual('@/im/utils');
 
   return {
     __esModule: true, // Use it when dealing with esModules

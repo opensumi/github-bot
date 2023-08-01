@@ -219,6 +219,7 @@ export class OctoService {
     while (
       latestStars.data &&
       latestStars.data[0] &&
+      latestStars.data[0].starred_at &&
       new Date(latestStars.data[0].starred_at).getTime() >= from
     ) {
       star_increment += latestStars.data.length;

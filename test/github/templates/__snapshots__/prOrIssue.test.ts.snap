@@ -11,7 +11,7 @@ exports[`github templates pr or issue can handle issue 1`] = `
 >
 > 看起来是不同的插件给某个文件做 diagnose 时，传的 uri 没有合并起来？
 >
-> https://github.com/opensumi/core/assets/13938334/8eb4bd97-5594-4428-9000-915546e33e63
+> https://github.com/opensumi/core/assets/1/8eb4bd97-5594-4428-9000-915546e33e63
 >
 >
 >
@@ -24,7 +24,8 @@ exports[`github templates pr or issue can handle pull_request_closed 1`] = `
 {
   "text": "#### [Codertocat](https://github.com/Codertocat) closed [pull request](https://github.com/Codertocat/Hello-World/pull/2)  
 ---
-> #### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)",
+> #### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)
+> Assignees: [Codertocat](https://github.com/Codertocat)",
   "title": "Pull request#2 closed",
 }
 `;
