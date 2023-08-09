@@ -1,8 +1,8 @@
 import { OpenAI } from '@/im/openai';
 
-import { DingCommandCenter } from './types';
+import { IMCommandCenter } from './types';
 
-export function registerChatGPTCommand(it: DingCommandCenter) {
+export function registerChatGPTCommand(it: IMCommandCenter) {
   it.on('清除记忆', async ({ bot }) => {
     await bot.conversationKVManager.clearConversation();
     await bot.replyText('已清除记忆');

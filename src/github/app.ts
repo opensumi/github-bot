@@ -23,7 +23,7 @@ export class App {
 
   octoApp: OctoApp<{ Octokit: typeof Octokit }>;
 
-  constructor(private setting: AppSetting) {
+  constructor(setting: AppSetting) {
     const { appSettings, githubSecret } = setting;
     Configuration.init(setting);
 

@@ -36,18 +36,6 @@ export function randomChoice(arr: string[]) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-export async function errorCallback(
-  promise: Promise<void>,
-  cb: (err: unknown) => void,
-) {
-  try {
-    await promise;
-  } catch (err) {
-    cb(err);
-    throw err;
-  }
-}
-
 // format Date to "yyyy-mm-dd" style
 export const formatDate = (date: Date) => {
   const year = date.getFullYear();

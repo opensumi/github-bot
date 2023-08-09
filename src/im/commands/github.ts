@@ -3,14 +3,14 @@ import { App } from '@/github/app';
 import { render } from '@/github/render';
 import { contentToMarkdown, parseGitHubUrl } from '@/github/utils';
 
-import type { DingBot } from '../ding/bot';
 import { code, markdown } from '../message';
+import { IBotAdapter } from '../types';
 
 import { ISSUE_REGEX, REPO_REGEX } from './constants';
-import { DingCommandCenter } from './types';
+import { IMCommandCenter } from './types';
 import { hasApp, replyIfAppNotDefined } from './utils';
 
-export function registerGitHubCommand(it: DingCommandCenter) {
+export function registerGitHubCommand(it: IMCommandCenter) {
   it.on(REPO_REGEX, async ({ bot, ctx, result }) => {
     await replyIfAppNotDefined(bot, ctx);
     if (!hasApp(ctx)) {
@@ -31,7 +31,7 @@ export function registerGitHubCommand(it: DingCommandCenter) {
       await bot.reply(
         markdown(
           `${full_name} Open Graph`,
-          `![](${bot.proxyThisUrl(
+          `![](${bot.getProxiedUrl(
             `https://opengraph.githubassets.com/${makeid(16)}/${full_name}`,
           )})`,
         ),
@@ -103,7 +103,7 @@ export function registerGitHubCommand(it: DingCommandCenter) {
             await bot.reply(
               markdown(
                 `${full_name} Open Graph`,
-                `![](${bot.proxyThisUrl(
+                `![](${bot.getProxiedUrl(
                   `https://opengraph.githubassets.com/${makeid(
                     16,
                   )}/${full_name}`,
@@ -148,7 +148,7 @@ export function registerGitHubCommand(it: DingCommandCenter) {
   );
 }
 
-async function getDefaultRepo(bot: DingBot) {
+async function getDefaultRepo(bot: IBotAdapter) {
   const defaultRepo = await bot.kvManager.getDefaultRepo(bot.id);
   if (!defaultRepo) {
     await bot.replyText(
@@ -164,7 +164,7 @@ async function getDefaultRepo(bot: DingBot) {
 // 2. star ide-startup -> opensumi/ide-startup
 // 3. star microsoft/core -> microsoft/core
 // 4. star microsoft core -> microsoft/core
-async function getRepoInfoFromCommand(argv: string[], bot: DingBot) {
+async function getRepoInfoFromCommand(argv: string[], bot: IBotAdapter) {
   const defaultRepo = await bot.kvManager.getDefaultRepo(bot.id);
   let owner, repo;
   if (defaultRepo) {
@@ -208,7 +208,7 @@ function makeid(length: number) {
 }
 
 async function replyGitHubIssue(
-  bot: DingBot,
+  bot: IBotAdapter,
   app: App,
   owner: string,
   repo: string,

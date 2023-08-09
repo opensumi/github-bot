@@ -1,6 +1,6 @@
-import { DingBot, verifyMessage } from '@/im/ding/bot';
+import { Session } from '@/im/bot';
+import { DingBotAdapter, verifyMessage } from '@/im/ding/bot';
 import { DingKVManager } from '@/kv/ding';
-import { errorCallback } from '@/utils';
 
 export function route(hono: THono) {
   hono.post('/ding/:id', async (c) => {
@@ -21,7 +21,7 @@ export function route(hono: THono) {
     if (!setting.outGoingToken) {
       return c.send.error(
         400,
-        `please set webhook token in database:  ${kvManager.secretsKV.f(id)}`,
+        `please set webhook token in database: ${kvManager.secretsKV.f(id)}`,
       );
     }
 
@@ -34,22 +34,20 @@ export function route(hono: THono) {
       return c.send.error(403, errMessage);
     }
 
-    const bot = new DingBot(
-      id,
+    const session = new Session(
       c,
-      await c.req.json(),
-      kvManager,
-      c.executionCtx,
-      setting,
+      new DingBotAdapter(
+        id,
+        c,
+        await c.req.json(),
+        kvManager,
+        c.executionCtx,
+        setting,
+      ),
     );
 
-    c.executionCtx.waitUntil(
-      errorCallback(bot.handle(), async (err: unknown) => {
-        await bot.replyText(
-          `处理消息出错: ${(err as Error).message} ${(err as Error).stack}`,
-        );
-      }),
-    );
+    session.runInBackground();
+
     return c.send.message('ok');
   });
 }

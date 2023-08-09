@@ -1,8 +1,8 @@
 import { ChatGPTAPI, ChatMessage, SendMessageBrowserOptions } from 'chatgpt';
 
 import Environment from '@/env';
+import { IBotAdapter } from '@/im';
 import { Context } from '@/im/commands';
-import { DingBot } from '@/im/ding/bot';
 
 import { ConversationKVManager } from './kvManager';
 
@@ -12,10 +12,10 @@ export class Conversation {
 
   constructor(
     protected currentRoundPrompt: string,
-    protected bot: DingBot,
+    protected bot: IBotAdapter,
     protected ctx: Context,
   ) {
-    this.conversationId = bot.msg.conversationId;
+    this.conversationId = ctx.message.conversationId;
     this.conversationKVManager = bot.conversationKVManager;
   }
 

@@ -5,11 +5,11 @@ import { CommandCenter } from '@/commander';
 import { registerCommonCommand } from './common';
 import { registerGitHubCommand } from './github';
 import { registerOpenSumiCommand } from './opensumi';
-import { DingCommandCenter } from './types';
+import { IMCommandCenter } from './types';
 
 export const cc = new CommandCenter({
   prefix: [''],
-}) as DingCommandCenter;
+}) as IMCommandCenter;
 
 registerCommonCommand(cc);
 registerGitHubCommand(cc);

@@ -2,12 +2,11 @@ import { startsWith } from '@/commander';
 import { IDingInfo } from '@/kv/types';
 import { StringBuilder } from '@/utils';
 
-import type { DingBot } from '../ding/bot';
 import { code } from '../message';
 
-import { Context, DingCommandCenter } from './types';
+import { IMCommandCenter } from './types';
 
-export function registerCommonCommand(it: DingCommandCenter) {
+export function registerCommonCommand(it: IMCommandCenter) {
   it.on(
     'putData',
     async ({ bot, ctx }) => {
@@ -22,13 +21,13 @@ export function registerCommonCommand(it: DingCommandCenter) {
     startsWith,
   );
 
-  it.on('getGroupInfo', async ({ bot }) => {
+  it.on('getGroupInfo', async ({ bot, ctx }) => {
     await bot.reply(
       code(
         'json',
         JSON.stringify({
-          conversationId: bot.msg.conversationId,
-          senderCorpId: bot.msg.senderCorpId,
+          conversationId: ctx.message.conversationId,
+          senderCorpId: ctx.message.senderCorpId,
         }),
       ),
     );

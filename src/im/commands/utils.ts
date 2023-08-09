@@ -1,4 +1,4 @@
-import { DingBot } from '../ding/bot';
+import { IBotAdapter } from '../types';
 
 import { Context } from './types';
 
@@ -8,10 +8,10 @@ export function hasApp<T>(
   return !!item.app;
 }
 
-export async function replyIfAppNotDefined(bot: DingBot, ctx: Context) {
+export async function replyIfAppNotDefined(bot: IBotAdapter, ctx: Context) {
   if (!hasApp(ctx)) {
     await bot.replyText(
-      'Current DingBot has not configured use GitHub App. Please contact admin.',
+      'current bot has not configured use GitHub App. Please contact admin.',
     );
   }
 }

@@ -2,13 +2,14 @@ import throttle from 'lodash/throttle';
 
 import { Conversation } from '@/ai/conversation';
 import { Context } from '@/im/commands';
-import { DingBot } from '@/im/ding/bot';
 import { markdown } from '@/im/message';
+
+import { IBotAdapter } from './types';
 
 export class OpenAI {
   constructor(
     protected text: string,
-    protected bot: DingBot,
+    protected bot: IBotAdapter,
     protected ctx: Context,
   ) {}
 

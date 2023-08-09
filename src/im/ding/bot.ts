@@ -9,7 +9,7 @@ import { IDingBotSetting } from '@/kv/types';
 
 import { cc } from '../commands';
 import { SendMessage, compose, text as textWrapper } from '../message';
-import { Message } from '../types';
+import { IBotAdapter, Message } from '../types';
 
 function prepare(s: string) {
   return s.toString().trim();
@@ -72,14 +72,14 @@ export async function verifyMessage(headers: Headers, token: string) {
   }
 }
 
-export class DingBot {
+export class DingBotAdapter implements IBotAdapter {
   githubKVManager: GitHubKVManager;
   conversationKVManager: ConversationKVManager;
 
   constructor(
     public id: string,
     public c: Context<THonoEnvironment>,
-    public msg: Message,
+    protected msg: Message,
     public kvManager: DingKVManager,
     public ctx: ExecutionContext,
     public setting: IDingBotSetting,
@@ -128,7 +128,7 @@ export class DingBot {
     await send(content, this.msg.sessionWebhook);
   }
 
-  proxyThisUrl(url: string) {
+  getProxiedUrl(url: string) {
     return this.c.getProxiedUrl(url);
   }
 }

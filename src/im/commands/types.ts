@@ -1,11 +1,7 @@
-import { CancellationToken } from '@opensumi/ide-utils/lib/cancellation';
-
 import { CommandCenter, IArgv } from '@/commander';
-import { IRegexResolveResult, IResolveResult } from '@/commander/types';
 import { App } from '@/github/app';
 
-import type { DingBot } from '../ding/bot';
-import { Message } from '../types';
+import { IBotAdapter, Message } from '../types';
 
 export interface Context<T = any> {
   message: Message;
@@ -18,9 +14,9 @@ export interface Context<T = any> {
 
 export type ContextWithApp<T = any> = Required<Context<T>>;
 
-interface DingCommandCenterContext {
-  bot: DingBot;
+interface IMCommandCenterContext {
+  bot: IBotAdapter;
   ctx: Context;
 }
 
-export type DingCommandCenter = CommandCenter<DingCommandCenterContext>;
+export type IMCommandCenter = CommandCenter<IMCommandCenterContext>;
