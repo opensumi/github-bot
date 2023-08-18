@@ -14,6 +14,10 @@ export function renderUserLink(sender: { login: string; html_url: string }) {
   return `[${sender.login}](${sender.html_url})`;
 }
 
+export function renderTeamLink(team: { name: string; html_url: string }) {
+  return `[${team.name}](${team.html_url})`;
+}
+
 export function renderAtUserLink(sender: { login: string; html_url: string }) {
   return `[@${sender.login}](${sender.html_url})`;
 }
@@ -102,6 +106,43 @@ export function renderAssigneeInfo(
 ) {
   const assigneeNames = assignees.map((v) => renderUserLink(v)).join(', ');
   return `> Assignees: ${assigneeNames}  `;
+}
+
+export function renderRequestedReviewersInfo(
+  reviewers: (
+    | {
+        name: string;
+        html_url: string;
+      }
+    | {
+        login: string;
+        html_url: string;
+      }
+  )[],
+) {
+  const reviewerNames = reviewers
+    .map((v) =>
+      (
+        v as {
+          login: string;
+          html_url: string;
+        }
+      ).login
+        ? renderUserLink(
+            v as {
+              login: string;
+              html_url: string;
+            },
+          )
+        : renderTeamLink(
+            v as {
+              name: string;
+              html_url: string;
+            },
+          ),
+    )
+    .join(', ');
+  return `> Requested reviewers: ${reviewerNames}  `;
 }
 
 export function renderDeletedPrOrIssueTitleLink(p: {

@@ -20,6 +20,18 @@ exports[`github templates pr or issue can handle issue 1`] = `
 }
 `;
 
+exports[`github templates pr or issue can handle pull_request_13_opened 1`] = `
+{
+  "text": "#### [Codertocat](https://github.com/Codertocat) opened [pull request](https://github.com/Codertocat/Hello-World/pull/2)  
+---
+> #### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)
+> master <- changes  
+> Requested reviewers: [octocat](http://github.com/octocat)  
+> Assignees: [Codertocat](https://github.com/Codertocat)",
+  "title": "Pull request#2 opened",
+}
+`;
+
 exports[`github templates pr or issue can handle pull_request_closed 1`] = `
 {
   "text": "#### [Codertocat](https://github.com/Codertocat) closed [pull request](https://github.com/Codertocat/Hello-World/pull/2)  

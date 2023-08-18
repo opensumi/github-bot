@@ -13,6 +13,7 @@ import {
   StopHandleError,
   renderPrRefInfo,
   renderAssigneeInfo,
+  renderRequestedReviewersInfo,
 } from './utils';
 
 import { textTpl } from '.';
@@ -175,6 +176,10 @@ export async function handlePr(
 
   if (shouldRenderMergeInfo) {
     builder.add(renderPrRefInfo(data));
+  }
+
+  if (data.requested_reviewers?.length) {
+    builder.add(renderRequestedReviewersInfo(data.requested_reviewers));
   }
 
   if (data.assignees?.length) {

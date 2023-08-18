@@ -9,6 +9,7 @@ import {
 
 import _antd_mini_release_published from './antd_mini_release_published.json';
 import pull_request_0_opened from './generated/pull_request_0_opened.json';
+import _pull_request_13_opened from './generated/pull_request_13_opened.json';
 import pull_request_3_closed from './generated/pull_request_3_closed.json';
 import _pull_request_review_comment_0_created from './generated/pull_request_review_comment_0_created.json';
 import _issue2045 from './issue-2045.json';
@@ -25,6 +26,8 @@ export const pull_request_closed =
   pull_request_3_closed as unknown as PullRequestClosedEvent;
 export const pull_request_opened =
   pull_request_0_opened as unknown as PullRequestOpenedEvent;
+export const pull_request_13_opened =
+  _pull_request_13_opened as PullRequestOpenedEvent;
 export const pull_request_edited_wip =
   _pull_request_edited_wip as unknown as PullRequestEditedEvent;
 export const pull_request_edited_base =
