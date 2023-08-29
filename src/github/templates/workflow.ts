@@ -6,6 +6,50 @@ import { Context, ExtractPayload, MarkdownContent } from '../types';
 
 import { renderAtUserLink, titleTpl, textTpl, StopHandleError } from '.';
 
+function renderWorkflow(
+  payload: ExtractPayload<'workflow_run'>,
+  ctx: Context & {
+    octokit?: Octokit;
+  },
+): MarkdownContent {
+  const workflow = payload.workflow;
+  const workflowRun = payload.workflow_run;
+  const action = payload.action as string;
+
+  const title = titleTpl(
+    {
+      repo: payload.repository,
+      event: 'workflow',
+      action,
+    },
+    ctx,
+  );
+
+  const builder = new StringBuilder();
+
+  builder.add(`Name: ${workflow.name}\n`);
+
+  const status = workflowRun.conclusion;
+
+  builder.add(`[Detail](${workflowRun.html_url})\n`);
+
+  const text = textTpl(
+    {
+      title: `[workflow](${
+        workflowRun.html_url
+      }) run ${status} (${renderAtUserLink(payload.sender)})`,
+      body: builder.build(),
+      repo: payload.repository,
+    },
+    ctx,
+  );
+
+  return {
+    title,
+    text,
+  };
+}
+
 export async function handleWorkflowRun(
   payload: ExtractPayload<'workflow_run'>,
   ctx: Context & {
@@ -14,7 +58,6 @@ export async function handleWorkflowRun(
 ): Promise<MarkdownContent> {
   const workflow = payload.workflow;
   const workflowRun = payload.workflow_run;
-  const action = payload.action as string;
   const repository = payload.repository;
   if (!workflowRun.path) {
     throw new StopHandleError('need workflow path');
@@ -24,43 +67,18 @@ export async function handleWorkflowRun(
     throw new StopHandleError('should have ctx octokit');
   }
 
-  // 下面就是通知 Workflow 结果的 actions
-  if (
-    repository.full_name === 'opensumi/actions' &&
-    workflow.name === 'sync to npmmirror'
-  ) {
-    const title = titleTpl(
-      {
-        repo: payload.repository,
-        event: 'workflow',
-        action,
-      },
-      ctx,
-    );
+  const mapping = {
+    'opensumi/actions': ['sync to npmmirror'],
+    'opensumi/core': ['Release RC Version'],
+  } as Partial<Record<string, string[]>>;
 
-    const builder = new StringBuilder();
+  const repoAllow = mapping[repository.full_name];
 
-    builder.add(`Name: ${workflow.name}\n`);
-
-    const status = workflowRun.conclusion;
-
-    builder.add(`[Detail](${workflowRun.html_url})\n`);
-
-    const text = textTpl(
-      {
-        title: `[workflow](${
-          workflowRun.html_url
-        }) run ${status} (${renderAtUserLink(payload.sender)})`,
-        body: builder.build(),
-        repo: payload.repository,
-      },
-      ctx,
-    );
-
-    return {
-      title,
-      text,
-    };
+  if (repoAllow) {
+    const allow = repoAllow.includes(workflow.name);
+    if (allow) {
+      return renderWorkflow(payload, ctx);
+    }
   }
 
   throw new StopHandleError(
