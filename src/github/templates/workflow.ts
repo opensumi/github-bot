@@ -1,6 +1,11 @@
 import { Octokit } from '@octokit/rest';
 
-import { SYNC_TO_NPM_NAME, workflowAboutRelease } from '@/constants/opensumi';
+import {
+  BOT_DEPLOY_NAME,
+  BOT_DEPLOY_PRE_NAME,
+  SYNC_TO_NPM_NAME,
+  workflowAboutRelease,
+} from '@/constants/opensumi';
 import { StringBuilder } from '@/utils';
 
 import { Context, ExtractPayload, MarkdownContent } from '../types';
@@ -71,6 +76,7 @@ export async function handleWorkflowRun(
   const mapping = {
     'opensumi/actions': new Set([SYNC_TO_NPM_NAME]),
     'opensumi/core': workflowAboutRelease,
+    'opensumi/github-bot': new Set([BOT_DEPLOY_PRE_NAME, BOT_DEPLOY_NAME]),
   } as Partial<Record<string, Set<string>>>;
 
   const repoAllow = mapping[repository.full_name];
