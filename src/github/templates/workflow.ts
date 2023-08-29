@@ -1,5 +1,6 @@
 import { Octokit } from '@octokit/rest';
 
+import { SYNC_TO_NPM_NAME, workflowAboutRelease } from '@/constants/opensumi';
 import { StringBuilder } from '@/utils';
 
 import { Context, ExtractPayload, MarkdownContent } from '../types';
@@ -68,14 +69,14 @@ export async function handleWorkflowRun(
   }
 
   const mapping = {
-    'opensumi/actions': ['sync to npmmirror'],
-    'opensumi/core': ['Release RC Version'],
-  } as Partial<Record<string, string[]>>;
+    'opensumi/actions': new Set([SYNC_TO_NPM_NAME]),
+    'opensumi/core': workflowAboutRelease,
+  } as Partial<Record<string, Set<string>>>;
 
   const repoAllow = mapping[repository.full_name];
 
   if (repoAllow) {
-    const allow = repoAllow.includes(workflow.name);
+    const allow = repoAllow.has(workflow.name);
     if (allow) {
       return renderWorkflow(payload, ctx);
     }

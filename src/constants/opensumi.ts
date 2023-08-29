@@ -15,6 +15,8 @@ export const workflowAboutRelease = new Set([
 
 export const VERSION_SYNC_KEYWORD = 'versionInfo';
 
+export const SYNC_TO_NPM_NAME = 'sync to npmmirror';
+
 export const MONTHLY_REPORT_FILE = 'monthly-report.yml';
 export const PR_NEXT_RELEASE_FILE = 'release-next.yml';
 
