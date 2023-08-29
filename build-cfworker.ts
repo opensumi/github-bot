@@ -29,6 +29,7 @@ async function buildWorker() {
     platform: 'browser',
     target: 'es2020',
     format: 'esm',
+    treeShaking: true,
     plugins: [resolvePlugin],
     define: DEFAULT_BUILD_ARGS,
   });

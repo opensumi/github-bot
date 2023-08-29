@@ -1,5 +1,5 @@
 import { Repository } from '@octokit/webhooks-types';
-import _ from 'lodash';
+import capitalize from 'lodash/capitalize';
 
 import { StringBuilder } from '@/utils';
 
@@ -198,14 +198,13 @@ export function useRef(text?: string | null | undefined, bodyLimit = -1) {
   const arrayOfLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
   const newLines = [];
 
-  for (let line of arrayOfLines) {
+  for (const line of arrayOfLines) {
     if (line) {
-      if (line === '>') {
+      if (line === '>' || line.startsWith('> ')) {
         newLines.push(line);
         continue;
-      } else if (line.startsWith('> ')) {
-        line = line.substring(2);
       }
+
       newLines.push(`> ${line}`);
     } else {
       newLines.push(`>`);
@@ -270,10 +269,10 @@ type TitleTpl = (
   capitalize?: boolean,
 ) => string;
 
-export const titleTpl: TitleTpl = (data, ctx, capitalize = true) => {
+export const titleTpl: TitleTpl = (data, ctx, shouldCapitalize = true) => {
   let event = data.event;
-  if (capitalize) {
-    event = _.capitalize(event);
+  if (shouldCapitalize) {
+    event = capitalize(event);
   }
   const info = `${event} ${data.action}`;
   let text;
