@@ -62,7 +62,7 @@ function render(
   }
 
   if (shouldRenderBody && data.body) {
-    builder.addDivider('> ');
+    builder.addDivider('> ', true);
     builder.add(renderPrOrIssueBody(data, contentLimit));
   }
 
