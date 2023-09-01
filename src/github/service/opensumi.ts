@@ -53,10 +53,11 @@ export class OpenSumiOctoService extends OctoService {
     });
     return workflow;
   }
-  async monthlyReport() {
-    const workflow = await this.octo.actions.createWorkflowDispatch(
-      MONTHLY_REPORT_WORKFLOW,
-    );
+  async monthlyReport(inputs: { time?: string }) {
+    const workflow = await this.octo.actions.createWorkflowDispatch({
+      ...MONTHLY_REPORT_WORKFLOW,
+      inputs,
+    });
     return workflow;
   }
   async syncVersion(version?: string) {
