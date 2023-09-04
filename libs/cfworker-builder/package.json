@@ -4,5 +4,8 @@
   "bin": "./cli/cli.mjs",
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
+  },
+  "dependencies": {
+    "mri": "^1.2.0"
   }
 }
