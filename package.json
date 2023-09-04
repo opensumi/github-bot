@@ -8,6 +8,9 @@
   "engines": {
     "node": ">=18.0.0"
   },
+  "workspaces": [
+    "libs/*"
+  ],
   "scripts": {
     "format": "prettier --write '**/*.{js,css,json,md}'",
     "ts:check": "tsc -p ./tsconfig.build.json --noEmit",
@@ -21,7 +24,7 @@
     "dev:worker:preview": "run-p dev:worker dev:proxy",
     "dev:worker": "wrangler dev",
     "dev:proxy": "tsx dev.ts",
-    "gen": "tsx ./scripts/generate-wrangler-toml.ts",
+    "gen": "cfworker-builder gen-toml",
     "prepublish:local": "yarn build",
     "publish:local": "wrangler publish",
     "lint": "eslint . && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
@@ -54,6 +57,7 @@
     "@octokit/plugin-paginate-rest": "^6.0.0",
     "@octokit/rest": "^19.0.7",
     "@octokit/webhooks": "^10.7.0",
+    "@opensumi/cfworker-builder": "workspace:^",
     "@opensumi/ide-utils": "^2.23.1",
     "chatgpt": "^5.0.9",
     "hono": "^3.0.3",

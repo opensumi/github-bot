@@ -1718,6 +1718,14 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@opensumi/cfworker-builder@workspace:^, @opensumi/cfworker-builder@workspace:libs/cfworker-builder":
+  version: 0.0.0-use.local
+  resolution: "@opensumi/cfworker-builder@workspace:libs/cfworker-builder"
+  bin:
+    cfworker-builder: ./cli/cli.mjs
+  languageName: unknown
+  linkType: soft
+
 "@opensumi/ide-utils@npm:^2.23.1":
   version: 2.26.2
   resolution: "@opensumi/ide-utils@npm:2.26.2"
@@ -4571,6 +4579,7 @@ __metadata:
     "@octokit/types": ^9.0.0
     "@octokit/webhooks": ^10.7.0
     "@octokit/webhooks-examples": ^6.10.0
+    "@opensumi/cfworker-builder": "workspace:^"
     "@opensumi/ide-utils": ^2.23.1
     "@types/jest": ^29.4.0
     "@types/lodash": ^4.14.191

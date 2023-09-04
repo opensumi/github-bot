@@ -1,0 +1,5 @@
+{
+  "name": "@opensumi/cfworker-builder",
+  "version": "0.0.1",
+  "bin": "./cli/cli.mjs"
+}
