@@ -1,6 +1,6 @@
 {
   "name": "@opensumi/cfworker-builder",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "bin": "./cli/cli.mjs",
   "publishConfig": {
     "registry": "https://registry.npmjs.org"
