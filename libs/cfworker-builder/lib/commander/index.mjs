@@ -1,6 +1,6 @@
 import mri from 'mri';
 
-class Commander {
+export default class Commander {
   commandMap = new Map();
   addSubCommand(subCommand, options) {
     this.commandMap.set(subCommand, options);
@@ -34,5 +34,3 @@ Good bye~
     );
   }
 }
-
-export default Commander;

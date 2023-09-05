@@ -1,30 +1,44 @@
 import 'dotenv/config';
 
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, watch as _watch } from 'fs';
 
 import MagicString from 'magic-string';
 
-const text = readFileSync('./wrangler.tpl.toml').toString();
+const tplFilePath = './wrangler.tpl.toml';
+const targetFilePath = './wrangler.toml';
 
-const magic = new MagicString(text);
+export function run() {
+  const text = readFileSync(tplFilePath).toString();
 
-const regex = /{{(.+?)}}/gm;
+  const magic = new MagicString(text);
 
-const matches = text.matchAll(regex);
+  const regex = /{{(.+?)}}/gm;
 
-if (!matches) {
-  process.exit(0);
-}
+  const matches = text.matchAll(regex);
 
-for (const match of matches) {
-  const key = match[1];
-  const v = process.env[key];
-  if (v && match.index) {
-    magic.update(match.index, match.index + match[0].length, v);
-    console.log(`"${key}" will be replaced to "[redacted]"`);
-  } else {
-    console.warn(`env variable "${key}" not found.`);
+  if (!matches) {
+    return;
   }
+
+  for (const match of matches) {
+    const key = match[1];
+    const v = process.env[key];
+    if (v && match.index) {
+      magic.update(match.index, match.index + match[0].length, v);
+      console.log(`"${key}" will be replaced to "[redacted]"`);
+    } else {
+      console.warn(`env variable "${key}" not found.`);
+    }
+  }
+
+  writeFileSync(targetFilePath, magic.toString());
 }
 
-writeFileSync('./wrangler.toml', magic.toString());
+export function watch() {
+  console.log('watching template file changes...');
+
+  _watch(tplFilePath, {}, () => {
+    console.log(`${tplFilePath} changed.`);
+    run();
+  });
+}
