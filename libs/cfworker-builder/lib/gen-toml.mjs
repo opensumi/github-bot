@@ -4,6 +4,8 @@ import { readFileSync, writeFileSync, watch as _watch } from 'fs';
 
 import MagicString from 'magic-string';
 
+import { debounce } from './utils/debounce.mjs';
+
 const tplFilePath = './wrangler.tpl.toml';
 const targetFilePath = './wrangler.toml';
 
@@ -34,11 +36,15 @@ export function run() {
   writeFileSync(targetFilePath, magic.toString());
 }
 
+const debouncedRun = debounce(run, 300);
+
 export function watch() {
   console.log('watching template file changes...');
 
   _watch(tplFilePath, {}, () => {
-    console.log(`${tplFilePath} changed.`);
-    run();
+    console.log(
+      `- ${new Date().toLocaleString('zh-CN')}: ${tplFilePath} changed.`,
+    );
+    debouncedRun();
   });
 }
