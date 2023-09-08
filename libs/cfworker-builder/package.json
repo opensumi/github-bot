@@ -1,6 +1,6 @@
 {
   "name": "@opensumi/cfworker-builder",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "bin": "./cli/cli.mjs",
   "dependencies": {
     "dotenv": "^16.3.1",
