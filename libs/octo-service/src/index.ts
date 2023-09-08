@@ -32,7 +32,7 @@ export const TEAM_MEMBER_PR_REQUIREMENT = {
 
 export function formatDateString(
   t: Date | number | string,
-  format = 'yyyy/MM/dd',
+  format = 'YYYY-MM-DD',
 ) {
   return dayjs(t).format(format);
 }

@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "jest"
+    "test": "jest",
+    "prepublish": "npm run build"
   },
   "dependencies": {
     "dayjs": "^1.11.9",
