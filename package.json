@@ -28,6 +28,7 @@
     "gen": "cfworker-builder gen-toml",
     "prepublish:local": "yarn build",
     "publish:local": "wrangler publish",
+    "publish:libs": "lerna publish",
     "lint": "eslint . && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
     "lint:fix": "eslint . --fix && prettier . -w",
     "test": "jest --config jest.config.json --verbose",
