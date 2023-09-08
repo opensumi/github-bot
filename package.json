@@ -15,6 +15,7 @@
     "format": "prettier --write '**/*.{js,css,json,md}'",
     "ts:check": "tsc -p ./tsconfig.build.json --noEmit",
     "build": "wireit",
+    "build:libs": "wireit",
     "build:cfworker": "wireit",
     "build:node": "wireit",
     "watch": "yarn build -- --watch",
@@ -35,9 +36,13 @@
     "generate:json-schemas": "node scripts/generate-json-schemas-all.js"
   },
   "wireit": {
+    "build:libs": {
+      "command": "lerna run build --stream --scope @opensumi/*"
+    },
     "build": {
       "command": "run-p build:cfworker build:node",
       "dependencies": [
+        "build:libs",
         "ts:check",
         "gen"
       ]
@@ -60,6 +65,7 @@
     "@octokit/webhooks": "^10.7.0",
     "@opensumi/cfworker-builder": "workspace:^",
     "@opensumi/ide-utils": "^2.23.1",
+    "@opensumi/octo-service": "workspace:^",
     "chatgpt": "^5.0.9",
     "hono": "^3.0.3",
     "lodash": "^4.17.21",

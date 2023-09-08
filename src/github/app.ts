@@ -5,12 +5,12 @@ import { PrivilegeEvent } from '@/constants';
 import { VERSION_SYNC_KEYWORD } from '@/constants/opensumi';
 import { AppSetting } from '@/kv/types';
 import { App as OctoApp } from '@/lib/app.js/src';
+import { GitHubService } from '@opensumi/octo-service';
 
 import { CommandContext, issueCc } from './commands';
 import { parseCommandInMarkdownComments } from './commands/parse';
 import Configuration from './configuration';
 import { setupWebhooksTemplate } from './handler';
-import { OctoService } from './service';
 import { OpenSumiOctoService } from './service/opensumi';
 import { sendToDing } from './utils';
 
@@ -18,7 +18,7 @@ export class App {
   ctx: {
     setting: AppSetting;
   };
-  octoService: OctoService;
+  octoService: GitHubService;
   opensumiOctoService: OpenSumiOctoService;
 
   octoApp: OctoApp<{ Octokit: typeof Octokit }>;
@@ -39,7 +39,7 @@ export class App {
       setting,
     };
     setupWebhooksTemplate(this.octoApp.webhooks, this.ctx);
-    this.octoService = new OctoService();
+    this.octoService = new GitHubService();
     this.opensumiOctoService = new OpenSumiOctoService();
     this.octoApp.webhooks.on('star.created', async ({ payload }) => {
       const repository = payload.repository;
@@ -171,8 +171,8 @@ export class App {
 
   async init() {
     const octo = await this.getOcto();
-    this.octoService.setOcto(octo);
-    this.opensumiOctoService.setOcto(octo);
+    this.octoService.octo = octo;
+    this.opensumiOctoService.octo = octo;
   }
 }
 

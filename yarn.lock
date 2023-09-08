@@ -2027,6 +2027,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@opensumi/octo-service@workspace:^, @opensumi/octo-service@workspace:libs/octo-service":
+  version: 0.0.0-use.local
+  resolution: "@opensumi/octo-service@workspace:libs/octo-service"
+  dependencies:
+    dayjs: ^1.11.9
+    typescript: ^5.2.2
+  peerDependencies:
+    "@octokit/rest": ^19.0.7
+  languageName: unknown
+  linkType: soft
+
 "@parcel/watcher@npm:2.0.4":
   version: 2.0.4
   resolution: "@parcel/watcher@npm:2.0.4"
@@ -3975,6 +3986,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dayjs@npm:^1.11.9":
+  version: 1.11.9
+  resolution: "dayjs@npm:1.11.9"
+  checksum: a4844d83dc87f921348bb9b1b93af851c51e6f71fa259604809cfe1b49d1230e6b0212dab44d1cb01994c096ad3a77ea1cf18fa55154da6efcc9d3610526ac38
+  languageName: node
+  linkType: hard
+
 "debounce-fn@npm:^5.1.2":
   version: 5.1.2
   resolution: "debounce-fn@npm:5.1.2"
@@ -5651,6 +5669,7 @@ __metadata:
     "@octokit/webhooks-examples": ^6.10.0
     "@opensumi/cfworker-builder": "workspace:^"
     "@opensumi/ide-utils": ^2.23.1
+    "@opensumi/octo-service": "workspace:^"
     "@types/jest": ^29.4.0
     "@types/lodash": ^4.14.191
     "@types/node": ^18.11.18
@@ -11688,7 +11707,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:>=3 < 6":
+"typescript@npm:>=3 < 6, typescript@npm:^5.2.2":
   version: 5.2.2
   resolution: "typescript@npm:5.2.2"
   bin:
@@ -11708,7 +11727,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@>=3 < 6#~builtin<compat/typescript>":
+"typescript@patch:typescript@>=3 < 6#~builtin<compat/typescript>, typescript@patch:typescript@^5.2.2#~builtin<compat/typescript>":
   version: 5.2.2
   resolution: "typescript@patch:typescript@npm%3A5.2.2#~builtin<compat/typescript>::version=5.2.2&hash=1f5320"
   bin:

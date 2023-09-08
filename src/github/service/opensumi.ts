@@ -5,10 +5,9 @@ import {
   PR_NEXT_WORKFLOW,
   RC_WORKFLOW_FILE,
 } from '@/constants/opensumi';
+import { GitHubService } from '@opensumi/octo-service';
 
-import { OctoService } from '.';
-
-export class OpenSumiOctoService extends OctoService {
+export class OpenSumiOctoService extends GitHubService {
   async releaseNextVersion(branch: string) {
     const workflow = await this.octo.actions.createWorkflowDispatch({
       owner: 'opensumi',

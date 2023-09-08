@@ -36,7 +36,9 @@ export function randomChoice(arr: string[]) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-// format Date to "yyyy-mm-dd" style
+/**
+ * format Date to "yyyy-mm-dd" style
+ */
 export const formatDate = (date: Date) => {
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, '0');

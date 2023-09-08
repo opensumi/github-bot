@@ -5,7 +5,7 @@ import {
 } from '@/github/templates/utils';
 import { StringBuilder } from '@/utils';
 
-import { IIssueDetail, IPrDetail } from '../service/types';
+import { IIssueDetail, IPrDetail } from '../../../libs/octo-service/src/types';
 
 export function render(data: IIssueDetail | IPrDetail) {
   const type = data.type === 'pr' ? 'Pull Request' : 'Issue';

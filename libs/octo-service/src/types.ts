@@ -2,13 +2,16 @@ import { RestEndpointMethodTypes } from '@octokit/rest';
 
 export type IssueData =
   RestEndpointMethodTypes['issues']['get']['response']['data'];
-export type PrData =
+export type TPrData =
   RestEndpointMethodTypes['pulls']['get']['response']['data'];
+
+export type TCommitInfo =
+  RestEndpointMethodTypes['repos']['getCommit']['response']['data'];
 
 export interface IPrDetail {
   type: 'pr';
   issue: IssueData;
-  pr: PrData;
+  pr: TPrData;
 }
 export interface IIssueDetail {
   type: 'issue';

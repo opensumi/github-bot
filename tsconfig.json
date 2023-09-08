@@ -22,7 +22,8 @@
     "./src/**/*.ts",
     "./test/**/*.ts",
     "./scripts/**/*.ts",
-    "./typings/**/*.d.ts"
+    "./typings/**/*.d.ts",
+    "libs/octo-service/src/types.ts"
   ],
   "exclude": ["node_modules"]
 }

@@ -3,13 +3,13 @@ import path from 'path';
 
 import { Octokit } from '@octokit/rest';
 
-import { OctoService } from '@/github/service';
+import { GitHubService } from '@opensumi/octo-service';
 
 const octo = new Octokit({
   auth: process.env['GITHUB_TOKEN'],
 });
-const service = new OctoService();
-service.setOcto(octo);
+const service = new GitHubService();
+service.octo = octo;
 async function main() {
   const targetDir = path.join(__dirname, '../fixtures');
   const issueData = await service.getIssuePrByNumber('opensumi', 'core', 2045);

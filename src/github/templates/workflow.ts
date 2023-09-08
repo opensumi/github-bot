@@ -68,12 +68,6 @@ export async function handleWorkflowRun(
   }
 
   const mapping = ctx.setting.workflowEventToNotify ?? {};
-
-  // const mapping = {
-  //   'opensumi/actions': new Set([SYNC_TO_NPM_NAME]),
-  //   'opensumi/github-bot': new Set([BOT_DEPLOY_PRE_NAME, BOT_DEPLOY_NAME]),
-  // } as Partial<Record<string, Set<string>>>;
-
   const repoAllow = mapping[repository.full_name];
 
   if (repoAllow) {

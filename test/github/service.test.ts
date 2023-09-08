@@ -2,7 +2,7 @@ import 'dotenv/config';
 
 import { Octokit } from '@octokit/rest';
 
-import { OctoService } from '@/github/service';
+import { GitHubService } from '@opensumi/octo-service';
 
 const shouldSkip = !Boolean(process.env['GITHUB_TOKEN']);
 console.log(`🚀 ~ file: service.test.ts ~ line 5 ~ shouldSkip`, shouldSkip);
@@ -11,8 +11,8 @@ console.log(`🚀 ~ file: service.test.ts ~ line 5 ~ shouldSkip`, shouldSkip);
   const octo = new Octokit({
     auth: process.env['GITHUB_TOKEN'],
   });
-  const service = new OctoService();
-  service.setOcto(octo);
+  const service = new GitHubService();
+  service.octo = octo;
 
   it('can fetch history', async () => {
     jest.setTimeout(9999999999);
