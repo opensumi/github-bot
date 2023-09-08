@@ -42,6 +42,12 @@ export interface ISetting {
    */
   event?: string[];
   /**
+   * 通知 workflow 的成功、失败事件
+   * 键是仓库的名字，值是某个 workflow 的名字(yml 中配置的 name 字段)
+   * @example { 'opensumi/actions': ['sync to npmmirror'] }
+   */
+  workflowEventToNotify?: Record<string, string[]>;
+  /**
    * 不在消息中展示 repo 名字，适合单仓库
    * @default false
    */

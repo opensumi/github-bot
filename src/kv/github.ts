@@ -1,6 +1,3 @@
-// 在 github app 的设置页面中查看
-// 如：https://github.com/organizations/riril/settings/apps/ririltestbot
-
 import { GitHubCommon, KVManager } from '@/kv';
 
 import { AppSetting, ISetting } from './types';
