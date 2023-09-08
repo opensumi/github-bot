@@ -75,7 +75,6 @@ export async function handleWorkflowRun(
 
   const mapping = {
     'opensumi/actions': new Set([SYNC_TO_NPM_NAME]),
-    'opensumi/core': workflowAboutRelease,
     'opensumi/github-bot': new Set([BOT_DEPLOY_PRE_NAME, BOT_DEPLOY_NAME]),
   } as Partial<Record<string, Set<string>>>;
 
