@@ -1,5 +1,4 @@
 import { HTTPException } from 'hono/http-exception';
-import { logger } from 'hono/logger';
 import { prettyJSON } from 'hono/pretty-json';
 
 import { ValidationError } from '@/github';
@@ -9,6 +8,7 @@ import html from '../public/index.html';
 
 import { registerBlueprint } from './controllers';
 import { applyMiddleware } from './middleware';
+import { logger } from './middleware/logger';
 
 export function ignition(hono: THono) {
   hono.use('*', async (c, next) => {
@@ -21,13 +21,14 @@ export function ignition(hono: THono) {
           } catch (err) {
             console.log('waitUntil error', err);
           }
-          console.log('wait until complete');
         })(),
       );
     };
 
     await next();
   });
+
+  applyMiddleware(hono);
 
   hono.use('*', logger());
   hono.use('*', prettyJSON());
@@ -44,7 +45,6 @@ export function ignition(hono: THono) {
     return c.text('User-agent: *\nDisallow: /', 200);
   });
 
-  applyMiddleware(hono);
   registerBlueprint(hono);
 
   hono.notFound((c) => {

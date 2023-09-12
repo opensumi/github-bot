@@ -39,6 +39,5 @@ export const enhanceContext = (hono: THono) => {
 
 export function applyMiddleware(hono: THono) {
   enhanceContext(hono);
-
   GitHub.middleware(hono);
 }

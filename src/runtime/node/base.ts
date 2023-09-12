@@ -9,22 +9,25 @@ const port = process.env.PORT ? Number(process.env.PORT) : 8787;
 const app = new Hono() as THono;
 ignition(app);
 
-serve({
-  fetch(request) {
-    return app.fetch(
-      request,
-      {},
-      {
-        waitUntil(promise) {
-          promise;
+serve(
+  {
+    fetch(request) {
+      return app.fetch(
+        request,
+        {},
+        {
+          waitUntil(promise) {
+            promise;
+          },
+          passThroughOnException() {
+            //
+          },
         },
-        passThroughOnException() {
-          //
-        },
-      },
-    );
+      );
+    },
+    port: port,
   },
-  port: port,
-});
-
-console.log(`listened on http://localhost:${port}`);
+  (info) => {
+    console.log(`Listening on http://localhost:${info.port}`);
+  },
+);
