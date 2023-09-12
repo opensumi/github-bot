@@ -49,6 +49,14 @@ export function registerPullRequestCommand(it: GitHubCommandCenter) {
         return;
       }
 
+      if (!result.merged) {
+        await app.replyComment(
+          ctx,
+          'Cannot backport unmerged pull request: ' + `#${issue.number}`,
+        );
+        return;
+      }
+
       const { text } = ctx;
       const { command } = ctx.result;
       const targetBranch = extractTargetBranchNameFromCommand(command);
