@@ -35,9 +35,20 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     }
 
     const { app } = ctx;
+    let text = '';
+    try {
+      text = '\n\n' + (await app.opensumiOctoService.getBotLastNCommitsText());
+    } catch (error) {
+      console.error(
+        `getBotLastNCommitsText error: ${(error as Error).message}`,
+      );
+    }
+
     await app.opensumiOctoService.deployBot();
     await app.opensumiOctoService.deployBotPre();
-    await bot.replyText('开始部署机器人 & 预发机器人');
+    await bot.reply(
+      markdown('开始部署机器人', '开始部署机器人 & 预发机器人' + text),
+    );
   });
 
   it.on('deploypre', async ({ bot, ctx }) => {
@@ -51,8 +62,19 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     }
 
     const { app } = ctx;
+    let text = '';
+    try {
+      text = '\n\n' + (await app.opensumiOctoService.getBotLastNCommitsText());
+    } catch (error) {
+      console.error(
+        `getBotLastNCommitsText error: ${(error as Error).message}`,
+      );
+    }
+
     await app.opensumiOctoService.deployBotPre();
-    await bot.replyText('开始部署预发机器人');
+    await bot.reply(
+      markdown('开始部署预发机器人', '开始部署预发机器人' + text),
+    );
   });
 
   it.on('rc', async ({ bot, ctx }) => {

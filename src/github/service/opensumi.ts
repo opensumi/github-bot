@@ -21,6 +21,27 @@ export class OpenSumiOctoService extends GitHubService {
     return workflow;
   }
 
+  async getBotLastNCommitsText(n = 5) {
+    const { data } = await this.octo.repos.listCommits({
+      owner: 'opensumi',
+      repo: 'github-bot',
+      per_page: n,
+    });
+    const commits = data.map((c) => {
+      return {
+        sha: c.sha,
+        message: c.commit.message,
+        url: c.html_url,
+      };
+    });
+    const text = commits
+      .map((c) => {
+        return `- [${c.sha.slice(0, 7)}](${c.url}) ${c.message}`;
+      })
+      .join('\n');
+    return text;
+  }
+
   async deployBot() {
     await this.octo.actions.createWorkflowDispatch({
       owner: 'opensumi',
