@@ -1,6 +1,8 @@
 import type { MiddlewareHandler } from 'hono';
 import { getPath } from 'hono/utils/url';
 
+import Environment from '@/env';
+
 enum LogPrefix {
   Incoming = '-->',
   Outgoing = '<--',
@@ -62,11 +64,35 @@ function logMessage(fn: PrintFunc, prefix: string, ...rest: any[]) {
   fn(`${prefix}`, ...rest);
 }
 
-export const logger = (fn: PrintFunc = console.log): MiddlewareHandler => {
+export const logger = (
+  fn: PrintFunc = console.log,
+): MiddlewareHandler<THonoEnvironment> => {
   return async (c, next) => {
     const { method, raw } = c.req;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const path = getPath(c.req.raw);
+
+    if (raw.cf) {
+      try {
+        Environment.instance().metrics?.writeDataPoint({
+          blobs: [
+            raw.cf.colo,
+            raw.cf.country,
+            raw.cf.city!,
+            raw.cf.region!,
+            raw.cf.timezone!,
+          ],
+          doubles: [
+            raw.cf.metroCode as any,
+            raw.cf.longitude as any,
+            raw.cf.latitude,
+          ],
+          indexes: [raw.cf.postalCode as any],
+        });
+      } catch (error) {
+        console.log(`🚀 ~ file: index.ts:92 ~ return ~ error:`, error);
+      }
+    }
 
     log(fn, LogPrefix.Incoming, method, path);
 

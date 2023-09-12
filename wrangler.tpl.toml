@@ -17,3 +17,6 @@ name = "sumi-webhook"
 vars = { ENVIRONMENT = "prod" }
 
 kv_namespaces = [{ binding = "KV_PROD", id = "{{KV_PROD_ID}}" }]
+
+[[analytics_engine_datasets]]
+binding = "metricsDataset"
