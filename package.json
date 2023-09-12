@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "format": "prettier --write '**/*.{js,css,json,md}'",
-    "ts:check": "tsc -p ./tsconfig.build.json --noEmit",
+    "tsc:build": "wireit",
     "build": "wireit",
     "build:libs": "wireit",
     "build:cfworker": "wireit",
@@ -40,11 +40,16 @@
     "build:libs": {
       "command": "lerna run build --stream --scope @opensumi/*"
     },
+    "tsc:build": {
+      "command": "tsc -p ./tsconfig.build.json --noEmit",
+      "dependencies": [
+        "build:libs"
+      ]
+    },
     "build": {
       "command": "run-p build:cfworker build:node",
       "dependencies": [
-        "build:libs",
-        "ts:check",
+        "tsc:build",
         "gen"
       ]
     },
