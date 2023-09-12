@@ -1,4 +1,5 @@
 index.js
 src/lib
+libs/app.js
 dist
 .yarn

@@ -62,11 +62,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.1.1",
-    "@octokit/auth-app": "^4.0.9",
-    "@octokit/auth-unauthenticated": "^3.0.4",
     "@octokit/core": "^4.2.0",
-    "@octokit/oauth-app": "^4.2.0",
-    "@octokit/plugin-paginate-rest": "^6.0.0",
     "@octokit/rest": "^19.0.7",
     "@octokit/webhooks": "^10.7.0",
     "@opensumi/cfworker-builder": "workspace:^",
