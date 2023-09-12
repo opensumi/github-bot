@@ -1,5 +1,5 @@
 {
-  "name": "@octokit/app",
+  "name": "@octokit/app-local",
   "publishConfig": {
     "access": "public"
   },

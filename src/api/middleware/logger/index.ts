@@ -76,18 +76,18 @@ export const logger = (
       try {
         Environment.instance().metrics?.writeDataPoint({
           blobs: [
-            raw.cf.colo,
-            raw.cf.country,
-            raw.cf.city!,
-            raw.cf.region!,
-            raw.cf.timezone!,
+            (raw.cf as any).colo,
+            (raw.cf as any).country,
+            (raw.cf as any).city!,
+            (raw.cf as any).region!,
+            (raw.cf as any).timezone!,
           ],
           doubles: [
-            raw.cf.metroCode as any,
-            raw.cf.longitude as any,
-            raw.cf.latitude,
+            (raw.cf as any).metroCode as any,
+            (raw.cf as any).longitude as any,
+            (raw.cf as any).latitude,
           ],
-          indexes: [raw.cf.postalCode as any],
+          indexes: [(raw.cf as any).postalCode as any],
         });
       } catch (error) {
         console.log(`🚀 ~ file: index.ts:92 ~ return ~ error:`, error);

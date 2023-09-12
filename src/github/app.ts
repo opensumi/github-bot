@@ -1,10 +1,10 @@
+import { App as OctoApp } from '@octokit/app';
 import { Octokit } from '@octokit/rest';
 import { HandlerFunction } from '@octokit/webhooks/dist-types/types';
 
 import { PrivilegeEvent } from '@/constants';
 import { VERSION_SYNC_KEYWORD } from '@/constants/opensumi';
 import { AppSetting } from '@/kv/types';
-import { App as OctoApp } from '@/lib/app.js/src';
 import { GitHubService } from '@opensumi/octo-service';
 
 import { CommandContext, issueCc } from './commands';

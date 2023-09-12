@@ -34,11 +34,12 @@
     "test": "jest --config jest.config.json --verbose",
     "test:cov": "yarn test --coverage",
     "extract-fixtures": "tsx scripts/extract-webhook-example.ts",
-    "generate:json-schemas": "node scripts/generate-json-schemas-all.js"
+    "generate:json-schemas": "node scripts/generate-json-schemas-all.js",
+    "postinstall": "yarn build:libs"
   },
   "wireit": {
     "build:libs": {
-      "command": "lerna run build --stream --scope @opensumi/*"
+      "command": "lerna run build --stream"
     },
     "tsc:build": {
       "command": "tsc -p ./tsconfig.build.json --noEmit",
@@ -62,9 +63,10 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.1.1",
-    "@octokit/core": "^4.2.0",
-    "@octokit/rest": "^19.0.7",
-    "@octokit/webhooks": "^10.7.0",
+    "@octokit/app": "^14.0.0",
+    "@octokit/core": "^5.0.0",
+    "@octokit/rest": "^20.0.1",
+    "@octokit/webhooks": "^12.0.3",
     "@opensumi/cfworker-builder": "workspace:^",
     "@opensumi/ide-utils": "^2.23.1",
     "@opensumi/octo-service": "workspace:^",
@@ -84,8 +86,8 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20230228.0",
-    "@octokit/types": "^9.0.0",
-    "@octokit/webhooks-examples": "^6.10.0",
+    "@octokit/types": "^11.1.0",
+    "@octokit/webhooks-examples": "^7.3.0",
     "@types/jest": "^29.4.0",
     "@types/lodash": "^4.14.191",
     "@types/node": "^18.11.18",
