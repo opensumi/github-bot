@@ -54,7 +54,10 @@ export function ignition(hono: THono) {
   hono.onError((err, c) => {
     console.error('onError', err);
     if (err instanceof ValidationError) {
-      return c.send.error(err.code, 'github validation error ' + err.message);
+      return c.send.error(
+        err.statusCode,
+        'github validation error ' + err.message,
+      );
     }
     if (err instanceof HTTPException) {
       return c.send.error(err.status, err.message);
