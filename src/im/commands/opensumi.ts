@@ -102,6 +102,8 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
       }
       if (ctx.parsed.raw['workflow-ref']) {
         workflowRef = ctx.parsed.raw['workflow-ref'];
+      } else {
+        workflowRef = ref;
       }
     }
 
@@ -143,6 +145,8 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
       }
       if (ctx.parsed.raw['workflow-ref']) {
         workflowRef = ctx.parsed.raw['workflow-ref'];
+      } else {
+        workflowRef = ref;
       }
     }
 
