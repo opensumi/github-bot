@@ -60,6 +60,11 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     if (!hasApp(ctx)) {
       return;
     }
+    let workflowRef: string | undefined = undefined;
+
+    if (ctx.parsed.raw['workflow-ref']) {
+      workflowRef = ctx.parsed.raw['workflow-ref'];
+    }
 
     const { app } = ctx;
     let text = '';
@@ -71,7 +76,7 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
       );
     }
 
-    await app.opensumiOctoService.deployBotPre();
+    await app.opensumiOctoService.deployBotPre(workflowRef);
     await bot.reply(
       markdown('开始部署预发机器人', '开始部署预发机器人' + text),
     );
@@ -90,16 +95,20 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     const { app } = ctx;
 
     let ref = ctx.parsed.raw.ref;
+    let workflowRef: string | undefined = undefined;
     if (!ref) {
       if (ctx.parsed['_'].length > 1) {
         ref = ctx.parsed['_'][1];
+      }
+      if (ctx.parsed.raw['workflow-ref']) {
+        workflowRef = ctx.parsed.raw['workflow-ref'];
       }
     }
 
     if (ref) {
       try {
         await app.octoService.getRefInfoByRepo(ref, 'opensumi', 'core');
-        await app.opensumiOctoService.releaseRCVersion(ref);
+        await app.opensumiOctoService.releaseRCVersion(ref, workflowRef);
         await bot.reply(
           markdown(
             'Starts releasing the release candidate',
@@ -127,16 +136,20 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     const { app } = ctx;
 
     let ref = ctx.parsed.raw.ref;
+    let workflowRef: string | undefined = undefined;
     if (!ref) {
       if (ctx.parsed['_'].length > 1) {
         ref = ctx.parsed['_'][1];
+      }
+      if (ctx.parsed.raw['workflow-ref']) {
+        workflowRef = ctx.parsed.raw['workflow-ref'];
       }
     }
 
     if (ref) {
       try {
         await app.octoService.getRefInfoByRepo(ref, 'opensumi', 'core');
-        await app.opensumiOctoService.releaseRCVersion(ref);
+        await app.opensumiOctoService.releaseRCVersion(ref, workflowRef);
         await bot.reply(
           markdown(
             'Starts releasing the release candidate',
@@ -164,13 +177,18 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     const { app } = ctx;
 
     let version = ctx.parsed.raw.version;
+    let workflowRef: string | undefined = undefined;
+
     if (!version) {
       if (ctx.parsed['_'].length > 1) {
         version = ctx.parsed['_'][1];
       }
+      if (ctx.parsed.raw['workflow-ref']) {
+        workflowRef = ctx.parsed.raw['workflow-ref'];
+      }
     }
     try {
-      await app.opensumiOctoService.syncVersion(version);
+      await app.opensumiOctoService.syncVersion(version, workflowRef);
       await bot.reply(
         markdown(
           'starts synchronizing packages',

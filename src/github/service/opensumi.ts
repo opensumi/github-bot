@@ -8,12 +8,12 @@ import {
 import { GitHubService } from '@opensumi/octo-service';
 
 export class OpenSumiOctoService extends GitHubService {
-  async releaseNextVersion(branch: string) {
+  async releaseNextVersion(branch: string, workflowRef = 'main') {
     const workflow = await this.octo.actions.createWorkflowDispatch({
       owner: 'opensumi',
       repo: 'core',
       workflow_id: NEXT_WORKFLOW_FILE,
-      ref: 'main',
+      ref: workflowRef,
       inputs: {
         ref: branch,
       },
@@ -42,31 +42,31 @@ export class OpenSumiOctoService extends GitHubService {
     return text;
   }
 
-  async deployBot() {
+  async deployBot(workflowRef = 'main') {
     await this.octo.actions.createWorkflowDispatch({
       owner: 'opensumi',
       repo: 'github-bot',
       workflow_id: 'deploy.yml',
-      ref: 'main',
+      ref: workflowRef,
       inputs: {
         environment: 'prod',
       },
     });
   }
-  async deployBotPre() {
+  async deployBotPre(workflowRef = 'main') {
     await this.octo.actions.createWorkflowDispatch({
       owner: 'opensumi',
       repo: 'github-bot',
       workflow_id: 'deploy-pre.yml',
-      ref: 'main',
+      ref: workflowRef,
     });
   }
-  async releaseRCVersion(branch: string) {
+  async releaseRCVersion(branch: string, workflowRef = 'main') {
     const workflow = await this.octo.actions.createWorkflowDispatch({
       owner: 'opensumi',
       repo: 'core',
       workflow_id: RC_WORKFLOW_FILE,
-      ref: 'main',
+      ref: workflowRef,
       inputs: {
         ref: branch,
       },
@@ -80,7 +80,7 @@ export class OpenSumiOctoService extends GitHubService {
     });
     return workflow;
   }
-  async syncVersion(version?: string) {
+  async syncVersion(version?: string, workflowRef = 'main') {
     const inputs = {} as Record<string, any>;
     if (version) {
       inputs.version = version;
@@ -89,7 +89,7 @@ export class OpenSumiOctoService extends GitHubService {
       owner: 'opensumi',
       repo: 'actions',
       workflow_id: 'sync.yml',
-      ref: 'main',
+      ref: workflowRef,
       inputs,
     });
     return workflow;
