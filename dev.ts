@@ -5,11 +5,12 @@
 import SmeeClient from 'smee-client';
 
 const allRoutes = [
-  'ding-opensumi',
-  'ding-trs',
-  'github-app-opensumi',
-  'github-app-qiuqiu',
-  'webhook-opensumi',
+  // 'ding-opensumi',
+  // 'ding-trs',
+  // 'github-app-opensumi',
+  // 'github-app-qiuqiu',
+  // 'webhook-opensumi',
+  'github-app-opensumi2',
 ];
 
 const allClients = [] as SmeeClient[];

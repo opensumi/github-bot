@@ -10,16 +10,11 @@ import { HonoRequest } from 'hono';
 import { error, json } from '@/api/utils/response';
 
 import { getTemplates, StopHandleError } from './templates';
-import type {
-  MarkdownContent,
-  THasAction,
-  Context,
-  ITemplateResult,
-} from './types';
+import type { MarkdownContent, Context, ITemplateResult } from './types';
 import { sendToDing } from './utils';
 
 export class ValidationError extends Error {
-  constructor(public code: number, message: string) {
+  constructor(public statusCode: number, message: string) {
     super(message);
   }
 }
@@ -29,7 +24,7 @@ export async function validateGithub(
   req: HonoRequest<any, {}>,
   webhooks: Webhooks,
 ) {
-  const headers = req.headers;
+  const headers = req.raw.headers;
 
   if (!headers.get('User-Agent')?.startsWith('GitHub-Hookshot/')) {
     console.warn('User agent: not from GitHub');
@@ -44,12 +39,7 @@ export async function validateGithub(
   const signature = headers.get('x-hub-signature-256') as string;
   const id = headers.get('x-github-delivery') as string;
 
-  let payload: any;
-  try {
-    payload = await req.json();
-  } catch (err) {
-    throw new ValidationError(400, 'Invalid JSON');
-  }
+  const text = await req.text();
 
   if (!signature) {
     throw new ValidationError(
@@ -58,7 +48,7 @@ export async function validateGithub(
     );
   }
 
-  const matchesSignature = await webhooks.verify(payload, signature);
+  const matchesSignature = await webhooks.verify(text, signature);
   if (!matchesSignature) {
     throw new ValidationError(
       401,
@@ -66,9 +56,12 @@ export async function validateGithub(
     );
   }
 
+  const payload = JSON.parse(text);
+
   return {
     id,
     event,
+    text,
     payload,
   };
 }
@@ -145,7 +138,7 @@ export async function webhookHandler(
       event: eventName,
       payload,
     } = await validateGithub(req, webhooks);
-
+    console.log('Receive Github Webhook, id: ', id, ', name: ', eventName);
     try {
       execContext.waitUntil(
         webhooks.receive({
@@ -174,9 +167,10 @@ export async function webhookHandler(
       return error(status, String(err));
     }
   } catch (err) {
-    const errorCode = (err as ValidationError).code ?? 500;
+    const errorCode = (err as ValidationError).statusCode ?? 500;
     const message =
       (err as ValidationError).message ?? 'Unknown error in validation';
+
     return error(errorCode, message);
   }
 }
