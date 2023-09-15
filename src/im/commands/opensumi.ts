@@ -37,7 +37,12 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     const { app } = ctx;
     let text = '';
     try {
-      text = '\n\n' + (await app.opensumiOctoService.getBotLastNCommitsText());
+      text =
+        '\n\n' +
+        (await app.opensumiOctoService.getLastNCommitsText({
+          owner: 'opensumi',
+          repo: 'github-bot',
+        }));
     } catch (error) {
       console.error(
         `getBotLastNCommitsText error: ${(error as Error).message}`,
@@ -69,7 +74,12 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     const { app } = ctx;
     let text = '';
     try {
-      text = '\n\n' + (await app.opensumiOctoService.getBotLastNCommitsText());
+      text =
+        '\n\n' +
+        (await app.opensumiOctoService.getLastNCommitsText({
+          owner: 'opensumi',
+          repo: 'github-bot',
+        }));
     } catch (error) {
       console.error(
         `getBotLastNCommitsText error: ${(error as Error).message}`,
@@ -110,11 +120,18 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     if (ref) {
       try {
         await app.octoService.getRefInfoByRepo(ref, 'opensumi', 'core');
+
+        const text = await app.opensumiOctoService.getLastNCommitsText({
+          owner: 'opensumi',
+          repo: 'core',
+          ref,
+        });
+
         await app.opensumiOctoService.releaseRCVersion(ref, workflowRef);
         await bot.reply(
           markdown(
             'Starts releasing the release candidate',
-            `Starts releasing the [release candidate](https://github.com/opensumi/core/actions/workflows/${RC_WORKFLOW_FILE}) on ${ref}`,
+            `Starts releasing the [release candidate](https://github.com/opensumi/core/actions/workflows/${RC_WORKFLOW_FILE}) on ${ref}\n\n${text}`,
           ),
         );
       } catch (error) {
@@ -153,11 +170,17 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     if (ref) {
       try {
         await app.octoService.getRefInfoByRepo(ref, 'opensumi', 'core');
+        const text = await app.opensumiOctoService.getLastNCommitsText({
+          owner: 'opensumi',
+          repo: 'core',
+          ref,
+        });
+
         await app.opensumiOctoService.releaseRCVersion(ref, workflowRef);
         await bot.reply(
           markdown(
             'Starts releasing the release candidate',
-            `Starts releasing the [release candidate](https://github.com/opensumi/core/actions/workflows/${RC_WORKFLOW_FILE}) on ${ref}`,
+            `Starts releasing the [release candidate](https://github.com/opensumi/core/actions/workflows/${RC_WORKFLOW_FILE}) on ${ref}\n\n${text}`,
           ),
         );
       } catch (error) {
