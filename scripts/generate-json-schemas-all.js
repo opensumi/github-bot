@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
+const prettier = require('prettier');
 const tsj = require('ts-json-schema-generator');
 
 /** @type {import('ts-json-schema-generator/dist/src/Config').Config} */
@@ -8,6 +9,13 @@ const config = {
   path: path.resolve(__dirname, '../src/kv/types.ts'),
   tsconfig: path.resolve(__dirname, '../tsconfig.build.json'),
 };
+
+function usePrettier(schema) {
+  return prettier.format(schema, {
+    parser: 'json',
+    ...prettier.resolveConfig(prettier.resolveConfigFile.sync()),
+  });
+}
 
 const generator = tsj.createGenerator(config);
 
@@ -28,7 +36,7 @@ function createTypeSchema(type, name) {
     `${name}.schema.json`,
   );
   ensureDirSync(output_path);
-  fs.writeFile(output_path, schemaString, (err) => {
+  fs.writeFile(output_path, usePrettier(schemaString), (err) => {
     if (err) throw err;
   });
 }

@@ -1,3 +1,10 @@
+import { EmitterWebhookEventName } from '@octokit/webhooks/dist-types/types';
+
+/**
+ * @format selectize
+ */
+export type WebhookEventName = EmitterWebhookEventName;
+
 export interface IDingWebhookItem {
   /**
    * Webhook url
@@ -11,7 +18,7 @@ export interface IDingWebhookItem {
    * 哪些事件需要推送到这个 webhook，如：`release.released`。
    * 不填写则推送所有事件
    */
-  event?: string[];
+  event?: WebhookEventName[];
   /**
    * 备注。你可以在这个空里备注下这个 webhook 是属于哪个群的。
    * @format textarea
@@ -33,14 +40,16 @@ export interface ISetting {
    */
   contentLimit: number;
   /**
-   * 只推送内置的社区需要的那几个 event，event 列表见：https://github.com/opensumi/github-bot/blob/main/src/github/templates/index.ts#L25
+   * 只推送社区需要的那几个 event： [ 'issues.opened', 'pull_request.opened', 'discussion.created', 'release.released' ]
+   *
+   * 代码见：https://github.com/opensumi/github-bot/blob/main/src/github/templates/index.ts#L25
    * @default false
    */
   isCommunity?: boolean;
   /**
-   * 监听哪些事件
+   * 要将哪些事件发送到钉钉群中。注意：设置了当前字段，isCommunity 就会失效
    */
-  event?: string[];
+  event?: WebhookEventName[];
   /**
    * 通知 workflow 的成功、失败事件
    * 键是仓库的名字，值是某个 workflow 的名字(yml 中配置的 name 字段)
