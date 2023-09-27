@@ -1,4 +1,4 @@
-import { html } from 'hono/html';
+import { html, raw } from 'hono/html';
 
 import { CommonKVManager } from '@/kv/admin';
 import { DingKVManager } from '@/kv/ding';
@@ -120,11 +120,11 @@ export function route(hono: THono) {
     }
 
     return c.html(
-      ConfigurationHTML +
-        html` <script type="module">
+      html`${raw(ConfigurationHTML)}
+        <script type="module">
           import defaultSchema from '${schemaUrl}' assert { type: 'json' };
 
-          window.starting_value = ${JSON.stringify(data ?? {})};
+          window.starting_value = ${raw(JSON.stringify(data ?? {}))};
           window.submit_url =
             '${c.origin}configuration/${id}/${type}?token=${token}';
           window._options = {
