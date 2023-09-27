@@ -99,12 +99,24 @@ export type SettingType =
   | 'ding-setting'
   | 'setting';
 
-export const settingsTypes = [
-  'app-settings',
-  'ding-info',
-  'ding-setting',
-  'setting',
-] as const;
+export const SettingsNameMap = {
+  'app-settings': 'GitHub App 配置',
+  'ding-info': '钉钉群信息配置',
+  'ding-setting': '钉钉机器人配置',
+  setting: 'GitHub Webhooks 配置',
+};
+
+export enum EValidLevel {
+  None = 1,
+  Normal = 1 << 1,
+  Admin = 1 << 2,
+}
+
+export const LevelSettingsMap = {
+  [EValidLevel.None]: [],
+  [EValidLevel.Normal]: ['setting', 'app-settings'],
+  [EValidLevel.Admin]: ['app-settings', 'ding-info', 'ding-setting', 'setting'],
+} as Record<EValidLevel, SettingType[]>;
 
 export interface IAdminInfo {
   token: string;

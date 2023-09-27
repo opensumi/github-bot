@@ -3,9 +3,20 @@ import { html } from 'hono/html';
 import { CommonKVManager } from '@/kv/admin';
 import { DingKVManager } from '@/kv/ding';
 import { GitHubKVManager } from '@/kv/github';
-import { settingsTypes, SettingType } from '@/kv/types';
+import {
+  EValidLevel,
+  LevelSettingsMap,
+  SettingsNameMap,
+  SettingType,
+} from '@/kv/types';
 import UnauthorizedHTML from '@/public/configuration/401.html';
 import ConfigurationHTML from '@/public/configuration/configuration.html';
+
+declare module 'hono' {
+  interface Context {
+    validLevel: EValidLevel;
+  }
+}
 
 export function route(hono: THono) {
   hono.use('/configuration/:id/*', async (c, next) => {
@@ -13,8 +24,9 @@ export function route(hono: THono) {
     const id = c.req.param('id');
 
     const kv = new CommonKVManager();
-    const valid = await kv.isTokenValidFor(token, id);
-    if (valid) {
+    const validLevel = await kv.isTokenValidFor(token, id);
+    if (validLevel > EValidLevel.None) {
+      c.validLevel = validLevel;
       await next();
       return;
     }
@@ -29,14 +41,16 @@ export function route(hono: THono) {
     const params = new URLSearchParams();
     if (token) params.append('token', token);
 
+    const settingsTypes = LevelSettingsMap[c.validLevel];
+
     return c.html(
       html`<!DOCTYPE html>
-        <h1>Hello!</h1>
+        <h1>Please select an item to continue:</h1>
 
         ${settingsTypes.map(
           (v) =>
             html`<a href="/configuration/${id}/${v}?${params.toString()}"
-                >${v}</a
+                >${v}: ${SettingsNameMap[v]}</a
               ><br />`,
         )} `,
     );
@@ -49,6 +63,9 @@ export function route(hono: THono) {
       return c.send.error(404, 'Not Found: id in query');
     }
     const type = c.req.param('type') as SettingType;
+
+    const settingsTypes = LevelSettingsMap[c.validLevel];
+
     if (!settingsTypes.includes(type as SettingType)) {
       return c.send.error(404, 'Not Found: type is not valid');
     }
@@ -77,6 +94,9 @@ export function route(hono: THono) {
     if (!id) {
       return c.text('Not Found: id in query', 404);
     }
+
+    const settingsTypes = LevelSettingsMap[c.validLevel];
+
     const type = c.req.param('type') as SettingType;
     if (!settingsTypes.includes(type as SettingType)) {
       return c.text('Not Found:' + type, 404);
