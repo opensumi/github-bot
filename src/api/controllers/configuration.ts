@@ -32,7 +32,7 @@ export function route(hono: THono) {
     }
 
     console.log('Unauthorized', token, id);
-    return c.html(html`${UnauthorizedHTML}`, 401);
+    return c.html(UnauthorizedHTML, 401);
   });
 
   hono.get('/configuration/:id', async (c) => {
@@ -121,18 +121,18 @@ export function route(hono: THono) {
 
     return c.html(
       ConfigurationHTML +
-        `
-<script type="module">
-  import defaultSchema from '${schemaUrl}' assert { type: 'json' };
+        html` <script type="module">
+          import defaultSchema from '${schemaUrl}' assert { type: 'json' };
 
-  window.starting_value = ${JSON.stringify(data ?? {})};
-  window.submit_url = '${c.origin}configuration/${id}/${type}?token=${token}';
-  window._options = {
-    schema: defaultSchema,
-    startval: window.starting_value,
-  }
-  window.parseData();
-</script>`,
+          window.starting_value = ${JSON.stringify(data ?? {})};
+          window.submit_url =
+            '${c.origin}configuration/${id}/${type}?token=${token}';
+          window._options = {
+            schema: defaultSchema,
+            startval: window.starting_value,
+          };
+          window.parseData();
+        </script>`,
     );
   });
 }
