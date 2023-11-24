@@ -1,7 +1,10 @@
 import { Webhooks } from '@octokit/webhooks';
 
-import { webhookHandler, setupWebhooksTemplate } from '@/github';
-import Configuration from '@/github/configuration';
+import {
+  webhookHandler,
+  setupWebhooksTemplate,
+  validateGithub,
+} from '@/github';
 import { GitHubKVManager } from '@/kv/github';
 
 export function route(hono: THono) {
@@ -20,15 +23,24 @@ export function route(hono: THono) {
       return c.send.error(400, 'please set webhook secret in database');
     }
 
-    Configuration.init(setting);
-
-    const webhooks = new Webhooks<{ octokit: undefined }>({
+    const webhooks = new Webhooks<{
+      octokit: undefined;
+    }>({
       secret: setting.githubSecret,
     });
+
+    const payload = await validateGithub(c.req, webhooks);
 
     setupWebhooksTemplate(webhooks, {
       setting: setting,
     });
-    return webhookHandler(webhooks, c.req, c.executionCtx);
+
+    return webhookHandler(
+      id,
+      'github-webhook',
+      webhooks,
+      c.executionCtx,
+      payload,
+    );
   });
 }

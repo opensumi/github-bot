@@ -1,6 +1,6 @@
 import { Octokit } from '@octokit/core';
 
-import { webhookHandler } from '@/github';
+import { validateGithub, webhookHandler } from '@/github';
 import { initApp } from '@/github/app';
 import { GitHubKVManager } from '@/kv/github';
 
@@ -21,7 +21,15 @@ export function route(hono: THono) {
     }
 
     const app = await initApp(setting);
-    return webhookHandler(app.webhooks, c.req, c.executionCtx);
+    const payload = await validateGithub(c.req, app.webhooks);
+
+    return webhookHandler(
+      id,
+      'github-app',
+      app.webhooks,
+      c.executionCtx,
+      payload,
+    );
   });
 
   hono.get('/github/installation-token/:id', async (c) => {

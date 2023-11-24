@@ -1,5 +1,7 @@
 import { Hono } from 'hono';
 
+import { TQueueMessage } from '../src/queue/types';
+
 export {};
 
 declare module 'hono' {
@@ -38,7 +40,9 @@ declare global {
   }
 
   interface IRuntimeEnv {
-    readonly KV_PROD: IKVNamespace;
+    readonly KV: IKVNamespace;
+    readonly MESSAGE_QUEUE: Queue<TQueueMessage>;
+
     readonly OPENAI_API_KEY?: string;
     readonly TIMEOUT?: string;
     readonly wechaty?: any;

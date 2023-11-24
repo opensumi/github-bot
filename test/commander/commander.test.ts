@@ -3,9 +3,11 @@ import { EdgeKVNamespace } from 'edge-mock';
 import { CommandCenter } from '@/commander';
 import Environment from '@/env';
 import { ISSUE_REGEX } from '@/im/commands/constants';
+import { NodeQueue } from '@/runtime/node/queue';
 
 const testEnv: IRuntimeEnv = {
-  KV_PROD: new EdgeKVNamespace(),
+  KV: new EdgeKVNamespace(),
+  MESSAGE_QUEUE: new NodeQueue(),
 };
 
 describe('command center', () => {

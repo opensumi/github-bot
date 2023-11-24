@@ -9,7 +9,6 @@ import { GitHubService } from '@opensumi/octo-service';
 
 import { CommandContext, issueCc } from './commands';
 import { parseCommandInMarkdownComments } from './commands/parse';
-import Configuration from './configuration';
 import { setupWebhooksTemplate } from './handler';
 import { OpenSumiOctoService } from './service/opensumi';
 import { sendToDing } from './utils';
@@ -25,7 +24,6 @@ export class App {
 
   constructor(setting: AppSetting) {
     const { appSettings, githubSecret } = setting;
-    Configuration.init(setting);
 
     this.octoApp = new OctoApp({
       appId: appSettings.appId,

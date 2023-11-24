@@ -4,10 +4,12 @@ import Environment from '@/env';
 
 import { NodeKV } from './kv';
 import { NodeAnalyticsEngineDataset } from './metrics';
+import { NodeQueue } from './queue';
 
 Environment.from('node', {
   ...process.env,
-  KV_PROD: new NodeKV(),
+  KV: new NodeKV(),
+  MESSAGE_QUEUE: new NodeQueue(),
   metricsDataset: new NodeAnalyticsEngineDataset(),
 });
 

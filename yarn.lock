@@ -5013,6 +5013,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eventemitter3@npm:^5.0.1":
+  version: 5.0.1
+  resolution: "eventemitter3@npm:5.0.1"
+  checksum: 543d6c858ab699303c3c32e0f0f47fc64d360bf73c3daf0ac0b5079710e340d6fe9f15487f94e66c629f5f82cd1a8678d692f3dbb6f6fcd1190e1b97fcad36f8
+  languageName: node
+  linkType: hard
+
 "eventsource-parser@npm:^1.0.0":
   version: 1.0.0
   resolution: "eventsource-parser@npm:1.0.0"
@@ -5711,6 +5718,7 @@ __metadata:
     eslint-config-prettier: ^8.6.0
     eslint-import-resolver-typescript: ^3.5.3
     eslint-plugin-import: ^2.27.5
+    eventemitter3: ^5.0.1
     execa: ^7.2.0
     hono: ^3.6.0
     jest: ^29.4.1

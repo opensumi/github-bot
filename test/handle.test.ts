@@ -17,8 +17,8 @@ describe('handle', () => {
     const result = await app.fetch(
       request,
       {
-        KV_PROD: new EdgeKVNamespace() as any,
-        // MY_QUEUE: {} as any,
+        KV: new EdgeKVNamespace() as any,
+        MESSAGE_QUEUE: {} as any,
       },
       event,
     );
