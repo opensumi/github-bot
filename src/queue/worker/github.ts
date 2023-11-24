@@ -20,7 +20,7 @@ export const githubWorker = async (
   if (setting && setting.githubSecret) {
     const app = await initApp(setting);
 
-    await webhookHandler(botId, type, app.webhooks, ctx, data);
+    await webhookHandler(botId, type, app.webhooks, ctx, data, true);
   } else {
     // todo logger
   }
@@ -42,7 +42,7 @@ export const githubWebhookWorker = async (
       secret: setting.githubSecret,
     });
 
-    await webhookHandler(botId, type, webhooks, ctx, data);
+    await webhookHandler(botId, type, webhooks, ctx, data, true);
   } else {
     // todo logger
   }

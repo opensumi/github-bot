@@ -135,12 +135,18 @@ export async function webhookHandler(
   webhooks: Webhooks<{ octokit?: Octokit }>,
   execContext: ExecutionContext,
   data: IGitHubEvent,
+  forceNoQueue?: boolean,
 ) {
   const { id, event: eventName, payload } = data;
   try {
     console.log('Receive Github Webhook, id: ', id, ', name: ', eventName);
     try {
-      if (Environment.instance().useQueue) {
+      let useQueue = Environment.instance().useQueue;
+      if (forceNoQueue) {
+        useQueue = false;
+      }
+
+      if (useQueue) {
         Environment.instance().Queue.send({
           botId,
           type,

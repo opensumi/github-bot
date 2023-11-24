@@ -21,6 +21,8 @@ export default {
     env: IRuntimeEnv,
     ctx: ExecutionContext,
   ) {
+    Environment.from('cfworker', env);
+
     const messages = batch.messages;
     messages.forEach((message) => {
       consumer.consume(message, env, ctx);
