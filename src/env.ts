@@ -8,8 +8,14 @@ export default class Environment {
 
   static #instance: Environment | null;
 
+  useQueue = false;
+
+  get Queue() {
+    return this.env.MESSAGE_QUEUE;
+  }
+
   get KV() {
-    return this.env.KV_PROD;
+    return this.env.KV;
   }
 
   get metrics() {

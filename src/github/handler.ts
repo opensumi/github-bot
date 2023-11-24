@@ -8,6 +8,7 @@ import { User } from '@octokit/webhooks-types';
 import { HonoRequest } from 'hono';
 
 import { error, json } from '@/api/utils/response';
+import Environment from '@/env';
 
 import { getTemplates, StopHandleError } from './templates';
 import type { MarkdownContent, Context, ITemplateResult } from './types';
@@ -127,6 +128,7 @@ export const setupWebhooksTemplate = (
 };
 
 export async function webhookHandler(
+  botId: string,
   webhooks: Webhooks,
   // eslint-disable-next-line @typescript-eslint/ban-types
   req: HonoRequest<any, {}>,
@@ -140,13 +142,26 @@ export async function webhookHandler(
     } = await validateGithub(req, webhooks);
     console.log('Receive Github Webhook, id: ', id, ', name: ', eventName);
     try {
-      execContext.waitUntil(
-        webhooks.receive({
-          id: id,
-          name: eventName as any,
-          payload: payload,
-        }),
-      );
+      if (Environment.instance().useQueue) {
+        Environment.instance().Queue.send({
+          botId,
+          type: 'github-app',
+          data: {
+            id: id,
+            event: eventName,
+            payload: payload,
+          },
+        });
+      } else {
+        execContext.waitUntil(
+          webhooks.receive({
+            id: id,
+            name: eventName as any,
+            payload: payload,
+          }),
+        );
+      }
+
       return json({
         id: id,
         name: eventName,

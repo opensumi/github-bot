@@ -6,12 +6,12 @@ import { GitHubKVManager } from '@/kv/github';
 
 export function route(hono: THono) {
   hono.post('/github/app/:id', async (c) => {
-    const id = c.req.param('id') ?? c.req.query('id');
-    if (!id) {
+    const botId = c.req.param('id') ?? c.req.query('id');
+    if (!botId) {
       return c.send.error(400, 'need a valid id');
     }
     const githubKVManager = new GitHubKVManager();
-    const setting = await githubKVManager.getAppSettingById(id);
+    const setting = await githubKVManager.getAppSettingById(botId);
 
     if (!setting) {
       return c.send.error(400, 'id not found in database');
@@ -21,7 +21,7 @@ export function route(hono: THono) {
     }
 
     const app = await initApp(setting);
-    return webhookHandler(app.webhooks, c.req, c.executionCtx);
+    return webhookHandler(botId, app.webhooks, c.req, c.executionCtx);
   });
 
   hono.get('/github/installation-token/:id', async (c) => {

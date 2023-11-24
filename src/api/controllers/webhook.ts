@@ -29,6 +29,6 @@ export function route(hono: THono) {
     setupWebhooksTemplate(webhooks, {
       setting: setting,
     });
-    return webhookHandler(webhooks, c.req, c.executionCtx);
+    return webhookHandler(id, webhooks, c.req, c.executionCtx);
   });
 }
