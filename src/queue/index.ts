@@ -1,7 +1,7 @@
 import { EventEmitter } from 'eventemitter3';
 
 import { TQueueMessage } from './types';
-import { githubWorker } from './worker/github';
+import { githubWorker, githubWebhookWorker } from './worker/github';
 
 export type IConsumeWorker<T> = (
   message: Message<T>,
@@ -32,3 +32,4 @@ export class QueueConsumer {
 
 export const consumer = new QueueConsumer();
 consumer.addWorker('github-app', githubWorker);
+consumer.addWorker('github-webhook', githubWebhookWorker);

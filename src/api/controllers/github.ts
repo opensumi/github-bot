@@ -1,17 +1,17 @@
 import { Octokit } from '@octokit/core';
 
-import { webhookHandler } from '@/github';
+import { validateGithub, webhookHandler } from '@/github';
 import { initApp } from '@/github/app';
 import { GitHubKVManager } from '@/kv/github';
 
 export function route(hono: THono) {
   hono.post('/github/app/:id', async (c) => {
-    const botId = c.req.param('id') ?? c.req.query('id');
-    if (!botId) {
+    const id = c.req.param('id') ?? c.req.query('id');
+    if (!id) {
       return c.send.error(400, 'need a valid id');
     }
     const githubKVManager = new GitHubKVManager();
-    const setting = await githubKVManager.getAppSettingById(botId);
+    const setting = await githubKVManager.getAppSettingById(id);
 
     if (!setting) {
       return c.send.error(400, 'id not found in database');
@@ -21,7 +21,15 @@ export function route(hono: THono) {
     }
 
     const app = await initApp(setting);
-    return webhookHandler(botId, app.webhooks, c.req, c.executionCtx);
+    const payload = await validateGithub(c.req, app.webhooks);
+
+    return webhookHandler(
+      id,
+      'github-app',
+      app.webhooks,
+      c.executionCtx,
+      payload,
+    );
   });
 
   hono.get('/github/installation-token/:id', async (c) => {

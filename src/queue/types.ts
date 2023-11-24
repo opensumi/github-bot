@@ -1,16 +1,14 @@
+import { IGitHubEvent } from '@/github';
+
 export interface IGitHubEventQueueMessage {
   /**
    * current bot id
    */
   botId: string;
 
-  type: 'github-app';
+  type: 'github-app' | 'github-webhook';
 
-  data: {
-    id: string;
-    event: string;
-    payload: any;
-  };
+  data: IGitHubEvent;
 }
 
 export interface IWechatyQueueMessage {
@@ -20,7 +18,6 @@ export interface IWechatyQueueMessage {
   botId: string;
 
   type: 'wechaty';
-
   data: any;
 }
 
