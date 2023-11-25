@@ -31,11 +31,11 @@ kv_namespaces = [{ binding = "KV", id = "{{KV_PROD_ID}}" }]
 [[analytics_engine_datasets]]
 binding = "metricsDataset"
 
-[[queues.producers]]
+[[env.prod.queues.producers]]
 queue = "{{QUEUE_NAME_PROD}}"
 binding = "MESSAGE_QUEUE"
 
-[[queues.consumers]]
+[[env.prod.queues.consumers]]
 queue = "{{QUEUE_NAME_PROD}}"
 max_batch_size = 10
 max_batch_timeout = 1
