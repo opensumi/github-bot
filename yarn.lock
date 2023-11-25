@@ -5732,6 +5732,7 @@ __metadata:
     mdast-util-to-markdown: ^1.5.0
     micromark-extension-gfm: ^2.0.1
     micromark-extension-gfm-autolink-literal: ^1.0.3
+    mnemonist: ^0.39.5
     mri: ^1.2.0
     nodemon: ^2.0.20
     npm-run-all: ^4.1.5
@@ -8779,6 +8780,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mnemonist@npm:^0.39.5":
+  version: 0.39.5
+  resolution: "mnemonist@npm:0.39.5"
+  dependencies:
+    obliterator: ^2.0.1
+  checksum: 6669d687a434226924b2c84ee6eb7ce7d0f83dfc5caad8bcc164c73c0c11fb6d43cbe32636e710f068046f4b40a56c3032532554e93e02640aafc6ca3dd222e6
+  languageName: node
+  linkType: hard
+
 "modify-values@npm:^1.0.1":
   version: 1.0.1
   resolution: "modify-values@npm:1.0.1"
@@ -9416,6 +9426,13 @@ __metadata:
     define-properties: ^1.1.4
     es-abstract: ^1.20.4
   checksum: f6fff9fd817c24cfd8107f50fb33061d81cd11bacc4e3dbb3852e9ff7692fde4dbce823d4333ea27cd9637ef1b6690df5fbb61f1ed314fa2959598dc3ae23d8e
+  languageName: node
+  linkType: hard
+
+"obliterator@npm:^2.0.1":
+  version: 2.0.4
+  resolution: "obliterator@npm:2.0.4"
+  checksum: f28ad35b6d812089315f375dc3e6e5f9bebf958ebe4b10ccd471c7115cbcf595e74bdac4783ae758e5b1f47e3096427fdb37cfa7bed566b132df92ff317b9a7c
   languageName: node
   linkType: hard
 

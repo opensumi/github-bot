@@ -1,49 +1,77 @@
-import { Webhooks } from '@octokit/webhooks';
+import { EmitterWebhookEventName } from '@octokit/webhooks';
+import chain from 'lodash/chain';
+import MultiMap from 'mnemonist/multi-map';
 
 import { initApp } from '@/github/app';
-import { webhookHandler } from '@/github/handler';
+import { setupWebhooksTemplate } from '@/github/handler';
+import { MarkdownContent } from '@/github/types';
+import { sendToDing } from '@/github/utils';
 import { GitHubKVManager } from '@/kv/github';
 
 import { IGitHubEventQueueMessage } from '../types';
 
-export const githubWorker = async (
-  message: Message<IGitHubEventQueueMessage>,
-  env: IRuntimeEnv,
-  ctx: ExecutionContext,
-) => {
-  const { body } = message;
-  const { botId, type, data } = body;
+import { BaseWorker } from '.';
 
-  const githubKVManager = new GitHubKVManager();
-  const setting = await githubKVManager.getAppSettingById(botId);
+export class GitHubAppWorker extends BaseWorker<IGitHubEventQueueMessage> {
+  async run() {
+    await Promise.allSettled(
+      chain(this.queue)
+        .groupBy((v) => v.body.botId)
+        .map(async (messages, botId) => {
+          const githubKVManager = new GitHubKVManager();
+          const setting = await githubKVManager.getAppSettingById(botId);
 
-  if (setting && setting.githubSecret) {
-    const app = await initApp(setting);
+          if (setting && setting.githubSecret) {
+            const app = await initApp(setting);
 
-    await webhookHandler(botId, type, app.webhooks, ctx, data, true);
-  } else {
-    // todo logger
+            const results = new MultiMap<string, MarkdownContent>();
+
+            setupWebhooksTemplate(
+              app.webhooks,
+              { setting },
+              async ({ markdown, eventName }) => {
+                results.set(eventName, markdown);
+              },
+            );
+
+            await Promise.allSettled(
+              chain(messages)
+                .groupBy((v) => v.body.data.event)
+                .map(async (messages, eventName: EmitterWebhookEventName) => {
+                  await Promise.all(
+                    messages.map(async (message) => {
+                      try {
+                        const { data } = message.body;
+                        await app.webhooks.receive({
+                          id: data.id,
+                          name: data.event as any,
+                          payload: data.payload,
+                        });
+                        message.ack();
+                      } catch (error) {
+                        console.error('github app worker error', error);
+                        message.retry();
+                      }
+                    }),
+                  );
+
+                  const markdowns = results.get(eventName);
+                  if (markdowns && markdowns.length > 0) {
+                    // 只有特定内容的 content 要被合并起来
+                    await Promise.allSettled(
+                      markdowns.map((markdown) =>
+                        sendToDing(markdown, eventName, setting),
+                      ),
+                    );
+                  }
+                })
+                .value(),
+            );
+          } else {
+            console.error('github app worker error: setting not found', botId);
+          }
+        })
+        .value(),
+    );
   }
-};
-
-export const githubWebhookWorker = async (
-  message: Message<IGitHubEventQueueMessage>,
-  env: IRuntimeEnv,
-  ctx: ExecutionContext,
-) => {
-  const { body } = message;
-  const { botId, type, data } = body;
-
-  const githubKVManager = new GitHubKVManager();
-  const setting = await githubKVManager.getSettingById(botId);
-
-  if (setting && setting.githubSecret) {
-    const webhooks = new Webhooks<{ octokit: undefined }>({
-      secret: setting.githubSecret,
-    });
-
-    await webhookHandler(botId, type, webhooks, ctx, data, true);
-  } else {
-    // todo logger
-  }
-};
+}

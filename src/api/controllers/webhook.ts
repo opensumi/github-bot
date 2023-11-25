@@ -5,6 +5,7 @@ import {
   setupWebhooksTemplate,
   validateGithub,
 } from '@/github';
+import { sendToDing } from '@/github/utils';
 import { GitHubKVManager } from '@/kv/github';
 
 export function route(hono: THono) {
@@ -31,9 +32,15 @@ export function route(hono: THono) {
 
     const payload = await validateGithub(c.req, webhooks);
 
-    setupWebhooksTemplate(webhooks, {
-      setting: setting,
-    });
+    setupWebhooksTemplate(
+      webhooks,
+      {
+        setting: setting,
+      },
+      async ({ markdown, eventName }) => {
+        await sendToDing(markdown, eventName, setting);
+      },
+    );
 
     return webhookHandler(
       id,
