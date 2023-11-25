@@ -36,7 +36,13 @@ export class App {
     this.ctx = {
       setting,
     };
-    setupWebhooksTemplate(this.octoApp.webhooks, this.ctx);
+    setupWebhooksTemplate(
+      this.octoApp.webhooks,
+      this.ctx,
+      async ({ markdown, eventName }) => {
+        await sendToDing(markdown, eventName, this.ctx.setting);
+      },
+    );
     this.octoService = new GitHubService();
     this.opensumiOctoService = new OpenSumiOctoService();
     this.octoApp.webhooks.on('star.created', async ({ payload }) => {

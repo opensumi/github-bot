@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 
 import { ignition } from '@/api';
 import Environment from '@/env';
-import { consumer } from '@/queue';
+import { createConsumer } from '@/queue';
 import { TQueueMessage } from '@/queue/types';
 import { RequiredField } from '@/types';
 
@@ -23,9 +23,19 @@ export default {
   ) {
     Environment.from('cfworker', env);
 
-    const messages = batch.messages;
-    messages.forEach((message) => {
-      consumer.consume(message, env, ctx);
-    });
+    const consumer = createConsumer(env, ctx);
+
+    batch.messages.forEach((v) => consumer.consume(v));
+
+    ctx.waitUntil(
+      consumer
+        .runAndWait()
+        .then(() => {
+          console.log('queue done');
+        })
+        .catch((err) => {
+          console.log('queue error', err);
+        }),
+    );
   },
 } as RequiredField<ExportedHandler<IRuntimeEnv>, 'fetch' | 'queue'>;

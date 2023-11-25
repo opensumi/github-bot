@@ -22,7 +22,7 @@ export class ValidationError extends Error {
 
 export interface IGitHubEvent {
   id: string;
-  event: string;
+  event: EmitterWebhookEventName;
   text: string;
   payload: any;
 }
@@ -79,16 +79,13 @@ const blockedUser = new Set(['renovate[bot]']);
 export const setupWebhooksTemplate = (
   webhooks: Webhooks<{ octokit?: Octokit }>,
   context: Context,
+  done: (data: {
+    markdown: MarkdownContent;
+    eventName: EmitterWebhookEventName;
+  }) => Promise<void>,
 ) => {
   const templates = getTemplates(context);
   const supportTemplates = Object.keys(templates) as EmitterWebhookEventName[];
-
-  // webhooks.onAny(async ({ id, name, payload }) => {
-  //   console.log('Receive Github Webhook, id: ', id, ', name: ', name);
-  //   if ((payload as THasAction)?.action) {
-  //     console.log('payload.action: ', (payload as THasAction).action);
-  //   }
-  // });
 
   for (const eventName of supportTemplates) {
     webhooks.on(eventName, async ({ id, payload, octokit }) => {
@@ -112,13 +109,14 @@ export const setupWebhooksTemplate = (
       try {
         console.log('run handler:', handler?.name);
 
-        const data = await handler(payload, {
+        const markdown = await handler(payload, {
           ...context,
           octokit,
         });
-        console.log('get data from handler: ', data);
 
-        await sendToDing(data, eventName, context.setting);
+        console.log('get data from handler: ', markdown);
+
+        await done({ markdown, eventName });
       } catch (err) {
         console.log('stop handler because: ', err);
         if (!(err instanceof StopHandleError)) {
