@@ -1,7 +1,7 @@
 let content: any | undefined;
-jest.mock('@/im/utils', () => {
+jest.mock('@opensumi/dingtalk-bot/lib/utils', () => {
   // Require the original module to not be mocked...
-  const originalModule = jest.requireActual('@/im/utils');
+  const originalModule = jest.requireActual('@opensumi/dingtalk-bot/lib/utils');
 
   return {
     __esModule: true, // Use it when dealing with esModules
@@ -14,6 +14,7 @@ jest.mock('@/im/utils', () => {
     },
   };
 });
+
 import { sendContentToDing } from '@/github/utils';
 
 describe('can send content to dingtalk', () => {

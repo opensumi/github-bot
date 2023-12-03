@@ -10,7 +10,7 @@ import {
   parseGitHubUrl,
   standardizeMarkdown,
 } from '@/github/utils';
-import * as DingUtils from '@/im/utils';
+import * as DingUtils from '@opensumi/dingtalk-bot/lib/utils';
 
 describe('github utils', () => {
   it('can limit lines', () => {

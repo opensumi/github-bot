@@ -90,16 +90,29 @@ describe('command center', () => {
 
     cc.on('hello', async (ctx) => {
       console.log(`🚀 ~ file: commander.test.ts:53 ~ cc.on ~ ctx:`, ctx);
-      ctx.token.onCancellationRequested(() => {
-        tokenOnCancellationRequested();
-      });
-      await sleep(4 * 1000);
-      fn();
+      await Promise.race([
+        (async () => {
+          await sleep(5 * 1000);
+          fn();
+        })(),
+        new Promise<void>((resolve) => {
+          ctx.token.onCancellationRequested(() => {
+            tokenOnCancellationRequested();
+            resolve();
+          });
+        }),
+      ]);
     });
     try {
-      await cc.tryHandle('/hello', {
-        name: 'opensumi',
-      });
+      await cc.tryHandle(
+        '/hello',
+        {
+          name: 'opensumi',
+        },
+        {
+          timeout: 3 * 1000,
+        },
+      );
     } catch (error) {
       expect((error as any).message).toBe('Canceled');
     }
