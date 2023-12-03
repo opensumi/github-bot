@@ -4,6 +4,7 @@ import { HandlerFunction } from '@octokit/webhooks/dist-types/types';
 
 import { PrivilegeEvent } from '@/constants';
 import { VERSION_SYNC_KEYWORD } from '@/constants/opensumi';
+import Environment from '@/env';
 import { AppSetting } from '@/kv/types';
 import { GitHubService } from '@opensumi/octo-service';
 
@@ -98,13 +99,19 @@ export class App {
   >[0]) => {
     const { comment } = payload;
 
-    await issueCc.tryHandle(comment.body, {
-      app: this,
-      id,
-      name,
-      payload,
-      octokit,
-    } as unknown as CommandContext);
+    await issueCc.tryHandle(
+      comment.body,
+      {
+        app: this,
+        id,
+        name,
+        payload,
+        octokit,
+      } as unknown as CommandContext,
+      {
+        timeout: Environment.instance().timeout,
+      },
+    );
 
     // 开始处理第一行注释中隐含的命令 <!-- versionInfo: RC | 2.20.5-rc-1665562305.0 -->
     const commands = parseCommandInMarkdownComments(comment.body);

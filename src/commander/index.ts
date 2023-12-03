@@ -3,8 +3,6 @@ import { createCancelablePromise } from '@opensumi/ide-utils/lib/async';
 import { isPromiseCanceledError } from '@opensumi/ide-utils/lib/errors';
 import mri from 'mri';
 
-import Environment from '@/env';
-
 import { Registry } from './registry';
 import { equalFunc, regex, startsWith } from './rules';
 import type {
@@ -54,6 +52,7 @@ type THandler<C> = TRegexHandler<C> | TTextHandler<C> | TFallbackHandler<C>;
 export interface ICommandCenterOptions<C> {
   prefix?: string[];
   replyText?: (c: C) => (text: string) => Promise<void>;
+  timeout?: number;
 }
 
 export class CommandCenter<C extends Record<string, any>> {
@@ -165,7 +164,11 @@ export class CommandCenter<C extends Record<string, any>> {
     await this.options?.replyText?.(c)(text);
   }
 
-  async tryHandle(str: string, payload: C) {
+  async tryHandle(
+    str: string,
+    payload: C,
+    options?: { timeout?: number | null },
+  ) {
     // remove redundant \r\n
     str = str.trim();
     const result = await this.resolve(str);
@@ -181,8 +184,8 @@ export class CommandCenter<C extends Record<string, any>> {
         return result.handler(c);
       });
 
-      let timeoutToClear: number | NodeJS.Timeout;
-      const timeoutNumber = Environment.instance().timeout;
+      let timeoutToClear: ReturnType<typeof setTimeout> | undefined;
+      const timeoutNumber = options?.timeout ?? this.options.timeout;
       if (typeof timeoutNumber === 'number') {
         console.log('command center timeout:', timeoutNumber);
         timeoutToClear = setTimeout(() => {

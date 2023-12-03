@@ -1,6 +1,7 @@
 import { Context } from 'hono';
 
 import { ConversationKVManager } from '@/ai/conversation/kvManager';
+import Environment from '@/env';
 import { initApp, App } from '@/github/app';
 import { doSign, send } from '@/im/utils';
 import { DingKVManager } from '@/kv/ding';
@@ -108,14 +109,20 @@ export class DingBotAdapter implements IBotAdapter {
       const parsed = cc.parseCliArgs(text);
       console.log(`DingBot ~ handle ~ parsed`, JSON.stringify(parsed));
 
-      await cc.tryHandle(parsed.arg0, {
-        bot: this,
-        ctx: {
-          message: msg,
-          parsed,
-          app,
+      await cc.tryHandle(
+        parsed.arg0,
+        {
+          bot: this,
+          ctx: {
+            message: msg,
+            parsed,
+            app,
+          },
         },
-      });
+        {
+          timeout: Environment.instance().timeout,
+        },
+      );
     }
   }
 
