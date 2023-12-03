@@ -35,7 +35,8 @@
     "test:cov": "yarn test --coverage",
     "extract-fixtures": "tsx scripts/extract-webhook-example.ts",
     "generate:json-schemas": "node scripts/generate-json-schemas-all.js",
-    "postinstall": "yarn build:libs"
+    "postinstall": "yarn build:libs",
+    "clean": "rm -rf libs/*/lib"
   },
   "wireit": {
     "build:libs": {
