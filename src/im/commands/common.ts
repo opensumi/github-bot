@@ -1,6 +1,6 @@
-import { startsWith } from '@/commander';
 import { IDingInfo } from '@/kv/types';
 import { StringBuilder } from '@/utils';
+import { startsWith } from '@opensumi/bot-commander';
 
 import { code } from '../message';
 

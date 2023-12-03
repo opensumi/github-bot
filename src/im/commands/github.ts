@@ -1,7 +1,7 @@
-import { startsWith } from '@/commander';
 import { App } from '@/github/app';
 import { render } from '@/github/render';
 import { contentToMarkdown, parseGitHubUrl } from '@/github/utils';
+import { startsWith } from '@opensumi/bot-commander';
 
 import { code, markdown } from '../message';
 import { IBotAdapter } from '../types';

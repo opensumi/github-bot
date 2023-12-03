@@ -1,7 +1,7 @@
 import { Octokit } from '@octokit/rest';
 
-import { CommandCenter } from '@/commander';
 import { ExtractPayload } from '@/github/types';
+import { CommandCenter } from '@opensumi/bot-commander';
 
 import type { App } from '../app';
 

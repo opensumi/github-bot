@@ -1,5 +1,5 @@
-import { equalFunc } from '@/commander';
 import { RC_WORKFLOW_FILE } from '@/constants/opensumi';
+import { equalFunc } from '@opensumi/bot-commander';
 
 import { markdown } from '../message';
 import { IBotAdapter } from '../types';

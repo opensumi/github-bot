@@ -1,4 +1,4 @@
-import { CommandCenter } from '@/commander';
+import { CommandCenter } from '@opensumi/bot-commander';
 
 import { registerPullRequestCommand } from './pullRequests';
 import { GitHubCommandCenter } from './types';

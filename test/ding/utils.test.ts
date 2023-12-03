@@ -1,4 +1,4 @@
-import { CommandCenter } from '@/commander';
+import { CommandCenter } from '@opensumi/bot-commander';
 
 const cc = new CommandCenter();
 

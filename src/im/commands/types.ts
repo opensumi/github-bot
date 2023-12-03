@@ -1,5 +1,5 @@
-import { CommandCenter, IArgv } from '@/commander';
 import { App } from '@/github/app';
+import { CommandCenter, IArgv } from '@opensumi/bot-commander';
 
 import { IBotAdapter, Message } from '../types';
 

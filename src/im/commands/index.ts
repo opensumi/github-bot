@@ -1,6 +1,6 @@
 export * from './types';
 
-import { CommandCenter } from '@/commander';
+import { CommandCenter } from '@opensumi/bot-commander';
 
 import { registerCommonCommand } from './common';
 import { registerGitHubCommand } from './github';

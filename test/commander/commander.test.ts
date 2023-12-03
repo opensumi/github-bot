@@ -1,9 +1,9 @@
 import { EdgeKVNamespace } from 'edge-mock';
 
-import { CommandCenter } from '@/commander';
 import Environment from '@/env';
 import { ISSUE_REGEX } from '@/im/commands/constants';
 import { NodeQueue } from '@/runtime/node/queue';
+import { CommandCenter } from '@opensumi/bot-commander';
 
 const testEnv: IRuntimeEnv = {
   KV: new EdgeKVNamespace(),
