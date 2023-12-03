@@ -1,8 +1,8 @@
 import { App } from '@/github/app';
 import { CommandCenter, IArgv } from '@opensumi/bot-commander';
+import { Message } from '@opensumi/dingtalk-bot/lib/types';
 
-import { IBotAdapter, Message } from '../types';
-
+import { IBotAdapter } from '../types';
 export interface Context<T = any> {
   message: Message;
   /**

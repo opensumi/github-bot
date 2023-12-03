@@ -12,8 +12,8 @@ import { toMarkdown } from 'mdast-util-to-markdown';
 import { gfm } from 'micromark-extension-gfm';
 
 import { markdown } from '@/im/message';
-import { send } from '@/im/utils';
 import { ISetting } from '@/kv/types';
+import { send } from '@opensumi/dingtalk-bot/lib/utils';
 
 import { MarkdownContent } from './types';
 

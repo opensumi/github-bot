@@ -1,7 +1,7 @@
 import { ChatMessage } from 'chatgpt';
 
-import { Message } from '@/im/types';
 import { KVManager, DingConversation } from '@/kv';
+import { Message } from '@opensumi/dingtalk-bot/lib/types';
 
 import { IConversationSetting } from './types';
 

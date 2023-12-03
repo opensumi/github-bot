@@ -23,7 +23,8 @@
     "./test/**/*.ts",
     "./scripts/**/*.ts",
     "./typings/**/*.d.ts",
-    "libs/octo-service/src/types.ts"
+    "libs/octo-service/src/types.ts",
+    "libs/dingtalk-bot/src/utils.ts"
   ],
   "exclude": ["node_modules"]
 }

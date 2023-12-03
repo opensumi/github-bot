@@ -2150,6 +2150,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@opensumi/dingtalk-bot@workspace:^, @opensumi/dingtalk-bot@workspace:libs/dingtalk-bot":
+  version: 0.0.0-use.local
+  resolution: "@opensumi/dingtalk-bot@workspace:libs/dingtalk-bot"
+  dependencies:
+    "@opensumi/ide-utils": ^2.23.1
+    "@opensumi/workers-utils": "workspace:^"
+    dotenv: ^16.3.1
+    magic-string: ^0.30.3
+    mri: ^1.2.0
+  languageName: unknown
+  linkType: soft
+
 "@opensumi/ide-utils@npm:^2.23.1":
   version: 2.26.2
   resolution: "@opensumi/ide-utils@npm:2.26.2"
@@ -2177,6 +2189,17 @@ __metadata:
 "@opensumi/workers-kv@workspace:^, @opensumi/workers-kv@workspace:libs/workers-kv":
   version: 0.0.0-use.local
   resolution: "@opensumi/workers-kv@workspace:libs/workers-kv"
+  dependencies:
+    "@opensumi/ide-utils": ^2.23.1
+    dotenv: ^16.3.1
+    magic-string: ^0.30.3
+    mri: ^1.2.0
+  languageName: unknown
+  linkType: soft
+
+"@opensumi/workers-utils@workspace:^, @opensumi/workers-utils@workspace:libs/workers-utils":
+  version: 0.0.0-use.local
+  resolution: "@opensumi/workers-utils@workspace:libs/workers-utils"
   dependencies:
     "@opensumi/ide-utils": ^2.23.1
     dotenv: ^16.3.1
@@ -5724,9 +5747,11 @@ __metadata:
     "@octokit/webhooks-examples": ^7.3.0
     "@opensumi/bot-commander": "workspace:^"
     "@opensumi/cfworker-builder": "workspace:^"
+    "@opensumi/dingtalk-bot": "workspace:^"
     "@opensumi/ide-utils": ^2.23.1
     "@opensumi/octo-service": "workspace:^"
     "@opensumi/workers-kv": "workspace:^"
+    "@opensumi/workers-utils": "workspace:^"
     "@types/jest": ^29.4.0
     "@types/lodash": ^4.14.191
     "@types/node": ^18.11.18

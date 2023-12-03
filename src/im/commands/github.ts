@@ -2,8 +2,9 @@ import { App } from '@/github/app';
 import { render } from '@/github/render';
 import { contentToMarkdown, parseGitHubUrl } from '@/github/utils';
 import { startsWith } from '@opensumi/bot-commander';
+import { code } from '@opensumi/dingtalk-bot/lib/types';
 
-import { code, markdown } from '../message';
+import { markdown } from '../message';
 import { IBotAdapter } from '../types';
 
 import { ISSUE_REGEX, REPO_REGEX } from './constants';

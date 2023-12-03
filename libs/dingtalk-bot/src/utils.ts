@@ -1,4 +1,4 @@
-import { sign } from '@/runtime/cfworker/crypto';
+import { sign } from '@opensumi/workers-utils/lib/crypto';
 
 export async function doSign(secret: string, content: string): Promise<string> {
   const mac = await sign(secret, content);

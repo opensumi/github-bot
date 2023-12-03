@@ -1,2 +1,2 @@
 export * from './types';
-export * from './utils';
+export * from '../../libs/dingtalk-bot/src/utils';
