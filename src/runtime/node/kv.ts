@@ -1,6 +1,5 @@
-import { WorkersKV } from '@/runtime/node/workers-kv';
-
-import { workersKvDebug } from './workers-kv/utils';
+import { WorkersKV } from '@opensumi/workers-kv';
+import { workersKvDebug } from '@opensumi/workers-kv/lib/utils';
 
 const cfAccountId = process.env.CLOUDFLARE_ACCOUNT_ID!;
 const cfAuthToken = process.env.CLOUDFLARE_AUTH_TOKEN!;

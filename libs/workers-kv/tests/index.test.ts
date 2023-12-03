@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { WorkersKV } from '@/runtime/node/workers-kv';
+import { WorkersKV } from '../src';
 
 const cfAccountId = process.env.CLOUDFLARE_ACCOUNT_ID!;
 console.log(`🚀 ~ file: workers-kv.test.ts:4 ~ cfAccountId:`, cfAccountId);

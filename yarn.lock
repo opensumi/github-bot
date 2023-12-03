@@ -2174,6 +2174,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@opensumi/workers-kv@workspace:^, @opensumi/workers-kv@workspace:libs/workers-kv":
+  version: 0.0.0-use.local
+  resolution: "@opensumi/workers-kv@workspace:libs/workers-kv"
+  dependencies:
+    "@opensumi/ide-utils": ^2.23.1
+    dotenv: ^16.3.1
+    magic-string: ^0.30.3
+    mri: ^1.2.0
+  languageName: unknown
+  linkType: soft
+
 "@parcel/watcher@npm:2.0.4":
   version: 2.0.4
   resolution: "@parcel/watcher@npm:2.0.4"
@@ -5715,6 +5726,7 @@ __metadata:
     "@opensumi/cfworker-builder": "workspace:^"
     "@opensumi/ide-utils": ^2.23.1
     "@opensumi/octo-service": "workspace:^"
+    "@opensumi/workers-kv": "workspace:^"
     "@types/jest": ^29.4.0
     "@types/lodash": ^4.14.191
     "@types/node": ^18.11.18

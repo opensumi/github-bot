@@ -71,6 +71,7 @@
     "@opensumi/cfworker-builder": "workspace:^",
     "@opensumi/ide-utils": "^2.23.1",
     "@opensumi/octo-service": "workspace:^",
+    "@opensumi/workers-kv": "workspace:^",
     "chatgpt": "^5.0.9",
     "eventemitter3": "^5.0.1",
     "hono": "^3.6.0",
