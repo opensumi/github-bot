@@ -75,6 +75,7 @@
     "@opensumi/workers-kv": "workspace:^",
     "@opensumi/workers-utils": "workspace:^",
     "chatgpt": "^5.0.9",
+    "dayjs": "^1.11.10",
     "eventemitter3": "^5.0.1",
     "hono": "^3.6.0",
     "lodash": "^4.17.21",

@@ -1,5 +1,5 @@
 import { IDingInfo } from '@/kv/types';
-import { StringBuilder } from '@/utils';
+import { StringBuilder } from '@/utils/string-builder';
 import { startsWith } from '@opensumi/bot-commander';
 import { code } from '@opensumi/dingtalk-bot/lib/types';
 

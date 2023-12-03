@@ -1,7 +1,5 @@
 import { StatusCode } from 'hono/utils/http-status';
 
-import { proxyThisUrl } from '@/utils';
-
 import * as GitHub from './github';
 
 export const enhanceContext = (hono: THono) => {
@@ -30,7 +28,7 @@ export const enhanceContext = (hono: THono) => {
     } as ISend;
 
     c.getProxiedUrl = (url: string) => {
-      return proxyThisUrl(origin, url);
+      return `${origin}/proxy/${encodeURIComponent(url)}`;
     };
 
     await next();

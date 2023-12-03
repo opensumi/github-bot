@@ -1,6 +1,6 @@
 import { Octokit } from '@octokit/rest';
 
-import { StringBuilder } from '@/utils';
+import { StringBuilder } from '@/utils/string-builder';
 
 import { Context, ExtractPayload, MarkdownContent } from '../types';
 

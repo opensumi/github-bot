@@ -2186,6 +2186,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@opensumi/onebot@workspace:libs/onebot":
+  version: 0.0.0-use.local
+  resolution: "@opensumi/onebot@workspace:libs/onebot"
+  dependencies:
+    "@opensumi/ide-utils": ^2.23.1
+    "@opensumi/workers-utils": "workspace:^"
+    dotenv: ^16.3.1
+    magic-string: ^0.30.3
+    mri: ^1.2.0
+  languageName: unknown
+  linkType: soft
+
 "@opensumi/workers-kv@workspace:^, @opensumi/workers-kv@workspace:libs/workers-kv":
   version: 0.0.0-use.local
   resolution: "@opensumi/workers-kv@workspace:libs/workers-kv"
@@ -4074,6 +4086,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dayjs@npm:^1.11.10":
+  version: 1.11.10
+  resolution: "dayjs@npm:1.11.10"
+  checksum: a6b5a3813b8884f5cd557e2e6b7fa569f4c5d0c97aca9558e38534af4f2d60daafd3ff8c2000fed3435cfcec9e805bcebd99f90130c6d1c5ef524084ced588c4
+  languageName: node
+  linkType: hard
+
 "dayjs@npm:^1.11.9":
   version: 1.11.9
   resolution: "dayjs@npm:1.11.9"
@@ -5760,6 +5779,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.49.0
     "@typescript-eslint/parser": ^5.49.0
     chatgpt: ^5.0.9
+    dayjs: ^1.11.10
     dotenv: ^16.3.1
     edge-mock: ^0.0.15
     esbuild: ^0.17.5

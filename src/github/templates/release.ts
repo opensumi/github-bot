@@ -1,4 +1,4 @@
-import { StringBuilder } from '@/utils';
+import { StringBuilder } from '@/utils/string-builder';
 
 import { Context, ExtractPayload } from '../types';
 import { replaceGitHubUrlToMarkdown } from '../utils';

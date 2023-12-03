@@ -3,7 +3,7 @@ import {
   renderPrOrIssueTitleLink,
   renderPrRefInfo,
 } from '@/github/templates/utils';
-import { StringBuilder } from '@/utils';
+import { StringBuilder } from '@/utils/string-builder';
 
 import { IIssueDetail, IPrDetail } from '../../../libs/octo-service/src/types';
 

@@ -2,7 +2,7 @@ import { Octokit } from '@octokit/rest';
 import { Repository, User } from '@octokit/webhooks-types';
 
 import { ExtractPayload, Context } from '@/github/types';
-import { StringBuilder } from '@/utils';
+import { StringBuilder } from '@/utils/string-builder';
 
 import { textTpl, titleTpl } from './utils';
 

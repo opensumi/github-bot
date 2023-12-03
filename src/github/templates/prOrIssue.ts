@@ -1,6 +1,6 @@
 import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 
-import { StringBuilder } from '@/utils';
+import { StringBuilder } from '@/utils/string-builder';
 
 import { ExtractPayload, THasChanges, Context } from '../types';
 

@@ -1,7 +1,7 @@
 import { Repository } from '@octokit/webhooks-types';
 import capitalize from 'lodash/capitalize';
 
-import { StringBuilder } from '@/utils';
+import { StringBuilder } from '@/utils/string-builder';
 
 import { Context } from '../types';
 import { replaceGitHubText } from '../utils';
