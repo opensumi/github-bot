@@ -2132,8 +2132,6 @@ __metadata:
   resolution: "@opensumi/bot-commander@workspace:libs/bot-commander"
   dependencies:
     "@opensumi/ide-utils": ^2.23.1
-    dotenv: ^16.3.1
-    magic-string: ^0.30.3
     mri: ^1.2.0
   languageName: unknown
   linkType: soft
@@ -2154,11 +2152,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@opensumi/dingtalk-bot@workspace:libs/dingtalk-bot"
   dependencies:
-    "@opensumi/ide-utils": ^2.23.1
     "@opensumi/workers-utils": "workspace:^"
-    dotenv: ^16.3.1
-    magic-string: ^0.30.3
-    mri: ^1.2.0
   languageName: unknown
   linkType: soft
 
@@ -2189,12 +2183,6 @@ __metadata:
 "@opensumi/onebot@workspace:libs/onebot":
   version: 0.0.0-use.local
   resolution: "@opensumi/onebot@workspace:libs/onebot"
-  dependencies:
-    "@opensumi/ide-utils": ^2.23.1
-    "@opensumi/workers-utils": "workspace:^"
-    dotenv: ^16.3.1
-    magic-string: ^0.30.3
-    mri: ^1.2.0
   languageName: unknown
   linkType: soft
 
@@ -2202,21 +2190,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@opensumi/workers-kv@workspace:libs/workers-kv"
   dependencies:
-    "@opensumi/ide-utils": ^2.23.1
     dotenv: ^16.3.1
-    magic-string: ^0.30.3
-    mri: ^1.2.0
   languageName: unknown
   linkType: soft
 
 "@opensumi/workers-utils@workspace:^, @opensumi/workers-utils@workspace:libs/workers-utils":
   version: 0.0.0-use.local
   resolution: "@opensumi/workers-utils@workspace:libs/workers-utils"
-  dependencies:
-    "@opensumi/ide-utils": ^2.23.1
-    dotenv: ^16.3.1
-    magic-string: ^0.30.3
-    mri: ^1.2.0
   languageName: unknown
   linkType: soft
 

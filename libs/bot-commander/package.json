@@ -11,8 +11,6 @@
   },
   "dependencies": {
     "@opensumi/ide-utils": "^2.23.1",
-    "dotenv": "^16.3.1",
-    "magic-string": "^0.30.3",
     "mri": "^1.2.0"
   },
   "publishConfig": {
