@@ -27,7 +27,7 @@ export function route(hono: THono) {
     }
 
     const errMessage = await verifyMessage(
-      c.req.headers,
+      c.req.raw.headers,
       setting.outGoingToken,
     );
     if (errMessage) {
