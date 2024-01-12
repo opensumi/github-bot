@@ -13,7 +13,6 @@ ignition(app);
 export default {
   fetch: async (request: Request, env: IRuntimeEnv, ctx: ExecutionContext) => {
     Environment.from('cfworker', env);
-    Environment.instance().useQueue = true;
     return app.fetch(request, env, ctx);
   },
   async queue(
