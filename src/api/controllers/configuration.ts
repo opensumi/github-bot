@@ -56,9 +56,12 @@ export function route(hono: THono) {
     );
   });
 
-  hono.put('/configuration/:id', async (c) => {
+  hono.post('/configuration', async (c) => {
     const body = await c.req.json();
-    const id = c.req.param('id');
+    const id = c.req.query('id');
+    if (!id) {
+      return c.send.error(404, 'page not found');
+    }
 
     const token = body['token'];
     const kv = new CommonKVManager();
