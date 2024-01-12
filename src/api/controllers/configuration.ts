@@ -56,6 +56,26 @@ export function route(hono: THono) {
     );
   });
 
+  hono.put('/configuration/:id', async (c) => {
+    const body = await c.req.json();
+    const id = c.req.param('id');
+
+    const token = body['token'];
+    const kv = new CommonKVManager();
+    const validLevel = await kv.isTokenValidFor(token, id);
+
+    if (validLevel < EValidLevel.Admin) {
+      return c.send.error(404, 'page not found');
+    }
+
+    const scopeToken = body['scopeToken'];
+    if (scopeToken) {
+      await kv.setScopeToken(id, scopeToken);
+    }
+
+    return c.send.message('ok');
+  });
+
   hono.post('/configuration/:id/:type', async (c) => {
     const id = c.req.param('id');
 

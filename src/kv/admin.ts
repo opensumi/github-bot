@@ -31,4 +31,14 @@ export class CommonKVManager {
       return data.tokenByScope[scope];
     }
   }
+
+  async setScopeToken(scope: string, token: string) {
+    const data = await this.kv.getJSON('');
+    if (!data) return;
+    if (!data.tokenByScope) {
+      data.tokenByScope = {};
+    }
+    data.tokenByScope[scope] = token;
+    await this.kv.setJSON('', data);
+  }
 }
