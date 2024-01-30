@@ -34,7 +34,7 @@ export function route(hono: THono) {
     setupWebhooksTemplate(
       webhooks,
       {
-        setting: setting,
+        setting,
       },
       async ({ markdown, eventName }) => {
         await sendToDing(markdown, eventName, setting);

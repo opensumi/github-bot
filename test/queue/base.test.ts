@@ -15,7 +15,7 @@ describe('queue consumer', () => {
     const batch = createMessageBatch();
     const wk = new Worker<FakeMessage>();
     consumer.addWorker('test', wk);
-    consumer.consume(...batch.messages);
+    consumer.push(...batch.messages);
     expect(wk.queue.length).toBe(100);
     await consumer.runAndWait();
   });

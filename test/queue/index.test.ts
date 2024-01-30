@@ -3,7 +3,7 @@ import 'dotenv/config';
 import { EmitterWebhookEventName } from '@octokit/webhooks';
 
 import { IGitHubEventQueueMessage } from '@/queue/types';
-import { GitHubAppWorker } from '@/queue/worker/github';
+import { GitHubEventWorker } from '@/queue/worker/github';
 
 import { prepareEnv } from '../__mocks__';
 import { MockMessageBatch } from '../__mocks__/queue/message';
@@ -55,10 +55,10 @@ describe('queue', () => {
     prepareEnv();
   });
   it('should work', async () => {
-    const wk = new GitHubAppWorker();
+    const wk = new GitHubEventWorker();
     const batch = MockMessageBatch.from(githubAppMessage);
     batch.messages.forEach((v) => {
-      wk.consume(v);
+      wk.push(v);
     });
 
     await wk.run();

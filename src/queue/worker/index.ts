@@ -5,7 +5,7 @@ export abstract class BaseWorker<T> {
 
   queue: Message<T>[] = [];
 
-  consume(message: Message<T>) {
+  push(message: Message<T>) {
     this.queue.push(message);
   }
 
