@@ -2,7 +2,8 @@ import { KVManager, Common } from '.';
 
 interface SwitchesItem {
   enabled: boolean;
-  whitelist: string[];
+  allowlist: string[];
+  denylist: string[];
   description: string;
 }
 
@@ -26,11 +27,15 @@ export class Switches {
       return false;
     }
 
-    if (item.whitelist.length === 0) {
-      return true;
+    if (item.allowlist) {
+      return item.allowlist.includes(id);
     }
 
-    return item.whitelist.includes(id);
+    if (item.denylist) {
+      return !item.denylist.includes(id);
+    }
+
+    return true;
   };
 
   private static _instance: Switches | undefined;
