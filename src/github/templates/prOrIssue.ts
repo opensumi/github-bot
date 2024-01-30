@@ -27,6 +27,21 @@ export const NameBlock = {
   [key in Name]: string;
 };
 
+function prettyStateReason(stateReason: string) {
+  switch (stateReason) {
+    case 'off_topic':
+      return 'off topic';
+    case 'too heated':
+      return 'too heated';
+    case 'resolved':
+      return 'resolved';
+    case 'not_planned':
+      return 'not planned';
+    default:
+      return stateReason;
+  }
+}
+
 function render(
   name: Name,
   payload: ExtractPayload<Name>,
@@ -71,7 +86,7 @@ function render(
   )} ${action} [${nameBlock}](${data.html_url})`;
 
   if ((data as Issue).state_reason) {
-    textFirstLine += ` as ${(data as Issue).state_reason}`;
+    textFirstLine += ` as ${prettyStateReason((data as Issue).state_reason!)}`;
   }
 
   const text = textTpl(
