@@ -1,26 +1,18 @@
-export * from './prOrIssue';
-export * from './comment';
-export * from './release';
-export * from './review';
-export * from './utils';
-export * from './workflow';
-
 import pick from 'lodash/pick';
 
 import { TemplateMapping, Context } from '@/github/types';
 
 import {
-  handlePr,
-  handleIssue,
-  handleReview,
-  handleRelease,
-  handleDiscussion,
-  handleWorkflowRun,
-  handleIssueComment,
   handleCommitComment,
-  handleReviewComment,
   handleDiscussionComment,
-} from '.';
+  handleIssueComment,
+  handleReviewComment,
+} from './comment';
+import { handleDiscussion, handleIssue, handlePr } from './prOrIssue';
+import { handleRelease } from './release';
+import { handleReview } from './review';
+import { handleStar } from './star';
+import { handleWorkflowRun } from './workflow';
 
 const templateMapping = Object.freeze({
   'issues.opened': handleIssue,
@@ -40,7 +32,8 @@ const templateMapping = Object.freeze({
   'pull_request_review.dismissed': handleReview,
   'pull_request_review_comment.created': handleReviewComment,
   'workflow_run.completed': handleWorkflowRun,
-}) as TemplateMapping;
+  'star.created': handleStar,
+}) as unknown as TemplateMapping;
 
 export const getTemplates = (ctx: Context) => {
   let templates = templateMapping;

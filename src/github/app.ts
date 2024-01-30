@@ -37,6 +37,7 @@ export class App {
     this.ctx = {
       setting,
     };
+
     setupWebhooksTemplate(
       this.octoApp.webhooks,
       this.ctx,
@@ -44,22 +45,9 @@ export class App {
         await sendToDing(markdown, eventName, this.ctx.setting);
       },
     );
+
     this.octoService = new GitHubService();
     this.opensumiOctoService = new OpenSumiOctoService();
-    this.octoApp.webhooks.on('star.created', async ({ payload }) => {
-      const repository = payload.repository;
-      const starCount = repository.stargazers_count;
-      if (starCount % 100 === 0) {
-        await sendToDing(
-          {
-            title: '⭐⭐⭐',
-            text: `一个好消息，[${repository.full_name}](${repository.html_url}) 有 ${starCount} 颗 🌟 了~`,
-          },
-          'star.created',
-          this.ctx.setting,
-        );
-      }
-    });
 
     this.octoApp.webhooks.on(
       'issue_comment.created',
