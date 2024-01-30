@@ -22,7 +22,7 @@ export default {
   ) {
     Environment.from('cfworker', env);
 
-    const consumer = createConsumer(env, ctx);
+    const consumer = createConsumer();
 
     consumer.consume(...batch.messages);
 

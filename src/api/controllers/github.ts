@@ -12,8 +12,8 @@ export function route(hono: THono) {
     if (!id) {
       return c.send.error(400, 'need a valid id');
     }
-    const githubKVManager = new GitHubKVManager();
-    const setting = await githubKVManager.getAppSettingById(id);
+
+    const setting = await GitHubKVManager.instance().getAppSettingById(id);
 
     if (!setting) {
       return c.send.error(400, 'id not found in database');
@@ -62,8 +62,7 @@ export function route(hono: THono) {
     }
 
     // 先查数据库有没有设置这个 id 对应的 installation id
-    const githubKVManager = new GitHubKVManager();
-    const setting = await githubKVManager.getAppSettingById(id);
+    const setting = await GitHubKVManager.instance().getAppSettingById(id);
 
     if (!setting) {
       return c.send.error(400, 'id not found in database');
@@ -107,8 +106,7 @@ export function route(hono: THono) {
     }
 
     // 先查数据库有没有设置这个 id 对应的 installation id
-    const githubKVManager = new GitHubKVManager();
-    const setting = await githubKVManager.getAppSettingById(id);
+    const setting = await GitHubKVManager.instance().getAppSettingById(id);
 
     if (!setting) {
       return c.send.error(400, 'id not found in database');

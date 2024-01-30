@@ -9,8 +9,6 @@ import { GitHubAppWorker } from './worker/github';
 export class QueueConsumer<T> {
   logger = Logger.instance();
 
-  constructor(public env: IRuntimeEnv, public ctx: ExecutionContext) {}
-
   private workerMap = new MultiMap<string, BaseWorker<T>>();
 
   addWorker(type: string, worker: BaseWorker<T>) {
@@ -35,9 +33,9 @@ export class QueueConsumer<T> {
   }
 }
 
-export const createConsumer = (env: IRuntimeEnv, ctx: ExecutionContext) => {
-  const consumer = new QueueConsumer<TQueueMessage>(env, ctx);
-  consumer.addWorker('github-app', new GitHubAppWorker(env, ctx));
+export const createConsumer = () => {
+  const consumer = new QueueConsumer<TQueueMessage>();
+  consumer.addWorker('github-app', new GitHubAppWorker());
   // consumer.addWorker('github-webhook', githubWebhookWorker);
   return consumer;
 };

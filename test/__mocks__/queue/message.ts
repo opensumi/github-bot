@@ -23,4 +23,8 @@ export class MockMessageBatch<T> implements MessageBatch<T> {
   ackAll(): void {
     this.messages.forEach((v) => v.ack());
   }
+
+  static from<T>(messages: T[]) {
+    return new MockMessageBatch(messages.map((v) => new MockMessage(v)));
+  }
 }

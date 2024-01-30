@@ -1,8 +1,5 @@
-import { makeEdgeEnv, EdgeKVNamespace } from 'edge-mock';
+import { makeEdgeEnv } from 'edge-mock';
 makeEdgeEnv();
-
-declare const FetchEvent: any;
-declare const Request: any;
 
 import { QueueConsumer } from '@/queue';
 import { BaseWorker } from '@/queue/worker';
@@ -15,18 +12,11 @@ class Worker<T> extends BaseWorker<T> {
   }
 }
 
-const env = {
-  KV: new EdgeKVNamespace() as any,
-  MESSAGE_QUEUE: {} as any,
-};
-const request = new Request('/?foo=1', { method: 'POST', body: 'hello' });
-const event = new FetchEvent('fetch', { request });
-
 describe('queue consumer', () => {
   it('can work', async () => {
-    const consumer = new QueueConsumer<FakeMessage>(env, event);
+    const consumer = new QueueConsumer<FakeMessage>();
     const batch = createMessageBatch();
-    const wk = new Worker<FakeMessage>(env, event);
+    const wk = new Worker<FakeMessage>();
     consumer.addWorker('test', wk);
     consumer.consume(...batch.messages);
     expect(wk.queue.length).toBe(100);

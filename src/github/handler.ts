@@ -140,21 +140,20 @@ export async function webhookHandler(
   try {
     logger.info('Receive Github Webhook, id: ', id, ', name: ', eventName);
     try {
+      const webhookEvent = {
+        id: id,
+        name: eventName as any,
+        payload: payload,
+      };
       if (useQueue) {
         logger.info('send to queue');
         Environment.instance().Queue.send({
           botId,
           type,
-          data,
+          data: webhookEvent,
         });
       } else {
-        execContext.waitUntil(
-          webhooks.receive({
-            id: id,
-            name: eventName as any,
-            payload: payload,
-          }),
-        );
+        execContext.waitUntil(webhooks.receive(webhookEvent));
       }
 
       return json({

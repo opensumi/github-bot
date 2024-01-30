@@ -1,4 +1,8 @@
-import { IGitHubEvent } from '@/github';
+export interface IGitHubMessageBody {
+  id: string;
+  name: string;
+  payload: any;
+}
 
 export interface IGitHubEventQueueMessage {
   /**
@@ -8,7 +12,7 @@ export interface IGitHubEventQueueMessage {
 
   type: 'github-app' | 'github-webhook';
 
-  data: IGitHubEvent;
+  data: IGitHubMessageBody;
 }
 
 export interface IWechatyQueueMessage {

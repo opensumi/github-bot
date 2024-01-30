@@ -6,13 +6,21 @@ export class GitHubKVManager {
   appSettingsKV: KVManager<AppSetting>;
   settingsKV: KVManager<ISetting>;
 
-  constructor() {
+  private constructor() {
     this.appSettingsKV = KVManager.for<AppSetting>(
       GitHubCommon.GITHUB_APP_SETTINGS_PREFIX,
     );
     this.settingsKV = KVManager.for<ISetting>(
       GitHubCommon.GITHUB_SETTINGS_PREFIX,
     );
+  }
+
+  private static _instance: GitHubKVManager;
+  static instance() {
+    if (!this._instance) {
+      this._instance = new GitHubKVManager();
+    }
+    return this._instance;
   }
 
   setAppSettingById(id: string, data: AppSetting) {

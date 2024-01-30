@@ -30,7 +30,7 @@ export class DingBotAdapter implements IBotAdapter {
     public ctx: ExecutionContext,
     public setting: IDingBotSetting,
   ) {
-    this.githubKVManager = new GitHubKVManager();
+    this.githubKVManager = GitHubKVManager.instance();
     this.conversationKVManager = new ConversationKVManager(msg);
     this.userInfoKVManager = new DingUserKVManager();
   }
