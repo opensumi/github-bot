@@ -1,12 +1,12 @@
-import { KVManager, Common } from '@/kv';
+import { Common, KVItem } from '@/kv';
 
 import { EValidLevel, IAdminInfo } from './types';
 
 export class CommonKVManager {
-  kv: KVManager<IAdminInfo>;
+  kvItem: KVItem<IAdminInfo>;
 
   constructor() {
-    this.kv = KVManager.for(Common.ADMIN_PREFIX);
+    this.kvItem = KVItem.for(Common.ADMIN);
   }
 
   async isTokenValidFor(token?: string, scope?: string): Promise<EValidLevel> {
@@ -21,11 +21,11 @@ export class CommonKVManager {
   }
 
   private async getAdminToken() {
-    const data = await this.kv.getJSON('');
+    const data = await this.kvItem.get();
     return data?.token;
   }
   private async getTokenByScope(scope: string) {
-    const data = await this.kv.getJSON('');
+    const data = await this.kvItem.get();
     if (!data) return;
     if (data.tokenByScope) {
       return data.tokenByScope[scope];
@@ -33,12 +33,12 @@ export class CommonKVManager {
   }
 
   async setScopeToken(scope: string, token: string) {
-    const data = await this.kv.getJSON('');
+    const data = await this.kvItem.get();
     if (!data) return;
     if (!data.tokenByScope) {
       data.tokenByScope = {};
     }
     data.tokenByScope[scope] = token;
-    await this.kv.setJSON('', data);
+    await this.kvItem.set(data);
   }
 }

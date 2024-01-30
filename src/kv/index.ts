@@ -49,3 +49,26 @@ export class KVManager<T> {
     return this.#cache.get(prefix)!;
   }
 }
+
+export class KVItem<T> {
+  static #cache: Map<string, KVItem<any>> = new Map();
+  manager: KVManager<T>;
+  private constructor(public key: string) {
+    this.manager = KVManager.for<T>(key);
+  }
+
+  static for<T>(key: string): KVItem<T> {
+    if (!this.#cache.has(key)) {
+      this.#cache.set(key, new KVItem(key));
+    }
+    return this.#cache.get(key)!;
+  }
+
+  get() {
+    return this.manager.getJSON(this.key);
+  }
+
+  set(data: T) {
+    return this.manager.setJSON(this.key, data);
+  }
+}
