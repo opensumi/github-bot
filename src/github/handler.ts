@@ -9,6 +9,7 @@ import { HonoRequest } from 'hono';
 
 import { error, json } from '@/api/utils/response';
 import Environment from '@/env';
+import { Logger } from '@/utils/logger';
 
 import { getTemplates, StopHandleError } from './templates';
 import type { MarkdownContent, Context } from './types';
@@ -135,10 +136,12 @@ export async function webhookHandler(
   useQueue?: boolean,
 ) {
   const { id, event: eventName, payload } = data;
+  const logger = Logger.instance();
   try {
-    console.log('Receive Github Webhook, id: ', id, ', name: ', eventName);
+    logger.info('Receive Github Webhook, id: ', id, ', name: ', eventName);
     try {
       if (useQueue) {
+        logger.info('send to queue');
         Environment.instance().Queue.send({
           botId,
           type,

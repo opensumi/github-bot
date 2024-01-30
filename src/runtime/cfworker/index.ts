@@ -24,7 +24,7 @@ export default {
 
     const consumer = createConsumer(env, ctx);
 
-    batch.messages.forEach((v) => consumer.consume(v));
+    consumer.consume(...batch.messages);
 
     ctx.waitUntil(
       consumer
