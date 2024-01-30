@@ -1,6 +1,3 @@
-import { makeEdgeEnv } from 'edge-mock';
-makeEdgeEnv();
-
 import { QueueConsumer } from '@/queue';
 import { BaseWorker } from '@/queue/worker';
 
