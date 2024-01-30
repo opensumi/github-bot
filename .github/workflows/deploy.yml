@@ -13,6 +13,8 @@ env:
   CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
   KV_LOCAL_ID: ${{ secrets.KV_LOCAL_ID }}
   KV_PROD_ID: ${{ secrets.KV_PROD_ID }}
+  QUEUE_NAME_LOCAL: ${{ secrets.QUEUE_NAME_LOCAL }}
+  QUEUE_NAME_PROD: ${{ secrets.QUEUE_NAME_PROD }}
 
 jobs:
   deploy:
