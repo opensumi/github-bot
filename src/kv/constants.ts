@@ -18,4 +18,5 @@ export namespace GitHubCommon {
 
 export namespace Common {
   export const ADMIN_PREFIX = '0common/admin';
+  export const SWITCHES_PREFIX = '0common/switches';
 }

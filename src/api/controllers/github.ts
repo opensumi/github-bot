@@ -1,8 +1,10 @@
 import { Octokit } from '@octokit/core';
 
+import Environment from '@/env';
 import { validateGithub, webhookHandler } from '@/github';
 import { initApp } from '@/github/app';
 import { GitHubKVManager } from '@/kv/github';
+import { KnownSwitches, Switches } from '@/kv/switches';
 
 export function route(hono: THono) {
   hono.post('/github/app/:id', async (c) => {
@@ -20,6 +22,14 @@ export function route(hono: THono) {
       return c.send.error(400, 'please set app webhook secret in database');
     }
 
+    let useQueue = Environment.instance().useQueue;
+    if (!useQueue) {
+      useQueue = await Switches.instance().isEnableFor(
+        KnownSwitches.enableQueue,
+        id,
+      );
+    }
+
     const app = await initApp(setting);
     const payload = await validateGithub(c.req, app.webhooks);
 
@@ -29,6 +39,7 @@ export function route(hono: THono) {
       app.webhooks,
       c.executionCtx,
       payload,
+      useQueue,
     );
   });
 

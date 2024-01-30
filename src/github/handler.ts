@@ -12,7 +12,6 @@ import Environment from '@/env';
 
 import { getTemplates, StopHandleError } from './templates';
 import type { MarkdownContent, Context } from './types';
-import { sendToDing } from './utils';
 
 export class ValidationError extends Error {
   constructor(public statusCode: number, message: string) {
@@ -133,17 +132,12 @@ export async function webhookHandler(
   webhooks: Webhooks<{ octokit?: Octokit }>,
   execContext: ExecutionContext,
   data: IGitHubEvent,
-  forceNoQueue?: boolean,
+  useQueue?: boolean,
 ) {
   const { id, event: eventName, payload } = data;
   try {
     console.log('Receive Github Webhook, id: ', id, ', name: ', eventName);
     try {
-      let useQueue = Environment.instance().useQueue;
-      if (forceNoQueue) {
-        useQueue = false;
-      }
-
       if (useQueue) {
         Environment.instance().Queue.send({
           botId,
