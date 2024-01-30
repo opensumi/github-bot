@@ -21,4 +21,9 @@ export function prepareEnv() {
       contentLimit: 300,
     }),
   );
+  console.log('prepare env done');
+  console.log(
+    'app settings',
+    kv.get(`${GitHubCommon.GITHUB_APP_SETTINGS_PREFIX}mock`),
+  );
 }

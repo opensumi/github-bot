@@ -4,16 +4,15 @@ import { Repository, User } from '@octokit/webhooks-types';
 import { ExtractPayload, Context } from '@/github/types';
 import { StringBuilder } from '@/utils/string-builder';
 
-import { textTpl, titleTpl } from './utils';
-
+import { Name, NameBlock } from './prOrIssue';
 import {
   limitLine,
-  Name,
-  NameBlock,
   renderPrOrIssueLink,
   renderUserLink,
+  textTpl,
+  titleTpl,
   useRef,
-} from '.';
+} from './utils';
 
 const codecov = (text: string) => {
   return limitLine(text, 2, 1, (line) => {

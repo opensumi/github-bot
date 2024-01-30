@@ -1,10 +1,10 @@
 import { EmitterWebhookEventName, Webhooks } from '@octokit/webhooks';
 import groupBy from 'lodash/groupBy';
-import MultiMap from 'mnemonist/multi-map';
+import DefaultMap from 'mnemonist/default-map';
 
 import { initApp } from '@/github/app';
 import { setupWebhooksTemplate } from '@/github/handler';
-import { MarkdownContent } from '@/github/types';
+import { ExtractPayload, MarkdownContent } from '@/github/types';
 import { sendToDing } from '@/github/utils';
 import { GitHubKVManager } from '@/kv/github';
 import { ISetting } from '@/kv/types';
@@ -13,6 +13,20 @@ import { Logger } from '@/utils/logger';
 import { IGitHubEventQueueMessage } from '../types';
 
 import { BaseWorker } from '.';
+
+export function createUniqueMessageId(data: {
+  repository: {
+    full_name: string;
+  };
+  pull_request?: {
+    number: number;
+  };
+  sender: {
+    login: string;
+  };
+}) {
+  return `${data.repository.full_name}#${data?.pull_request?.number}#${data?.sender?.login}`;
+}
 
 export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
   logger = Logger.instance();
@@ -85,13 +99,29 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
           return;
         }
 
-        const results = new MultiMap<string, MarkdownContent>();
+        const results = [] as {
+          eventName: string;
+          markdown: MarkdownContent;
+        }[];
+        const prReviewResults = new DefaultMap<
+          string,
+          PullRequestReviewComposite
+        >(() => new PullRequestReviewComposite());
 
         setupWebhooksTemplate(
           hooks,
           { setting },
-          async ({ markdown, eventName }) => {
-            results.set(eventName, markdown);
+          async ({ markdown, eventName, payload }) => {
+            const result = { eventName, markdown };
+            if (eventName.startsWith('pull_request_review.')) {
+              const key = createUniqueMessageId(payload);
+              prReviewResults.get(key).addPullRequestReview(result);
+            } else if (eventName.startsWith('pull_request_review_comment.')) {
+              const key = createUniqueMessageId(payload);
+              prReviewResults.get(key).addPullRequestReviewComment(result);
+            } else {
+              results.push(result);
+            }
           },
         );
 
@@ -101,9 +131,9 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
         >;
 
         await Promise.allSettled(
-          Object.entries(byEvent).map(async ([eventName, messages]) => {
-            await Promise.allSettled(
-              messages.map(async (message) => {
+          Object.entries(byEvent)
+            .map(([_, messages]) => {
+              return messages.map(async (message) => {
                 try {
                   const { data } = message.body;
                   await hooks.receive({
@@ -116,23 +146,27 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
                   console.error('github app worker error', error);
                   message.retry();
                 }
-              }),
-            );
+              });
+            })
+            .flat(),
+        );
 
-            const markdowns = results.get(eventName);
-            if (markdowns && markdowns.length > 0) {
-              // 只有特定内容的 content 要被合并起来
-              await Promise.allSettled(
-                markdowns.map((markdown) =>
-                  sendToDing(
-                    markdown,
-                    eventName as EmitterWebhookEventName,
-                    setting,
-                  ),
-                ),
-              );
-            }
-          }),
+        prReviewResults.forEach((v) => {
+          const result = v.getResult();
+          if (result) {
+            results.push(result);
+          }
+        });
+
+        console.log(
+          `🚀 ~ GitHubEventWorker ~ prReviewResults.forEach ~ results:`,
+          results,
+        );
+
+        await Promise.allSettled(
+          results.map(({ markdown, eventName }) =>
+            sendToDing(markdown, eventName as EmitterWebhookEventName, setting),
+          ),
         );
       }),
     );
@@ -143,4 +177,50 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
       }
     });
   }
+}
+
+class PullRequestReviewComposite {
+  reviewData!: IResult;
+  commentData: IResult[] = [];
+
+  addPullRequestReview(data: IResult) {
+    this.reviewData = data;
+  }
+
+  addPullRequestReviewComment(data: IResult) {
+    this.commentData.push(data);
+  }
+
+  getResult() {
+    const { reviewData, commentData } = this;
+
+    let title = '';
+    let eventName = '';
+    if (reviewData) {
+      title = reviewData.markdown.title;
+      eventName = reviewData.eventName;
+    } else if (commentData.length > 0) {
+      title = commentData[0].markdown.title;
+      eventName = commentData[0].eventName;
+    }
+
+    let text = commentData.map((v) => v.markdown.text).join('\n\n');
+
+    if (reviewData) {
+      text = reviewData.markdown.text + '\n\n' + text;
+    }
+
+    return {
+      eventName,
+      markdown: {
+        title,
+        text,
+      },
+    };
+  }
+}
+
+interface IResult {
+  eventName: string;
+  markdown: MarkdownContent;
 }

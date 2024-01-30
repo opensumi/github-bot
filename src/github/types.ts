@@ -28,6 +28,12 @@ export type THasAction = {
   action?: string;
 };
 
+export interface IHasSender {
+  sender: {
+    login: string;
+  };
+}
+
 export interface ChangeItem {
   from: string;
 }

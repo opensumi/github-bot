@@ -3,6 +3,10 @@ import {
   PullRequestOpenedEvent,
   PullRequestEditedEvent,
   PullRequestReviewCommentCreatedEvent,
+  PullRequestReviewCommentDeletedEvent,
+  PullRequestReviewCommentEditedEvent,
+  PullRequestReviewSubmittedEvent,
+  PullRequestReviewDismissedEvent,
   ReleasePublishedEvent,
   IssuesOpenedEvent,
 } from '@octokit/webhooks-types';
@@ -11,7 +15,16 @@ import _antd_mini_release_published from './antd_mini_release_published.json';
 import pull_request_0_opened from './generated/pull_request_0_opened.json';
 import _pull_request_13_opened from './generated/pull_request_13_opened.json';
 import pull_request_3_closed from './generated/pull_request_3_closed.json';
+import _pull_request_review_0_submitted from './generated/pull_request_review_0_submitted_commented.json';
+import _pull_request_review_1_dismissed from './generated/pull_request_review_1_dismissed_dismissed.json';
+import _pull_request_review_2_submitted from './generated/pull_request_review_2_submitted_commented.json';
+import _pull_request_review_3_submitted from './generated/pull_request_review_3_submitted_commented.json';
+import _pull_request_review_4_submitted_changes_requested from './generated/pull_request_review_4_submitted_changes_requested.json';
 import _pull_request_review_comment_0_created from './generated/pull_request_review_comment_0_created.json';
+import _pull_request_review_comment_1_created from './generated/pull_request_review_comment_1_created.json';
+import _pull_request_review_comment_2_created from './generated/pull_request_review_comment_2_created.json';
+import _pull_request_review_comment_3_deleted from './generated/pull_request_review_comment_3_deleted.json';
+import _pull_request_review_comment_4_edited from './generated/pull_request_review_comment_4_edited.json';
 import _issue2045 from './issue-2045.json';
 import _issue_opened from './issue_opened.json';
 import _pr2060 from './pr-2060.json';
@@ -19,8 +32,27 @@ import _pull_request_edited_base from './pull_request_edited_base.json';
 import _pull_request_edited_wip from './pull_request_edited_wip.json';
 import _release_published from './release_published.json';
 
+export const pull_request_review_0_submitted =
+  _pull_request_review_0_submitted as unknown as PullRequestReviewSubmittedEvent;
+export const pull_request_review_1_dismissed =
+  _pull_request_review_1_dismissed as unknown as PullRequestReviewDismissedEvent;
+export const pull_request_review_2_submitted =
+  _pull_request_review_2_submitted as unknown as PullRequestReviewSubmittedEvent;
+export const pull_request_review_3_submitted =
+  _pull_request_review_3_submitted as unknown as PullRequestReviewSubmittedEvent;
+export const pull_request_review_4_submitted_changes_requested =
+  _pull_request_review_4_submitted_changes_requested as unknown as PullRequestReviewSubmittedEvent;
+
 export const pull_request_review_comment_0_created =
   _pull_request_review_comment_0_created as unknown as PullRequestReviewCommentCreatedEvent;
+export const pull_request_review_comment_1_created =
+  _pull_request_review_comment_1_created as unknown as PullRequestReviewCommentCreatedEvent;
+export const pull_request_review_comment_2_created =
+  _pull_request_review_comment_2_created as unknown as PullRequestReviewCommentCreatedEvent;
+export const pull_request_review_comment_3_deleted =
+  _pull_request_review_comment_3_deleted as unknown as PullRequestReviewCommentDeletedEvent;
+export const pull_request_review_comment_4_edited =
+  _pull_request_review_comment_4_edited as unknown as PullRequestReviewCommentEditedEvent;
 
 export const pull_request_closed =
   pull_request_3_closed as unknown as PullRequestClosedEvent;

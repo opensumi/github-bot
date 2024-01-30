@@ -13,6 +13,7 @@ import { handleRelease } from './release';
 import { handleReview } from './review';
 import { handleStar } from './star';
 import { handleWorkflowRun } from './workflow';
+export * from './utils';
 
 const templateMapping = Object.freeze({
   'issues.opened': handleIssue,

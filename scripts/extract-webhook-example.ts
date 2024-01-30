@@ -26,6 +26,13 @@ for (const webhook of WEBHOOKS) {
       }
     });
   }
+  if (webhook.name === 'pull_request_review') {
+    const pull_request_review =
+      webhook as WebhookDefinition<'pull_request_review'>;
+    pull_request_review.examples.forEach((v, i) => {
+      writeFile(`pull_request_review_${i}_${v.action}_${v.review.state}`, v);
+    });
+  }
   if (webhook.name === 'pull_request_review_comment') {
     const pull_request_review_comment =
       webhook as WebhookDefinition<'pull_request_review_comment'>;

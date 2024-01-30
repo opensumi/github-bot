@@ -12,7 +12,7 @@ import Environment from '@/env';
 import { Logger } from '@/utils/logger';
 
 import { getTemplates, StopHandleError } from './templates';
-import type { MarkdownContent, Context } from './types';
+import type { MarkdownContent, Context, IHasSender } from './types';
 
 export class ValidationError extends Error {
   constructor(public statusCode: number, message: string) {
@@ -82,6 +82,7 @@ export const setupWebhooksTemplate = (
   done: (data: {
     markdown: MarkdownContent;
     eventName: EmitterWebhookEventName;
+    payload: any;
   }) => Promise<void>,
 ) => {
   const templates = getTemplates(context);
@@ -89,8 +90,8 @@ export const setupWebhooksTemplate = (
 
   for (const eventName of supportTemplates) {
     webhooks.on(eventName, async ({ id, payload, octokit }) => {
-      if ((payload as { sender: User })?.sender) {
-        const name = (payload as { sender: User }).sender.login;
+      if ((payload as IHasSender)?.sender) {
+        const name = (payload as IHasSender).sender.login;
         if (blockedUser.has(name)) {
           return;
         }
@@ -116,7 +117,7 @@ export const setupWebhooksTemplate = (
 
         console.log('get data from handler: ', markdown);
 
-        await done({ markdown, eventName });
+        await done({ markdown, eventName, payload });
       } catch (err) {
         console.log('stop handler because: ', err);
         if (!(err instanceof StopHandleError)) {

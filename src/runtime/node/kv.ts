@@ -46,8 +46,14 @@ export class LocalKV implements IKVNamespace {
     this.map = new Map();
   }
 
-  get(key: unknown, type: unknown): TKVValue<string> {
-    return Promise.resolve(this.map.get(key));
+  get(key: unknown, type?: unknown): TKVValue<any> {
+    let result = this.map.get(key);
+
+    if (type === 'json') {
+      result = JSON.parse(result);
+    }
+
+    return Promise.resolve(result);
   }
   async put(
     key: string,
