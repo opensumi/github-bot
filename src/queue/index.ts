@@ -36,6 +36,6 @@ export class QueueConsumer<T> {
 export const createConsumer = () => {
   const consumer = new QueueConsumer<TQueueMessage>();
   consumer.addWorker('github-app', new GitHubAppWorker());
-  // consumer.addWorker('github-webhook', githubWebhookWorker);
+  // consumer.addWorker('github-webhook', new GitHubWebHookWorker());
   return consumer;
 };

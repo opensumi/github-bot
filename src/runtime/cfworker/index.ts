@@ -5,6 +5,7 @@ import Environment from '@/env';
 import { createConsumer } from '@/queue';
 import { TQueueMessage } from '@/queue/types';
 import { RequiredField } from '@/types';
+import { Logger } from '@/utils/logger';
 
 const app = new Hono<{ Bindings: IRuntimeEnv }>() as THono;
 
@@ -20,6 +21,7 @@ export default {
     env: IRuntimeEnv,
     ctx: ExecutionContext,
   ) {
+    const logger = Logger.instance();
     Environment.from('cfworker', env);
 
     const consumer = createConsumer();
@@ -29,11 +31,11 @@ export default {
     ctx.waitUntil(
       consumer
         .runAndWait()
-        .then(() => {
-          console.log('queue done');
+        .then((res) => {
+          logger.info('queue done', res);
         })
         .catch((err) => {
-          console.log('queue error', err);
+          logger.error('queue error', err);
         }),
     );
   },

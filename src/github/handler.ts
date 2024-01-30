@@ -146,11 +146,14 @@ export async function webhookHandler(
         payload: payload,
       };
       if (useQueue) {
-        logger.info('send to queue');
-        Environment.instance().Queue.send({
+        const queueItem = {
           botId,
           type,
           data: webhookEvent,
+        };
+        logger.info('send to queue', queueItem);
+        await Environment.instance().Queue.send(queueItem, {
+          contentType: 'json',
         });
       } else {
         execContext.waitUntil(webhooks.receive(webhookEvent));
