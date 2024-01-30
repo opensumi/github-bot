@@ -94,11 +94,9 @@ export function route(hono: THono) {
     }
     const data = await c.req.json();
     if (type === 'app-settings') {
-      const kvManager = new GitHubKVManager();
-      await kvManager.setAppSettingById(id, data);
+      await GitHubKVManager.instance().setAppSettingById(id, data);
     } else if (type === 'setting') {
-      const kvManager = new GitHubKVManager();
-      await kvManager.setSettingById(id, data);
+      await GitHubKVManager.instance().setSettingById(id, data);
     } else if (type === 'ding-setting') {
       const kvManager = new DingKVManager();
       await kvManager.setSettingById(id, data);
@@ -129,11 +127,9 @@ export function route(hono: THono) {
     let data = null;
 
     if (type === 'app-settings') {
-      const kvManager = new GitHubKVManager();
-      data = await kvManager.getAppSettingById(id);
+      data = await GitHubKVManager.instance().getAppSettingById(id);
     } else if (type === 'setting') {
-      const kvManager = new GitHubKVManager();
-      data = await kvManager.getSettingById(id);
+      data = await GitHubKVManager.instance().getSettingById(id);
     } else if (type === 'ding-setting') {
       const kvManager = new DingKVManager();
       data = await kvManager.getSettingById(id);

@@ -6,6 +6,7 @@ import { GitHubService } from '@opensumi/octo-service';
 
 const shouldSkip = !Boolean(process.env['GITHUB_TOKEN']);
 console.log(`🚀 ~ file: service.test.ts ~ line 5 ~ shouldSkip`, shouldSkip);
+jest.setTimeout(20 * 1000);
 
 (shouldSkip ? describe.skip : describe)('can fetch github data', () => {
   const octo = new Octokit({
@@ -15,18 +16,14 @@ console.log(`🚀 ~ file: service.test.ts ~ line 5 ~ shouldSkip`, shouldSkip);
   service.octo = octo;
 
   it('can fetch history', async () => {
-    jest.setTimeout(9999999999);
-
     const data = await service.getRepoHistory('opensumi', 'core');
     console.log(`🚀 ~ file: service.test.ts ~ line 15 ~ it ~ data`, data);
   });
   it('can get pr info', async () => {
-    jest.setTimeout(9999999999);
     const result = await service.getPrByNumber('opensumi', 'core', 2463);
     console.log(`🚀 ~ file: service.test.ts:33 ~ it ~ result:`, result);
   });
   it('can get patch', async () => {
-    jest.setTimeout(9999999999);
     const { data: patch } = await octo.pulls.get({
       owner: 'opensumi',
       repo: 'core',
@@ -38,7 +35,6 @@ console.log(`🚀 ~ file: service.test.ts ~ line 5 ~ shouldSkip`, shouldSkip);
     console.log(`🚀 ~ file: service.test.ts:33 ~ it ~ patch:`, patch);
   });
   it('can get diff', async () => {
-    jest.setTimeout(9999999999);
     const { data: diff } = await octo.pulls.get({
       owner: 'opensumi',
       repo: 'core',
