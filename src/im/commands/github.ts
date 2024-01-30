@@ -1,6 +1,7 @@
 import { App } from '@/github/app';
 import { render } from '@/github/render';
 import { contentToMarkdown, parseGitHubUrl } from '@/github/utils';
+import { StringBuilder } from '@/utils';
 import { startsWith } from '@opensumi/bot-commander';
 import { code } from '@opensumi/dingtalk-bot/lib/types';
 
@@ -9,7 +10,11 @@ import { IBotAdapter } from '../types';
 
 import { ISSUE_REGEX, REPO_REGEX } from './constants';
 import { IMCommandCenter } from './types';
-import { hasApp, replyIfAppNotDefined } from './utils';
+import {
+  getGitHubUserFromDingtalkId,
+  hasApp,
+  replyIfAppNotDefined,
+} from './utils';
 
 export function registerGitHubCommand(it: IMCommandCenter) {
   it.on(REPO_REGEX, async ({ bot, ctx, result }) => {
@@ -146,6 +151,67 @@ export function registerGitHubCommand(it: IMCommandCenter) {
     },
     ['stars'],
     startsWith,
+  );
+
+  it.on('bind-github', async ({ bot, ctx }) => {
+    await replyIfAppNotDefined(bot, ctx);
+    if (!hasApp(ctx)) {
+      return;
+    }
+
+    const posArg = ctx.parsed['_'];
+
+    if (!(posArg.length > 1)) {
+      return;
+    }
+
+    const githubId = posArg[1];
+
+    const senderId = ctx.message.senderId;
+
+    await bot.userInfoKVManager.updateGitHubUserByDingtalkId(
+      senderId,
+      githubId,
+    );
+
+    await bot.replyText('success');
+  });
+
+  it.on(
+    'my-pr',
+    async ({ bot, ctx }) => {
+      await replyIfAppNotDefined(bot, ctx);
+      if (!hasApp(ctx)) {
+        return;
+      }
+
+      const { app } = ctx;
+      const githubUserId = await getGitHubUserFromDingtalkId(bot);
+      const posArg = ctx.parsed['_'];
+      const { owner, repo } = await getRepoInfoFromCommand(posArg, bot);
+      const prs = await app.octoService.pr.getPullRequests(
+        owner,
+        repo,
+        githubUserId,
+      );
+
+      const builder = new StringBuilder();
+
+      builder.add(`# ${githubUserId}'s prs of ${owner}/${repo}`);
+      builder.add(`${prs.length} open PRs`);
+      builder.add('');
+      for (const pr of prs) {
+        builder.add(`- [${pr.title}](${pr.html_url})`);
+      }
+
+      await bot.reply(
+        contentToMarkdown({
+          title: `${githubUserId}'s prs of ${owner}/${repo}`,
+          text: builder.toString(),
+        }),
+      );
+    },
+    ['mypr'],
   );
 }
 

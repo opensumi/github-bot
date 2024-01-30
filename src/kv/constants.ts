@@ -8,6 +8,7 @@ export namespace DingConversation {
 export namespace DingCommon {
   export const SECRETS_PREFIX = 'ding/secrets/';
   export const INFO_PREFIX = 'ding/info/';
+  export const USER_INFO_PREFIX = 'ding/user-info/';
 }
 
 export namespace GitHubCommon {

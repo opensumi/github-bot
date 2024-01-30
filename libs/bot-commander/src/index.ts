@@ -207,9 +207,23 @@ export class CommandCenter<C extends Record<string, any>> {
         );
       });
 
-      await p;
+      try {
+        await p;
+      } catch (error) {
+        if (error instanceof StopError) {
+          console.log('stop executing handler, reason:', error.message);
+          return;
+        }
+        throw error;
+      }
     } else {
       console.log('no handler found for', str);
     }
+  }
+}
+
+export class StopError extends Error {
+  constructor(message: string) {
+    super(message);
   }
 }

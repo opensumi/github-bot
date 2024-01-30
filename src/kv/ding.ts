@@ -1,6 +1,6 @@
 import { KVManager, DingCommon } from '@/kv';
 
-import { IDingBotSetting, IDingInfo } from './types';
+import { IDingBotSetting, IDingInfo, IDingUserInfo } from './types';
 
 export class DingKVManager {
   secretsKV: KVManager<IDingBotSetting>;
@@ -46,4 +46,20 @@ export class DingKVManager {
     }
     return undefined;
   };
+}
+
+export class DingUserKVManager {
+  userInfoKV: KVManager<IDingUserInfo>;
+
+  constructor() {
+    this.userInfoKV = KVManager.for(DingCommon.USER_INFO_PREFIX);
+  }
+
+  async getGitHubUserByDingtalkId(id: string) {
+    return (await this.userInfoKV.getJSON(id))?.githubId;
+  }
+
+  async updateGitHubUserByDingtalkId(id: string, githubId: string) {
+    return await this.userInfoKV.updateJSON(id, { githubId });
+  }
 }

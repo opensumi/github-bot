@@ -102,6 +102,10 @@ export interface IDingInfo {
   enableConversation?: boolean;
 }
 
+export interface IDingUserInfo {
+  githubId: string;
+}
+
 export type SettingType =
   | 'app-settings'
   | 'ding-info'

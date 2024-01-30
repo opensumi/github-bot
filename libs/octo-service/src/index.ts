@@ -1,6 +1,7 @@
 import { Octokit } from '@octokit/rest';
 import dayjs from 'dayjs';
 
+import { PRService } from './pr';
 import { IIssueDetail, IPrDetail, TCommitInfo, TPrData } from './types';
 
 const PER_PAGE = 100;
@@ -46,7 +47,10 @@ export function range(from: number, to: number): number[] {
 }
 
 export class GitHubService {
-  constructor(protected _octo?: Octokit) {}
+  pr: PRService;
+  constructor(protected _octo?: Octokit) {
+    this.pr = new PRService(_octo);
+  }
 
   set octo(o: Octokit) {
     this._octo = o;

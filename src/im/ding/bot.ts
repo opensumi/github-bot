@@ -3,7 +3,7 @@ import { Context } from 'hono';
 import { ConversationKVManager } from '@/ai/conversation/kvManager';
 import Environment from '@/env';
 import { initApp, App } from '@/github/app';
-import { DingKVManager } from '@/kv/ding';
+import { DingKVManager, DingUserKVManager } from '@/kv/ding';
 import { GitHubKVManager } from '@/kv/github';
 import { IDingBotSetting } from '@/kv/types';
 import * as types from '@opensumi/dingtalk-bot/lib/types';
@@ -20,17 +20,19 @@ function prepare(s: string) {
 export class DingBotAdapter implements IBotAdapter {
   githubKVManager: GitHubKVManager;
   conversationKVManager: ConversationKVManager;
+  userInfoKVManager: DingUserKVManager;
 
   constructor(
     public id: string,
     public c: Context<THonoEnvironment>,
-    protected msg: Message,
+    public msg: Message,
     public kvManager: DingKVManager,
     public ctx: ExecutionContext,
     public setting: IDingBotSetting,
   ) {
     this.githubKVManager = new GitHubKVManager();
     this.conversationKVManager = new ConversationKVManager(msg);
+    this.userInfoKVManager = new DingUserKVManager();
   }
 
   async handle() {
