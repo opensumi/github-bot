@@ -1,10 +1,9 @@
-import { EdgeKVNamespace } from 'edge-mock';
-
 import Environment from '@/env';
 import { GitHubCommon } from '@/kv/constants';
+import { LocalKV } from '@/runtime/node/kv';
 
 export function prepareEnv() {
-  const kv = new EdgeKVNamespace();
+  const kv = new LocalKV();
   Environment.from('node', {
     KV: kv,
     MESSAGE_QUEUE: {} as any,
