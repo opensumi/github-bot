@@ -1,10 +1,11 @@
 import { EmitterWebhookEventName, Webhooks } from '@octokit/webhooks';
+import chunk from 'lodash/chunk';
 import groupBy from 'lodash/groupBy';
 import DefaultMap from 'mnemonist/default-map';
 
 import { initApp } from '@/github/app';
 import { setupWebhooksTemplate } from '@/github/handler';
-import { ExtractPayload, MarkdownContent } from '@/github/types';
+import { MarkdownContent } from '@/github/types';
 import { sendToDing } from '@/github/utils';
 import { GitHubKVManager } from '@/kv/github';
 import { ISetting } from '@/kv/types';
@@ -152,10 +153,7 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
         );
 
         prReviewResults.forEach((v) => {
-          const result = v.getResult();
-          if (result) {
-            results.push(result);
-          }
+          results.push(...v.toResult());
         });
 
         console.log(
@@ -191,32 +189,36 @@ class PullRequestReviewComposite {
     this.commentData.push(data);
   }
 
-  getResult() {
+  toResult() {
     const { reviewData, commentData } = this;
 
-    let title = '';
-    let eventName = '';
-    if (reviewData) {
-      title = reviewData.markdown.title;
-      eventName = reviewData.eventName;
-    } else if (commentData.length > 0) {
-      title = commentData[0].markdown.title;
-      eventName = commentData[0].eventName;
-    }
+    const chunked = chunk(commentData, 5);
+    const result = [] as IResult[];
 
-    let text = commentData.map((v) => v.markdown.text).join('\n\n');
+    chunked.forEach((v, i) => {
+      let title = '';
+      let eventName = '';
+      let text = v.map((d) => d.markdown.text).join('\n\n');
 
-    if (reviewData) {
-      text = reviewData.markdown.text + '\n\n' + text;
-    }
+      if (i === 0 && reviewData) {
+        title = reviewData.markdown.title;
+        eventName = reviewData.eventName;
+        text = reviewData.markdown.text + '\n\n' + text;
+      } else if (commentData.length > 0) {
+        title = commentData[0].markdown.title;
+        eventName = commentData[0].eventName;
+      }
 
-    return {
-      eventName,
-      markdown: {
-        title,
-        text,
-      },
-    };
+      result.push({
+        eventName,
+        markdown: {
+          title: `${title} (${i + 1}/${chunked.length})`,
+          text,
+        },
+      });
+    });
+
+    return result;
   }
 }
 
