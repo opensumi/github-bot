@@ -32,6 +32,7 @@ export function route(hono: THono) {
 
     const app = await initApp(setting);
     const payload = await validateGithub(c.req, app.webhooks);
+    app.listenWebhooks();
 
     return webhookHandler(
       id,

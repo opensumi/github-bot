@@ -38,14 +38,6 @@ export class App {
       setting,
     };
 
-    setupWebhooksTemplate(
-      this.octoApp.webhooks,
-      this.ctx,
-      async ({ markdown, eventName }) => {
-        await sendToDing(markdown, eventName, this.ctx.setting);
-      },
-    );
-
     this.octoService = new GitHubService();
     this.opensumiOctoService = new OpenSumiOctoService();
 
@@ -172,6 +164,16 @@ export class App {
     const octo = await this.getOcto();
     this.octoService.octo = octo;
     this.opensumiOctoService.octo = octo;
+  }
+
+  listenWebhooks() {
+    setupWebhooksTemplate(
+      this.octoApp.webhooks,
+      this.ctx,
+      async ({ markdown, eventName }) => {
+        await sendToDing(markdown, eventName, this.ctx.setting);
+      },
+    );
   }
 }
 
