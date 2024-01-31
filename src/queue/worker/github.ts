@@ -15,18 +15,24 @@ import { IGitHubEventQueueMessage } from '../types';
 
 import { BaseWorker } from '.';
 
-export function createUniqueMessageId(data: {
-  repository: {
-    full_name: string;
-  };
-  pull_request?: {
-    number: number;
-  };
-  sender: {
-    login: string;
-  };
-}) {
-  return `${data.repository.full_name}#${data?.pull_request?.number}#${data?.sender?.login}`;
+export function createUniqueMessageId(
+  data: {
+    repository: {
+      full_name: string;
+    };
+    pull_request?: {
+      number: number;
+    };
+    discussion?: {
+      number: number;
+    };
+    sender: {
+      login: string;
+    };
+  },
+  prefix = '',
+) {
+  return `${prefix}#${data?.repository?.full_name}#${data?.pull_request?.number}#${data?.discussion?.number}#${data?.sender?.login}`;
 }
 
 export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
@@ -34,6 +40,11 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
 
   constructor(public type: 'app' | 'webhook') {
     super();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  onBatchDoneForTest(results: IResult[]) {
+    // do nothing
   }
 
   async run() {
@@ -100,14 +111,10 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
           return;
         }
 
-        const results = [] as {
-          eventName: string;
-          markdown: MarkdownContent;
-        }[];
-        const prReviewResults = new DefaultMap<
-          string,
-          PullRequestReviewComposite
-        >(() => new PullRequestReviewComposite());
+        const results = [] as IResult[];
+        const multiViewResults = new DefaultMap<string, EventComposite>(
+          (key) => new EventComposite(key),
+        );
 
         setupWebhooksTemplate(
           hooks,
@@ -115,51 +122,45 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
           async ({ markdown, eventName, payload }) => {
             const result = { eventName, markdown };
             if (eventName.startsWith('pull_request_review.')) {
-              const key = createUniqueMessageId(payload);
-              prReviewResults.get(key).addPullRequestReview(result);
+              const key = createUniqueMessageId(payload, 'pr_review');
+              multiViewResults.get(key).setMainView(result);
             } else if (eventName.startsWith('pull_request_review_comment.')) {
-              const key = createUniqueMessageId(payload);
-              prReviewResults.get(key).addPullRequestReviewComment(result);
+              const key = createUniqueMessageId(payload, 'pr_review');
+              multiViewResults.get(key).addSubView(result);
+            } else if (eventName.startsWith('discussion.')) {
+              const key = createUniqueMessageId(payload, 'discussion');
+              multiViewResults.get(key).setMainView(result);
+            } else if (eventName.startsWith('discussion_comment.')) {
+              const key = createUniqueMessageId(payload, 'discussion');
+              multiViewResults.get(key).addSubView(result);
             } else {
               results.push(result);
             }
           },
         );
 
-        const byEvent = groupBy(messages, (v) => v.body.data.name) as Record<
-          EmitterWebhookEventName,
-          Message<IGitHubEventQueueMessage>[]
-        >;
-
         await Promise.allSettled(
-          Object.entries(byEvent)
-            .map(([_, messages]) => {
-              return messages.map(async (message) => {
-                try {
-                  const { data } = message.body;
-                  await hooks.receive({
-                    id: data.id,
-                    name: data.name as any,
-                    payload: data.payload,
-                  });
-                  message.ack();
-                } catch (error) {
-                  console.error('github app worker error', error);
-                  message.retry();
-                }
+          messages.map(async (message) => {
+            try {
+              const { data } = message.body;
+              await hooks.receive({
+                id: data.id,
+                name: data.name as any,
+                payload: data.payload,
               });
-            })
-            .flat(),
+              message.ack();
+            } catch (error) {
+              console.error('github app worker error', error);
+              message.retry();
+            }
+          }),
         );
 
-        prReviewResults.forEach((v) => {
+        multiViewResults.forEach((v) => {
           results.push(...v.toResult());
         });
 
-        console.log(
-          `🚀 ~ GitHubEventWorker ~ prReviewResults.forEach ~ results:`,
-          results,
-        );
+        this.onBatchDoneForTest(results);
 
         await Promise.allSettled(
           results.map(({ markdown, eventName }) =>
@@ -177,22 +178,24 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
   }
 }
 
-class PullRequestReviewComposite {
-  reviewData!: IResult;
-  commentData: IResult[] = [];
+class EventComposite {
+  mainView!: IResult;
+  subView: IResult[] = [];
 
-  addPullRequestReview(data: IResult) {
-    this.reviewData = data;
+  constructor(public key: string) {}
+
+  setMainView(data: IResult) {
+    this.mainView = data;
   }
 
-  addPullRequestReviewComment(data: IResult) {
-    this.commentData.push(data);
+  addSubView(data: IResult) {
+    this.subView.push(data);
   }
 
   toResult() {
-    const { reviewData, commentData } = this;
+    const { mainView, subView } = this;
 
-    const chunked = chunk(commentData, 5);
+    const chunked = chunk(subView, 5);
     const result = [] as IResult[];
 
     chunked.forEach((v, i) => {
@@ -200,19 +203,19 @@ class PullRequestReviewComposite {
       let eventName = '';
       let text = v.map((d) => d.markdown.text).join('\n\n');
 
-      if (i === 0 && reviewData) {
-        title = reviewData.markdown.title;
-        eventName = reviewData.eventName;
-        text = reviewData.markdown.text + '\n\n' + text;
-      } else if (commentData.length > 0) {
-        title = commentData[0].markdown.title;
-        eventName = commentData[0].eventName;
+      if (i === 0 && mainView) {
+        title = mainView.markdown.title;
+        eventName = mainView.eventName;
+        text = mainView.markdown.text + '\n\n' + text;
+      } else if (subView.length > 0) {
+        title = subView[0].markdown.title;
+        eventName = subView[0].eventName;
       }
 
       result.push({
         eventName,
         markdown: {
-          title: `${title} (${i + 1}/${chunked.length})`,
+          title,
           text,
         },
       });

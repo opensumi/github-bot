@@ -19,6 +19,8 @@ import {
   pull_request_review_comment_0_created,
   pull_request_review_4_submitted_changes_requested,
   pull_request_review_comment_1_created,
+  discussion_0_created,
+  discussion_comment_0_created,
 } from '../fixtures';
 
 const botId = 'mock';
@@ -96,6 +98,43 @@ describe('queue', () => {
 
     const batch = MockMessageBatch.from(reviews);
     wk.push(...batch.messages);
+
+    wk.onBatchDoneForTest = (results) => {
+      expect(results.length).toBe(1);
+    };
+
+    await wk.run();
+  });
+
+  it('can composite discussion', async () => {
+    const wk = new GitHubEventWorker('app');
+    const events = [
+      {
+        name: 'discussion.created',
+        payload: discussion_0_created,
+      },
+      {
+        name: 'discussion_comment.created',
+        payload: discussion_comment_0_created,
+      },
+    ] as { name: EmitterWebhookEventName; payload: any }[];
+
+    const reviews = events.map((v) => ({
+      botId,
+      type: 'github-app',
+      data: {
+        id: `${Math.random()}`,
+        name: v.name,
+        payload: v.payload,
+      },
+    })) as IGitHubEventQueueMessage[];
+
+    const batch = MockMessageBatch.from(reviews);
+    wk.push(...batch.messages);
+
+    wk.onBatchDoneForTest = (results) => {
+      expect(results.length).toBe(1);
+    };
 
     await wk.run();
   });

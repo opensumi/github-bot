@@ -22,7 +22,7 @@ for (const webhook of WEBHOOKS) {
         v.action === 'opened' ||
         v.action === 'closed'
       ) {
-        writeFile(`pull_request_${i}_${v.action}`, v);
+        writeFile(`pull_request_${v.pull_request.number}_${i}_${v.action}`, v);
       }
     });
   }
@@ -30,7 +30,10 @@ for (const webhook of WEBHOOKS) {
     const pull_request_review =
       webhook as WebhookDefinition<'pull_request_review'>;
     pull_request_review.examples.forEach((v, i) => {
-      writeFile(`pull_request_review_${i}_${v.action}_${v.review.state}`, v);
+      writeFile(
+        `pull_request_review_${v.pull_request.number}_${i}_${v.action}_${v.review.state}`,
+        v,
+      );
     });
   }
   if (webhook.name === 'pull_request_review_comment') {
@@ -42,8 +45,35 @@ for (const webhook of WEBHOOKS) {
         v.action === 'created' ||
         v.action === 'deleted'
       ) {
-        writeFile(`pull_request_review_comment_${i}_${v.action}`, v);
+        writeFile(
+          `pull_request_${v.pull_request.number}_review_comment_${i}_${v.action}`,
+          v,
+        );
       }
+    });
+  }
+  if (webhook.name === 'discussion') {
+    const discussion = webhook as WebhookDefinition<'discussion'>;
+    discussion.examples.forEach((v, i) => {
+      if (v.discussion.number !== 90) {
+        return;
+      }
+      writeFile(`discussion_${v.discussion.number}_${i}_${v.action}`, v);
+    });
+  }
+
+  if (webhook.name === 'discussion_comment') {
+    const discussion_comment =
+      webhook as WebhookDefinition<'discussion_comment'>;
+    discussion_comment.examples.forEach((v, i) => {
+      if (v.discussion.number !== 90) {
+        return;
+      }
+
+      writeFile(
+        `discussion_comment_${v.discussion.number}_${i}_${v.action}`,
+        v,
+      );
     });
   }
 }

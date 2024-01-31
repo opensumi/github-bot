@@ -1,44 +1,6 @@
 {
-  "action": "submitted",
-  "review": {
-    "id": 237895671,
-    "node_id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3MjM3ODk1Njcx",
-    "user": {
-      "login": "Codertocat",
-      "id": 21031067,
-      "node_id": "MDQ6VXNlcjIxMDMxMDY3",
-      "avatar_url": "https://avatars1.githubusercontent.com/u/21031067?v=4",
-      "gravatar_id": "",
-      "url": "https://api.github.com/users/Codertocat",
-      "html_url": "https://github.com/Codertocat",
-      "followers_url": "https://api.github.com/users/Codertocat/followers",
-      "following_url": "https://api.github.com/users/Codertocat/following{/other_user}",
-      "gists_url": "https://api.github.com/users/Codertocat/gists{/gist_id}",
-      "starred_url": "https://api.github.com/users/Codertocat/starred{/owner}{/repo}",
-      "subscriptions_url": "https://api.github.com/users/Codertocat/subscriptions",
-      "organizations_url": "https://api.github.com/users/Codertocat/orgs",
-      "repos_url": "https://api.github.com/users/Codertocat/repos",
-      "events_url": "https://api.github.com/users/Codertocat/events{/privacy}",
-      "received_events_url": "https://api.github.com/users/Codertocat/received_events",
-      "type": "User",
-      "site_admin": false
-    },
-    "body": null,
-    "commit_id": "ec26c3e57ca3a959ca5aad62de7213c562f8c821",
-    "submitted_at": "2019-05-15T15:20:38Z",
-    "state": "commented",
-    "html_url": "https://github.com/Codertocat/Hello-World/pull/2#pullrequestreview-237895671",
-    "pull_request_url": "https://api.github.com/repos/Codertocat/Hello-World/pulls/2",
-    "author_association": "OWNER",
-    "_links": {
-      "html": {
-        "href": "https://github.com/Codertocat/Hello-World/pull/2#pullrequestreview-237895671"
-      },
-      "pull_request": {
-        "href": "https://api.github.com/repos/Codertocat/Hello-World/pulls/2"
-      }
-    }
-  },
+  "action": "closed",
+  "number": 2,
   "pull_request": {
     "url": "https://api.github.com/repos/Codertocat/Hello-World/pulls/2",
     "id": 279147437,
@@ -48,7 +10,7 @@
     "patch_url": "https://github.com/Codertocat/Hello-World/pull/2.patch",
     "issue_url": "https://api.github.com/repos/Codertocat/Hello-World/issues/2",
     "number": 2,
-    "state": "open",
+    "state": "closed",
     "locked": false,
     "title": "Update the README with new information.",
     "user": {
@@ -73,15 +35,67 @@
     },
     "body": "This is a pretty simple change that we need to pull into master.",
     "created_at": "2019-05-15T15:20:33Z",
-    "updated_at": "2019-05-15T15:20:38Z",
-    "closed_at": null,
+    "updated_at": "2019-05-15T15:21:18Z",
+    "closed_at": "2019-05-15T15:21:18Z",
     "merged_at": null,
     "merge_commit_sha": "c4295bd74fb0f4fda03689c3df3f2803b658fd85",
     "assignee": null,
-    "assignees": [],
-    "requested_reviewers": [],
+    "assignees": [
+      {
+        "login": "Codertocat",
+        "id": 21031067,
+        "node_id": "MDQ6VXNlcjIxMDMxMDY3",
+        "avatar_url": "https://avatars1.githubusercontent.com/u/21031067?v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/Codertocat",
+        "html_url": "https://github.com/Codertocat",
+        "followers_url": "https://api.github.com/users/Codertocat/followers",
+        "following_url": "https://api.github.com/users/Codertocat/following{/other_user}",
+        "gists_url": "https://api.github.com/users/Codertocat/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/Codertocat/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/Codertocat/subscriptions",
+        "organizations_url": "https://api.github.com/users/Codertocat/orgs",
+        "repos_url": "https://api.github.com/users/Codertocat/repos",
+        "events_url": "https://api.github.com/users/Codertocat/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/Codertocat/received_events",
+        "type": "User",
+        "site_admin": false
+      }
+    ],
+    "requested_reviewers": [
+      {
+        "login": "octocat",
+        "id": 5346,
+        "node_id": "MDQ6VXNlcjIxMDMxMDY3",
+        "avatar_url": "http://alambic.github.com/avatars/u/5346?",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/octocat",
+        "html_url": "http://github.com/octocat",
+        "followers_url": "https://api.github.com/users/octocat/followers",
+        "following_url": "https://api.github.com/users/octocat/following{/other_user}",
+        "gists_url": "https://api.github.com/users/octocat/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/octocat/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/octocat/subscriptions",
+        "organizations_url": "https://api.github.com/users/octocat/orgs",
+        "repos_url": "https://api.github.com/users/octocat/repos",
+        "events_url": "https://api.github.com/users/octocat/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/octocat/received_events",
+        "type": "User",
+        "site_admin": false
+      }
+    ],
     "requested_teams": [],
-    "labels": [],
+    "labels": [
+      {
+        "id": 1362934389,
+        "node_id": "MDU6TGFiZWwxMzYyOTM0Mzg5",
+        "url": "https://api.github.com/repos/Codertocat/Hello-World/labels/bug",
+        "name": "bug",
+        "color": "d73a4a",
+        "default": true,
+        "description": "Something isn't working"
+      }
+    ],
     "milestone": null,
     "commits_url": "https://api.github.com/repos/Codertocat/Hello-World/pulls/2/commits",
     "review_comments_url": "https://api.github.com/repos/Codertocat/Hello-World/pulls/2/comments",
@@ -179,8 +193,8 @@
         "releases_url": "https://api.github.com/repos/Codertocat/Hello-World/releases{/id}",
         "deployments_url": "https://api.github.com/repos/Codertocat/Hello-World/deployments",
         "created_at": "2019-05-15T15:19:25Z",
-        "updated_at": "2019-05-15T15:20:34Z",
-        "pushed_at": "2019-05-15T15:20:33Z",
+        "updated_at": "2019-05-15T15:21:14Z",
+        "pushed_at": "2019-05-15T15:20:57Z",
         "git_url": "git://github.com/Codertocat/Hello-World.git",
         "ssh_url": "git@github.com:Codertocat/Hello-World.git",
         "clone_url": "https://github.com/Codertocat/Hello-World.git",
@@ -199,16 +213,16 @@
         "mirror_url": null,
         "archived": false,
         "disabled": false,
-        "open_issues_count": 2,
+        "open_issues_count": 1,
         "license": null,
         "forks": 0,
-        "open_issues": 2,
+        "open_issues": 1,
         "watchers": 0,
         "default_branch": "master",
-        "allow_squash_merge": true,
-        "allow_merge_commit": true,
-        "allow_rebase_merge": true,
-        "delete_branch_on_merge": false
+        "is_template": false,
+        "topics": [],
+        "visibility": "public",
+        "web_commit_signoff_required": false
       }
     },
     "base": {
@@ -302,8 +316,8 @@
         "releases_url": "https://api.github.com/repos/Codertocat/Hello-World/releases{/id}",
         "deployments_url": "https://api.github.com/repos/Codertocat/Hello-World/deployments",
         "created_at": "2019-05-15T15:19:25Z",
-        "updated_at": "2019-05-15T15:20:34Z",
-        "pushed_at": "2019-05-15T15:20:33Z",
+        "updated_at": "2019-05-15T15:21:14Z",
+        "pushed_at": "2019-05-15T15:20:57Z",
         "git_url": "git://github.com/Codertocat/Hello-World.git",
         "ssh_url": "git@github.com:Codertocat/Hello-World.git",
         "clone_url": "https://github.com/Codertocat/Hello-World.git",
@@ -322,16 +336,16 @@
         "mirror_url": null,
         "archived": false,
         "disabled": false,
-        "open_issues_count": 2,
+        "open_issues_count": 1,
         "license": null,
         "forks": 0,
-        "open_issues": 2,
+        "open_issues": 1,
         "watchers": 0,
         "default_branch": "master",
-        "allow_squash_merge": true,
-        "allow_merge_commit": true,
-        "allow_rebase_merge": true,
-        "delete_branch_on_merge": false
+        "is_template": false,
+        "topics": [],
+        "visibility": "public",
+        "web_commit_signoff_required": false
       }
     },
     "_links": {
@@ -360,7 +374,22 @@
         "href": "https://api.github.com/repos/Codertocat/Hello-World/statuses/ec26c3e57ca3a959ca5aad62de7213c562f8c821"
       }
     },
-    "author_association": "OWNER"
+    "author_association": "OWNER",
+    "auto_merge": null,
+    "active_lock_reason": null,
+    "draft": false,
+    "merged": false,
+    "mergeable": true,
+    "rebaseable": true,
+    "mergeable_state": "clean",
+    "merged_by": null,
+    "comments": 0,
+    "review_comments": 1,
+    "maintainer_can_modify": false,
+    "commits": 1,
+    "additions": 1,
+    "deletions": 1,
+    "changed_files": 1
   },
   "repository": {
     "id": 186853002,
@@ -429,8 +458,8 @@
     "releases_url": "https://api.github.com/repos/Codertocat/Hello-World/releases{/id}",
     "deployments_url": "https://api.github.com/repos/Codertocat/Hello-World/deployments",
     "created_at": "2019-05-15T15:19:25Z",
-    "updated_at": "2019-05-15T15:20:34Z",
-    "pushed_at": "2019-05-15T15:20:33Z",
+    "updated_at": "2019-05-15T15:21:14Z",
+    "pushed_at": "2019-05-15T15:20:57Z",
     "git_url": "git://github.com/Codertocat/Hello-World.git",
     "ssh_url": "git@github.com:Codertocat/Hello-World.git",
     "clone_url": "https://github.com/Codertocat/Hello-World.git",
@@ -449,12 +478,34 @@
     "mirror_url": null,
     "archived": false,
     "disabled": false,
-    "open_issues_count": 2,
+    "open_issues_count": 1,
     "license": null,
     "forks": 0,
-    "open_issues": 2,
+    "open_issues": 1,
     "watchers": 0,
-    "default_branch": "master"
+    "default_branch": "master",
+    "is_template": false,
+    "topics": [],
+    "visibility": "public",
+    "web_commit_signoff_required": false
+  },
+  "installation": {
+    "id": 1,
+    "node_id": "MDIzOkludGVncmF0aW9uSW5zdGFsbGF0aW9uMQ=="
+  },
+  "organization": {
+    "login": "Octocoders",
+    "id": 38302899,
+    "node_id": "MDEyOk9yZ2FuaXphdGlvbjM4MzAyODk5",
+    "url": "https://api.github.com/orgs/Octocoders",
+    "repos_url": "https://api.github.com/orgs/Octocoders/repos",
+    "events_url": "https://api.github.com/orgs/Octocoders/events",
+    "hooks_url": "https://api.github.com/orgs/Octocoders/hooks",
+    "issues_url": "https://api.github.com/orgs/Octocoders/issues",
+    "members_url": "https://api.github.com/orgs/Octocoders/members{/member}",
+    "public_members_url": "https://api.github.com/orgs/Octocoders/public_members{/member}",
+    "avatar_url": "https://avatars1.githubusercontent.com/u/38302899?v=4",
+    "description": ""
   },
   "sender": {
     "login": "Codertocat",

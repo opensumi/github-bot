@@ -1,5 +1,5 @@
 {
-  "action": "submitted",
+  "action": "dismissed",
   "review": {
     "id": 237895671,
     "node_id": "MDE3OlB1bGxSZXF1ZXN0UmV2aWV3MjM3ODk1Njcx",
@@ -26,7 +26,7 @@
     "body": null,
     "commit_id": "ec26c3e57ca3a959ca5aad62de7213c562f8c821",
     "submitted_at": "2019-05-15T15:20:38Z",
-    "state": "commented",
+    "state": "dismissed",
     "html_url": "https://github.com/Codertocat/Hello-World/pull/2#pullrequestreview-237895671",
     "pull_request_url": "https://api.github.com/repos/Codertocat/Hello-World/pulls/2",
     "author_association": "OWNER",
@@ -40,13 +40,13 @@
     }
   },
   "pull_request": {
-    "url": "https://api.github.com/repos/Codertocat/Hello-World/pulls/2",
-    "id": 279147437,
-    "node_id": "MDExOlB1bGxSZXF1ZXN0Mjc5MTQ3NDM3",
-    "html_url": "https://github.com/Codertocat/Hello-World/pull/2",
-    "diff_url": "https://github.com/Codertocat/Hello-World/pull/2.diff",
-    "patch_url": "https://github.com/Codertocat/Hello-World/pull/2.patch",
-    "issue_url": "https://api.github.com/repos/Codertocat/Hello-World/issues/2",
+    "url": "https://api.github.com/repos/hellomouse/GNS/pulls/902",
+    "id": 370123640,
+    "node_id": "MDExOlB1bGxSZXF1ZXN0MzcwMTIzNjQw",
+    "html_url": "https://github.com/hellomouse/GNS/pull/902",
+    "diff_url": "https://github.com/hellomouse/GNS/pull/902.diff",
+    "patch_url": "https://github.com/hellomouse/GNS/pull/902.patch",
+    "issue_url": "https://api.github.com/repos/hellomouse/GNS/issues/902",
     "number": 2,
     "state": "open",
     "locked": false,
@@ -71,7 +71,7 @@
       "type": "User",
       "site_admin": false
     },
-    "body": "This is a pretty simple change that we need to pull into master.",
+    "body": "",
     "created_at": "2019-05-15T15:20:33Z",
     "updated_at": "2019-05-15T15:20:38Z",
     "closed_at": null,
@@ -515,20 +515,6 @@
     "visibility": "public",
     "web_commit_signoff_required": false
   },
-  "organization": {
-    "login": "Octocoders",
-    "id": 38302899,
-    "node_id": "MDEyOk9yZ2FuaXphdGlvbjM4MzAyODk5",
-    "url": "https://api.github.com/orgs/Octocoders",
-    "repos_url": "https://api.github.com/orgs/Octocoders/repos",
-    "events_url": "https://api.github.com/orgs/Octocoders/events",
-    "hooks_url": "https://api.github.com/orgs/Octocoders/hooks",
-    "issues_url": "https://api.github.com/orgs/Octocoders/issues",
-    "members_url": "https://api.github.com/orgs/Octocoders/members{/member}",
-    "public_members_url": "https://api.github.com/orgs/Octocoders/public_members{/member}",
-    "avatar_url": "https://avatars1.githubusercontent.com/u/38302899?v=4",
-    "description": ""
-  },
   "sender": {
     "login": "Codertocat",
     "id": 21031067,
@@ -552,5 +538,19 @@
   "installation": {
     "id": 1,
     "node_id": "MDIzOkludGVncmF0aW9uSW5zdGFsbGF0aW9uMQ=="
+  },
+  "organization": {
+    "login": "Octocoders",
+    "id": 38302899,
+    "node_id": "MDEyOk9yZ2FuaXphdGlvbjM4MzAyODk5",
+    "url": "https://api.github.com/orgs/Octocoders",
+    "repos_url": "https://api.github.com/orgs/Octocoders/repos",
+    "events_url": "https://api.github.com/orgs/Octocoders/events",
+    "hooks_url": "https://api.github.com/orgs/Octocoders/hooks",
+    "issues_url": "https://api.github.com/orgs/Octocoders/issues",
+    "members_url": "https://api.github.com/orgs/Octocoders/members{/member}",
+    "public_members_url": "https://api.github.com/orgs/Octocoders/public_members{/member}",
+    "avatar_url": "https://avatars1.githubusercontent.com/u/38302899?v=4",
+    "description": ""
   }
 }
