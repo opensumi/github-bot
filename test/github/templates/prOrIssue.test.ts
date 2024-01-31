@@ -1,4 +1,4 @@
-import { handlePr, handleIssue } from '@/github/templates';
+import { handlePr, handleIssue } from '@/github/templates/prOrIssue';
 
 import {
   pull_request_closed,

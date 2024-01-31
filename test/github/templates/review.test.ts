@@ -1,4 +1,4 @@
-import { handleReviewComment } from '@/github/templates';
+import { handleReviewComment } from '@/github/templates/comment';
 
 import { pull_request_review_comment_0_created } from '../../fixtures';
 import { ctx } from '../ctx';

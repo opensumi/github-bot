@@ -22,16 +22,22 @@ describe('queue consumer', () => {
 });
 
 interface FakeMessage {
-  id: number;
-  name: string;
-  payload: any;
+  type: string;
+  data: {
+    id: string;
+    name: string;
+    payload: any;
+  };
 }
 
 function createMessageBatch() {
   const msgs = new Array(100).fill(0).map((_, i) => ({
-    id: i,
-    name: 'test',
-    payload: {},
+    type: 'test',
+    data: {
+      id: `${i}`,
+      name: 'test',
+      payload: {},
+    },
   }));
 
   return new MockMessageBatch<FakeMessage>(msgs.map((v) => new MockMessage(v)));
