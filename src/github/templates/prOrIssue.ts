@@ -35,7 +35,7 @@ function prettyStateReason(stateReason: string) {
   switch (stateReason) {
     case 'off_topic':
       return 'off topic';
-    case 'too heated':
+    case 'too_heated':
       return 'too heated';
     case 'resolved':
       return 'resolved';
@@ -85,9 +85,7 @@ function render(
     builder.add(renderPrOrIssueBody(data, contentLimit));
   }
 
-  let textFirstLine = `${renderUserLink(
-    payload.sender,
-  )} ${action} [${nameBlock}](${data.html_url})`;
+  let textFirstLine = `{{sender | link:sender}} ${action} [${nameBlock}](${data.html_url})`;
 
   if ((data as Issue).state_reason) {
     textFirstLine += ` as ${prettyStateReason((data as Issue).state_reason!)}`;
@@ -95,16 +93,16 @@ function render(
 
   const text = textTpl(
     {
+      payload,
       title: textFirstLine,
       body: builder.build(),
-      repo: payload.repository,
     },
     ctx,
   );
 
   const title = titleTpl(
     {
-      repo: payload.repository,
+      payload,
       event: `${nameBlock}#${data.number}`,
       action,
     },
@@ -216,22 +214,18 @@ export async function handlePr(
     builder.add(renderPrOrIssueBody(data, ctx.setting.contentLimit));
   }
 
-  const firstLine = `${renderUserLink(
-    payload.sender,
-  )} ${action} [${nameBlock}](${data.html_url})`;
-
   const text = textTpl(
     {
-      title: firstLine,
+      payload,
+      title: `{{sender | link:sender}} ${action} [${nameBlock}](${data.html_url})`,
       body: builder.build(),
-      repo: payload.repository,
     },
     ctx,
   );
 
   const title = titleTpl(
     {
-      repo: payload.repository,
+      payload,
       event: `${nameBlock}#${data.number}`,
       action,
     },

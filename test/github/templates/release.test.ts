@@ -12,6 +12,7 @@ describe('release related', () => {
     expect(data.text).toBeDefined();
   });
   it('will transform long url to short link', async () => {
+    debugger;
     const data = await handleRelease(release_published, ctx);
 
     expect(data).toMatchSnapshot();

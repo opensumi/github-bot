@@ -95,7 +95,6 @@ export function replaceGitHubUrlToMarkdown(
   walk(tree, (node) => {
     if (node.type === 'link') {
       if (checkLinkIsLiteral(node)) {
-        debugger;
         console.log('literal', node);
         const url = node.url;
         const pull = new RegExp(
@@ -269,7 +268,6 @@ export function parseGitHubUrl(
       repo: splitted[1],
     };
   } else if (splitted.length === 4) {
-    console.log('sub');
     // https://github.com/opensumi/core/pull/2172
     return {
       type: 'issue',

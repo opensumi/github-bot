@@ -5,7 +5,7 @@ import { replaceGitHubUrlToMarkdown } from '../utils';
 
 import { titleTpl } from './utils';
 
-import { renderUserLink, useRef, textTpl } from '.';
+import { useRef, textTpl } from '.';
 
 export async function handleRelease(
   payload: ExtractPayload<'release'>,
@@ -13,10 +13,9 @@ export async function handleRelease(
 ): Promise<TemplateRenderResult> {
   const action = payload.action;
   const release = payload.release;
-  const repo = payload.repository;
   const title = titleTpl(
     {
-      repo,
+      payload,
       event: release.name,
       action,
     },
@@ -43,12 +42,10 @@ export async function handleRelease(
 
   const text = textTpl(
     {
-      repo: payload.repository,
-      title: `${renderUserLink(payload.sender)} ${action} [${release.name}](${
-        release.html_url
-      })`,
+      payload,
+      title: `{{ sender | link }} ${action} {{ release | link }}`,
       body: replaceGitHubUrlToMarkdown(builder.build(), {
-        owner: payload.repository.owner.login ?? '',
+        owner: payload.repository.owner.login,
         repo: payload.repository.name,
       }),
     },

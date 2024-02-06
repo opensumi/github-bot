@@ -3,6 +3,7 @@ import capitalize from 'lodash/capitalize';
 
 import { StringBuilder } from '@/utils/string-builder';
 
+import { renderTemplate } from '../render';
 import { Context } from '../types';
 import { replaceGitHubText } from '../utils';
 
@@ -20,6 +21,10 @@ export function renderTeamLink(team: { name: string; html_url: string }) {
 
 export function renderAtUserLink(sender: { login: string; html_url: string }) {
   return `[@${sender.login}](${sender.html_url})`;
+}
+
+export function renderReleaseLink(release: { name: string; html_url: string }) {
+  return `[${release.name}](${release.html_url})`;
 }
 
 export function renderPrOrIssueText(
@@ -261,7 +266,7 @@ export class StopHandleError extends Error {
 
 type TitleTpl = (
   data: {
-    repo: Repository;
+    payload: any;
     event: string;
     action: string;
   },
@@ -270,6 +275,8 @@ type TitleTpl = (
 ) => string;
 
 export const titleTpl: TitleTpl = (data, ctx, shouldCapitalize = true) => {
+  const { payload } = data;
+
   let event = data.event;
   if (shouldCapitalize) {
     event = capitalize(event);
@@ -279,40 +286,13 @@ export const titleTpl: TitleTpl = (data, ctx, shouldCapitalize = true) => {
   if (ctx.setting.notDisplayRepoName) {
     text = info;
   } else {
-    text = `[${data.repo.name}] ${info}`;
+    text = `[{{repository.name}}] ${info}`;
   }
-  return text;
-};
-
-type DetailTitleTpl = (
-  data: {
-    somebody: { login: string; html_url: string };
-    did: {
-      text: string;
-      html_url?: string;
-    };
-    something: string | undefined;
-    something1: {
-      text: string;
-      html_url?: string;
-    };
-  },
-  ctx: Context,
-) => string;
-
-export const detailTitleTpl: DetailTitleTpl = (data) => {
-  let text = `${renderUserLink(data.somebody)} [${data.did.text}](${
-    data.did.html_url
-  }) `;
-  if (data.something) {
-    text += `${data.something} on `;
-  }
-  text += `[${data.something1.text}](${data.something1.html_url})`;
-  return text;
+  return renderTemplate(text, payload);
 };
 
 export type TextTplInput = {
-  repo: { name: string; html_url: string };
+  payload: any;
   title: string;
   body: string;
   notRenderBody?: boolean;
@@ -338,12 +318,18 @@ export type HandlerResult = {
 };
 
 export const textTpl: TextTpl = (data, ctx) => {
-  const { repo, title, body } = data;
+  const { payload, title, body } = data;
+  const repo = payload.repository;
+
   let repoInfo = renderRepoLink(repo) + ' ';
   if (ctx?.setting?.notDisplayRepoName) {
     repoInfo = '';
   }
-  const bodyHeader = `#### ${repoInfo}${title.trim()}  `;
+  const bodyHeader = renderTemplate(
+    `#### ${repoInfo}${title.trim()}  `,
+    payload,
+  );
+
   const text = new StringBuilder(bodyHeader);
 
   let bodyText = '';
@@ -355,6 +341,8 @@ export const textTpl: TextTpl = (data, ctx) => {
     text.addDivider();
     text.add(useRef(bodyText));
   }
+
+  bodyText = renderTemplate(bodyText, payload);
 
   return {
     text: text.toString(),

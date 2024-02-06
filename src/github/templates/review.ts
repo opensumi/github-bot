@@ -1,11 +1,6 @@
 import { StringBuilder } from '@/utils/string-builder';
 
-import {
-  Context,
-  ExtractPayload,
-  MarkdownContent,
-  TemplateRenderResult,
-} from '../types';
+import { Context, ExtractPayload, TemplateRenderResult } from '../types';
 
 import {
   StopHandleError,
@@ -13,7 +8,6 @@ import {
   titleTpl,
   renderPrOrIssueTitleLink,
   textTpl,
-  detailTitleTpl,
 } from '.';
 
 export async function handleReview(
@@ -52,7 +46,7 @@ export async function handleReview(
 
   const title = titleTpl(
     {
-      repo: payload.repository,
+      payload,
       event: 'review',
       action: titleActionText,
     },
@@ -64,25 +58,17 @@ export async function handleReview(
   builder.add(renderPrOrIssueTitleLink(pr));
   builder.add(useRef(review.body, ctx.setting.contentLimit));
 
+  let textFirstLine = `{{sender|link}} [${did}]({{review.html_url}}) `;
+  if (something) {
+    textFirstLine += `${something} on `;
+  }
+  textFirstLine += `[pull request]({{pull_request.html_url}})`;
+
   const text = textTpl(
     {
-      title: detailTitleTpl(
-        {
-          somebody: payload.sender,
-          did: {
-            text: did,
-            html_url: review.html_url,
-          },
-          something,
-          something1: {
-            text: 'pull request',
-            html_url: pr.html_url,
-          },
-        },
-        ctx,
-      ),
+      payload,
+      title: textFirstLine,
       body: builder.build(),
-      repo: payload.repository,
     },
     ctx,
   );

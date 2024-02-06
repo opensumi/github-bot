@@ -7,9 +7,9 @@ import { ExtractPayload, Context, TemplateRenderResult } from '../types';
 
 import { Name, NameBlock } from './prOrIssue';
 import {
+  StopHandleError,
   limitLine,
   renderPrOrIssueLink,
-  renderUserLink,
   textTpl,
   titleTpl,
   useRef,
@@ -107,7 +107,7 @@ function renderComment(
 
   const title = titleTpl(
     {
-      repo: payload.repository,
+      payload,
       event: `${location} comment`,
       action,
     },
@@ -116,10 +116,8 @@ function renderComment(
 
   const text = textTpl(
     {
-      repo: payload.repository,
-      title: `${renderUserLink(payload.sender)} ${action} [comment](${
-        comment.html_url
-      }) on [${location}](${data.html_url})`,
+      payload,
+      title: `{{sender | link:sender}} ${action} [comment](${comment.html_url}) on [${location}](${data.html_url})`,
       body: renderCommentBody(data, payload.comment, ctx.setting.contentLimit),
       notRenderBody,
     },
@@ -175,13 +173,13 @@ export async function handleCommitComment(
       },
     );
     if (resp.data) {
-      const commit = resp.data.commit;
-      commitInfo += ` ${commit.message}`;
+      commitInfo += ` ${resp.data.commit.message}`;
     }
   }
+
   const title = titleTpl(
     {
-      repo: payload.repository,
+      payload,
       event: 'commit comment',
       action: 'created',
     },
@@ -190,10 +188,8 @@ export async function handleCommitComment(
 
   const text = textTpl(
     {
-      repo,
-      title: `${renderUserLink(
-        payload.sender,
-      )} commented on [${commitRefInfo}](${comment.html_url})`,
+      payload,
+      title: `{{sender | link}} commented on [${commitRefInfo}]({{comment.html_url}})`,
       body: renderCommentBody(
         {
           html_url: comment.html_url,
@@ -212,19 +208,24 @@ export async function handleCommitComment(
   };
 }
 
+const allowedReviewCommentAction = new Set(['created']);
+
 export async function handleReviewComment(
   payload: ExtractPayload<'pull_request_review_comment'>,
   ctx: Context,
 ): Promise<TemplateRenderResult> {
-  const repo = payload.repository;
+  const { action } = payload;
   const comment = payload.comment;
+
   const pr = payload.pull_request;
-  const action = 'created';
-  const location = 'pull request';
+
+  if (!allowedReviewCommentAction.has(action)) {
+    throw new StopHandleError(`not support action ${action}`);
+  }
 
   const title = titleTpl(
     {
-      repo,
+      payload,
       event: 'review comment',
       action,
     },
@@ -233,10 +234,8 @@ export async function handleReviewComment(
 
   const text = textTpl(
     {
-      repo,
-      title: `${renderUserLink(payload.sender)} ${action} [review comment](${
-        comment.html_url
-      }) on [${location}](${pr.html_url})`,
+      payload,
+      title: `{{sender | link:sender}} ${action} [review comment](${comment.html_url}) on [pull request](${pr.html_url})`,
       body: renderCommentBody(pr, payload.comment, ctx.setting.contentLimit),
     },
     ctx,

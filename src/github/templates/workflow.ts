@@ -4,7 +4,7 @@ import { StringBuilder } from '@/utils/string-builder';
 
 import { Context, ExtractPayload, TemplateRenderResult } from '../types';
 
-import { renderAtUserLink, titleTpl, textTpl, StopHandleError } from '.';
+import { titleTpl, textTpl, StopHandleError } from '.';
 
 function renderWorkflow(
   payload: ExtractPayload<'workflow_run'>,
@@ -12,13 +12,11 @@ function renderWorkflow(
     octokit?: Octokit;
   },
 ): TemplateRenderResult {
-  const workflow = payload.workflow;
-  const workflowRun = payload.workflow_run;
   const action = payload.action as string;
 
   const title = titleTpl(
     {
-      repo: payload.repository,
+      payload,
       event: 'workflow',
       action,
     },
@@ -27,19 +25,14 @@ function renderWorkflow(
 
   const builder = new StringBuilder();
 
-  builder.add(`Name: ${workflow.name}\n`);
-
-  const status = workflowRun.conclusion;
-
-  builder.add(`[Detail](${workflowRun.html_url})\n`);
+  builder.add(`Name: {{workflow.name}}\n`);
+  builder.add(`[Detail]({{workflow_run.html_url}})\n`);
 
   const text = textTpl(
     {
-      title: `[workflow](${
-        workflowRun.html_url
-      }) run ${status} (${renderAtUserLink(payload.sender)})`,
+      payload,
+      title: `{{sender | link}} run [workflow]({{workflow_run.html_url}}) {{workflow_run.conclusion}}`,
       body: builder.build(),
-      repo: payload.repository,
     },
     ctx,
   );
@@ -70,11 +63,8 @@ export async function handleWorkflowRun(
   const mapping = ctx.setting.workflowEventToNotify ?? {};
   const repoAllow = mapping[repository.full_name];
 
-  if (repoAllow) {
-    const allow = repoAllow.includes(workflow.name);
-    if (allow) {
-      return renderWorkflow(payload, ctx);
-    }
+  if (repoAllow && repoAllow.includes(workflow.name)) {
+    return renderWorkflow(payload, ctx);
   }
 
   throw new StopHandleError(

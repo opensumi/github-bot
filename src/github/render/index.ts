@@ -7,6 +7,8 @@ import { StringBuilder } from '@/utils/string-builder';
 
 import { IIssueDetail, IPrDetail } from '../../../libs/octo-service/src/types';
 
+export { renderTemplate } from './template-engine';
+
 export function render(data: IIssueDetail | IPrDetail) {
   const type = data.type === 'pr' ? 'Pull Request' : 'Issue';
   const issueNumber = data.issue.number;
