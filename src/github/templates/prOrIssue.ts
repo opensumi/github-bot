@@ -2,7 +2,12 @@ import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 
 import { StringBuilder } from '@/utils/string-builder';
 
-import { ExtractPayload, THasChanges, Context } from '../types';
+import {
+  ExtractPayload,
+  THasChanges,
+  Context,
+  TemplateRenderResult,
+} from '../types';
 
 import {
   renderUserLink,
@@ -14,9 +19,8 @@ import {
   renderPrRefInfo,
   renderAssigneeInfo,
   renderRequestedReviewersInfo,
+  textTpl,
 } from './utils';
-
-import { textTpl } from '.';
 
 export type Name = 'issues' | 'pull_request' | 'discussion';
 export const NameBlock = {
@@ -47,7 +51,7 @@ function render(
   payload: ExtractPayload<Name>,
   data: Issue | Discussion,
   ctx: Context,
-) {
+): TemplateRenderResult {
   const nameBlock = NameBlock[name];
   const action = payload.action as string;
 
@@ -109,7 +113,7 @@ function render(
 
   return {
     title,
-    text,
+    ...text,
   };
 }
 
@@ -235,20 +239,20 @@ export async function handlePr(
   );
   return {
     title,
-    text,
+    ...text,
   };
 }
 
 export async function handleIssue(
   payload: ExtractPayload<'issues'>,
   ctx: Context,
-) {
+): Promise<TemplateRenderResult> {
   return render('issues', payload, payload.issue, ctx);
 }
 
 export async function handleDiscussion(
   payload: ExtractPayload<'discussion'>,
   ctx: Context,
-) {
+): Promise<TemplateRenderResult> {
   return render('discussion', payload, payload.discussion, ctx);
 }

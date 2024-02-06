@@ -1,8 +1,9 @@
 import { Octokit } from '@octokit/rest';
 import { Repository, User } from '@octokit/webhooks-types';
 
-import { ExtractPayload, Context } from '@/github/types';
 import { StringBuilder } from '@/utils/string-builder';
+
+import { ExtractPayload, Context, TemplateRenderResult } from '../types';
 
 import { Name, NameBlock } from './prOrIssue';
 import {
@@ -94,7 +95,7 @@ function renderComment(
     html_url: string;
   },
   ctx: Context,
-) {
+): TemplateRenderResult {
   const comment = payload.comment;
   const location = NameBlock[name];
   const action = payload.action;
@@ -127,14 +128,14 @@ function renderComment(
 
   return {
     title,
-    text,
+    ...text,
   };
 }
 
 export async function handleIssueComment(
   payload: ExtractPayload<'issue_comment'>,
   ctx: Context,
-) {
+): Promise<TemplateRenderResult> {
   const issue = payload.issue;
   const isUnderPullRequest = Boolean(issue.pull_request);
   let name = 'issues' as Name;
@@ -156,7 +157,7 @@ export async function handleCommitComment(
   ctx: Context & {
     octokit?: Octokit;
   },
-) {
+): Promise<TemplateRenderResult> {
   const repo = payload.repository;
   const comment = payload.comment;
   const commitId = comment.commit_id.slice(0, 6);
@@ -207,14 +208,14 @@ export async function handleCommitComment(
 
   return {
     title,
-    text,
+    ...text,
   };
 }
 
 export async function handleReviewComment(
   payload: ExtractPayload<'pull_request_review_comment'>,
   ctx: Context,
-) {
+): Promise<TemplateRenderResult> {
   const repo = payload.repository;
   const comment = payload.comment;
   const pr = payload.pull_request;
@@ -243,6 +244,6 @@ export async function handleReviewComment(
 
   return {
     title,
-    text,
+    ...text,
   };
 }

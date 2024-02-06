@@ -5,7 +5,7 @@ import DefaultMap from 'mnemonist/default-map';
 
 import { initApp } from '@/github/app';
 import { setupWebhooksTemplate } from '@/github/handler';
-import { MarkdownContent } from '@/github/types';
+import { TemplateRenderResult } from '@/github/types';
 import { sendToDing } from '@/github/utils';
 import { GitHubKVManager } from '@/kv/github';
 import { ISetting } from '@/kv/types';
@@ -35,6 +35,11 @@ export function createUniqueMessageId(
   return `${prefix}#${data?.repository?.full_name}#${data?.pull_request?.number}#${data?.discussion?.number}#${data?.sender?.login}`;
 }
 
+export interface IOctokitShape {
+  webhooks: Webhooks<any>;
+  setting: ISetting;
+}
+
 export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
   logger = Logger.instance();
 
@@ -47,6 +52,59 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
     // do nothing
   }
 
+  async createGitHubApp(botId: string): Promise<IOctokitShape | undefined> {
+    const appSetting = await GitHubKVManager.instance().getAppSettingById(
+      botId,
+    );
+
+    if (!appSetting) {
+      this.logger.error('github app worker error: setting not found', botId);
+      return;
+    }
+
+    if (!appSetting.githubSecret) {
+      this.logger.error(
+        'github app worker error: please set app webhook secret in database',
+        botId,
+      );
+      return;
+    }
+
+    const app = await initApp(appSetting);
+    return {
+      webhooks: app.webhooks,
+      setting: appSetting,
+    };
+  }
+
+  async createWebhook(botId: string): Promise<IOctokitShape | undefined> {
+    const _setting = await GitHubKVManager.instance().getSettingById(botId);
+    if (!_setting) {
+      this.logger.error('github app worker error: setting not found', botId);
+      return;
+    }
+
+    if (!_setting.githubSecret) {
+      this.logger.error(
+        'github app worker error: please set webhook secret in database',
+        botId,
+      );
+      return;
+    }
+
+    const webhooks = new Webhooks<{
+      octokit: undefined;
+    }>({
+      secret: _setting.githubSecret,
+    });
+    const setting = _setting;
+
+    return {
+      webhooks,
+      setting,
+    };
+  }
+
   async run() {
     const byId = groupBy(this.queue, (v) => v.body.botId);
 
@@ -54,58 +112,20 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
       Object.entries(byId).map(async ([botId, messages]) => {
         this.logger.info('consume for', botId, messages.length);
 
-        let hooks: Webhooks<any>;
-        let setting: ISetting;
+        let octokit: IOctokitShape;
+
         if (this.type === 'app') {
-          const appSetting = await GitHubKVManager.instance().getAppSettingById(
-            botId,
-          );
-
-          if (!appSetting) {
-            this.logger.error(
-              'github app worker error: setting not found',
-              botId,
-            );
+          const result = await this.createGitHubApp(botId);
+          if (!result) {
             return;
           }
-
-          if (!appSetting.githubSecret) {
-            this.logger.error(
-              'github app worker error: please set app webhook secret in database',
-              botId,
-            );
-            return;
-          }
-
-          const app = await initApp(appSetting);
-          hooks = app.webhooks;
-          setting = appSetting;
+          octokit = result;
         } else if (this.type === 'webhook') {
-          const _setting = await GitHubKVManager.instance().getSettingById(
-            botId,
-          );
-          if (!_setting) {
-            this.logger.error(
-              'github app worker error: setting not found',
-              botId,
-            );
+          const result = await this.createWebhook(botId);
+          if (!result) {
             return;
           }
-
-          if (!_setting.githubSecret) {
-            this.logger.error(
-              'github app worker error: please set webhook secret in database',
-              botId,
-            );
-            return;
-          }
-
-          hooks = new Webhooks<{
-            octokit: undefined;
-          }>({
-            secret: _setting.githubSecret,
-          });
-          setting = _setting;
+          octokit = result;
         } else {
           this.logger.error('github app worker error: unknown type', this.type);
           return;
@@ -116,9 +136,11 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
           (key) => new EventComposite(key),
         );
 
+        const { webhooks, setting } = octokit;
+
         setupWebhooksTemplate(
-          hooks,
-          { setting },
+          webhooks,
+          { setting, queueMode: true },
           async ({ markdown, eventName, payload }) => {
             const result = { eventName, markdown };
             if (eventName.startsWith('pull_request_review.')) {
@@ -143,7 +165,7 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
           messages.map(async (message) => {
             try {
               const { data } = message.body;
-              await hooks.receive({
+              await webhooks.receive({
                 id: data.id,
                 name: data.name as any,
                 payload: data.payload,
@@ -227,5 +249,5 @@ class EventComposite {
 
 interface IResult {
   eventName: string;
-  markdown: MarkdownContent;
+  markdown: TemplateRenderResult;
 }

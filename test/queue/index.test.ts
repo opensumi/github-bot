@@ -3,10 +3,10 @@ import 'dotenv/config';
 import { EmitterWebhookEventName } from '@octokit/webhooks';
 
 import { IGitHubEventQueueMessage } from '@/queue/types';
-import { GitHubEventWorker } from '@/queue/worker/github';
 
 import { prepareEnv } from '../__mocks__';
 import { MockMessageBatch } from '../__mocks__/queue/message';
+import { MockGitHubEventWorker } from '../__mocks__/webhooks';
 import {
   pull_request_closed,
   pull_request_opened,
@@ -25,9 +25,9 @@ import {
 
 const botId = 'mock';
 
-const describe = process.env.GITHUB_TOKEN
-  ? global.describe
-  : global.describe.skip;
+// const describe = process.env.GITHUB_TOKEN
+//   ? global.describe
+//   : global.describe.skip;
 
 describe('queue', () => {
   beforeAll(() => {
@@ -35,7 +35,7 @@ describe('queue', () => {
   });
 
   it('should work', async () => {
-    const wk = new GitHubEventWorker('app');
+    const wk = new MockGitHubEventWorker('app');
     const events = [
       { name: 'pull_request.closed', payload: pull_request_closed },
       { name: 'pull_request.opened', payload: pull_request_opened },
@@ -70,7 +70,8 @@ describe('queue', () => {
   });
 
   it('can composite pr review', async () => {
-    const wk = new GitHubEventWorker('app');
+    expect.assertions(2);
+    const wk = new MockGitHubEventWorker('app');
     const events = [
       {
         name: 'pull_request_review.submitted',
@@ -101,13 +102,15 @@ describe('queue', () => {
 
     wk.onBatchDoneForTest = (results) => {
       expect(results.length).toBe(1);
+      expect(results).toMatchSnapshot();
     };
 
     await wk.run();
   });
 
   it('can composite discussion', async () => {
-    const wk = new GitHubEventWorker('app');
+    expect.assertions(2);
+    const wk = new MockGitHubEventWorker('app');
     const events = [
       {
         name: 'discussion.created',
@@ -134,6 +137,7 @@ describe('queue', () => {
 
     wk.onBatchDoneForTest = (results) => {
       expect(results.length).toBe(1);
+      expect(results).toMatchSnapshot();
     };
 
     await wk.run();

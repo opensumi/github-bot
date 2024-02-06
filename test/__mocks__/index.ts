@@ -2,6 +2,11 @@ import Environment from '@/env';
 import { GitHubCommon } from '@/kv/constants';
 import { LocalKV } from '@/runtime/node/kv';
 
+const githubSecret = process.env.GITHUB_TOKEN || 'mock-secret';
+const githubAppId = process.env.GITHUB_APPID || 'mock-app-id';
+const githubPrivateKey =
+  process.env.GITHUB_APP_PRIVATE_KEY || 'mock-private-key';
+
 export function prepareEnv() {
   const kv = new LocalKV();
   Environment.from('node', {
@@ -13,10 +18,10 @@ export function prepareEnv() {
     `${GitHubCommon.GITHUB_APP_SETTINGS_PREFIX}mock`,
     JSON.stringify({
       appSettings: {
-        appId: process.env.GITHUB_APPID,
-        privateKey: process.env.GITHUB_APP_PRIVATE_KEY!.replace(/\\n/g, '\n'),
+        appId: githubAppId,
+        privateKey: githubPrivateKey!.replace(/\\n/g, '\n'),
       },
-      githubSecret: process.env.GITHUB_TOKEN,
+      githubSecret,
       dingWebhooks: [],
       contentLimit: 300,
     }),

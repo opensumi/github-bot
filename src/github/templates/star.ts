@@ -1,8 +1,10 @@
-import { ExtractPayload } from '../types';
+import { ExtractPayload, TemplateRenderResult } from '../types';
 
 import { StopHandleError } from './utils';
 
-export async function handleStar(payload: ExtractPayload<'star'>) {
+export async function handleStar(
+  payload: ExtractPayload<'star'>,
+): Promise<TemplateRenderResult> {
   const repository = payload.repository;
   const starCount = repository.stargazers_count;
   if (starCount % 100 === 0) {

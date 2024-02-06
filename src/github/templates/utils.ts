@@ -311,19 +311,31 @@ export const detailTitleTpl: DetailTitleTpl = (data) => {
   return text;
 };
 
+export type TextTplInput = {
+  repo: { name: string; html_url: string };
+  title: string;
+  body: string;
+  notRenderBody?: boolean;
+};
+
 type TextTpl = (
-  data: {
-    repo: { name: string; html_url: string };
-    title: string;
-    body: string;
-    notRenderBody?: boolean;
-  },
+  data: TextTplInput,
   ctx?: {
     setting?: {
       notDisplayRepoName?: boolean;
     };
   },
-) => string;
+) => {
+  text: string;
+  detail: {
+    bodyText: string;
+    bodyHeader: string;
+  };
+};
+
+export type HandlerResult = {
+  text: TextTplInput;
+};
 
 export const textTpl: TextTpl = (data, ctx) => {
   const { repo, title, body } = data;
@@ -331,16 +343,26 @@ export const textTpl: TextTpl = (data, ctx) => {
   if (ctx?.setting?.notDisplayRepoName) {
     repoInfo = '';
   }
-  const text = new StringBuilder(`#### ${repoInfo}${title.trim()}  `);
+  const bodyHeader = `#### ${repoInfo}${title.trim()}  `;
+  const text = new StringBuilder(bodyHeader);
 
-  const bodyText = body.trim();
+  let bodyText = '';
+  if (!data.notRenderBody) {
+    bodyText = body.trim();
+  }
 
-  if (!data.notRenderBody && bodyText) {
+  if (bodyText) {
     text.addDivider();
     text.add(useRef(bodyText));
   }
 
-  return text.toString();
+  return {
+    text: text.toString(),
+    detail: {
+      bodyText,
+      bodyHeader,
+    },
+  };
 };
 
 export const removeOrgInfo = (orgName: string, label: string) => {

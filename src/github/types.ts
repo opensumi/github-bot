@@ -5,6 +5,12 @@ import { ISetting } from '@/kv/types';
 
 export interface Context {
   setting: ISetting;
+
+  /**
+   * if queue mode is true
+   * some event will be rendered more concise in order to avoid the message is too long
+   */
+  queueMode?: boolean;
 }
 
 export type ExtractPayload<TEmitterEvent extends EmitterWebhookEventName> =
@@ -17,11 +23,13 @@ export type MarkdownContent = {
   text: string;
 };
 
-export type TemplateMapping = {
-  [TEmitterEvent in EmitterWebhookEventName]?: (
-    payload: ExtractPayload<TEmitterEvent>,
-    ctx: Context,
-  ) => Promise<MarkdownContent>;
+export type TemplateRenderResult = {
+  title: string;
+  text: string;
+  detail?: {
+    bodyText: string;
+    bodyHeader: string;
+  };
 };
 
 export type THasAction = {

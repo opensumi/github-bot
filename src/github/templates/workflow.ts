@@ -2,7 +2,7 @@ import { Octokit } from '@octokit/rest';
 
 import { StringBuilder } from '@/utils/string-builder';
 
-import { Context, ExtractPayload, MarkdownContent } from '../types';
+import { Context, ExtractPayload, TemplateRenderResult } from '../types';
 
 import { renderAtUserLink, titleTpl, textTpl, StopHandleError } from '.';
 
@@ -11,7 +11,7 @@ function renderWorkflow(
   ctx: Context & {
     octokit?: Octokit;
   },
-): MarkdownContent {
+): TemplateRenderResult {
   const workflow = payload.workflow;
   const workflowRun = payload.workflow_run;
   const action = payload.action as string;
@@ -46,7 +46,7 @@ function renderWorkflow(
 
   return {
     title,
-    text,
+    ...text,
   };
 }
 
@@ -55,7 +55,7 @@ export async function handleWorkflowRun(
   ctx: Context & {
     octokit?: Octokit;
   },
-): Promise<MarkdownContent> {
+): Promise<TemplateRenderResult> {
   const workflow = payload.workflow;
   const workflowRun = payload.workflow_run;
   const repository = payload.repository;

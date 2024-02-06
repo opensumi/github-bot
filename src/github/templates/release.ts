@@ -1,6 +1,6 @@
 import { StringBuilder } from '@/utils/string-builder';
 
-import { Context, ExtractPayload } from '../types';
+import { Context, ExtractPayload, TemplateRenderResult } from '../types';
 import { replaceGitHubUrlToMarkdown } from '../utils';
 
 import { titleTpl } from './utils';
@@ -10,7 +10,7 @@ import { renderUserLink, useRef, textTpl } from '.';
 export async function handleRelease(
   payload: ExtractPayload<'release'>,
   ctx: Context,
-) {
+): Promise<TemplateRenderResult> {
   const action = payload.action;
   const release = payload.release;
   const repo = payload.repository;
@@ -55,5 +55,5 @@ export async function handleRelease(
     ctx,
   );
 
-  return { title, text };
+  return { title, ...text };
 }

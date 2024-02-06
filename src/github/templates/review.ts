@@ -1,6 +1,11 @@
 import { StringBuilder } from '@/utils/string-builder';
 
-import { Context, ExtractPayload, MarkdownContent } from '../types';
+import {
+  Context,
+  ExtractPayload,
+  MarkdownContent,
+  TemplateRenderResult,
+} from '../types';
 
 import {
   StopHandleError,
@@ -14,7 +19,7 @@ import {
 export async function handleReview(
   payload: ExtractPayload<'pull_request_review'>,
   ctx: Context,
-): Promise<MarkdownContent> {
+): Promise<TemplateRenderResult> {
   const review = payload.review;
   const action = payload.action;
   const pr = payload.pull_request;
@@ -84,6 +89,6 @@ export async function handleReview(
 
   return {
     title,
-    text,
+    ...text,
   };
 }

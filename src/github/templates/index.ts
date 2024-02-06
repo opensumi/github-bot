@@ -1,6 +1,6 @@
 import pick from 'lodash/pick';
 
-import { TemplateMapping, Context } from '@/github/types';
+import { Context, TemplateRenderResult } from '@/github/types';
 
 import {
   handleCommitComment,
@@ -15,7 +15,14 @@ import { handleStar } from './star';
 import { handleWorkflowRun } from './workflow';
 export * from './utils';
 
-const templateMapping = Object.freeze({
+type MaybePromise<T> = T | Promise<T>;
+
+export type TemplateMapping = Record<
+  string,
+  (payload: any, ctx: Context) => MaybePromise<TemplateRenderResult>
+>;
+
+const templateMapping: TemplateMapping = Object.freeze({
   'issues.opened': handleIssue,
   'pull_request.opened': handlePr,
   'discussion.created': handleDiscussion,
@@ -34,7 +41,7 @@ const templateMapping = Object.freeze({
   'pull_request_review_comment.created': handleReviewComment,
   'workflow_run.completed': handleWorkflowRun,
   'star.created': handleStar,
-}) as unknown as TemplateMapping;
+});
 
 export const getTemplates = (ctx: Context) => {
   let templates = templateMapping;

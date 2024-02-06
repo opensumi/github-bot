@@ -4,7 +4,6 @@ import {
   WebhookEventHandlerError,
   EmitterWebhookEventName,
 } from '@octokit/webhooks/dist-types/types';
-import { User } from '@octokit/webhooks-types';
 import { HonoRequest } from 'hono';
 
 import { error, json } from '@/api/utils/response';
@@ -12,7 +11,7 @@ import Environment from '@/env';
 import { Logger } from '@/utils/logger';
 
 import { getTemplates, StopHandleError } from './templates';
-import type { MarkdownContent, Context, IHasSender } from './types';
+import type { Context, IHasSender, TemplateRenderResult } from './types';
 
 export class ValidationError extends Error {
   constructor(public statusCode: number, message: string) {
@@ -80,7 +79,7 @@ export const setupWebhooksTemplate = (
   webhooks: Webhooks<{ octokit?: Octokit }>,
   context: Context,
   done: (data: {
-    markdown: MarkdownContent;
+    markdown: TemplateRenderResult;
     eventName: EmitterWebhookEventName;
     payload: any;
   }) => Promise<void>,
@@ -99,10 +98,7 @@ export const setupWebhooksTemplate = (
 
       console.log(eventName, 'handled id:', id);
 
-      const handler = templates[eventName] as (
-        payload: any,
-        ctx: any,
-      ) => Promise<MarkdownContent>;
+      const handler = templates[eventName];
       if (!handler) {
         throw new Error('no handler for ' + eventName);
       }
@@ -113,7 +109,7 @@ export const setupWebhooksTemplate = (
         const markdown = await handler(payload, {
           ...context,
           octokit,
-        });
+        } as any);
 
         console.log('get data from handler: ', markdown);
 
