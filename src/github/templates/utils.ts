@@ -1,4 +1,3 @@
-import { Repository } from '@octokit/webhooks-types';
 import capitalize from 'lodash/capitalize';
 
 import { StringBuilder } from '@/utils/string-builder';
@@ -113,38 +112,24 @@ export function renderAssigneeInfo(
   return `> Assignees: ${assigneeNames}  `;
 }
 
+interface ISenderBasic {
+  login: string;
+  html_url: string;
+}
+
+interface ITeamBasic {
+  name: string;
+  html_url: string;
+}
+
 export function renderRequestedReviewersInfo(
-  reviewers: (
-    | {
-        name: string;
-        html_url: string;
-      }
-    | {
-        login: string;
-        html_url: string;
-      }
-  )[],
+  reviewers: (ISenderBasic | ITeamBasic)[],
 ) {
   const reviewerNames = reviewers
     .map((v) =>
-      (
-        v as {
-          login: string;
-          html_url: string;
-        }
-      ).login
-        ? renderUserLink(
-            v as {
-              login: string;
-              html_url: string;
-            },
-          )
-        : renderTeamLink(
-            v as {
-              name: string;
-              html_url: string;
-            },
-          ),
+      (v as ISenderBasic).login
+        ? renderUserLink(v as ISenderBasic)
+        : renderTeamLink(v as ITeamBasic),
     )
     .join(', ');
   return `> Requested reviewers: ${reviewerNames}  `;
@@ -183,7 +168,7 @@ export function renderPrOrIssueBody(
   const builder = new StringBuilder();
 
   if (p.body) {
-    builder.add(`${useRef(p.body, bodyLimit)}`);
+    builder.add(useRef(p.body, bodyLimit));
   }
 
   return builder.build();

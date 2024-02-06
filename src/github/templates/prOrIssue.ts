@@ -10,7 +10,6 @@ import {
 } from '../types';
 
 import {
-  renderUserLink,
   renderPrOrIssueTitleLink,
   renderDeletedPrOrIssueTitleLink,
   titleTpl,
@@ -31,14 +30,8 @@ export const NameBlock = {
   [key in Name]: string;
 };
 
-function prettyStateReason(stateReason: string) {
+function prettyIssueStateReason(stateReason: string) {
   switch (stateReason) {
-    case 'off_topic':
-      return 'off topic';
-    case 'too_heated':
-      return 'too heated';
-    case 'resolved':
-      return 'resolved';
     case 'not_planned':
       return 'not planned';
     default:
@@ -88,7 +81,9 @@ function render(
   let textFirstLine = `{{sender | link:sender}} ${action} [${nameBlock}](${data.html_url})`;
 
   if ((data as Issue).state_reason) {
-    textFirstLine += ` as ${prettyStateReason((data as Issue).state_reason!)}`;
+    textFirstLine += ` as ${prettyIssueStateReason(
+      (data as Issue).state_reason!,
+    )}`;
   }
 
   const text = textTpl(
