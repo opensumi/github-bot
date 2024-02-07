@@ -71,8 +71,8 @@ function render(
   }
 
   if (shouldRenderBody && data.body) {
-    builder.addDivider('> ', true);
-    builder.add(renderPrOrIssueBody(data, contentLimit));
+    builder.addDivider('', true);
+    builder.add(renderPrOrIssueBody(data));
   }
 
   let textFirstLine = `{{sender | link:sender}} ${action} [${nameBlock}](${data.html_url})`;
@@ -90,6 +90,7 @@ function render(
       action,
       title: textFirstLine,
       body: builder.build(),
+      contentLimit,
     },
     ctx,
   );
@@ -187,13 +188,13 @@ export async function handlePr(
 
   if (oldRef) {
     builder.add(
-      `> changed the base branch from \`${oldRef}\` to \`${base.ref}\`  `,
+      `changed the base branch from \`${oldRef}\` to \`${base.ref}\`  `,
     );
   }
 
   if (shouldRenderBody && data.body) {
-    builder.addDivider('> ', true);
-    builder.add(renderPrOrIssueBody(data, ctx.setting.contentLimit));
+    builder.addDivider('', true);
+    builder.add(renderPrOrIssueBody(data));
   }
 
   const text = textTpl(
@@ -203,6 +204,7 @@ export async function handlePr(
       action,
       title: `{{sender | link:sender}} ${action} [${nameBlock}](${data.html_url})`,
       body: builder.build(),
+      contentLimit: ctx.setting.contentLimit,
     },
     ctx,
   );

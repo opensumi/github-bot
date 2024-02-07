@@ -137,6 +137,7 @@ export function replaceGitHubUrlToMarkdown(
   text = toMarkdown(tree, {
     extensions: [gfmToMarkdown()],
     listItemIndent: 'one',
+    rule: '-',
   });
 
   return text;
@@ -184,7 +185,7 @@ export async function sendContentToDing(
       })(),
     );
   }
-  await Promise.all(promises);
+  await Promise.allSettled(promises);
 }
 
 export function contentToMarkdown(data: MarkdownContent) {

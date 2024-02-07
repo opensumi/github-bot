@@ -37,6 +37,8 @@ describe('comment', () => {
     );
     console.log(`🚀 ~ file: comments.test.ts ~ line 21 ~ d`, d);
     expect(d.trim().split('\n').length).toEqual(3);
-    expect(d.trim().split('\n')[0]).toEqual('> #### [#1 123](12312)');
+    expect(d.trim().split('\n')[0]).toMatchInlineSnapshot(
+      `"#### [#1 123](12312)"`,
+    );
   });
 });

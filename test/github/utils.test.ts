@@ -1,8 +1,4 @@
-import {
-  limitLine,
-  useRef,
-  limitTextByPosition,
-} from '@/github/templates/utils';
+import { limitLine, useRef } from '@/github/templates/utils';
 import {
   sendToDing,
   replaceGitHubUrlToMarkdown,
@@ -10,6 +6,7 @@ import {
   parseGitHubUrl,
   standardizeMarkdown,
 } from '@/github/utils';
+import { limitTextByPosition } from '@/utils/string-builder';
 import * as DingUtils from '@opensumi/dingtalk-bot/lib/utils';
 
 describe('github utils', () => {
@@ -40,7 +37,12 @@ describe('github utils', () => {
 44444
 `;
     const d = limitTextByPosition(text, 9);
-    expect(d).toEqual(`11111\n22222\n33333...`);
+    expect(d).toMatchInlineSnapshot(`
+      "11111
+      22222
+      33333
+      44444"
+    `);
   });
 
   it('can limitTextByPostion2', () => {
@@ -53,7 +55,13 @@ describe('github utils', () => {
 77777
 `;
     const d = limitTextByPosition(text, 15);
-    expect(d).toEqual(`11111\n22222\n33333...`);
+    expect(d).toMatchInlineSnapshot(`
+      "11111
+      22222
+      33333
+      44444
+      55555..."
+    `);
   });
 
   it('send to ding', async () => {

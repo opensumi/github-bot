@@ -1,6 +1,6 @@
 import capitalize from 'lodash/capitalize';
 
-import { StringBuilder } from '@/utils/string-builder';
+import { StringBuilder, limitTextByPosition } from '@/utils/string-builder';
 
 import { render } from '../render';
 import { Context } from '../types';
@@ -81,7 +81,7 @@ export function renderPrOrIssueTitleLink(p: {
   html_url: string;
   body?: string | null | undefined;
 }) {
-  return `> #### ${renderPrOrIssueLink(p)}`;
+  return `#### ${renderPrOrIssueLink(p)}`;
 }
 
 export function renderPrRefInfo(data: {
@@ -99,7 +99,7 @@ export function renderPrRefInfo(data: {
   const head = data.head;
   const base = data.base;
   const headLabel = removeOrgInfo(base.user.login, head.label);
-  return `> ${base.ref} <- ${headLabel}  `;
+  return `${base.ref} <- ${headLabel}  `;
 }
 
 export function renderAssigneeInfo(
@@ -109,7 +109,7 @@ export function renderAssigneeInfo(
   }[],
 ) {
   const assigneeNames = assignees.map((v) => renderUserLink(v)).join(', ');
-  return `> Assignees: ${assigneeNames}  `;
+  return `Assignees: ${assigneeNames}  `;
 }
 
 interface ISenderBasic {
@@ -132,7 +132,7 @@ export function renderRequestedReviewersInfo(
         : renderTeamLink(v as ITeamBasic),
     )
     .join(', ');
-  return `> Requested reviewers: ${reviewerNames}  `;
+  return `Requested reviewers: ${reviewerNames}  `;
 }
 
 export function renderDeletedPrOrIssueTitleLink(p: {
@@ -147,28 +147,25 @@ export function renderDeletedPrOrIssueTitleLink(p: {
   html_url: string;
   body: string | null | undefined;
 }) {
-  return `> #### ${renderPrOrIssueLink(p, '~~', '~~')}`;
+  return `#### ${renderPrOrIssueLink(p, '~~', '~~')}`;
 }
 
-export function renderPrOrIssueBody(
-  p: {
-    /**
-     * The title of the pull request.
-     */
-    title: string;
-    /**
-     * Number uniquely identifying the pull request within its repository.
-     */
-    number: number;
-    html_url: string;
-    body?: string | null | undefined;
-  },
-  bodyLimit = -1,
-) {
+export function renderPrOrIssueBody(p: {
+  /**
+   * The title of the pull request.
+   */
+  title: string;
+  /**
+   * Number uniquely identifying the pull request within its repository.
+   */
+  number: number;
+  html_url: string;
+  body?: string | null | undefined;
+}) {
   const builder = new StringBuilder();
 
   if (p.body) {
-    builder.add(useRef(p.body, bodyLimit));
+    builder.add(p.body);
   }
 
   return builder.build();
@@ -199,32 +196,6 @@ export function useRef(text?: string | null | undefined, bodyLimit = -1) {
   return newLines.join('\n');
 }
 
-const LIMIT_MIN_LINE = 3;
-
-export function limitTextByPosition(text: string, position: number) {
-  const arrayOfLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
-
-  let count = 0;
-  let lineNo = 0;
-  for (; lineNo < arrayOfLines.length; lineNo++) {
-    const line = arrayOfLines[lineNo];
-    count += line.length;
-    if (count >= position) {
-      break;
-    }
-  }
-
-  // 如果 limit 过后的行数小于 LIMIT_MIN_LINE，则使用 LIMIT_MIN_LINE
-  lineNo = lineNo < LIMIT_MIN_LINE ? LIMIT_MIN_LINE : lineNo;
-
-  const finalLines = arrayOfLines.slice(0, lineNo);
-  let finalContent = finalLines.join('\n').trim();
-  if (lineNo < arrayOfLines.length) {
-    finalContent = finalContent + '...';
-  }
-  return finalContent;
-}
-
 export function limitLine(
   text: string,
   count: number,
@@ -251,8 +222,10 @@ export type TextTplInput = {
   body: string;
   event: string;
   action: string;
+  contentLimit?: number;
   notCapitalizeTitle?: boolean;
   notRenderBody?: boolean;
+  noAutoRef?: boolean;
 };
 
 type TextTpl = (
@@ -260,6 +233,11 @@ type TextTpl = (
   ctx?: {
     setting?: {
       notDisplayRepoName?: boolean;
+    };
+  },
+  options?: {
+    hooks?: {
+      afterRender?: (result: string) => string;
     };
   },
 ) => {
@@ -272,7 +250,9 @@ export type HandlerResult = {
   text: TextTplInput;
 };
 
-export const textTpl: TextTpl = (data, ctx) => {
+const raw = (v: string) => v;
+
+export const textTpl: TextTpl = (data, ctx, options) => {
   const {
     payload,
     title: bodyTitle,
@@ -280,6 +260,8 @@ export const textTpl: TextTpl = (data, ctx) => {
     body,
     action,
     notCapitalizeTitle,
+    noAutoRef,
+    contentLimit = -1,
   } = data;
   const repo = payload.repository;
 
@@ -302,8 +284,9 @@ export const textTpl: TextTpl = (data, ctx) => {
   if (bodyText) {
     text.addDivider();
     payload.bodyText = bodyText;
-    text.add(`{{bodyText|ref}}`);
-    compactText && compactText.add(`{{bodyText|ref}}`);
+    text.add(noAutoRef ? '{{bodyText}}' : '{{bodyText|ref}}');
+    compactText &&
+      compactText.add(noAutoRef ? '{{bodyText}}' : '{{bodyText|ref}}');
   }
 
   let event = data.event;
@@ -311,15 +294,21 @@ export const textTpl: TextTpl = (data, ctx) => {
     event = capitalize(event);
   }
 
-  let title = `${event} ${action}`;
+  let titleText = `${event} ${action}`;
   if (!ctx?.setting?.notDisplayRepoName) {
-    title = `[{{repository.name}}] ${title}`;
+    titleText = `[{{repository.name}}] ${titleText}`;
   }
 
+  const title = new StringBuilder(titleText);
+
+  const afterRender = options?.hooks?.afterRender ?? raw;
+
   return {
-    title: render(title, payload),
-    text: text.render(payload),
-    compactText: compactText ? compactText.render(payload) : undefined,
+    title: afterRender(title.render(payload, { contentLimit })),
+    text: afterRender(text.render(payload, { contentLimit })),
+    compactText: compactText
+      ? afterRender(compactText.render(payload, { contentLimit }))
+      : undefined,
   };
 };
 

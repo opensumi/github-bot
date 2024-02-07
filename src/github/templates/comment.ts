@@ -63,7 +63,7 @@ export function renderCommentBody(
   }
 
   const builder = new StringBuilder(
-    `> #### ${renderPrOrIssueLink({
+    `#### ${renderPrOrIssueLink({
       ...data,
       title,
     })}`,
@@ -71,8 +71,8 @@ export function renderCommentBody(
   if (restText) {
     builder.add(useRef(restText, limit));
   }
-  builder.add(`>`);
-  builder.add(useRef(text, limit));
+  builder.addLine();
+  builder.add(text);
   return builder.build();
 }
 
