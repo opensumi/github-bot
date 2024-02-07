@@ -19,6 +19,7 @@ import {
   renderAssigneeInfo,
   renderRequestedReviewersInfo,
   textTpl,
+  prettyUnderlineWord,
 } from './utils';
 
 export type Name = 'issues' | 'pull_request' | 'discussion';
@@ -30,15 +31,6 @@ export const NameBlock = {
   [key in Name]: string;
 };
 
-function prettyIssueStateReason(stateReason: string) {
-  switch (stateReason) {
-    case 'not_planned':
-      return 'not planned';
-    default:
-      return stateReason;
-  }
-}
-
 function render(
   name: Name,
   payload: ExtractPayload<Name>,
@@ -47,6 +39,11 @@ function render(
 ): TemplateRenderResult {
   const nameBlock = NameBlock[name];
   const action = payload.action as string;
+
+  let shouldRenderAssigneeInfo = false;
+  if (['opened', 'edited'].includes(action)) {
+    shouldRenderAssigneeInfo = true;
+  }
 
   let shouldRenderBody = true;
   if (['closed', 'edited'].includes(action)) {
@@ -68,7 +65,8 @@ function render(
     ) {
       contentLimit = -1;
     }
-    if ((data as Issue).assignees?.length) {
+
+    if (shouldRenderAssigneeInfo && (data as Issue).assignees?.length) {
       builder.add(renderAssigneeInfo((data as Issue).assignees));
     }
   }
@@ -81,7 +79,7 @@ function render(
   let textFirstLine = `{{sender | link:sender}} ${action} [${nameBlock}](${data.html_url})`;
 
   if ((data as Issue).state_reason) {
-    textFirstLine += ` as ${prettyIssueStateReason(
+    textFirstLine += ` as ${prettyUnderlineWord(
       (data as Issue).state_reason!,
     )}`;
   }

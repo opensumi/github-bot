@@ -342,3 +342,10 @@ export const removeOrgInfo = (orgName: string, label: string) => {
   }
   return label;
 };
+
+/**
+ * `not_planned` -> `not planned`
+ */
+export function prettyUnderlineWord(stateReason: string) {
+  return stateReason.replace(/_/g, ' ');
+}
