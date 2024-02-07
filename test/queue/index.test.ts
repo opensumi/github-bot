@@ -1,6 +1,9 @@
 import 'dotenv/config';
 
-import { EmitterWebhookEventName } from '@octokit/webhooks';
+import {
+  EmitterWebhookEvent,
+  EmitterWebhookEventName,
+} from '@octokit/webhooks';
 
 import { IGitHubEventQueueMessage } from '@/queue/types';
 
@@ -37,16 +40,16 @@ describe('queue', () => {
   it('should work', async () => {
     const wk = new MockGitHubEventWorker('app');
     const events = [
-      { name: 'pull_request.closed', payload: pull_request_closed },
-      { name: 'pull_request.opened', payload: pull_request_opened },
-      { name: 'pull_request.opened', payload: pull_request_13_opened },
-      { name: 'pull_request.edited', payload: pull_request_edited_wip },
-      { name: 'pull_request.edited', payload: pull_request_edited_base },
-      { name: 'issues.opened', payload: issue_opened_event },
-      { name: 'release.published', payload: release_published },
-      { name: 'release.published', payload: antd_mini_release_published },
+      { name: 'pull_request', payload: pull_request_closed },
+      { name: 'pull_request', payload: pull_request_opened },
+      { name: 'pull_request', payload: pull_request_13_opened },
+      { name: 'pull_request', payload: pull_request_edited_wip },
+      { name: 'pull_request', payload: pull_request_edited_base },
+      { name: 'issues', payload: issue_opened_event },
+      { name: 'release', payload: release_published },
+      { name: 'release', payload: antd_mini_release_published },
       {
-        name: 'pull_request_review_comment.created',
+        name: 'pull_request_review_comment',
         payload: pull_request_review_comment_0_created,
       },
     ] as { name: EmitterWebhookEventName; payload: any }[];
@@ -74,15 +77,15 @@ describe('queue', () => {
     const wk = new MockGitHubEventWorker('app');
     const events = [
       {
-        name: 'pull_request_review.submitted',
+        name: 'pull_request_review',
         payload: pull_request_review_4_submitted_changes_requested,
       },
       {
-        name: 'pull_request_review_comment.created',
+        name: 'pull_request_review_comment',
         payload: pull_request_review_comment_0_created,
       },
       {
-        name: 'pull_request_review_comment.created',
+        name: 'pull_request_review_comment',
         payload: pull_request_review_comment_1_created,
       },
     ] as { name: EmitterWebhookEventName; payload: any }[];
@@ -113,14 +116,14 @@ describe('queue', () => {
     const wk = new MockGitHubEventWorker('app');
     const events = [
       {
-        name: 'discussion.created',
+        name: 'discussion',
         payload: discussion_0_created,
       },
       {
-        name: 'discussion_comment.created',
+        name: 'discussion_comment',
         payload: discussion_comment_0_created,
       },
-    ] as { name: EmitterWebhookEventName; payload: any }[];
+    ] as EmitterWebhookEvent[];
 
     const reviews = events.map((v) => ({
       botId,

@@ -1,8 +1,4 @@
-export interface IGitHubMessageBody {
-  id: string;
-  name: string;
-  payload: any;
-}
+import type { EmitterWebhookEvent } from '@octokit/webhooks/dist-types/types';
 
 export interface IGitHubEventQueueMessage {
   /**
@@ -12,7 +8,7 @@ export interface IGitHubEventQueueMessage {
 
   type: 'github-app' | 'github-webhook';
 
-  data: IGitHubMessageBody;
+  data: EmitterWebhookEvent;
 }
 
 export interface IWechatyQueueMessage {

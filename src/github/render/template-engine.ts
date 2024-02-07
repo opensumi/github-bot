@@ -9,7 +9,6 @@ import {
 const defaultOperators = {
   link: (operator: string, key: string, value) => {
     const [, type] = operator.split(':', 2);
-    debugger;
     switch (type || key) {
       case 'sender':
         return renderUserLink(value as any);
@@ -60,10 +59,7 @@ export function processKey(key: string) {
   return key;
 }
 
-export function renderTemplate(
-  template: string,
-  context: Record<string, any>,
-): string {
+export function render(template: string, context: Record<string, any>): string {
   return template.replace(/{{\s*([^}]+)\s*}}/g, (raw, key) => {
     try {
       console.log(`🚀 ~ key:`, key);

@@ -1,5 +1,5 @@
 import { App } from '@/github/app';
-import { render } from '@/github/render';
+import { renderPrOrIssue } from '@/github/render';
 import { contentToMarkdown, parseGitHubUrl } from '@/github/utils';
 import { StringBuilder } from '@/utils';
 import { startsWith } from '@opensumi/bot-commander';
@@ -287,7 +287,7 @@ async function replyGitHubIssue(
     issueNumber,
   );
   if (issue) {
-    const markdown = render(issue);
+    const markdown = renderPrOrIssue(issue);
     await bot.reply(contentToMarkdown(markdown));
   } else {
     await bot.replyText(

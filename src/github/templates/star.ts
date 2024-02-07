@@ -1,4 +1,4 @@
-import { renderTemplate } from '../render';
+import { render } from '../render';
 import { ExtractPayload, TemplateRenderResult } from '../types';
 
 import { StopHandleError } from './utils';
@@ -11,7 +11,7 @@ export async function handleStar(
   if (starCount % 100 === 0) {
     return {
       title: '⭐⭐⭐',
-      text: renderTemplate(
+      text: render(
         `Good news, {{repository|link}} now has ${starCount} 🌟s.`,
         payload,
       ),

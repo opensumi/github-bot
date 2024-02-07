@@ -3,7 +3,9 @@ import { Webhooks } from '@octokit/webhooks';
 import {
   WebhookEventHandlerError,
   EmitterWebhookEventName,
+  EmitterWebhookEvent,
 } from '@octokit/webhooks/dist-types/types';
+import type { WebhookEventName } from '@octokit/webhooks-types';
 import { HonoRequest } from 'hono';
 
 import { error, json } from '@/api/utils/response';
@@ -19,18 +21,11 @@ export class ValidationError extends Error {
   }
 }
 
-export interface IGitHubEvent {
-  id: string;
-  event: EmitterWebhookEventName;
-  text: string;
-  payload: any;
-}
-
 export async function validateGithub(
   // eslint-disable-next-line @typescript-eslint/ban-types
   req: HonoRequest<any, {}>,
   webhooks: Webhooks,
-): Promise<IGitHubEvent> {
+): Promise<EmitterWebhookEvent> {
   const headers = req.raw.headers;
 
   if (!headers.get('User-Agent')?.startsWith('GitHub-Hookshot/')) {
@@ -42,7 +37,7 @@ export async function validateGithub(
     throw new ValidationError(415, 'Content type: not json');
   }
 
-  const event = headers.get('x-github-event') as EmitterWebhookEventName;
+  const name = headers.get('x-github-event') as WebhookEventName;
   const signature = headers.get('x-hub-signature-256') as string;
   const id = headers.get('x-github-delivery') as string;
 
@@ -67,10 +62,9 @@ export async function validateGithub(
 
   return {
     id,
-    event,
-    text,
+    name,
     payload,
-  };
+  } as EmitterWebhookEvent;
 }
 
 const blockedUser = new Set(['renovate[bot]']);
@@ -80,6 +74,7 @@ export const setupWebhooksTemplate = (
   context: Context,
   done: (data: {
     markdown: TemplateRenderResult;
+    name: WebhookEventName;
     eventName: EmitterWebhookEventName;
     payload: any;
   }) => Promise<void>,
@@ -88,7 +83,7 @@ export const setupWebhooksTemplate = (
   const supportTemplates = Object.keys(templates) as EmitterWebhookEventName[];
 
   for (const eventName of supportTemplates) {
-    webhooks.on(eventName, async ({ id, payload, octokit }) => {
+    webhooks.on(eventName, async ({ id, name, payload, octokit }) => {
       if ((payload as IHasSender)?.sender) {
         const name = (payload as IHasSender).sender.login;
         if (blockedUser.has(name)) {
@@ -113,7 +108,7 @@ export const setupWebhooksTemplate = (
 
         console.log('get data from handler: ', markdown);
 
-        await done({ markdown, eventName, payload });
+        await done({ markdown, name, eventName, payload });
       } catch (err) {
         console.log('stop handler because: ', err);
         if (!(err instanceof StopHandleError)) {
@@ -129,36 +124,31 @@ export async function webhookHandler(
   type: 'github-app' | 'github-webhook',
   webhooks: Webhooks<{ octokit?: Octokit }>,
   execContext: ExecutionContext,
-  data: IGitHubEvent,
+  data: EmitterWebhookEvent,
   useQueue?: boolean,
 ) {
-  const { id, event: eventName, payload } = data;
   const logger = Logger.instance();
+  const { id, name } = data;
   try {
-    logger.info('Receive Github Webhook, id: ', id, ', name: ', eventName);
+    logger.info('Receive Github Webhook, id: ', id, ', name: ', name);
     try {
-      const webhookEvent = {
-        id: id,
-        name: eventName as any,
-        payload: payload,
-      };
       if (useQueue) {
         const queueItem = {
           botId,
           type,
-          data: webhookEvent,
+          data,
         };
         logger.info('send to queue', queueItem);
         await Environment.instance().Queue.send(queueItem, {
           contentType: 'json',
         });
       } else {
-        execContext.waitUntil(webhooks.receive(webhookEvent));
+        execContext.waitUntil(webhooks.receive(data));
       }
 
       return json({
-        id: id,
-        name: eventName,
+        id,
+        name,
         message: 'ok',
       });
     } catch (err) {

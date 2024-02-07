@@ -2,7 +2,7 @@ import capitalize from 'lodash/capitalize';
 
 import { StringBuilder } from '@/utils/string-builder';
 
-import { renderTemplate } from '../render';
+import { render } from '../render';
 import { Context } from '../types';
 import { replaceGitHubText } from '../utils';
 
@@ -273,7 +273,7 @@ export const titleTpl: TitleTpl = (data, ctx, shouldCapitalize = true) => {
   } else {
     text = `[{{repository.name}}] ${info}`;
   }
-  return renderTemplate(text, payload);
+  return render(text, payload);
 };
 
 export type TextTplInput = {
@@ -310,10 +310,7 @@ export const textTpl: TextTpl = (data, ctx) => {
   if (ctx?.setting?.notDisplayRepoName) {
     repoInfo = '';
   }
-  const bodyHeader = renderTemplate(
-    `#### ${repoInfo}${title.trim()}  `,
-    payload,
-  );
+  const bodyHeader = render(`#### ${repoInfo}${title.trim()}  `, payload);
 
   const text = new StringBuilder(bodyHeader);
 
@@ -327,7 +324,7 @@ export const textTpl: TextTpl = (data, ctx) => {
     text.add(useRef(bodyText));
   }
 
-  bodyText = renderTemplate(bodyText, payload);
+  bodyText = render(bodyText, payload);
 
   return {
     text: text.toString(),

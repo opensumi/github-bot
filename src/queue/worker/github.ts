@@ -112,22 +112,19 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
       Object.entries(byId).map(async ([botId, messages]) => {
         this.logger.info('consume for', botId, messages.length);
 
-        let octokit: IOctokitShape;
+        let octokit: IOctokitShape | undefined;
 
         if (this.type === 'app') {
-          const result = await this.createGitHubApp(botId);
-          if (!result) {
-            return;
-          }
-          octokit = result;
+          octokit = await this.createGitHubApp(botId);
         } else if (this.type === 'webhook') {
-          const result = await this.createWebhook(botId);
-          if (!result) {
-            return;
-          }
-          octokit = result;
+          octokit = await this.createWebhook(botId);
         } else {
           this.logger.error('github app worker error: unknown type', this.type);
+          return;
+        }
+
+        if (!octokit) {
+          this.logger.error('cannot get octokit info for ', botId);
           return;
         }
 
@@ -141,22 +138,33 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
         setupWebhooksTemplate(
           webhooks,
           { setting, queueMode: true },
-          async ({ markdown, eventName, payload }) => {
+          async ({ markdown, name, eventName, payload }) => {
             const result = { eventName, markdown };
-            if (eventName.startsWith('pull_request_review.')) {
-              const key = createUniqueMessageId(payload, 'pr_review');
-              multiViewResults.get(key).setMainView(result);
-            } else if (eventName.startsWith('pull_request_review_comment.')) {
-              const key = createUniqueMessageId(payload, 'pr_review');
-              multiViewResults.get(key).addSubView(result);
-            } else if (eventName.startsWith('discussion.')) {
-              const key = createUniqueMessageId(payload, 'discussion');
-              multiViewResults.get(key).setMainView(result);
-            } else if (eventName.startsWith('discussion_comment.')) {
-              const key = createUniqueMessageId(payload, 'discussion');
-              multiViewResults.get(key).addSubView(result);
-            } else {
-              results.push(result);
+            switch (name) {
+              case 'pull_request_review': {
+                const key = createUniqueMessageId(payload, 'pr_review');
+                multiViewResults.get(key).setMainView(result);
+                break;
+              }
+              case 'pull_request_review_comment': {
+                const key = createUniqueMessageId(payload, 'pr_review');
+                multiViewResults.get(key).addSubView(result);
+                break;
+              }
+              case 'discussion': {
+                const key = createUniqueMessageId(payload, 'discussion');
+                multiViewResults.get(key).setMainView(result);
+                break;
+              }
+              case 'discussion_comment': {
+                const key = createUniqueMessageId(payload, 'discussion');
+                multiViewResults.get(key).addSubView(result);
+                break;
+              }
+              default: {
+                results.push(result);
+                break;
+              }
             }
           },
         );
@@ -164,12 +172,7 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
         await Promise.allSettled(
           messages.map(async (message) => {
             try {
-              const { data } = message.body;
-              await webhooks.receive({
-                id: data.id,
-                name: data.name as any,
-                payload: data.payload,
-              });
+              await webhooks.receive(message.body.data);
               message.ack();
             } catch (error) {
               console.error('github app worker error', error);
