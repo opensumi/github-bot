@@ -249,37 +249,13 @@ export class StopHandleError extends Error {
   }
 }
 
-type TitleTpl = (
-  data: {
-    payload: any;
-    event: string;
-    action: string;
-  },
-  ctx: Context,
-  capitalize?: boolean,
-) => string;
-
-export const titleTpl: TitleTpl = (data, ctx, shouldCapitalize = true) => {
-  const { payload } = data;
-
-  let event = data.event;
-  if (shouldCapitalize) {
-    event = capitalize(event);
-  }
-  const info = `${event} ${data.action}`;
-  let text;
-  if (ctx.setting.notDisplayRepoName) {
-    text = info;
-  } else {
-    text = `[{{repository.name}}] ${info}`;
-  }
-  return render(text, payload);
-};
-
 export type TextTplInput = {
   payload: any;
   title: string;
   body: string;
+  event: string;
+  action: string;
+  notCapitalizeTitle?: boolean;
   notRenderBody?: boolean;
 };
 
@@ -291,6 +267,7 @@ type TextTpl = (
     };
   },
 ) => {
+  title: string;
   text: string;
   detail: {
     bodyText: string;
@@ -303,14 +280,14 @@ export type HandlerResult = {
 };
 
 export const textTpl: TextTpl = (data, ctx) => {
-  const { payload, title, body } = data;
+  const { payload, title: bodyTitle, body, notCapitalizeTitle } = data;
   const repo = payload.repository;
 
   let repoInfo = renderRepoLink(repo) + ' ';
   if (ctx?.setting?.notDisplayRepoName) {
     repoInfo = '';
   }
-  const bodyHeader = render(`#### ${repoInfo}${title.trim()}  `, payload);
+  const bodyHeader = render(`#### ${repoInfo}${bodyTitle.trim()}  `, payload);
 
   const text = new StringBuilder(bodyHeader);
 
@@ -326,7 +303,20 @@ export const textTpl: TextTpl = (data, ctx) => {
 
   bodyText = render(bodyText, payload);
 
+  let event = data.event;
+  if (!notCapitalizeTitle) {
+    event = capitalize(event);
+  }
+  const info = `${event} ${data.action}`;
+  let title = '';
+  if (ctx?.setting?.notDisplayRepoName) {
+    title = info;
+  } else {
+    title = `[{{repository.name}}] ${info}`;
+  }
+
   return {
+    title: render(title, payload),
     text: text.toString(),
     detail: {
       bodyText,

@@ -11,7 +11,6 @@ import {
   limitLine,
   renderPrOrIssueLink,
   textTpl,
-  titleTpl,
   useRef,
 } from './utils';
 
@@ -105,18 +104,11 @@ function renderComment(
     notRenderBody = true;
   }
 
-  const title = titleTpl(
-    {
-      payload,
-      event: `${location} comment`,
-      action,
-    },
-    ctx,
-  );
-
   const text = textTpl(
     {
       payload,
+      action,
+      event: `${location} comment`,
       title: `{{sender | link:sender}} ${action} [comment](${comment.html_url}) on [${location}](${data.html_url})`,
       body: renderCommentBody(data, payload.comment, ctx.setting.contentLimit),
       notRenderBody,
@@ -124,10 +116,7 @@ function renderComment(
     ctx,
   );
 
-  return {
-    title,
-    ...text,
-  };
+  return text;
 }
 
 export async function handleIssueComment(
@@ -177,19 +166,12 @@ export async function handleCommitComment(
     }
   }
 
-  const title = titleTpl(
+  const text = textTpl(
     {
       payload,
       event: 'commit comment',
       action: 'created',
-    },
-    ctx,
-  );
-
-  const text = textTpl(
-    {
-      payload,
-      title: `{{sender | link}} commented on [${commitRefInfo}]({{comment.html_url}})`,
+      title: `{{sender | link}} {{action}} comment on [${commitRefInfo}]({{comment.html_url}})`,
       body: renderCommentBody(
         {
           html_url: comment.html_url,
@@ -202,10 +184,7 @@ export async function handleCommitComment(
     ctx,
   );
 
-  return {
-    title,
-    ...text,
-  };
+  return text;
 }
 
 const allowedReviewCommentAction = new Set(['created']);
@@ -223,26 +202,16 @@ export async function handleReviewComment(
     throw new StopHandleError(`not support action ${action}`);
   }
 
-  const title = titleTpl(
+  const text = textTpl(
     {
       payload,
       event: 'review comment',
       action,
-    },
-    ctx,
-  );
-
-  const text = textTpl(
-    {
-      payload,
       title: `{{sender | link:sender}} ${action} [review comment](${comment.html_url}) on [pull request](${pr.html_url})`,
       body: renderCommentBody(pr, payload.comment, ctx.setting.contentLimit),
     },
     ctx,
   );
 
-  return {
-    title,
-    ...text,
-  };
+  return text;
 }

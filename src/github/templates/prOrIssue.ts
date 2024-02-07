@@ -12,7 +12,6 @@ import {
 import {
   renderPrOrIssueTitleLink,
   renderDeletedPrOrIssueTitleLink,
-  titleTpl,
   renderPrOrIssueBody,
   StopHandleError,
   renderPrRefInfo,
@@ -87,25 +86,15 @@ function render(
   const text = textTpl(
     {
       payload,
+      event: `${nameBlock}#${data.number}`,
+      action,
       title: textFirstLine,
       body: builder.build(),
     },
     ctx,
   );
 
-  const title = titleTpl(
-    {
-      payload,
-      event: `${nameBlock}#${data.number}`,
-      action,
-    },
-    ctx,
-  );
-
-  return {
-    title,
-    ...text,
-  };
+  return text;
 }
 
 export async function handlePr(
@@ -210,24 +199,15 @@ export async function handlePr(
   const text = textTpl(
     {
       payload,
+      event: `${nameBlock}#${data.number}`,
+      action,
       title: `{{sender | link:sender}} ${action} [${nameBlock}](${data.html_url})`,
       body: builder.build(),
     },
     ctx,
   );
 
-  const title = titleTpl(
-    {
-      payload,
-      event: `${nameBlock}#${data.number}`,
-      action,
-    },
-    ctx,
-  );
-  return {
-    title,
-    ...text,
-  };
+  return text;
 }
 
 export async function handleIssue(

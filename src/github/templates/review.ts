@@ -2,13 +2,7 @@ import { StringBuilder } from '@/utils/string-builder';
 
 import { Context, ExtractPayload, TemplateRenderResult } from '../types';
 
-import {
-  StopHandleError,
-  useRef,
-  titleTpl,
-  renderPrOrIssueTitleLink,
-  textTpl,
-} from '.';
+import { StopHandleError, useRef, renderPrOrIssueTitleLink, textTpl } from '.';
 
 export async function handleReview(
   payload: ExtractPayload<'pull_request_review'>,
@@ -44,15 +38,6 @@ export async function handleReview(
     something = 'review';
   }
 
-  const title = titleTpl(
-    {
-      payload,
-      event: 'review',
-      action: titleActionText,
-    },
-    ctx,
-  );
-
   const builder = new StringBuilder();
 
   builder.add(renderPrOrIssueTitleLink(pr));
@@ -67,14 +52,13 @@ export async function handleReview(
   const text = textTpl(
     {
       payload,
+      event: 'review',
+      action: titleActionText,
       title: textFirstLine,
       body: builder.build(),
     },
     ctx,
   );
 
-  return {
-    title,
-    ...text,
-  };
+  return text;
 }

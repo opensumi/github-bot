@@ -3,8 +3,6 @@ import { StringBuilder } from '@/utils/string-builder';
 import { Context, ExtractPayload, TemplateRenderResult } from '../types';
 import { replaceGitHubUrlToMarkdown } from '../utils';
 
-import { titleTpl } from './utils';
-
 import { useRef, textTpl } from '.';
 
 export async function handleRelease(
@@ -13,15 +11,6 @@ export async function handleRelease(
 ): Promise<TemplateRenderResult> {
   const action = payload.action;
   const release = payload.release;
-  const title = titleTpl(
-    {
-      payload,
-      event: release.name,
-      action,
-    },
-    ctx,
-    false,
-  );
 
   const builder = new StringBuilder();
 
@@ -43,14 +32,17 @@ export async function handleRelease(
   const text = textTpl(
     {
       payload,
+      event: release.name,
+      action,
       title: `{{ sender | link }} ${action} {{ release | link }}`,
       body: replaceGitHubUrlToMarkdown(builder.build(), {
         owner: payload.repository.owner.login,
         repo: payload.repository.name,
       }),
+      notCapitalizeTitle: true,
     },
     ctx,
   );
 
-  return { title, ...text };
+  return text;
 }

@@ -20,15 +20,9 @@ const defaultOperators = {
 
     return value;
   },
-} as Record<
-  string,
-  (operator: string, value: string, context: Record<string, any>) => string
->;
+} as Record<string, (operator: string, key: string, value: any) => string>;
 
-function processInterpolation(
-  expression: string,
-  context: Record<string, any>,
-) {
+function processInterpolation(expression: string, context: any) {
   let key = expression;
   const operators = [];
   if (expression.includes('|')) {
@@ -54,20 +48,17 @@ function processInterpolation(
 }
 
 export function processKey(key: string) {
-  // 1. remove all spaces and new lines
+  // remove all spaces and new lines
   key = key.replace(/\s/g, '');
   return key;
 }
 
-export function render(template: string, context: Record<string, any>): string {
+export function render(template: string, context: any): string {
   return template.replace(/{{\s*([^}]+)\s*}}/g, (raw, key) => {
     try {
-      console.log(`🚀 ~ key:`, key);
-      key = processKey(key);
-
-      return processInterpolation(key, context);
+      return processInterpolation(processKey(key), context);
     } catch (e) {
-      console.error(`template engine error`, e);
+      console.error(`render template engine error`, e);
       return raw;
     }
   });
