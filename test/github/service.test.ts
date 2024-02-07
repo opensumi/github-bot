@@ -52,7 +52,6 @@ jest.setTimeout(20 * 1000);
       const result = await octo.request('GET /users/bytemain');
       console.log(`🚀 ~ file: service.test.ts:56 ~ it ~ result:`, result);
     } catch (error) {
-      debugger;
       console.log(error);
     }
   });
@@ -70,7 +69,6 @@ jest.setTimeout(20 * 1000);
       });
       console.log(`🚀 ~ file: service.test.ts:56 ~ it ~ result:`, result);
     } catch (error) {
-      debugger;
       console.log(error);
     }
   });

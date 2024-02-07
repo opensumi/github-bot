@@ -189,12 +189,7 @@ export function useRef(text?: string | null | undefined, bodyLimit = -1) {
   const newLines = [];
 
   for (const line of arrayOfLines) {
-    if (line) {
-      if (line === '>' || line.startsWith('> ')) {
-        newLines.push(line);
-        continue;
-      }
-
+    if (line.trim()) {
       newLines.push(`> ${line}`);
     } else {
       newLines.push(`>`);
@@ -306,9 +301,9 @@ export const textTpl: TextTpl = (data, ctx) => {
 
   if (bodyText) {
     text.addDivider();
-    text.add(useRef(bodyText));
-
-    compactText && compactText.add(useRef(bodyText));
+    payload.bodyText = bodyText;
+    text.add(`{{bodyText|ref}}`);
+    compactText && compactText.add(`{{bodyText|ref}}`);
   }
 
   let event = data.event;

@@ -21,6 +21,12 @@ exports[`render can render issue 1`] = `
 }
 `;
 
+exports[`render can render nested placeholder 1`] = `
+"> > 123
+> > 456
+> > 789"
+`;
+
 exports[`render can render pr 1`] = `
 {
   "text": "> #### [#2060 fix: electron cannot work](https://github.com/opensumi/core/pull/2060)

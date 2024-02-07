@@ -14,17 +14,22 @@ describe('render', () => {
   });
 
   it('can render template', () => {
-    debugger;
     const a = render('hello {{sender}}', {
       sender: 'henry',
     });
     expect(a).toBe('hello henry');
   });
   it('can render template with operator', () => {
-    debugger;
     const b = render('hello {{sender|link}}', {
       sender: { login: 'henry', html_url: 'https://bot.internal' },
     });
     expect(b).toBe('hello [henry](https://bot.internal)');
+  });
+
+  it('can render nested placeholder', () => {
+    const a = '{{milestone|ref}}';
+    const milestone = '{{title|ref}}';
+    const title = `123\n456\n789`;
+    expect(render(a, { milestone, title })).toMatchSnapshot();
   });
 });

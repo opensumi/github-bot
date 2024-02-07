@@ -41,7 +41,7 @@ export async function handleReview(
   const builder = new StringBuilder();
 
   builder.add(renderPrOrIssueTitleLink(pr));
-  builder.add(useRef(review.body, ctx.setting.contentLimit));
+  builder.add('{{review.body|ref}}');
 
   let textFirstLine = `{{sender|link}} [${did}]({{review.html_url}}) `;
   if (something) {

@@ -41,7 +41,14 @@ function processInterpolation(expression: string, context: any) {
     operators.push(..._operators);
   }
 
-  const value = get(context, key);
+  let value = get(context, key);
+  if (!value) {
+    return '';
+  }
+
+  while (typeof value === 'string' && regex().test(value)) {
+    value = renderWorker(value, context);
+  }
 
   if (operators.length > 0) {
     return operators.reduce((result, operator) => {
@@ -63,8 +70,10 @@ export function processKey(key: string) {
   return key;
 }
 
-export function render(template: string, context: any): string {
-  return template.replace(/{{\s*([^}]+)\s*}}/g, (raw, key) => {
+const regex = () => /{{\s*([^}]+)\s*}}/g;
+
+function renderWorker(template: string, context: any) {
+  return template.replace(regex(), (raw, key) => {
     try {
       return processInterpolation(processKey(key), context);
     } catch (e) {
@@ -72,4 +81,13 @@ export function render(template: string, context: any): string {
       return raw;
     }
   });
+}
+
+export function render(template: string, context: any): string {
+  let result = template;
+  while (regex().test(result)) {
+    result = renderWorker(result, context);
+  }
+
+  return result;
 }
