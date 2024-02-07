@@ -2,27 +2,7 @@
 
 exports[`release related can handle release event 1`] = `
 {
-  "detail": {
-    "bodyHeader": "#### [opensumi](https://github.com/opensumi) published [v0.0.0](https://github.com/opensumi/core/releases/tag/v0.0.0)  ",
-    "bodyText": "Tag: v0.0.0
-
-> <!-- Release notes generated using configuration in .github/release.yml at v2.21.2 -->
->
-> ## What's Changed
->
-> * fix(snippets): register code snippets timing by @Aaaaash in [#1920](https://github.com/opensumi/core/pull/1920)
-> * fix: workspace dir async watch by @Aaaaash in [#1929](https://github.com/opensumi/core/pull/1929)
-> * fix: support mousewheel on editor tabs by @erha19 in [#1927](https://github.com/opensumi/core/pull/1927)
-> * fix: do not active disabled extension by @Aaaaash in [#1931](https://github.com/opensumi/core/pull/1931)
-> * fix: make watcher can be disposed by @opensumi in [#1925](https://github.com/opensumi/core/pull/1925)
-> * fix: browser views contribution by @Aaaaash in [#1921](https://github.com/opensumi/core/pull/1921)
-> * fix: parcel watcher subscribe retry catch by @life2015 in [#1932](https://github.com/opensumi/core/pull/1932)
-> * fix: update unsupported watch exclude glob by @erha19 in [#1926](https://github.com/opensumi/core/pull/1926)
-> * chore(release): v2.20.12 by @erha19 in [#1938](https://github.com/opensumi/core/pull/1938)
-> * fix: make the search references clean up by @yantze in [#1923](https://github.com/opensumi/core/pull/1923)
->
-> **Full Changelog**: [v2.21.1...v2.21.2](https://github.com/opensumi/core/compare/v2.21.1...v2.21.2)",
-  },
+  "compactText": undefined,
   "text": "#### [opensumi](https://github.com/opensumi) published [v0.0.0](https://github.com/opensumi/core/releases/tag/v0.0.0)  
 ---
 > Tag: v0.0.0
@@ -49,33 +29,7 @@ exports[`release related can handle release event 1`] = `
 
 exports[`release related transform url correctly 1`] = `
 {
-  "detail": {
-    "bodyHeader": "#### [github](https://github.com/github) published [1.1.0](https://github.com/ant-design/ant-design-mini/releases/tag/1.1.0)  ",
-    "bodyText": "Tag: 1.1.0
-
-> #### [1.1.0](https://github.com/ant-design/ant-design-mini/compare/1.0.1...1.1.0)
->
-> [1.0.1...1.1.0](https://github.com/ant-design/ant-design-mini/compare/1.0.1...1.1.0)
->
-> * feat(Container): 无title、headerRight时隐藏header [\`#560\`](https://github.com/ant-design/ant-design-mini/pull/560)
-> * chore(formItem): 删除formItem无用代码 [\`#562\`](https://github.com/ant-design/ant-design-mini/pull/562)
-> * docs(collapse): 文档透出CollapseItem的disabled字段 [\`#561\`](https://github.com/ant-design/ant-design-mini/pull/561)<!-- Release notes generated using configuration in .github/release.yml at v2.21.2 -->
->
-> ## What's Changed
->
-> * fix(snippets): register code snippets timing by @Aaaaash in [opensumi/core#1920](https://github.com/opensumi/core/pull/1920)
-> * fix: workspace dir async watch by @Aaaaash in [opensumi/core#1929](https://github.com/opensumi/core/pull/1929)
-> * fix: support mousewheel on editor tabs by @erha19 in [opensumi/core#1927](https://github.com/opensumi/core/pull/1927)
-> * fix: do not active disabled extension by @Aaaaash in [opensumi/core#1931](https://github.com/opensumi/core/pull/1931)
-> * fix: make watcher can be disposed by @opensumi in [opensumi/core#1925](https://github.com/opensumi/core/pull/1925)
-> * fix: browser views contribution by @Aaaaash in [opensumi/core#1921](https://github.com/opensumi/core/pull/1921)
-> * fix: parcel watcher subscribe retry catch by @life2015 in [opensumi/core#1932](https://github.com/opensumi/core/pull/1932)
-> * fix: update unsupported watch exclude glob by @erha19 in [opensumi/core#1926](https://github.com/opensumi/core/pull/1926)
-> * chore(release): v2.20.12 by @erha19 in [opensumi/core#1938](https://github.com/opensumi/core/pull/1938)
-> * fix: make the search references clean up by @yantze in [opensumi/core#1923](https://github.com/opensumi/core/pull/1923)
->
-> **Full Changelog**: [opensumi/core:v2.21.1...v2.21.2](https://github.com/opensumi/core/compare/v2.21.1...v2.21.2) <https://github.com/opensumi/core/pull/test>",
-  },
+  "compactText": undefined,
   "text": "#### [github](https://github.com/github) published [1.1.0](https://github.com/ant-design/ant-design-mini/releases/tag/1.1.0)  
 ---
 > Tag: 1.1.0
@@ -108,27 +62,7 @@ exports[`release related transform url correctly 1`] = `
 
 exports[`release related will transform long url to short link 1`] = `
 {
-  "detail": {
-    "bodyHeader": "#### [opensumi](https://github.com/opensumi) published [v0.0.0](https://github.com/opensumi/core/releases/tag/v0.0.0)  ",
-    "bodyText": "Tag: v0.0.0
-
-> <!-- Release notes generated using configuration in .github/release.yml at v2.21.2 -->
->
-> ## What's Changed
->
-> * fix(snippets): register code snippets timing by @Aaaaash in [#1920](https://github.com/opensumi/core/pull/1920)
-> * fix: workspace dir async watch by @Aaaaash in [#1929](https://github.com/opensumi/core/pull/1929)
-> * fix: support mousewheel on editor tabs by @erha19 in [#1927](https://github.com/opensumi/core/pull/1927)
-> * fix: do not active disabled extension by @Aaaaash in [#1931](https://github.com/opensumi/core/pull/1931)
-> * fix: make watcher can be disposed by @opensumi in [#1925](https://github.com/opensumi/core/pull/1925)
-> * fix: browser views contribution by @Aaaaash in [#1921](https://github.com/opensumi/core/pull/1921)
-> * fix: parcel watcher subscribe retry catch by @life2015 in [#1932](https://github.com/opensumi/core/pull/1932)
-> * fix: update unsupported watch exclude glob by @erha19 in [#1926](https://github.com/opensumi/core/pull/1926)
-> * chore(release): v2.20.12 by @erha19 in [#1938](https://github.com/opensumi/core/pull/1938)
-> * fix: make the search references clean up by @yantze in [#1923](https://github.com/opensumi/core/pull/1923)
->
-> **Full Changelog**: [v2.21.1...v2.21.2](https://github.com/opensumi/core/compare/v2.21.1...v2.21.2)",
-  },
+  "compactText": undefined,
   "text": "#### [opensumi](https://github.com/opensumi) published [v0.0.0](https://github.com/opensumi/core/releases/tag/v0.0.0)  
 ---
 > Tag: v0.0.0

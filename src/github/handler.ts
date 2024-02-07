@@ -130,7 +130,7 @@ export async function webhookHandler(
   const logger = Logger.instance();
   const { id, name } = data;
   try {
-    logger.info('Receive Github Webhook, id: ', id, ', name: ', name);
+    logger.info('receive github webhook, id: ${id}, name: ${name}');
     try {
       if (useQueue) {
         const queueItem = {
@@ -138,7 +138,7 @@ export async function webhookHandler(
           type,
           data,
         };
-        logger.info('send to queue', queueItem);
+        logger.info('send to queue');
         await Environment.instance().Queue.send(queueItem, {
           contentType: 'json',
         });
@@ -163,13 +163,14 @@ export async function webhookHandler(
       if ((err as any).code) {
         status = (err as any).code;
       }
+      console.error('error in webhookHandler', err);
       return error(status, String(err));
     }
   } catch (err) {
     const errorCode = (err as ValidationError).statusCode ?? 500;
     const message =
       (err as ValidationError).message ?? 'Unknown error in validation';
-
+    console.error('error in webhookHandler', err);
     return error(errorCode, message);
   }
 }

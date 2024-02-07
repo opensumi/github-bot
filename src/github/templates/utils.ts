@@ -252,6 +252,7 @@ export class StopHandleError extends Error {
 export type TextTplInput = {
   payload: any;
   title: string;
+  compactTitle?: string;
   body: string;
   event: string;
   action: string;
@@ -269,10 +270,7 @@ type TextTpl = (
 ) => {
   title: string;
   text: string;
-  detail: {
-    bodyText: string;
-    bodyHeader: string;
-  };
+  compactText?: string;
 };
 
 export type HandlerResult = {
@@ -280,16 +278,26 @@ export type HandlerResult = {
 };
 
 export const textTpl: TextTpl = (data, ctx) => {
-  const { payload, title: bodyTitle, body, notCapitalizeTitle } = data;
+  const {
+    payload,
+    title: bodyTitle,
+    compactTitle,
+    body,
+    action,
+    notCapitalizeTitle,
+  } = data;
   const repo = payload.repository;
 
   let repoInfo = renderRepoLink(repo) + ' ';
   if (ctx?.setting?.notDisplayRepoName) {
     repoInfo = '';
   }
-  const bodyHeader = render(`#### ${repoInfo}${bodyTitle.trim()}  `, payload);
 
-  const text = new StringBuilder(bodyHeader);
+  const text = new StringBuilder(`#### ${repoInfo}${bodyTitle.trim()}  `);
+  let compactText: StringBuilder | undefined;
+  if (compactTitle) {
+    compactText = new StringBuilder(compactTitle);
+  }
 
   let bodyText = '';
   if (!data.notRenderBody) {
@@ -299,29 +307,24 @@ export const textTpl: TextTpl = (data, ctx) => {
   if (bodyText) {
     text.addDivider();
     text.add(useRef(bodyText));
-  }
 
-  bodyText = render(bodyText, payload);
+    compactText && compactText.add(useRef(bodyText));
+  }
 
   let event = data.event;
   if (!notCapitalizeTitle) {
     event = capitalize(event);
   }
-  const info = `${event} ${data.action}`;
-  let title = '';
-  if (ctx?.setting?.notDisplayRepoName) {
-    title = info;
-  } else {
-    title = `[{{repository.name}}] ${info}`;
+
+  let title = `${event} ${action}`;
+  if (!ctx?.setting?.notDisplayRepoName) {
+    title = `[{{repository.name}}] ${title}`;
   }
 
   return {
     title: render(title, payload),
-    text: text.toString(),
-    detail: {
-      bodyText,
-      bodyHeader,
-    },
+    text: text.render(payload),
+    compactText: compactText ? compactText.render(payload) : undefined,
   };
 };
 

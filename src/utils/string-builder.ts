@@ -1,3 +1,5 @@
+import { render } from '@/github/render';
+
 export class StringBuilder {
   private array = [] as string[];
   constructor(...initial: string[]) {
@@ -25,5 +27,9 @@ export class StringBuilder {
   }
   toString() {
     return this.build();
+  }
+
+  render(payload: any) {
+    return render(this.build(), payload);
   }
 }
