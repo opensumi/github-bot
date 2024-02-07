@@ -147,10 +147,9 @@ export async function handleCommitComment(
 ): Promise<TemplateRenderResult> {
   const repo = payload.repository;
   const comment = payload.comment;
-  const commitId = comment.commit_id.slice(0, 6);
-  const commitRefInfo = `commit@${commitId}`;
+  const commitRefInfo = `commit@${comment.commit_id.slice(0, 6)}`;
 
-  let commitInfo = 'M: ';
+  let title = 'M: ';
 
   if (ctx.octokit) {
     const resp = await ctx.octokit.request(
@@ -162,9 +161,24 @@ export async function handleCommitComment(
       },
     );
     if (resp.data) {
-      commitInfo += ` ${resp.data.commit.message}`;
+      title += ` ${resp.data.commit.message}`;
     }
   }
+
+  let restText = '';
+  const splitted = title.split('\n');
+  if (splitted.length > 1) {
+    title = splitted[0];
+    restText = splitted.slice(1).join('\n');
+  }
+
+  const builder = new StringBuilder(`> #### [${title}]({{comment.html_url}})`);
+
+  if (restText) {
+    builder.add(useRef(restText));
+  }
+  builder.add(`>`);
+  builder.add('{{comment.body|ref}}');
 
   const text = textTpl(
     {
@@ -172,14 +186,7 @@ export async function handleCommitComment(
       event: 'commit comment',
       action: 'created',
       title: `{{sender | link}} {{action}} comment on [${commitRefInfo}]({{comment.html_url}})`,
-      body: renderCommentBody(
-        {
-          html_url: comment.html_url,
-          title: commitInfo,
-        },
-        payload.comment,
-        ctx.setting.contentLimit,
-      ),
+      body: builder.build(),
     },
     ctx,
   );

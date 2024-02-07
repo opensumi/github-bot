@@ -4,6 +4,7 @@ import {
   renderReleaseLink,
   renderRepoLink,
   renderUserLink,
+  useRef,
 } from '../templates';
 
 const defaultOperators = {
@@ -19,6 +20,15 @@ const defaultOperators = {
     }
 
     return value;
+  },
+  ref: (operator: string, key: string, value) => {
+    let bodyLimit = -1;
+    const [, limit] = operator.split(':', 2);
+    if (limit !== undefined) {
+      bodyLimit = parseInt(limit, 10);
+    }
+
+    return useRef(value, bodyLimit);
   },
 } as Record<string, (operator: string, key: string, value: any) => string>;
 

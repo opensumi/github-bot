@@ -11,19 +11,19 @@ import { prepareEnv } from '../__mocks__';
 import { MockMessageBatch } from '../__mocks__/queue/message';
 import { MockGitHubEventWorker } from '../__mocks__/webhooks';
 import {
-  pull_request_closed,
-  pull_request_opened,
-  pull_request_13_opened,
+  pull_request_2_3_closed,
+  pull_request_2_0_opened,
+  pull_request_2_13_opened,
   pull_request_edited_wip,
   pull_request_edited_base,
   issue_opened_event,
   release_published,
   antd_mini_release_published,
-  pull_request_review_comment_0_created,
+  pull_request_2_review_comment_0_created,
   pull_request_review_4_submitted_changes_requested,
-  pull_request_review_comment_1_created,
-  discussion_0_created,
-  discussion_comment_0_created,
+  pull_request_2_review_comment_1_created,
+  discussion_90_0_created,
+  discussion_comment_90_0_created,
 } from '../fixtures';
 
 const botId = 'mock';
@@ -40,9 +40,9 @@ describe('queue', () => {
   it('should work', async () => {
     const wk = new MockGitHubEventWorker('app');
     const events = [
-      { name: 'pull_request', payload: pull_request_closed },
-      { name: 'pull_request', payload: pull_request_opened },
-      { name: 'pull_request', payload: pull_request_13_opened },
+      { name: 'pull_request', payload: pull_request_2_3_closed },
+      { name: 'pull_request', payload: pull_request_2_0_opened },
+      { name: 'pull_request', payload: pull_request_2_13_opened },
       { name: 'pull_request', payload: pull_request_edited_wip },
       { name: 'pull_request', payload: pull_request_edited_base },
       { name: 'issues', payload: issue_opened_event },
@@ -50,7 +50,7 @@ describe('queue', () => {
       { name: 'release', payload: antd_mini_release_published },
       {
         name: 'pull_request_review_comment',
-        payload: pull_request_review_comment_0_created,
+        payload: pull_request_2_review_comment_0_created,
       },
     ] as { name: EmitterWebhookEventName; payload: any }[];
 
@@ -82,11 +82,11 @@ describe('queue', () => {
       },
       {
         name: 'pull_request_review_comment',
-        payload: pull_request_review_comment_0_created,
+        payload: pull_request_2_review_comment_0_created,
       },
       {
         name: 'pull_request_review_comment',
-        payload: pull_request_review_comment_1_created,
+        payload: pull_request_2_review_comment_1_created,
       },
     ] as { name: EmitterWebhookEventName; payload: any }[];
 
@@ -117,11 +117,11 @@ describe('queue', () => {
     const events = [
       {
         name: 'discussion',
-        payload: discussion_0_created,
+        payload: discussion_90_0_created,
       },
       {
         name: 'discussion_comment',
-        payload: discussion_comment_0_created,
+        payload: discussion_comment_90_0_created,
       },
     ] as EmitterWebhookEvent[];
 

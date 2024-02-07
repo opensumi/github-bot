@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`github templates comment can handle commit_comment 1`] = `
+{
+  "compactText": undefined,
+  "text": "#### [Codertocat](https://github.com/Codertocat) created comment on [commit@611372](https://github.com/Codertocat/Hello-World/commit/6113728f27ae82c7b1a177c8d03f9e96e0adf246#commitcomment-33548674)  
+---
+> #### [M: ](https://github.com/Codertocat/Hello-World/commit/6113728f27ae82c7b1a177c8d03f9e96e0adf246#commitcomment-33548674)
+>
+> > This is a really good change! :+1:",
+  "title": "Commit comment created",
+}
+`;
