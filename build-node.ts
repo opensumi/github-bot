@@ -1,7 +1,5 @@
 import 'dotenv/config';
 
-import fs from 'fs/promises';
-
 import { context as createContext } from 'esbuild';
 import mri from 'mri';
 
