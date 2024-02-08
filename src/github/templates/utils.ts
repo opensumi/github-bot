@@ -225,7 +225,7 @@ export type TextTplInput = {
   contentLimit?: number;
   notCapitalizeTitle?: boolean;
   notRenderBody?: boolean;
-  noAutoRef?: boolean;
+  autoRef?: boolean;
 };
 
 type TextTpl = (
@@ -260,7 +260,7 @@ export const textTpl: TextTpl = (data, ctx, options) => {
     body,
     action,
     notCapitalizeTitle,
-    noAutoRef,
+    autoRef,
     contentLimit = -1,
   } = data;
   const repo = payload.repository;
@@ -284,9 +284,10 @@ export const textTpl: TextTpl = (data, ctx, options) => {
   if (bodyText) {
     text.addDivider();
     payload.bodyText = bodyText;
-    text.add(noAutoRef ? '{{bodyText}}' : '{{bodyText|ref}}');
-    compactText &&
-      compactText.add(noAutoRef ? '{{bodyText}}' : '{{bodyText|ref}}');
+
+    const refText = autoRef ? '{{bodyText|ref}}' : '{{bodyText}}';
+    text.add(refText);
+    compactText && compactText.add(refText);
   }
 
   let event = data.event;

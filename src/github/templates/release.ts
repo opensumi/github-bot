@@ -40,7 +40,6 @@ export async function handleRelease(
         repo: payload.repository.name,
       }),
       notCapitalizeTitle: true,
-      noAutoRef: true,
     },
     ctx,
   );

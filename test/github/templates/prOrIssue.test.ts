@@ -41,7 +41,7 @@ describe('github templates pr or issue', () => {
     expect(result).toMatchSnapshot();
     expect(result.text).toBeDefined();
     expect(result.text).toContain('<-');
-    expect(result.text).toContain('> changed the base branch');
+    expect(result.text).toContain('changed the base branch');
     expect(result.title).toBeDefined();
   });
   it('can handle issue', async () => {
