@@ -12,6 +12,7 @@ import _pr2060 from './pr-2060.json';
 import _pull_request_edited_base from './pull_request_edited_base.json';
 import _pull_request_edited_wip from './pull_request_edited_wip.json';
 import _pull_request_review_4_submitted_changes_requested from './pull_request_review_4_submitted_changes_requested.json';
+import _pull_request_review_submitted_approved from './pull_request_review_submitted_approved.json';
 import _release_published from './release_published.json';
 
 export const pull_request_review_4_submitted_changes_requested =
@@ -30,5 +31,8 @@ export const antd_mini_release_published =
   _antd_mini_release_published as ReleasePublishedEvent;
 
 export const issue_opened_event = _issue_opened as IssuesOpenedEvent;
+
+export const pull_request_review_submitted_approved =
+  _pull_request_review_submitted_approved as PullRequestReviewSubmittedEvent;
 
 export * from './generated';

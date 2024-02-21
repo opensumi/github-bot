@@ -56,3 +56,19 @@ Maybe you should use more emojji on this line.",
   },
 ]
 `;
+
+exports[`queue can composite pr review single 1`] = `
+[
+  {
+    "eventName": "pull_request_review.submitted",
+    "markdown": {
+      "compactText": undefined,
+      "text": "#### [[core]](https://github.com/opensumi/core) [bytemain](https://github.com/bytemain) [approved](https://github.com/opensumi/core/pull/3345#pullrequestreview-1892322711) [pull request](https://github.com/opensumi/core/pull/3345)  
+---
+#### [#3345 feat: support SourceControl.historyProvider](https://github.com/opensumi/core/pull/3345)
+",
+      "title": "[core] Review approved",
+    },
+  },
+]
+`;

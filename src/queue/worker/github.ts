@@ -220,33 +220,37 @@ class EventComposite {
   toResult() {
     const { mainView, subView } = this;
 
-    const chunked = chunk(subView, 5);
     const result = [] as IResult[];
 
     const separator = '\n\n---\n\n';
 
-    chunked.forEach((v, i) => {
-      let title = '';
-      let eventName = '';
-      let text = v.map((d) => d.markdown.text).join(separator);
+    if (subView.length > 0) {
+      const chunked = chunk(subView, 5);
+      chunked.forEach((v, i) => {
+        let title = '';
+        let eventName = '';
+        let text = v.map((d) => d.markdown.text).join(separator);
 
-      if (i === 0 && mainView) {
-        title = mainView.markdown.title;
-        eventName = mainView.eventName;
-        text = mainView.markdown.text + separator + text;
-      } else if (subView.length > 0) {
-        title = subView[0].markdown.title;
-        eventName = subView[0].eventName;
-      }
+        if (i === 0 && mainView) {
+          title = mainView.markdown.title;
+          eventName = mainView.eventName;
+          text = mainView.markdown.text + separator + text;
+        } else if (subView.length > 0) {
+          title = subView[0].markdown.title;
+          eventName = subView[0].eventName;
+        }
 
-      result.push({
-        eventName,
-        markdown: {
-          title,
-          text,
-        },
+        result.push({
+          eventName,
+          markdown: {
+            title,
+            text,
+          },
+        });
       });
-    });
+    } else if (mainView) {
+      result.push(mainView);
+    }
 
     return result;
   }
