@@ -2,7 +2,7 @@ import capitalize from 'lodash/capitalize';
 
 import { StringBuilder, limitTextByPosition } from '@/utils/string-builder';
 
-import { render } from '../render';
+import { render } from '../renderer';
 import { Context } from '../types';
 import { replaceGitHubText } from '../utils';
 

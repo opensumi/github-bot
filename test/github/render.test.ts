@@ -1,4 +1,4 @@
-import { renderPrOrIssue, render } from '@/github/render';
+import { renderPrOrIssue, render } from '@/github/renderer';
 
 import { issue2045, pr2060 } from '../fixtures';
 

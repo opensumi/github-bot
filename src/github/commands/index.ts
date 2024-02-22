@@ -16,8 +16,4 @@ export const issueCc = new CommandCenter({
   },
 }) as GitHubCommandCenter;
 
-issueCc.on('hello', async (ctx) => {
-  await issueCc.replyText(ctx, 'Hello there 👋');
-});
-
 registerPullRequestCommand(issueCc);

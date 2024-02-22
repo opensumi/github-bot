@@ -1,4 +1,4 @@
-import { render } from '../render';
+import { render } from '../renderer';
 import { ExtractPayload, TemplateRenderResult } from '../types';
 
 import { StopHandleError } from './utils';

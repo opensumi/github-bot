@@ -1,4 +1,4 @@
-import { render } from '@/github/render';
+import { render } from '@/github/renderer';
 
 export class StringBuilder {
   private array = [] as string[];

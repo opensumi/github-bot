@@ -1,5 +1,5 @@
 import { App } from '@/github/app';
-import { renderPrOrIssue } from '@/github/render';
+import { renderPrOrIssue } from '@/github/renderer';
 import { contentToMarkdown, parseGitHubUrl } from '@/github/utils';
 import { StringBuilder } from '@/utils';
 import { startsWith } from '@opensumi/bot-commander';

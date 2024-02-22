@@ -7,7 +7,7 @@ import {
 } from '@/constants/opensumi';
 import { GitHubService } from '@opensumi/octo-service';
 
-import { firstLine } from '../render/line';
+import { firstLine } from '../renderer/line';
 
 export class OpenSumiOctoService extends GitHubService {
   async releaseNextVersion(branch: string, workflowRef = 'main') {
