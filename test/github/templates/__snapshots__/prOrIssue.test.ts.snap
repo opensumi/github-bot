@@ -4,11 +4,11 @@ exports[`github templates pr or issue can handle issue 1`] = `
 {
   "compactText": undefined,
   "text": "#### [bytemain](https://github.com/bytemain) opened [issue](https://github.com/opensumi/core/issues/2960)  
----
+***
 #### [#2960 [BUG]  Problem 面板闪烁](https://github.com/opensumi/core/issues/2960)
 Assignees: [bytemain](https://github.com/bytemain)  
 
----
+***
 
 打开 settings.json，打开问题面板，操作的时候发现有闪烁现象。
 
@@ -23,11 +23,10 @@ exports[`github templates pr or issue can handle pull_request_13_opened 1`] = `
 {
   "compactText": undefined,
   "text": "#### [Codertocat](https://github.com/Codertocat) opened [pull request](https://github.com/Codertocat/Hello-World/pull/2)  
----
 #### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)
-master <- changes  
-Requested reviewers: [octocat](http://github.com/octocat)  
-Assignees: [Codertocat](https://github.com/Codertocat)",
+> master <- changes  
+> Requested reviewers: [octocat](http://github.com/octocat)  
+> Assignees: [Codertocat](https://github.com/Codertocat)  ",
   "title": "Pull request#2 opened",
 }
 `;
@@ -36,10 +35,9 @@ exports[`github templates pr or issue can handle pull_request_closed 1`] = `
 {
   "compactText": undefined,
   "text": "#### [Codertocat](https://github.com/Codertocat) closed [pull request](https://github.com/Codertocat/Hello-World/pull/2)  
----
 #### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)
-Requested reviewers: [octocat](http://github.com/octocat)  
-Assignees: [Codertocat](https://github.com/Codertocat)",
+> Requested reviewers: [octocat](http://github.com/octocat)  
+> Assignees: [Codertocat](https://github.com/Codertocat)  ",
   "title": "Pull request#2 closed",
 }
 `;
@@ -48,10 +46,9 @@ exports[`github templates pr or issue can handle pull_request_edit wip 1`] = `
 {
   "compactText": undefined,
   "text": "#### [bytemain](https://github.com/bytemain) edited [pull request](https://github.com/opensumi/core/pull/1235)  
----
 #### [~~#1235 ci: add codeql-analysis.yml~~](https://github.com/opensumi/core/pull/1235)
 #### [#1235 wip: ci: add codeql-analysis.yml](https://github.com/opensumi/core/pull/1235)
-main <- bytemain-patch-2",
+> main <- bytemain-patch-2  ",
   "title": "Pull request#1235 edited",
 }
 `;
@@ -60,10 +57,9 @@ exports[`github templates pr or issue can handle pull_request_edited_base 1`] = 
 {
   "compactText": undefined,
   "text": "#### [bytemain](https://github.com/bytemain) edited [pull request](https://github.com/opensumi/core/pull/1235)  
----
 #### [#1235 wip: ci: add codeql-analysis.yml](https://github.com/opensumi/core/pull/1235)
-alipay/v2.18 <- bytemain-patch-2  
-changed the base branch from \`main\` to \`alipay/v2.18\`",
+> alipay/v2.18 <- bytemain-patch-2  
+> changed the base branch from \`main\` to \`alipay/v2.18\`  ",
   "title": "Pull request#1235 edited",
 }
 `;
@@ -72,12 +68,9 @@ exports[`github templates pr or issue can handle pull_request_opened 1`] = `
 {
   "compactText": undefined,
   "text": "#### [Codertocat](https://github.com/Codertocat) opened [pull request](https://github.com/Codertocat/Hello-World/pull/2)  
----
 #### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)
-master <- changes  
-
----
-
+> master <- changes  
+***
 This is a pretty simple change that we need to pull into master.",
   "title": "Pull request#2 opened",
 }

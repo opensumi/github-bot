@@ -19,6 +19,7 @@ import {
   renderRequestedReviewersInfo,
   textTpl,
   prettyUnderlineWord,
+  useRef,
 } from './utils';
 
 export type Name = 'issues' | 'pull_request' | 'discussion';
@@ -175,26 +176,21 @@ export async function handlePr(
   builder.add(renderPrOrIssueTitleLink(data));
 
   if (shouldRenderMergeInfo) {
-    builder.add(renderPrRefInfo(data));
+    builder.add(`> ${renderPrRefInfo(data)}`);
   }
 
   if (data.requested_reviewers?.length) {
-    builder.add(renderRequestedReviewersInfo(data.requested_reviewers));
+    builder.add(`> ${renderRequestedReviewersInfo(data.requested_reviewers)}`);
   }
 
   if (data.assignees?.length) {
-    builder.add(renderAssigneeInfo(data.assignees));
+    builder.add(`> ${renderAssigneeInfo(data.assignees)}`);
   }
 
   if (oldRef) {
     builder.add(
-      `changed the base branch from \`${oldRef}\` to \`${base.ref}\`  `,
+      `> changed the base branch from \`${oldRef}\` to \`${base.ref}\`  `,
     );
-  }
-
-  if (shouldRenderBody && data.body) {
-    builder.addDivider('', true);
-    builder.add(renderPrOrIssueBody(data));
   }
 
   const text = textTpl(
@@ -203,7 +199,8 @@ export async function handlePr(
       event: `${nameBlock}#${data.number}`,
       action,
       title: `{{sender | link:sender}} ${action} [${nameBlock}](${data.html_url})`,
-      body: builder.build(),
+      target: builder.build(),
+      body: shouldRenderBody && data.body ? renderPrOrIssueBody(data) : '',
       contentLimit: ctx.setting.contentLimit,
     },
     ctx,

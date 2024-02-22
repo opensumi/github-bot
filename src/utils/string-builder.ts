@@ -1,4 +1,5 @@
 import { render } from '@/github/renderer';
+import { replaceGitHubText } from '@/github/utils';
 
 export class StringBuilder {
   private array = [] as string[];
@@ -21,7 +22,7 @@ export class StringBuilder {
     addExtraLine && this.addLineIfNecessary();
   }
   addDivider(prefix = '', addExtraLine = false) {
-    this.add(prefix + '---', addExtraLine);
+    this.add(prefix + '***', addExtraLine);
   }
   /**
    * if there are content in the last line, then add a new line
@@ -36,7 +37,7 @@ export class StringBuilder {
     this.array.push('');
   }
   build() {
-    return this.array.join('\n');
+    return replaceGitHubText(this.array.join('\n'));
   }
   toString() {
     return this.build();
@@ -48,7 +49,7 @@ export class StringBuilder {
       contentLimit?: number;
     },
   ) {
-    const result = render(this.build(), payload);
+    const result = replaceGitHubText(render(this.build(), payload));
 
     if (options?.contentLimit && options.contentLimit > 0) {
       return limitTextByPosition(result, options.contentLimit);

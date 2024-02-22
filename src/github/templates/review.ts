@@ -1,8 +1,6 @@
-import { StringBuilder } from '@/utils/string-builder';
-
 import { Context, ExtractPayload, TemplateRenderResult } from '../types';
 
-import { StopHandleError, useRef, renderPrOrIssueTitleLink, textTpl } from '.';
+import { StopHandleError, textTpl } from './utils';
 
 export async function handleReview(
   payload: ExtractPayload<'pull_request_review'>,
@@ -10,7 +8,6 @@ export async function handleReview(
 ): Promise<TemplateRenderResult> {
   const review = payload.review;
   const action = payload.action;
-  const pr = payload.pull_request;
 
   if (action === 'submitted' && review.state === 'commented') {
     throw new StopHandleError(

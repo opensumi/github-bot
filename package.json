@@ -31,7 +31,7 @@
     "publish:libs": "lerna publish",
     "lint": "eslint . && prettier --check '*.{json,js}' 'src/**/*.{js,ts}' 'test/**/*.{js,ts}'",
     "lint:fix": "eslint . --fix && prettier . -w",
-    "test": "jest --config jest.config.json --verbose",
+    "test": "jest --config jest.config.js --verbose",
     "test:cov": "yarn test --coverage",
     "extract-fixtures": "tsx scripts/extract-webhook-example.ts",
     "generate:json-schemas": "node scripts/generate-json-schemas-all.js",

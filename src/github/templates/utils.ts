@@ -176,8 +176,6 @@ export function useRef(text?: string | null | undefined, bodyLimit = -1) {
     return '';
   }
 
-  text = replaceGitHubText(text);
-
   if (bodyLimit && bodyLimit > 0) {
     text = limitTextByPosition(text, bodyLimit);
   }

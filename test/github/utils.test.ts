@@ -6,7 +6,7 @@ import {
   parseGitHubUrl,
   standardizeMarkdown,
 } from '@/github/utils';
-import { limitTextByPosition } from '@/utils/string-builder';
+import { StringBuilder, limitTextByPosition } from '@/utils/string-builder';
 import * as DingUtils from '@opensumi/dingtalk-bot/lib/utils';
 
 describe('github utils', () => {
@@ -16,11 +16,11 @@ describe('github utils', () => {
     expect(text1).toEqual('line1');
   });
 
-  it('can ref comments', () => {
+  it('can transform image', () => {
     const comment = `<img width="954" alt="image" src="https://user-images.githubusercontent.com/2226423/153811718-2babbfa7-e63f-4ec7-9fd3-9f450beaad9b.png">
 看起来这个分支有个报错关于 TerminalClient 的,有可能是 init 时机有点问题`;
-    const data = useRef(comment);
-    expect(data).toMatchSnapshot();
+    const data = new StringBuilder(comment);
+    expect(data.build()).toMatchSnapshot();
   });
 
   it('can limitTextByPostion', () => {

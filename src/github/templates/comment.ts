@@ -40,40 +40,17 @@ const formatByUserLogin = {
   [key: string]: (text: string) => string;
 };
 
-export function renderCommentBody(
-  data: {
-    title: string;
-    html_url: string;
-    number?: number;
-  },
-  comment: { body: string; user: { login: string } },
-  limit = -1,
-) {
+export function renderCommentBody(comment: {
+  body: string;
+  user: { login: string };
+}) {
   let text = comment.body;
   const formatter = formatByUserLogin[comment.user.login];
   if (formatter) {
     text = formatter(text);
   }
-  let title = data.title;
-  let restText = '';
-  const splitted = title.split('\n');
-  if (splitted.length > 1) {
-    title = splitted[0];
-    restText = splitted.slice(1).join('\n');
-  }
 
-  const builder = new StringBuilder(
-    `#### ${renderPrOrIssueLink({
-      ...data,
-      title,
-    })}`,
-  );
-  if (restText) {
-    builder.add(useRef(restText, limit));
-  }
-  builder.addLine();
-  builder.add(text);
-  return builder.build();
+  return text;
 }
 
 function renderComment(
@@ -109,8 +86,9 @@ function renderComment(
       payload,
       action,
       event: `${location} comment`,
+      target: renderPrOrIssueLink(data),
       title: `{{sender | link:sender}} ${action} [comment](${comment.html_url}) on [${location}](${data.html_url})`,
-      body: renderCommentBody(data, payload.comment, ctx.setting.contentLimit),
+      body: renderCommentBody(payload.comment),
       notRenderBody,
     },
     ctx,
@@ -125,7 +103,7 @@ export async function handleIssueComment(
 ): Promise<TemplateRenderResult> {
   const issue = payload.issue;
   const isUnderPullRequest = Boolean(issue.pull_request);
-  let name = 'issues' as Name;
+  let name: Name = 'issues';
   if (isUnderPullRequest) {
     name = 'pull_request';
   }
@@ -214,8 +192,9 @@ export async function handleReviewComment(
       payload,
       event: 'review comment',
       action,
+      target: '{{pull_request|link}}',
       title: `{{sender | link:sender}} ${action} [review comment](${comment.html_url}) on [pull request](${pr.html_url})`,
-      body: renderCommentBody(pr, payload.comment, ctx.setting.contentLimit),
+      body: renderCommentBody(payload.comment),
     },
     ctx,
   );

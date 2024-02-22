@@ -19,6 +19,8 @@ const defaultOperators = {
       case 'release':
         return renderReleaseLink(value);
       case 'pull_request':
+      case 'issue':
+      case 'discussion':
         return renderPrOrIssueLink(value);
     }
 
