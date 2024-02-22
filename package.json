@@ -13,7 +13,6 @@
   ],
   "scripts": {
     "format": "prettier --write '**/*.{js,css,json,md}'",
-    "tsc:build": "hereby",
     "build": "hereby",
     "build:libs": "hereby",
     "build:cfworker": "hereby",
