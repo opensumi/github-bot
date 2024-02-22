@@ -218,6 +218,7 @@ export class StopHandleError extends Error {
 export type TextTplInput = {
   payload: any;
   title: string;
+  target?: string;
   compactTitle?: string;
   body: string;
   event: string;
@@ -257,6 +258,7 @@ export const textTpl: TextTpl = (data, ctx, options) => {
     payload,
     title: bodyTitle,
     compactTitle,
+    target,
     body,
     action,
     notCapitalizeTitle,
@@ -276,9 +278,14 @@ export const textTpl: TextTpl = (data, ctx, options) => {
     compactText = new StringBuilder(compactTitle);
   }
 
+  if (target) {
+    text.add(target);
+    // compact text do not need target
+  }
+
   let bodyText = '';
   if (!data.notRenderBody) {
-    bodyText = body.trim();
+    bodyText = render(body.trim(), payload);
   }
 
   if (bodyText) {

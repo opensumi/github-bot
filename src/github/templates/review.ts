@@ -38,11 +38,6 @@ export async function handleReview(
     something = 'review';
   }
 
-  const builder = new StringBuilder();
-
-  builder.add(renderPrOrIssueTitleLink(pr));
-  builder.add('{{review.body|ref}}');
-
   let textFirstLine = `{{sender|link}} [${did}]({{review.html_url}}) `;
   if (something) {
     textFirstLine += `${something} on `;
@@ -53,9 +48,10 @@ export async function handleReview(
     {
       payload,
       event: 'review',
+      target: '{{pull_request|link}}',
       action: titleActionText,
       title: textFirstLine,
-      body: builder.build(),
+      body: '{{review.body|ref}}',
     },
     ctx,
   );

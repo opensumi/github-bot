@@ -1,6 +1,7 @@
 import get from 'lodash/get';
 
 import {
+  renderPrOrIssueLink,
   renderReleaseLink,
   renderRepoLink,
   renderUserLink,
@@ -12,11 +13,13 @@ const defaultOperators = {
     const [, type] = operator.split(':', 2);
     switch (type || key) {
       case 'sender':
-        return renderUserLink(value as any);
+        return renderUserLink(value);
       case 'repository':
-        return renderRepoLink(value as any);
+        return renderRepoLink(value);
       case 'release':
-        return renderReleaseLink(value as any);
+        return renderReleaseLink(value);
+      case 'pull_request':
+        return renderPrOrIssueLink(value);
     }
 
     return value;
