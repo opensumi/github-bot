@@ -7,6 +7,8 @@ import {
 } from '@/constants/opensumi';
 import { GitHubService } from '@opensumi/octo-service';
 
+import { firstLine } from '../render/line';
+
 export class OpenSumiOctoService extends GitHubService {
   async releaseNextVersion(branch: string, workflowRef = 'main') {
     const workflow = await this.octo.actions.createWorkflowDispatch({
@@ -48,7 +50,7 @@ export class OpenSumiOctoService extends GitHubService {
     });
     const text = commits
       .map((c) => {
-        return `- [${c.sha.slice(0, 7)}](${c.url}) ${c.message}`;
+        return `- [${c.sha.slice(0, 7)}](${c.url}) ${firstLine(c.message)}`;
       })
       .join('\n');
     return text;
