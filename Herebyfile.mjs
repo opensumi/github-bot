@@ -53,7 +53,11 @@ export const tscBuild = task({
 
 export const build = task({
   name: 'build',
-  dependencies: [tscBuild, gen, buildNode, buildCfWorker],
+  dependencies: [tscBuild, gen],
+  run: async () => {
+    await runTask(buildNode);
+    await runTask(buildCfWorker);
+  },
 });
 
 export const dev = task({
