@@ -43,19 +43,8 @@ export class StringBuilder {
     return this.build();
   }
 
-  render(
-    payload: any,
-    options?: {
-      contentLimit?: number;
-    },
-  ) {
-    const result = replaceGitHubText(render(this.build(), payload));
-
-    if (options?.contentLimit && options.contentLimit > 0) {
-      return limitTextByPosition(result, options.contentLimit);
-    }
-
-    return result;
+  render(payload: any) {
+    return replaceGitHubText(render(this.build(), payload));
   }
 }
 

@@ -288,6 +288,11 @@ export const textTpl: TextTpl = (data, ctx, options) => {
 
   if (bodyText) {
     text.addDivider();
+
+    if (contentLimit && contentLimit > 0) {
+      bodyText = limitTextByPosition(bodyText, contentLimit);
+    }
+
     payload.bodyText = bodyText;
 
     const refText = autoRef ? '{{bodyText|ref}}' : '{{bodyText}}';
@@ -310,10 +315,10 @@ export const textTpl: TextTpl = (data, ctx, options) => {
   const afterRender = options?.hooks?.afterRender ?? raw;
 
   return {
-    title: afterRender(title.render(payload, { contentLimit })),
-    text: afterRender(text.render(payload, { contentLimit })),
+    title: afterRender(title.render(payload)),
+    text: afterRender(text.render(payload)),
     compactText: compactText
-      ? afterRender(compactText.render(payload, { contentLimit }))
+      ? afterRender(compactText.render(payload))
       : undefined,
   };
 };

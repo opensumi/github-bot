@@ -39,7 +39,7 @@ export class GitHubKVManager {
     const webhooks = await this.settingsKV.getJSON(id);
     if (webhooks) {
       if (webhooks.contentLimit === undefined) {
-        webhooks.contentLimit = 300;
+        webhooks.contentLimit = 400;
       }
     }
 
