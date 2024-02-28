@@ -5,7 +5,7 @@ import DefaultMap from 'mnemonist/default-map';
 
 import { initApp } from '@/github/app';
 import { setupWebhooksTemplate } from '@/github/handler';
-import { TemplateRenderResult } from '@/github/types';
+import { TemplateRenderResult } from '@/github/templates';
 import { sendToDing } from '@/github/utils';
 import { GitHubKVManager } from '@/kv/github';
 import { ISetting } from '@/kv/types';
@@ -222,14 +222,16 @@ class EventComposite {
 
     const result = [] as IResult[];
 
-    const separator = '\n\n---\n\n';
+    const separator = '\n\n***\n\n';
 
     if (subView.length > 0) {
       const chunked = chunk(subView, 5);
       chunked.forEach((v, i) => {
         let title = '';
         let eventName = '';
-        let text = v.map((d) => d.markdown.text).join(separator);
+        let text = v
+          .map((d) => d.markdown.compactText || d.markdown.text)
+          .join(separator);
 
         if (i === 0 && mainView) {
           title = mainView.markdown.title;

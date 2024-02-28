@@ -3,13 +3,13 @@ import { Repository, User } from '@octokit/webhooks-types';
 
 import { StringBuilder } from '@/utils/string-builder';
 
-import { ExtractPayload, Context, TemplateRenderResult } from '../types';
+import { ExtractPayload, Context } from '../types';
 
 import { Name, NameBlock } from './prOrIssue';
 import {
   StopHandleError,
+  TemplateRenderResult,
   limitLine,
-  renderPrOrIssueLink,
   renderPrOrIssueTitleLink,
   textTpl,
   useRef,
@@ -90,6 +90,7 @@ function renderComment(
       target: renderPrOrIssueTitleLink(data),
       title: `{{sender | link:sender}} ${action} [comment](${comment.html_url}) on [${location}](${data.html_url})`,
       body: renderCommentBody(payload.comment),
+      compactTitle: `{{sender | link:sender}} ${action} [comment](${data.html_url}):  \n`,
       doNotRenderBody,
     },
     ctx,
@@ -196,6 +197,7 @@ export async function handleReviewComment(
       target: '{{pull_request|link}}',
       title: `{{sender | link:sender}} ${action} [review comment](${comment.html_url}) on [pull request](${pr.html_url})`,
       body: renderCommentBody(payload.comment),
+      compactTitle: `{{sender | link}} ${action} [review comment](${comment.html_url}):  \n`,
     },
     ctx,
   );

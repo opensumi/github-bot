@@ -1,6 +1,6 @@
 import pick from 'lodash/pick';
 
-import { Context, TemplateRenderResult } from '@/github/types';
+import { Context } from '@/github/types';
 
 import {
   handleCommitComment,
@@ -12,6 +12,7 @@ import { handleDiscussion, handleIssue, handlePr } from './prOrIssue';
 import { handleRelease } from './release';
 import { handleReview } from './review';
 import { handleStar } from './star';
+import { TemplateRenderResult } from './utils';
 import { handleWorkflowRun } from './workflow';
 export * from './utils';
 

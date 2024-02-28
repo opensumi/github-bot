@@ -3,8 +3,6 @@ import capitalize from 'lodash/capitalize';
 import { StringBuilder, limitTextByPosition } from '@/utils/string-builder';
 
 import { render } from '../renderer';
-import { Context } from '../types';
-import { replaceGitHubText } from '../utils';
 
 export function renderRepoLink(repository: { name: string; html_url: string }) {
   return `[[${repository.name}]](${repository.html_url})`;
@@ -227,6 +225,12 @@ export type TextTplInput = {
   autoRef?: boolean;
 };
 
+export type TemplateRenderResult = {
+  title: string;
+  text: string;
+  compactText?: string;
+};
+
 type TextTpl = (
   data: TextTplInput,
   ctx?: {
@@ -239,11 +243,7 @@ type TextTpl = (
       afterRender?: (result: string) => string;
     };
   },
-) => {
-  title: string;
-  text: string;
-  compactText?: string;
-};
+) => TemplateRenderResult;
 
 export type HandlerResult = {
   text: TextTplInput;

@@ -1,6 +1,6 @@
-import { Context, ExtractPayload, TemplateRenderResult } from '../types';
+import { Context, ExtractPayload } from '../types';
 
-import { StopHandleError, textTpl } from './utils';
+import { StopHandleError, textTpl, TemplateRenderResult } from './utils';
 
 export async function handleReview(
   payload: ExtractPayload<'pull_request_review'>,

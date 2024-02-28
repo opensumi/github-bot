@@ -2,9 +2,9 @@ import { Octokit } from '@octokit/rest';
 
 import { StringBuilder } from '@/utils/string-builder';
 
-import { Context, ExtractPayload, TemplateRenderResult } from '../types';
+import { Context, ExtractPayload } from '../types';
 
-import { textTpl, StopHandleError } from '.';
+import { textTpl, StopHandleError, TemplateRenderResult } from './utils';
 
 function renderWorkflow(
   payload: ExtractPayload<'workflow_run'>,

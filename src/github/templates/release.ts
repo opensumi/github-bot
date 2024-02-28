@@ -1,9 +1,9 @@
 import { StringBuilder } from '@/utils/string-builder';
 
-import { Context, ExtractPayload, TemplateRenderResult } from '../types';
+import { Context, ExtractPayload } from '../types';
 import { replaceGitHubUrlToMarkdown } from '../utils';
 
-import { textTpl } from '.';
+import { TemplateRenderResult, textTpl } from './utils';
 
 export async function handleRelease(
   payload: ExtractPayload<'release'>,

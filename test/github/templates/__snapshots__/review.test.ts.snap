@@ -11,7 +11,9 @@ exports[`github templates pr review can handle pull_request_review_2_1_dismissed
 
 exports[`github templates pr review can handle pull_request_review_comment_0_created 1`] = `
 {
-  "compactText": undefined,
+  "compactText": "[Codertocat](https://github.com/Codertocat) created [review comment](https://github.com/Codertocat/Hello-World/pull/2#discussion_r284312630):  
+
+Maybe you should use more emoji on this line.",
   "text": "#### [Codertocat](https://github.com/Codertocat) created [review comment](https://github.com/Codertocat/Hello-World/pull/2#discussion_r284312630) on [pull request](https://github.com/Codertocat/Hello-World/pull/2)  
 [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)
 

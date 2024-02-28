@@ -23,15 +23,6 @@ export type MarkdownContent = {
   text: string;
 };
 
-export type TemplateRenderResult = {
-  title: string;
-  text: string;
-  detail?: {
-    bodyText: string;
-    bodyHeader: string;
-  };
-};
-
 export type THasAction = {
   action?: string;
 };

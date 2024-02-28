@@ -12,8 +12,12 @@ import { error, json } from '@/api/utils/response';
 import Environment from '@/env';
 import { Logger } from '@/utils/logger';
 
-import { getTemplates, StopHandleError } from './templates';
-import type { Context, IHasSender, TemplateRenderResult } from './types';
+import {
+  getTemplates,
+  StopHandleError,
+  TemplateRenderResult,
+} from './templates';
+import type { Context, IHasSender } from './types';
 
 export class ValidationError extends Error {
   constructor(public statusCode: number, message: string) {

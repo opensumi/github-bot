@@ -2,12 +2,7 @@ import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 
 import { StringBuilder } from '@/utils/string-builder';
 
-import {
-  ExtractPayload,
-  THasChanges,
-  Context,
-  TemplateRenderResult,
-} from '../types';
+import { ExtractPayload, THasChanges, Context } from '../types';
 
 import {
   renderPrOrIssueTitleLink,
@@ -19,6 +14,7 @@ import {
   renderRequestedReviewersInfo,
   textTpl,
   prettyUnderlineWord,
+  TemplateRenderResult,
 } from './utils';
 
 export type Name = 'issues' | 'pull_request' | 'discussion';
