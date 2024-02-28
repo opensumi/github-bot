@@ -23,7 +23,7 @@ const config = {
   moduleNameMapper: {
     '@/(.*)$': '<rootDir>/src/$1',
   },
-  setupFilesAfterEnv: ['<rootDir>/jestSetup.js'],
+  setupFilesAfterEnv: ['<rootDir>/jest-setup.js'],
   // the summary of all failed tests will be printed if there are ten or more failing tests
   reporters: [['summary', { summaryThreshold: 1 }]],
 };
