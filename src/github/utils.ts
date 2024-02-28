@@ -87,6 +87,8 @@ export function replaceGitHubUrlToMarkdown(
     }
   });
 
+  text = makeMarkdown(tree);
+
   return text;
 }
 
