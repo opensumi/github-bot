@@ -1,20 +1,11 @@
 import { EmitterWebhookEventName } from '@octokit/webhooks';
-import { fromMarkdown } from 'mdast-util-from-markdown';
-import {
-  Root,
-  Content,
-  Parent,
-  Link,
-  Text,
-} from 'mdast-util-from-markdown/lib/index';
-import { gfmFromMarkdown, gfmToMarkdown } from 'mdast-util-gfm';
-import { toMarkdown } from 'mdast-util-to-markdown';
-import { gfm } from 'micromark-extension-gfm';
+import { Link, Text } from 'mdast-util-from-markdown/lib/index';
 
 import { markdown } from '@/im/message';
 import { ISetting } from '@/kv/types';
 import { send } from '@opensumi/dingtalk-bot/lib/utils';
 
+import { makeMarkdown, parseMarkdown, walk } from './renderer/make-mark';
 import { MarkdownContent } from './types';
 
 function securityInterception(text: string) {
@@ -45,45 +36,6 @@ function checkLinkIsLiteral(link: Link) {
       return true;
     }
   }
-}
-
-export function walk(root: Parent, cb: (token: Content) => boolean | void) {
-  root.children.forEach((node) => {
-    if (node) {
-      const skip = cb(node);
-      if (!skip) {
-        if ((node as Parent).children) {
-          walk(node as Parent, cb);
-        }
-      }
-    }
-  });
-}
-
-function trimLeadingWS(str: string) {
-  /*
-    Get the initial indentation
-    But ignore new line characters
-  */
-  const matcher = /^[\r\n]?(\s+)/;
-  if (matcher.test(str)) {
-    /*
-      Replace the initial whitespace 
-      globally and over multiple lines
-    */
-    return str.replace(new RegExp('^' + str.match(matcher)![1], 'gm'), '');
-  } else {
-    // Regex doesn't match so return the original string
-    return str;
-  }
-}
-
-function parseMarkdown(text: string) {
-  const tree = fromMarkdown(trimLeadingWS(text), {
-    extensions: [gfm()],
-    mdastExtensions: [gfmFromMarkdown()],
-  });
-  return tree;
 }
 
 export function replaceGitHubUrlToMarkdown(
@@ -134,27 +86,13 @@ export function replaceGitHubUrlToMarkdown(
       return true;
     }
   });
-  text = toMarkdown(tree, {
-    extensions: [gfmToMarkdown()],
-    listItemIndent: 'one',
-    rule: '-',
-  });
 
   return text;
 }
 
-export function toDingtalkMarkdown(tree: Root) {
-  return toMarkdown(tree, {
-    extensions: [gfmToMarkdown()],
-    listItemIndent: 'one',
-    fence: '`',
-    fences: true,
-  });
-}
-
 export function standardizeMarkdown(text: string) {
   const tree = parseMarkdown(text);
-  return toDingtalkMarkdown(tree);
+  return makeMarkdown(tree);
 }
 
 export async function sendContentToDing(
@@ -211,6 +149,10 @@ export async function sendToDing(
 }
 
 export function replaceGitHubText(text: string) {
+  if (!text.includes('<img')) {
+    return text;
+  }
+
   let tmp = text;
   let regexResult: RegExpExecArray | null = null;
   do {

@@ -1,4 +1,5 @@
 import { render } from '@/github/renderer';
+import { makeMarkdown, parseMarkdown, walk } from '@/github/renderer/make-mark';
 import { replaceGitHubText } from '@/github/utils';
 
 export class StringBuilder {
@@ -50,7 +51,37 @@ export class StringBuilder {
 
 const LIMIT_MIN_LINE = 5;
 
+export function tryReplaceImageToNull(text: string) {
+  text = replaceGitHubText(text);
+
+  const ast = parseMarkdown(text);
+
+  let imageCount = 0;
+
+  walk(ast, (node) => {
+    if (node.type === 'image') {
+      imageCount++;
+      node.url = '';
+      node.alt = '';
+      node.title = '';
+      return true;
+    }
+  });
+
+  const result = makeMarkdown(ast);
+
+  return { result, imageCount };
+}
+
 export function limitTextByPosition(text: string, position: number) {
+  // replace all image url to null
+  const { result, imageCount } = tryReplaceImageToNull(text);
+
+  // if images count less than 8, we only process the non-image text
+  if (imageCount < 8) {
+    text = result;
+  }
+
   const arrayOfLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
 
   let count = 0;

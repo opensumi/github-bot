@@ -6,8 +6,15 @@ import {
   parseGitHubUrl,
   standardizeMarkdown,
 } from '@/github/utils';
-import { StringBuilder, limitTextByPosition } from '@/utils/string-builder';
+import {
+  StringBuilder,
+  limitTextByPosition,
+  tryReplaceImageToNull,
+} from '@/utils/string-builder';
 import * as DingUtils from '@opensumi/dingtalk-bot/lib/utils';
+
+const commentWithImg = `<img width="954" alt="image" src="https://user-images.githubusercontent.com/2226423/153811718-2babbfa7-e63f-4ec7-9fd3-9f450beaad9b.png">
+看起来这个分支有个报错关于 TerminalClient 的,有可能是 init 时机有点问题`;
 
 describe('github utils', () => {
   it('can limit lines', () => {
@@ -17,9 +24,7 @@ describe('github utils', () => {
   });
 
   it('can transform image', () => {
-    const comment = `<img width="954" alt="image" src="https://user-images.githubusercontent.com/2226423/153811718-2babbfa7-e63f-4ec7-9fd3-9f450beaad9b.png">
-看起来这个分支有个报错关于 TerminalClient 的,有可能是 init 时机有点问题`;
-    const data = new StringBuilder(comment);
+    const data = new StringBuilder(commentWithImg);
     expect(data.build()).toMatchSnapshot();
   });
 
@@ -292,5 +297,10 @@ https://github.com/opensumi/core/blob/3455b10620badfe7b03a02d66136d3226b7891b8/p
     const result = standardizeMarkdown(data);
     expect(result).toContain(`hi\\~`);
     console.log(`it ~ result:`, result);
+  });
+
+  it('can replace image to null', () => {
+    const d = tryReplaceImageToNull(commentWithImg);
+    expect(d).toMatchSnapshot();
   });
 });

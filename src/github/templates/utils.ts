@@ -1,6 +1,10 @@
 import capitalize from 'lodash/capitalize';
 
-import { StringBuilder, limitTextByPosition } from '@/utils/string-builder';
+import {
+  StringBuilder,
+  limitTextByPosition,
+  tryReplaceImageToNull,
+} from '@/utils/string-builder';
 
 import { render } from '../renderer';
 
