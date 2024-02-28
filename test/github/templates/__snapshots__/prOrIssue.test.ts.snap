@@ -4,7 +4,6 @@ exports[`github templates pr or issue can handle issue 1`] = `
 {
   "compactText": undefined,
   "text": "#### [bytemain](https://github.com/bytemain) opened [issue](https://github.com/opensumi/core/issues/2960)  
-***
 #### [#2960 [BUG]  Problem 面板闪烁](https://github.com/opensumi/core/issues/2960)
 Assignees: [bytemain](https://github.com/bytemain)  
 
@@ -70,7 +69,9 @@ exports[`github templates pr or issue can handle pull_request_opened 1`] = `
   "text": "#### [Codertocat](https://github.com/Codertocat) opened [pull request](https://github.com/Codertocat/Hello-World/pull/2)  
 #### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)
 > master <- changes  
+
 ***
+
 This is a pretty simple change that we need to pull into master.",
   "title": "Pull request#2 opened",
 }

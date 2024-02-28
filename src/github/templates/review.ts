@@ -24,6 +24,8 @@ export async function handleReview(
     did = review.state;
   }
 
+  let doNotRenderBody = false;
+
   if (review.state === 'changes_requested') {
     titleActionText = 'requested changes';
     did = 'requested';
@@ -33,6 +35,7 @@ export async function handleReview(
   if (action === 'dismissed') {
     did = 'dismissed';
     something = 'review';
+    doNotRenderBody = true;
   }
 
   let textFirstLine = `{{sender|link}} [${did}]({{review.html_url}}) `;
@@ -45,10 +48,11 @@ export async function handleReview(
     {
       payload,
       event: 'review',
-      target: '{{pull_request|link}}',
+      target: '#### {{pull_request|link}}',
       action: titleActionText,
       title: textFirstLine,
-      body: '{{review.body|ref}}',
+      body: '{{review.body}}',
+      notRenderBody: doNotRenderBody,
     },
     ctx,
   );

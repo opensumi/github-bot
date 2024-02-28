@@ -1,11 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`github templates pr review can handle pull_request_review_2_1_dismissed_dismissed 1`] = `
+{
+  "compactText": undefined,
+  "text": "#### [Codertocat](https://github.com/Codertocat) [dismissed](https://github.com/Codertocat/Hello-World/pull/2#pullrequestreview-237895671) review on [pull request](https://github.com/hellomouse/GNS/pull/902)  
+#### [#2 Update the README with new information.](https://github.com/hellomouse/GNS/pull/902)",
+  "title": "Review dismissed",
+}
+`;
+
 exports[`github templates pr review can handle pull_request_review_comment_0_created 1`] = `
 {
   "compactText": undefined,
   "text": "#### [Codertocat](https://github.com/Codertocat) created [review comment](https://github.com/Codertocat/Hello-World/pull/2#discussion_r284312630) on [pull request](https://github.com/Codertocat/Hello-World/pull/2)  
 [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)
+
 ***
+
 Maybe you should use more emoji on this line.",
   "title": "Review comment created",
 }

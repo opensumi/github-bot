@@ -1,6 +1,10 @@
 import { handleReviewComment } from '@/github/templates/comment';
+import { handleReview } from '@/github/templates/review';
 
-import { pull_request_2_review_comment_0_created } from '../../fixtures';
+import {
+  pull_request_2_review_comment_0_created,
+  pull_request_review_2_1_dismissed_dismissed,
+} from '../../fixtures';
 import { ctx } from '../ctx';
 
 describe('github templates pr review', () => {
@@ -10,6 +14,14 @@ describe('github templates pr review', () => {
       ctx,
     );
     console.log(`pull_request_review_comment_0_created ~ result`, result);
+    expect(result).toMatchSnapshot();
+  });
+  it('can handle pull_request_review_2_1_dismissed_dismissed', async () => {
+    const result = await handleReview(
+      pull_request_review_2_1_dismissed_dismissed,
+      ctx,
+    );
+    console.log(`pull_request_review_2_1_dismissed_dismissed ~ result`, result);
     expect(result).toMatchSnapshot();
   });
 });

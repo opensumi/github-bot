@@ -287,7 +287,7 @@ export const textTpl: TextTpl = (data, ctx, options) => {
   }
 
   if (bodyText) {
-    text.addDivider();
+    text.addDivider('', true);
 
     if (contentLimit && contentLimit > 0) {
       bodyText = limitTextByPosition(bodyText, contentLimit);

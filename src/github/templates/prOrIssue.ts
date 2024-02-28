@@ -19,7 +19,6 @@ import {
   renderRequestedReviewersInfo,
   textTpl,
   prettyUnderlineWord,
-  useRef,
 } from './utils';
 
 export type Name = 'issues' | 'pull_request' | 'discussion';
@@ -71,17 +70,10 @@ function render(
     }
   }
 
-  if (shouldRenderBody && data.body) {
-    builder.addDivider('', true);
-    builder.add(renderPrOrIssueBody(data));
-  }
-
-  let textFirstLine = `{{sender | link:sender}} ${action} [${nameBlock}](${data.html_url})`;
+  let title = `{{sender | link:sender}} ${action} [${nameBlock}](${data.html_url})`;
 
   if ((data as Issue).state_reason) {
-    textFirstLine += ` as ${prettyUnderlineWord(
-      (data as Issue).state_reason!,
-    )}`;
+    title += ` as ${prettyUnderlineWord((data as Issue).state_reason!)}`;
   }
 
   const text = textTpl(
@@ -89,9 +81,11 @@ function render(
       payload,
       event: `${nameBlock}#${data.number}`,
       action,
-      title: textFirstLine,
-      body: builder.build(),
+      title,
+      target: builder.build(),
+      body: renderPrOrIssueBody(data),
       contentLimit,
+      notRenderBody: !shouldRenderBody,
     },
     ctx,
   );

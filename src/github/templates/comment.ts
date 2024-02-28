@@ -10,6 +10,7 @@ import {
   StopHandleError,
   limitLine,
   renderPrOrIssueLink,
+  renderPrOrIssueTitleLink,
   textTpl,
   useRef,
 } from './utils';
@@ -86,7 +87,7 @@ function renderComment(
       payload,
       action,
       event: `${location} comment`,
-      target: renderPrOrIssueLink(data),
+      target: renderPrOrIssueTitleLink(data),
       title: `{{sender | link:sender}} ${action} [comment](${comment.html_url}) on [${location}](${data.html_url})`,
       body: renderCommentBody(payload.comment),
       notRenderBody,
