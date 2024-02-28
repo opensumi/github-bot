@@ -85,7 +85,7 @@ function render(
       target: builder.build(),
       body: renderPrOrIssueBody(data),
       contentLimit,
-      notRenderBody: !shouldRenderBody,
+      doNotRenderBody: !shouldRenderBody,
     },
     ctx,
   );

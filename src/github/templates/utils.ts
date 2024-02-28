@@ -223,7 +223,7 @@ export type TextTplInput = {
   action: string;
   contentLimit?: number;
   notCapitalizeTitle?: boolean;
-  notRenderBody?: boolean;
+  doNotRenderBody?: boolean;
   autoRef?: boolean;
 };
 
@@ -282,7 +282,7 @@ export const textTpl: TextTpl = (data, ctx, options) => {
   }
 
   let bodyText = '';
-  if (!data.notRenderBody) {
+  if (!data.doNotRenderBody) {
     bodyText = render(body.trim(), payload);
   }
 

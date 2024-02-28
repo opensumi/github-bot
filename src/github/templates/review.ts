@@ -52,7 +52,7 @@ export async function handleReview(
       action: titleActionText,
       title: textFirstLine,
       body: '{{review.body}}',
-      notRenderBody: doNotRenderBody,
+      doNotRenderBody: doNotRenderBody,
     },
     ctx,
   );

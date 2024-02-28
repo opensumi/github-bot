@@ -77,9 +77,9 @@ function renderComment(
   const location = NameBlock[name];
   const action = payload.action;
 
-  let notRenderBody = false;
+  let doNotRenderBody = false;
   if (['edited'].includes(action)) {
-    notRenderBody = true;
+    doNotRenderBody = true;
   }
 
   const text = textTpl(
@@ -90,7 +90,7 @@ function renderComment(
       target: renderPrOrIssueTitleLink(data),
       title: `{{sender | link:sender}} ${action} [comment](${comment.html_url}) on [${location}](${data.html_url})`,
       body: renderCommentBody(payload.comment),
-      notRenderBody,
+      doNotRenderBody,
     },
     ctx,
   );
