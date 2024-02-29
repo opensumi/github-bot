@@ -10,9 +10,9 @@ import { GitHubService } from '@opensumi/octo-service';
 
 import { CommandContext, issueCc } from './commands';
 import { parseCommandInMarkdownComments } from './commands/parse';
+import { sendToDing } from './dingtalk';
 import { setupWebhooksTemplate } from './handler';
 import { OpenSumiOctoService } from './service/opensumi';
-import { sendToDing } from './utils';
 
 export class App {
   ctx: {

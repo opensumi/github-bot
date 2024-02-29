@@ -1,7 +1,7 @@
 import { RC_WORKFLOW_FILE } from '@/constants/opensumi';
+import { markdown } from '@/github/dingtalk';
 import { equalFunc } from '@opensumi/bot-commander';
 
-import { markdown } from '../message';
 import { IBotAdapter } from '../types';
 
 import { KnownRepo } from './constants';

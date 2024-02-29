@@ -1,8 +1,8 @@
 import throttle from 'lodash/throttle';
 
 import { Conversation } from '@/ai/conversation';
+import { markdown } from '@/github/dingtalk';
 import { Context } from '@/im/commands';
-import { markdown } from '@/im/message';
 
 import { IBotAdapter } from './types';
 

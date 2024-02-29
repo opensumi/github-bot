@@ -1,7 +1,7 @@
 import { render } from '../renderer';
 import { ExtractPayload } from '../types';
 
-import { StopHandleError, TemplateRenderResult } from './utils';
+import { StopHandleError, TemplateRenderResult } from './components';
 
 export async function handleStar(
   payload: ExtractPayload<'star'>,

@@ -5,7 +5,7 @@ exports[`github templates pr or issue can handle issue 1`] = `
   "compactText": undefined,
   "text": "#### [bytemain](https://github.com/bytemain) opened [issue](https://github.com/opensumi/core/issues/2960)  
 #### [#2960 [BUG]  Problem 面板闪烁](https://github.com/opensumi/core/issues/2960)
-Assignees: [bytemain](https://github.com/bytemain)  
+> Assignees: [bytemain](https://github.com/bytemain)  
 
 ***
 

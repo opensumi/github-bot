@@ -1,9 +1,9 @@
 import { StringBuilder } from '@/utils/string-builder';
 
+import { replaceGitHubUrlToMarkdown } from '../gfm';
 import { Context, ExtractPayload } from '../types';
-import { replaceGitHubUrlToMarkdown } from '../utils';
 
-import { TemplateRenderResult, textTpl } from './utils';
+import { TemplateRenderResult, Template } from './components';
 
 export async function handleRelease(
   payload: ExtractPayload<'release'>,
@@ -29,7 +29,7 @@ export async function handleRelease(
   builder.add(`Tag: ${release.tag_name}\n`);
   builder.add('{{release.body|ref}}');
 
-  const text = textTpl(
+  return Template(
     {
       payload,
       event: release.name,
@@ -43,6 +43,4 @@ export async function handleRelease(
     },
     ctx,
   );
-
-  return text;
 }

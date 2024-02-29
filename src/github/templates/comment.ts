@@ -1,19 +1,18 @@
 import { Octokit } from '@octokit/rest';
 import { Repository, User } from '@octokit/webhooks-types';
 
-import { StringBuilder } from '@/utils/string-builder';
+import { StringBuilder, limitLine } from '@/utils/string-builder';
 
 import { ExtractPayload, Context } from '../types';
 
-import { Name, NameBlock } from './prOrIssue';
 import {
   StopHandleError,
   TemplateRenderResult,
-  limitLine,
-  renderPrOrIssueTitleLink,
-  textTpl,
-  useRef,
-} from './utils';
+  IssuesTitleLink,
+  Template,
+  Reference,
+} from './components';
+import { Name, NameBlock } from './prOrIssue';
 
 const codecov = (text: string) => {
   return limitLine(text, 2, 1, (line) => {
@@ -41,7 +40,7 @@ const formatByUserLogin = {
   [key: string]: (text: string) => string;
 };
 
-export function renderCommentBody(comment: {
+export function CommentBody(comment: {
   body: string;
   user: { login: string };
 }) {
@@ -82,21 +81,19 @@ function renderComment(
     doNotRenderBody = true;
   }
 
-  const text = textTpl(
+  return Template(
     {
       payload,
       action,
       event: `${location} comment`,
-      target: renderPrOrIssueTitleLink(data),
+      target: IssuesTitleLink(data),
       title: `{{sender | link:sender}} ${action} [comment](${comment.html_url}) on [${location}](${data.html_url})`,
-      body: renderCommentBody(payload.comment),
+      body: CommentBody(payload.comment),
       compactTitle: `{{sender | link:sender}} ${action} [comment](${data.html_url}):  \n`,
       doNotRenderBody,
     },
     ctx,
   );
-
-  return text;
 }
 
 export async function handleIssueComment(
@@ -155,12 +152,12 @@ export async function handleCommitComment(
   const builder = new StringBuilder(`> #### [${title}]({{comment.html_url}})`);
 
   if (restText) {
-    builder.add(useRef(restText));
+    builder.add(Reference(restText));
   }
   builder.add(`>`);
   builder.add('{{comment.body|ref}}');
 
-  const text = textTpl(
+  return Template(
     {
       payload,
       event: 'commit comment',
@@ -170,8 +167,6 @@ export async function handleCommitComment(
     },
     ctx,
   );
-
-  return text;
 }
 
 const allowedReviewCommentAction = new Set(['created']);
@@ -189,18 +184,16 @@ export async function handleReviewComment(
     throw new StopHandleError(`not support action ${action}`);
   }
 
-  const text = textTpl(
+  return Template(
     {
       payload,
       event: 'review comment',
       action,
       target: '{{pull_request|link}}',
       title: `{{sender | link:sender}} ${action} [review comment](${comment.html_url}) on [pull request](${pr.html_url})`,
-      body: renderCommentBody(payload.comment),
+      body: CommentBody(payload.comment),
       compactTitle: `{{sender | link}} ${action} [review comment](${comment.html_url}):  \n`,
     },
     ctx,
   );
-
-  return text;
 }

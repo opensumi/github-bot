@@ -1,11 +1,11 @@
 import { App } from '@/github/app';
+import { markdown } from '@/github/dingtalk';
+import { parseGitHubUrl } from '@/github/gfm';
 import { renderPrOrIssue } from '@/github/renderer';
-import { contentToMarkdown, parseGitHubUrl } from '@/github/utils';
 import { StringBuilder } from '@/utils';
 import { startsWith } from '@opensumi/bot-commander';
 import { code } from '@opensumi/dingtalk-bot/lib/types';
 
-import { markdown } from '../message';
 import { IBotAdapter } from '../types';
 
 import { ISSUE_REGEX, REPO_REGEX } from './constants';
@@ -205,10 +205,10 @@ export function registerGitHubCommand(it: IMCommandCenter) {
       }
 
       await bot.reply(
-        contentToMarkdown({
-          title: `${githubUserId}'s prs of ${owner}/${repo}`,
-          text: builder.toString(),
-        }),
+        markdown(
+          `${githubUserId}'s prs of ${owner}/${repo}`,
+          builder.toString(),
+        ),
       );
     },
     ['mypr'],
@@ -287,8 +287,8 @@ async function replyGitHubIssue(
     issueNumber,
   );
   if (issue) {
-    const markdown = renderPrOrIssue(issue);
-    await bot.reply(contentToMarkdown(markdown));
+    const data = renderPrOrIssue(issue);
+    await bot.reply(markdown(data.title, data.text));
   } else {
     await bot.replyText(
       `${issueNumber} 不是 ${owner}/${repo} 仓库有效的 issue number`,

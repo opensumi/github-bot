@@ -1,34 +1,30 @@
 import capitalize from 'lodash/capitalize';
 
-import {
-  StringBuilder,
-  limitTextByPosition,
-  tryReplaceImageToNull,
-} from '@/utils/string-builder';
+import { StringBuilder, limitTextByPosition } from '@/utils/string-builder';
 
 import { render } from '../renderer';
 
-export function renderRepoLink(repository: { name: string; html_url: string }) {
+export function RepositoryLink(repository: { name: string; html_url: string }) {
   return `[[${repository.name}]](${repository.html_url})`;
 }
 
-export function renderUserLink(sender: { login: string; html_url: string }) {
+export function SenderLink(sender: { login: string; html_url: string }) {
   return `[${sender.login}](${sender.html_url})`;
 }
 
-export function renderTeamLink(team: { name: string; html_url: string }) {
+export function TeamLink(team: { name: string; html_url: string }) {
   return `[${team.name}](${team.html_url})`;
 }
 
-export function renderAtUserLink(sender: { login: string; html_url: string }) {
+export function AtSenderLink(sender: { login: string; html_url: string }) {
   return `[@${sender.login}](${sender.html_url})`;
 }
 
-export function renderReleaseLink(release: { name: string; html_url: string }) {
+export function ReleaseLink(release: { name: string; html_url: string }) {
   return `[${release.name}](${release.html_url})`;
 }
 
-export function renderPrOrIssueText(
+export function IssuesText(
   p: {
     /**
      * The title of the pull request.
@@ -53,7 +49,7 @@ export function renderPrOrIssueText(
   return text;
 }
 
-export function renderPrOrIssueLink(
+export function IssuesLink(
   p: {
     /**
      * The title of the pull request.
@@ -68,10 +64,10 @@ export function renderPrOrIssueLink(
   prefix?: string,
   suffix?: string,
 ) {
-  return `[${renderPrOrIssueText(p, prefix, suffix)}](${p.html_url})`;
+  return `[${IssuesText(p, prefix, suffix)}](${p.html_url})`;
 }
 
-export function renderPrOrIssueTitleLink(p: {
+export function IssuesTitleLink(p: {
   /**
    * The title of the pull request.
    */
@@ -83,10 +79,10 @@ export function renderPrOrIssueTitleLink(p: {
   html_url: string;
   body?: string | null | undefined;
 }) {
-  return `#### ${renderPrOrIssueLink(p)}`;
+  return `#### ${IssuesLink(p)}`;
 }
 
-export function renderPrRefInfo(data: {
+export function PullRequestRefInfo(data: {
   head: {
     label: string;
   };
@@ -104,13 +100,13 @@ export function renderPrRefInfo(data: {
   return `${base.ref} <- ${headLabel}  `;
 }
 
-export function renderAssigneeInfo(
+export function AssigneesInfo(
   assignees: {
     login: string;
     html_url: string;
   }[],
 ) {
-  const assigneeNames = assignees.map((v) => renderUserLink(v)).join(', ');
+  const assigneeNames = assignees.map((v) => SenderLink(v)).join(', ');
   return `Assignees: ${assigneeNames}  `;
 }
 
@@ -124,20 +120,20 @@ interface ITeamBasic {
   html_url: string;
 }
 
-export function renderRequestedReviewersInfo(
+export function RequestedReviewersInfo(
   reviewers: (ISenderBasic | ITeamBasic)[],
 ) {
   const reviewerNames = reviewers
     .map((v) =>
       (v as ISenderBasic).login
-        ? renderUserLink(v as ISenderBasic)
-        : renderTeamLink(v as ITeamBasic),
+        ? SenderLink(v as ISenderBasic)
+        : TeamLink(v as ITeamBasic),
     )
     .join(', ');
   return `Requested reviewers: ${reviewerNames}  `;
 }
 
-export function renderDeletedPrOrIssueTitleLink(p: {
+export function DeletedPrOrIssueTitleLink(p: {
   /**
    * The title of the pull request.
    */
@@ -149,31 +145,10 @@ export function renderDeletedPrOrIssueTitleLink(p: {
   html_url: string;
   body: string | null | undefined;
 }) {
-  return `#### ${renderPrOrIssueLink(p, '~~', '~~')}`;
+  return `#### ${IssuesLink(p, '~~', '~~')}`;
 }
 
-export function renderPrOrIssueBody(p: {
-  /**
-   * The title of the pull request.
-   */
-  title: string;
-  /**
-   * Number uniquely identifying the pull request within its repository.
-   */
-  number: number;
-  html_url: string;
-  body?: string | null | undefined;
-}) {
-  const builder = new StringBuilder();
-
-  if (p.body) {
-    builder.add(p.body);
-  }
-
-  return builder.build();
-}
-
-export function useRef(text?: string | null | undefined, bodyLimit = -1) {
+export function Reference(text?: string | null | undefined, bodyLimit = -1) {
   if (!text) {
     return '';
   }
@@ -196,19 +171,6 @@ export function useRef(text?: string | null | undefined, bodyLimit = -1) {
   return newLines.join('\n');
 }
 
-export function limitLine(
-  text: string,
-  count: number,
-  start = 0,
-  lineProcess = (v: string) => v,
-) {
-  const arrayOfLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
-  const finalLines = arrayOfLines
-    .slice(start, start + count)
-    .map((v) => lineProcess(v));
-  return finalLines.join('\n').trim();
-}
-
 export class StopHandleError extends Error {
   constructor(reason: string) {
     super(reason);
@@ -220,7 +182,7 @@ export type TextTplInput = {
   title: string;
   target?: string;
   compactTitle?: string;
-  body: string;
+  body?: string | null;
   event: string;
   action: string;
   contentLimit?: number;
@@ -255,7 +217,7 @@ export type HandlerResult = {
 
 const raw = (v: string) => v;
 
-export const textTpl: TextTpl = (data, ctx, options) => {
+export const Template: TextTpl = (data, ctx, options) => {
   const {
     payload,
     title: bodyTitle,
@@ -269,7 +231,7 @@ export const textTpl: TextTpl = (data, ctx, options) => {
   } = data;
   const repo = payload.repository;
 
-  let repoInfo = renderRepoLink(repo) + ' ';
+  let repoInfo = RepositoryLink(repo) + ' ';
   if (ctx?.setting?.notDisplayRepoName) {
     repoInfo = '';
   }
@@ -286,7 +248,7 @@ export const textTpl: TextTpl = (data, ctx, options) => {
   }
 
   let bodyText = '';
-  if (!data.doNotRenderBody) {
+  if (body && !data.doNotRenderBody) {
     bodyText = render(body.trim(), payload);
   }
 
@@ -327,7 +289,7 @@ export const textTpl: TextTpl = (data, ctx, options) => {
   };
 };
 
-export const removeOrgInfo = (orgName: string, label: string) => {
+const removeOrgInfo = (orgName: string, label: string) => {
   const prefix = `${orgName}:`;
   if (label.startsWith(prefix)) {
     return label.slice(prefix.length);

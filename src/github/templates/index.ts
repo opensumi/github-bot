@@ -8,13 +8,13 @@ import {
   handleIssueComment,
   handleReviewComment,
 } from './comment';
+import { TemplateRenderResult } from './components';
 import { handleDiscussion, handleIssue, handlePr } from './prOrIssue';
 import { handleRelease } from './release';
 import { handleReview } from './review';
 import { handleStar } from './star';
-import { TemplateRenderResult } from './utils';
 import { handleWorkflowRun } from './workflow';
-export * from './utils';
+export * from './components';
 
 type MaybePromise<T> = T | Promise<T>;
 

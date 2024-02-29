@@ -52,3 +52,8 @@ export function makeMarkdown(tree: Parent) {
     fences: true,
   });
 }
+
+export function standardizeMarkdown(text: string) {
+  const tree = parseMarkdown(text);
+  return makeMarkdown(tree);
+}

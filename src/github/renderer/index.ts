@@ -1,8 +1,7 @@
 import {
-  renderPrOrIssueBody,
-  renderPrOrIssueTitleLink,
-  renderPrRefInfo,
-} from '@/github/templates/utils';
+  IssuesTitleLink,
+  PullRequestRefInfo,
+} from '@/github/templates/components';
 import { StringBuilder } from '@/utils/string-builder';
 import { IIssueDetail, IPrDetail } from '@opensumi/octo-service/src/types';
 
@@ -13,17 +12,17 @@ export function renderPrOrIssue(data: IIssueDetail | IPrDetail) {
   const issueNumber = data.issue.number;
   const title = `${type} ${issueNumber}`;
   const builder = new StringBuilder();
-  builder.add(renderPrOrIssueTitleLink(data.issue));
+  builder.add(IssuesTitleLink(data.issue));
   if (data.type === 'pr') {
-    builder.add(renderPrRefInfo(data.pr));
+    builder.add(PullRequestRefInfo(data.pr));
   }
 
   builder.addDivider(undefined, true);
 
   if (data.type === 'pr') {
-    builder.add(renderPrOrIssueBody(data.pr));
+    builder.add(data.pr.body || '');
   } else {
-    builder.add(renderPrOrIssueBody(data.issue));
+    builder.add(data.issue.body || '');
   }
 
   return {

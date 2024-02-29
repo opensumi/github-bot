@@ -1,6 +1,6 @@
 import { Context, ExtractPayload } from '../types';
 
-import { StopHandleError, textTpl, TemplateRenderResult } from './utils';
+import { StopHandleError, Template, TemplateRenderResult } from './components';
 
 export async function handleReview(
   payload: ExtractPayload<'pull_request_review'>,
@@ -44,7 +44,7 @@ export async function handleReview(
   }
   textFirstLine += `[pull request]({{pull_request.html_url}})`;
 
-  const text = textTpl(
+  return Template(
     {
       payload,
       event: 'review',
@@ -56,6 +56,4 @@ export async function handleReview(
     },
     ctx,
   );
-
-  return text;
 }

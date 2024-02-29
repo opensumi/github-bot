@@ -4,7 +4,7 @@ import { StringBuilder } from '@/utils/string-builder';
 
 import { Context, ExtractPayload } from '../types';
 
-import { textTpl, StopHandleError, TemplateRenderResult } from './utils';
+import { Template, StopHandleError, TemplateRenderResult } from './components';
 
 function renderWorkflow(
   payload: ExtractPayload<'workflow_run'>,
@@ -19,7 +19,7 @@ function renderWorkflow(
   builder.add(`Name: {{workflow.name}}\n`);
   builder.add(`[Detail]({{workflow_run.html_url}})\n`);
 
-  const text = textTpl(
+  return Template(
     {
       payload,
       event: 'workflow',
@@ -29,8 +29,6 @@ function renderWorkflow(
     },
     ctx,
   );
-
-  return text;
 }
 
 export async function handleWorkflowRun(

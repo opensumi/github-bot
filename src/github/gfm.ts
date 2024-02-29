@@ -1,17 +1,6 @@
-import { EmitterWebhookEventName } from '@octokit/webhooks';
 import { Link, Text } from 'mdast-util-from-markdown/lib/index';
 
-import { markdown } from '@/im/message';
-import { ISetting } from '@/kv/types';
-import { send } from '@opensumi/dingtalk-bot/lib/utils';
-
 import { makeMarkdown, parseMarkdown, walk } from './renderer/make-mark';
-import { MarkdownContent } from './types';
-
-function securityInterception(text: string) {
-  text = text.replaceAll('dingtalk://dingtalkclient/page/link?url=', '');
-  return text;
-}
 
 interface ReplaceOptions {
   owner: string;
@@ -90,64 +79,6 @@ export function replaceGitHubUrlToMarkdown(
   text = makeMarkdown(tree);
 
   return text;
-}
-
-export function standardizeMarkdown(text: string) {
-  const tree = parseMarkdown(text);
-  return makeMarkdown(tree);
-}
-
-export async function sendContentToDing(
-  dingContent: Record<string, unknown>,
-  eventName: EmitterWebhookEventName,
-  setting: ISetting,
-) {
-  if (setting.dingWebhooks.length === 0) {
-    return;
-  }
-
-  const promises = [] as Promise<void>[];
-
-  for (const webhook of setting.dingWebhooks) {
-    console.log(`webhook`, webhook);
-    if (webhook.event && webhook.event.length > 0) {
-      // 如果 webhook 设置了只接受的 event，查询一下
-      if (!webhook.event.includes(eventName)) {
-        // 如果这个 webhook 不接收本次 event，就跳过
-        continue;
-      }
-    }
-
-    promises.push(
-      (async () => {
-        console.log('send to ', webhook.url);
-        await send(dingContent, webhook.url, webhook.secret);
-      })(),
-    );
-  }
-  await Promise.allSettled(promises);
-}
-
-export function contentToMarkdown(data: MarkdownContent) {
-  const { text: _text, title } = data;
-
-  const text = securityInterception(_text);
-  const dingContent = markdown(title, text);
-  return dingContent;
-}
-
-export async function sendToDing(
-  data: MarkdownContent,
-  eventName: EmitterWebhookEventName,
-  setting: ISetting,
-) {
-  if (!setting.dingWebhooks || setting.dingWebhooks.length === 0) {
-    console.error('no ding webhook setting, please check');
-    return;
-  }
-
-  const dingContent = contentToMarkdown(data);
-  await sendContentToDing(dingContent, eventName, setting);
 }
 
 export function replaceGitHubText(text: string) {

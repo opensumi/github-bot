@@ -5,7 +5,7 @@ import {
   setupWebhooksTemplate,
   validateGithub,
 } from '@/github';
-import { sendToDing } from '@/github/utils';
+import { sendToDing } from '@/github/dingtalk';
 import { GitHubKVManager } from '@/kv/github';
 
 export function route(hono: THono) {

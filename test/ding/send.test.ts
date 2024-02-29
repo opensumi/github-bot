@@ -15,7 +15,7 @@ jest.mock('@opensumi/dingtalk-bot/lib/utils', () => {
   };
 });
 
-import { sendContentToDing } from '@/github/utils';
+import { sendContentToDing } from '@/github/dingtalk';
 
 describe('can send content to dingtalk', () => {
   it('can filter event', async () => {

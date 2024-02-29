@@ -4,9 +4,9 @@ import groupBy from 'lodash/groupBy';
 import DefaultMap from 'mnemonist/default-map';
 
 import { initApp } from '@/github/app';
+import { sendToDing } from '@/github/dingtalk';
 import { setupWebhooksTemplate } from '@/github/handler';
 import { TemplateRenderResult } from '@/github/templates';
-import { sendToDing } from '@/github/utils';
 import { GitHubKVManager } from '@/kv/github';
 import { ISetting } from '@/kv/types';
 import { Logger } from '@/utils/logger';

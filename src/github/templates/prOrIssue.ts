@@ -5,17 +5,16 @@ import { StringBuilder } from '@/utils/string-builder';
 import { ExtractPayload, THasChanges, Context } from '../types';
 
 import {
-  renderPrOrIssueTitleLink,
-  renderDeletedPrOrIssueTitleLink,
-  renderPrOrIssueBody,
+  IssuesTitleLink,
+  DeletedPrOrIssueTitleLink,
   StopHandleError,
-  renderPrRefInfo,
-  renderAssigneeInfo,
-  renderRequestedReviewersInfo,
-  textTpl,
+  PullRequestRefInfo,
+  AssigneesInfo,
+  RequestedReviewersInfo,
+  Template,
   prettyUnderlineWord,
   TemplateRenderResult,
-} from './utils';
+} from './components';
 
 export type Name = 'issues' | 'pull_request' | 'discussion';
 export const NameBlock = {
@@ -47,7 +46,7 @@ function render(
 
   const builder = new StringBuilder();
 
-  builder.add(renderPrOrIssueTitleLink(data));
+  builder.add(IssuesTitleLink(data));
 
   let contentLimit = ctx.setting.contentLimit;
 
@@ -62,7 +61,7 @@ function render(
     }
 
     if (shouldRenderAssigneeInfo && (data as Issue).assignees?.length) {
-      builder.add(renderAssigneeInfo((data as Issue).assignees));
+      builder.add('> ' + AssigneesInfo((data as Issue).assignees));
     }
   }
 
@@ -72,21 +71,19 @@ function render(
     title += ` as ${prettyUnderlineWord((data as Issue).state_reason!)}`;
   }
 
-  const text = textTpl(
+  return Template(
     {
       payload,
       event: `${nameBlock}#${data.number}`,
       action,
       title,
       target: builder.build(),
-      body: renderPrOrIssueBody(data),
+      body: data.body,
       contentLimit,
       doNotRenderBody: !shouldRenderBody,
     },
     ctx,
   );
-
-  return text;
 }
 
 export async function handlePr(
@@ -112,9 +109,8 @@ export async function handlePr(
     }
   }
 
-  if (action === 'ready_for_review') {
-    action = 'ready for review';
-  }
+  // ready_for_review -> ready for review
+  action = prettyUnderlineWord(action);
 
   let shouldRenderMergeInfo = false;
   if (['opened', 'edited', 'merged'].includes(action)) {
@@ -156,25 +152,25 @@ export async function handlePr(
 
   if (oldTitle) {
     builder.add(
-      renderDeletedPrOrIssueTitleLink({
+      DeletedPrOrIssueTitleLink({
         ...data,
         title: oldTitle,
       }),
     );
   }
 
-  builder.add(renderPrOrIssueTitleLink(data));
+  builder.add(IssuesTitleLink(data));
 
   if (shouldRenderMergeInfo) {
-    builder.add(`> ${renderPrRefInfo(data)}`);
+    builder.add(`> ${PullRequestRefInfo(data)}`);
   }
 
   if (data.requested_reviewers?.length) {
-    builder.add(`> ${renderRequestedReviewersInfo(data.requested_reviewers)}`);
+    builder.add(`> ${RequestedReviewersInfo(data.requested_reviewers)}`);
   }
 
   if (data.assignees?.length) {
-    builder.add(`> ${renderAssigneeInfo(data.assignees)}`);
+    builder.add(`> ${AssigneesInfo(data.assignees)}`);
   }
 
   if (oldRef) {
@@ -183,20 +179,19 @@ export async function handlePr(
     );
   }
 
-  const text = textTpl(
+  return Template(
     {
       payload,
       event: `${nameBlock}#${data.number}`,
       action,
       title: `{{sender | link:sender}} ${action} [${nameBlock}](${data.html_url})`,
       target: builder.build(),
-      body: shouldRenderBody && data.body ? renderPrOrIssueBody(data) : '',
+      body: data.body,
       contentLimit: ctx.setting.contentLimit,
+      doNotRenderBody: !shouldRenderBody,
     },
     ctx,
   );
-
-  return text;
 }
 
 export async function handleIssue(

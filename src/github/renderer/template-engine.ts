@@ -1,11 +1,11 @@
 import get from 'lodash/get';
 
 import {
-  renderPrOrIssueLink,
-  renderReleaseLink,
-  renderRepoLink,
-  renderUserLink,
-  useRef,
+  IssuesLink,
+  ReleaseLink,
+  RepositoryLink,
+  SenderLink,
+  Reference,
 } from '../templates';
 
 const defaultOperators = {
@@ -13,15 +13,15 @@ const defaultOperators = {
     const [, type] = operator.split(':', 2);
     switch (type || key) {
       case 'sender':
-        return renderUserLink(value);
+        return SenderLink(value);
       case 'repository':
-        return renderRepoLink(value);
+        return RepositoryLink(value);
       case 'release':
-        return renderReleaseLink(value);
+        return ReleaseLink(value);
       case 'pull_request':
       case 'issue':
       case 'discussion':
-        return renderPrOrIssueLink(value);
+        return IssuesLink(value);
     }
 
     return value;
@@ -33,7 +33,7 @@ const defaultOperators = {
       bodyLimit = parseInt(limit, 10);
     }
 
-    return useRef(value, bodyLimit);
+    return Reference(value, bodyLimit);
   },
 } as Record<string, (operator: string, key: string, value: any) => string>;
 

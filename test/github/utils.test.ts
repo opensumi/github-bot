@@ -1,15 +1,15 @@
-import { limitLine, useRef } from '@/github/templates/utils';
+import { sendToDing } from '@/github/dingtalk';
 import {
-  sendToDing,
   replaceGitHubUrlToMarkdown,
   replaceGitHubText,
   parseGitHubUrl,
-  standardizeMarkdown,
-} from '@/github/utils';
+} from '@/github/gfm';
+import { standardizeMarkdown } from '@/github/renderer/make-mark';
 import {
   StringBuilder,
+  limitLine,
   limitTextByPosition,
-  tryReplaceImageToNull,
+  transformMarkdownToLimitable,
 } from '@/utils/string-builder';
 import * as DingUtils from '@opensumi/dingtalk-bot/lib/utils';
 
@@ -65,7 +65,9 @@ describe('github utils', () => {
       22222
       33333
       44444
-      55555..."
+      55555
+      66666
+      ..."
     `);
   });
 
@@ -299,8 +301,16 @@ https://github.com/opensumi/core/blob/3455b10620badfe7b03a02d66136d3226b7891b8/p
     console.log(`it ~ result:`, result);
   });
 
-  it('can replace image to null', () => {
-    const d = tryReplaceImageToNull(commentWithImg);
+  it('can transform markdown to limitable', () => {
+    const d = transformMarkdownToLimitable(`
+    ${commentWithImg}
+\`\`\`
+asdfg
+\`\`\`
+
+# a
+## b
+    `);
     expect(d).toMatchSnapshot();
   });
 });

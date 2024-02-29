@@ -1,6 +1,6 @@
+import { replaceGitHubText } from '@/github/gfm';
 import { render } from '@/github/renderer';
 import { makeMarkdown, parseMarkdown, walk } from '@/github/renderer/make-mark';
-import { replaceGitHubText } from '@/github/utils';
 
 export class StringBuilder {
   private array = [] as string[];
@@ -49,14 +49,18 @@ export class StringBuilder {
   }
 }
 
-const LIMIT_MIN_LINE = 5;
-
-export function tryReplaceImageToNull(text: string) {
+/**
+ * remove image url and alt text,
+ * remove heading
+ * remove code block
+ */
+export function transformMarkdownToLimitable(text: string) {
   text = replaceGitHubText(text);
 
   const ast = parseMarkdown(text);
 
   let imageCount = 0;
+  let headingDepthCount = 0;
 
   walk(ast, (node) => {
     if (node.type === 'image') {
@@ -65,21 +69,35 @@ export function tryReplaceImageToNull(text: string) {
       node.alt = '';
       node.title = '';
       return true;
+    } else if (node.type === 'code') {
+      (node as any).type = 'text';
+      node.lang = '';
+      node.meta = '';
+      return true;
+    } else if (node.type === 'heading') {
+      headingDepthCount = headingDepthCount + node.depth;
     }
   });
 
   const result = makeMarkdown(ast);
 
-  return { result, imageCount };
+  return { result, imageCount, headingDepthCount };
 }
 
-export function limitTextByPosition(text: string, position: number) {
+export function limitTextByPosition(
+  text: string,
+  position: number,
+  minLine = 6,
+) {
   // replace all image url to null
-  const { result, imageCount } = tryReplaceImageToNull(text);
+  const { result, imageCount, headingDepthCount } =
+    transformMarkdownToLimitable(text);
 
   // if images count less than 8, we only process the non-image text
   if (imageCount < 8) {
     text = result;
+    // tolerate heading depth
+    position = position + headingDepthCount;
   }
 
   const arrayOfLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
@@ -96,13 +114,26 @@ export function limitTextByPosition(text: string, position: number) {
 
   lineNo++;
 
-  // 如果 limit 过后的行数小于 LIMIT_MIN_LINE，则使用 LIMIT_MIN_LINE
-  lineNo = lineNo < LIMIT_MIN_LINE ? LIMIT_MIN_LINE : lineNo;
+  // 如果 limit 过后的行数小于 minLine, 则使用 minLine
+  lineNo = lineNo < minLine ? minLine : lineNo;
 
   const finalLines = arrayOfLines.slice(0, lineNo);
   let finalContent = finalLines.join('\n').trim();
   if (lineNo < arrayOfLines.length) {
-    finalContent = finalContent + '...';
+    finalContent = finalContent + '\n...';
   }
   return finalContent;
+}
+
+export function limitLine(
+  text: string,
+  count: number,
+  start = 0,
+  lineProcess = (v: string) => v,
+) {
+  const arrayOfLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
+  const finalLines = arrayOfLines
+    .slice(start, start + count)
+    .map((v) => lineProcess(v));
+  return finalLines.join('\n').trim();
 }
