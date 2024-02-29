@@ -224,34 +224,42 @@ class EventComposite {
 
     const separator = '\n\n***\n\n';
 
-    if (subView.length > 0) {
-      const chunked = chunk(subView, 5);
-      chunked.forEach((v, i) => {
-        let title = '';
-        let eventName = '';
-        let text = v
-          .map((d) => d.markdown.compactText || d.markdown.text)
-          .join(separator);
+    function constructView(mainView: IResult, subViews: IResult[]) {
+      const title = mainView.markdown.title;
+      const eventName = mainView.eventName;
+      let text = subViews
+        .map((d) => d.markdown.compactText || d.markdown.text)
+        .join(separator);
 
-        if (i === 0 && mainView) {
-          title = mainView.markdown.title;
-          eventName = mainView.eventName;
-          text = mainView.markdown.text + separator + text;
-        } else if (subView.length > 0) {
-          title = subView[0].markdown.title;
-          eventName = subView[0].eventName;
-        }
+      text = mainView.markdown.text + separator + text;
 
-        result.push({
-          eventName,
-          markdown: {
-            title,
-            text,
-          },
-        });
+      result.push({
+        eventName,
+        markdown: {
+          title,
+          text,
+        },
       });
-    } else if (mainView) {
-      result.push(mainView);
+    }
+
+    if (mainView) {
+      if (subView.length > 0) {
+        chunk(subView, 5).forEach((subViews) => {
+          constructView(mainView, subViews);
+        });
+      } else {
+        result.push(mainView);
+      }
+    } else if (subView.length > 0) {
+      // only have subView
+      if (subView.length === 1) {
+        result.push(subView[0]);
+      } else {
+        chunk(subView, 5).forEach((subViews) => {
+          const mainView = subViews.shift() as IResult;
+          constructView(mainView, subViews);
+        });
+      }
     }
 
     return result;

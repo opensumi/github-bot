@@ -29,10 +29,6 @@ import {
 
 const botId = 'mock';
 
-// const describe = process.env.GITHUB_TOKEN
-//   ? global.describe
-//   : global.describe.skip;
-
 describe('queue', () => {
   beforeAll(() => {
     prepareEnv();
@@ -119,6 +115,37 @@ describe('queue', () => {
       {
         name: 'pull_request_review',
         payload: pull_request_review_submitted_approved,
+      },
+    ] as { name: EmitterWebhookEventName; payload: any }[];
+
+    const reviews = events.map((v) => ({
+      botId,
+      type: 'github-app',
+      data: {
+        id: `${Math.random()}`,
+        name: v.name,
+        payload: v.payload,
+      },
+    })) as IGitHubEventQueueMessage[];
+
+    const batch = MockMessageBatch.from(reviews);
+    wk.push(...batch.messages);
+
+    wk.onBatchDoneForTest = (results) => {
+      expect(results.length).toBe(1);
+      expect(results).toMatchSnapshot();
+    };
+
+    await wk.run();
+  });
+
+  it('can composite pr review comment single', async () => {
+    expect.assertions(2);
+    const wk = new MockGitHubEventWorker('app');
+    const events = [
+      {
+        name: 'pull_request_review_comment',
+        payload: pull_request_2_review_comment_1_created,
       },
     ] as { name: EmitterWebhookEventName; payload: any }[];
 
