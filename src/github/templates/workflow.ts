@@ -6,6 +6,39 @@ import { Context, ExtractPayload } from '../types';
 
 import { Template, StopHandleError, TemplateRenderResult } from './components';
 
+const conclusionToAdv = (
+  conclusion:
+    | 'success'
+    | 'failure'
+    | 'neutral'
+    | 'cancelled'
+    | 'timed_out'
+    | 'action_required'
+    | 'stale'
+    | 'skipped',
+) => {
+  switch (conclusion) {
+    case 'success':
+      return 'successfully';
+    case 'failure':
+      return 'failed';
+    case 'neutral':
+      return 'neutral';
+    case 'cancelled':
+      return 'cancelled';
+    case 'timed_out':
+      return 'timed out';
+    case 'action_required':
+      return 'action required';
+    case 'stale':
+      return 'stale';
+    case 'skipped':
+      return 'skipped';
+    default:
+      return conclusion;
+  }
+};
+
 function renderWorkflow(
   payload: ExtractPayload<'workflow_run'>,
   ctx: Context & {
@@ -14,18 +47,14 @@ function renderWorkflow(
 ): TemplateRenderResult {
   const action = payload.action as string;
 
-  const builder = new StringBuilder();
-
-  builder.add(`Name: {{workflow.name}}\n`);
-  builder.add(`[Detail]({{workflow_run.html_url}})\n`);
-
   return Template(
     {
       payload,
       event: 'workflow',
       action,
-      title: `{{sender | link}} run [workflow]({{workflow_run.html_url}}) {{workflow_run.conclusion}}`,
-      body: builder.build(),
+      title: `workflow [{{workflow.name}}]({{workflow_run.html_url}}) ran ${conclusionToAdv(
+        payload.workflow_run.conclusion!,
+      )}`,
     },
     ctx,
   );
