@@ -36,6 +36,7 @@ const templateMapping: TemplateMapping = Object.freeze({
   'pull_request.ready_for_review': handlePr,
   'discussion_comment.created': handleDiscussionComment,
   'issue_comment.created': handleIssueComment,
+  'issue_comment.edited': handleIssueComment,
   'commit_comment.created': handleCommitComment,
   'pull_request_review.submitted': handleReview,
   'pull_request_review.dismissed': handleReview,

@@ -53,6 +53,15 @@ export function CommentBody(comment: {
   return text;
 }
 
+const meaningfulCommentEditUser = new Set([
+  'dependabot[bot]',
+  'renovate[bot]',
+  'dependabot-preview[bot]',
+  'railway-app[bot]',
+  'codecov[bot]',
+  'CLAassistant',
+]);
+
 function renderComment(
   name: Name,
   payload: {
@@ -76,9 +85,12 @@ function renderComment(
   const location = NameBlock[name];
   const action = payload.action;
 
-  let doNotRenderBody = false;
-  if (['edited'].includes(action)) {
-    doNotRenderBody = true;
+  if (action === 'edited') {
+    if (!meaningfulCommentEditUser.has(comment.user.login)) {
+      throw new StopHandleError(
+        `do not render ${comment.user.login} comment edit event`,
+      );
+    }
   }
 
   return Template(
@@ -90,7 +102,6 @@ function renderComment(
       title: `{{sender | link:sender}} ${action} [comment](${comment.html_url}) on [${location}](${data.html_url})`,
       body: CommentBody(payload.comment),
       compactTitle: `{{sender | link:sender}} ${action} [comment](${data.html_url}):  \n`,
-      doNotRenderBody,
     },
     ctx,
   );
