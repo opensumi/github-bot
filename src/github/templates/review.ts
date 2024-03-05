@@ -38,10 +38,13 @@ export async function handleReview(
     doNotRenderBody = true;
   }
 
-  let textFirstLine = `{{sender|link}} [${did}]({{review.html_url}}) `;
+  let textFirstLine = `{{sender|link}} `;
   if (something) {
-    textFirstLine += `${something} on `;
+    textFirstLine += `[${did} ${something}]({{review.html_url}}) on `;
+  } else {
+    textFirstLine += `[${did}]({{review.html_url}}) `;
   }
+
   textFirstLine += `[pull request]({{pull_request.html_url}})`;
 
   return Template(
