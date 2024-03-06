@@ -3,7 +3,7 @@ import { Repository, User } from '@octokit/webhooks-types';
 
 import { StringBuilder, limitLine } from '@/utils/string-builder';
 
-import { ExtractPayload, Context } from '../types';
+import { ExtractPayload, Context, THasChanges } from '../types';
 
 import {
   StopHandleError,
@@ -53,7 +53,7 @@ export function CommentBody(comment: {
   return text;
 }
 
-const meaningfulCommentEditUser = new Set([
+const meaningfulCommentEditUser = new Set<string>([
   'dependabot[bot]',
   'renovate[bot]',
   'dependabot-preview[bot]',
@@ -91,6 +91,16 @@ function renderComment(
         `do not render ${comment.user.login} comment edit event`,
       );
     }
+
+    const from = (payload as THasChanges).changes?.body?.from;
+    if (from === undefined) {
+      throw new StopHandleError('no from in comment edit');
+    }
+
+    const now = comment.body;
+    if (now === from) {
+      throw new StopHandleError('no change in comment edit');
+    }
   }
 
   return Template(
@@ -112,9 +122,8 @@ export async function handleIssueComment(
   ctx: Context,
 ): Promise<TemplateRenderResult> {
   const issue = payload.issue;
-  const isUnderPullRequest = Boolean(issue.pull_request);
   let name: Name = 'issues';
-  if (isUnderPullRequest) {
+  if (Boolean(issue.pull_request)) {
     name = 'pull_request';
   }
   return renderComment(name, payload, issue, ctx);

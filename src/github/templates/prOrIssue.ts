@@ -128,14 +128,14 @@ export async function handlePr(
         // 说明是标题改变
         // 我们只接收标题带有 WIP 的改变
         if (
-          changes.title.from.toLowerCase().includes('wip') &&
-          !data.title.toLowerCase().includes('wip')
+          contains(changes.title.from, 'wip') &&
+          !contains(data.title, 'wip')
         ) {
           oldTitle = changes.title.from;
         }
         if (
-          !changes.title.from.toLowerCase().includes('wip') &&
-          data.title.toLowerCase().includes('wip')
+          !contains(changes.title.from, 'wip') &&
+          contains(data.title, 'wip')
         ) {
           oldTitle = changes.title.from;
         }
@@ -207,3 +207,5 @@ export async function handleDiscussion(
 ): Promise<TemplateRenderResult> {
   return render('discussion', payload, payload.discussion, ctx);
 }
+
+const contains = (str: string, sub: string) => str.toLowerCase().includes(sub);
