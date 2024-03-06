@@ -209,7 +209,7 @@ export async function handleReviewComment(
       payload,
       event: 'review comment',
       action,
-      target: '{{pull_request|link}}',
+      target: '#### {{pull_request|link}}',
       title: `{{sender | link:sender}} ${action} [review comment](${comment.html_url}) on [pull request](${pr.html_url})`,
       body: CommentBody(payload.comment),
       compactTitle: `{{sender | link}} ${action} [review comment](${comment.html_url}):  \n`,
