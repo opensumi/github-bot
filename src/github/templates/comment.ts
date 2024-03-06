@@ -62,6 +62,30 @@ const meaningfulCommentEditUser = new Set<string>([
   'CLAassistant',
 ]);
 
+const spicificUserSkiper = {
+  'railway-app[bot]': (payload: any) => {
+    const comment = payload.comment;
+
+    const from = (payload as THasChanges).changes?.body?.from;
+    if (from === undefined) {
+      throw new StopHandleError('no from in comment edit');
+    }
+    const now = comment.body;
+    if (now === from) {
+      throw new StopHandleError('no change in comment edit');
+    }
+
+    if (now.includes('Deploying') && from.includes('Deploying')) {
+      throw new StopHandleError('skiped by railway-app[bot] skiper');
+    }
+    if (now.includes('REMOVED') && from.includes('REMOVED')) {
+      throw new StopHandleError('skiped by railway-app[bot] skiper');
+    }
+
+    return false;
+  },
+} as Partial<Record<string, (payload: any) => boolean>>;
+
 function renderComment(
   name: Name,
   payload: {
@@ -100,6 +124,14 @@ function renderComment(
     const now = comment.body;
     if (now === from) {
       throw new StopHandleError('no change in comment edit');
+    }
+
+    const skiper = spicificUserSkiper[comment.user.login];
+    if (skiper) {
+      const result = skiper(payload);
+      if (result) {
+        throw new StopHandleError('skiped by spicificUserSkiper');
+      }
     }
   }
 
