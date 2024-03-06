@@ -184,7 +184,7 @@ export type TextTplInput = {
   compactTitle?: string;
   body?: string | null;
   event: string;
-  action: string;
+  action?: string;
   contentLimit?: number;
   notCapitalizeTitle?: boolean;
   doNotRenderBody?: boolean;
@@ -224,11 +224,11 @@ export const Template: TextTpl = (data, ctx, options) => {
     compactTitle,
     target,
     body,
-    action,
     notCapitalizeTitle,
     autoRef,
     contentLimit = -1,
   } = data;
+  const action = data.action ?? payload.action;
   const repo = payload.repository;
 
   let repoInfo = RepositoryLink(repo) + ' ';

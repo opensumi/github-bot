@@ -19,7 +19,7 @@ const conclusionToAdv = (
 ) => {
   switch (conclusion) {
     case 'success':
-      return 'successfully';
+      return 'succeeded';
     case 'failure':
       return 'failed';
     case 'neutral':
@@ -35,30 +35,9 @@ const conclusionToAdv = (
     case 'skipped':
       return 'skipped';
     default:
-      return conclusion;
+      return 'completed';
   }
 };
-
-function renderWorkflow(
-  payload: ExtractPayload<'workflow_run'>,
-  ctx: Context & {
-    octokit?: Octokit;
-  },
-): TemplateRenderResult {
-  const action = payload.action as string;
-
-  return Template(
-    {
-      payload,
-      event: 'workflow',
-      action,
-      title: `workflow [{{workflow.name}}]({{workflow_run.html_url}}) ran ${conclusionToAdv(
-        payload.workflow_run.conclusion!,
-      )}`,
-    },
-    ctx,
-  );
-}
 
 export async function handleWorkflowRun(
   payload: ExtractPayload<'workflow_run'>,
@@ -81,7 +60,16 @@ export async function handleWorkflowRun(
   const repoAllow = mapping[repository.full_name];
 
   if (repoAllow && repoAllow.includes(workflow.name)) {
-    return renderWorkflow(payload, ctx);
+    return Template(
+      {
+        payload,
+        event: 'workflow',
+        title: `workflow [[{{workflow.name}}]({{workflow_run.html_url}})] ${conclusionToAdv(
+          payload.workflow_run.conclusion!,
+        )}`,
+      },
+      ctx,
+    );
   }
 
   throw new StopHandleError(
