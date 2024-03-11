@@ -62,8 +62,9 @@ export const build = task({
 
 export const dev = task({
   name: 'dev',
+  dependencies: [build],
   run: async () => {
-    await runTask(build);
+    await shell('yarn dev:worker:preview');
   },
 });
 
