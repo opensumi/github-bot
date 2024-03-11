@@ -1,12 +1,12 @@
 import { execa, execaCommand } from 'execa';
 import { task } from 'hereby';
 
-async function runTs(file) {
-  await execa('tsx', [file]);
+async function runTs(file, ...args) {
+  await execa('tsx', [file, ...args]);
 }
 
-async function runTask(task) {
-  await task.options.run();
+async function runTask(task, ...args) {
+  await task.options.run(...args);
 }
 
 async function shell(command) {
@@ -17,15 +17,15 @@ async function shell(command) {
 
 export const buildNode = task({
   name: 'build:node',
-  run: async () => {
-    await runTs('build-node.ts');
+  run: async (...args) => {
+    await runTs('build-node.ts', ...args);
   },
 });
 
 export const buildCfWorker = task({
   name: 'build:cfworker',
-  run: async () => {
-    await runTs('build-cfworker.ts');
+  run: async (...args) => {
+    await runTs('build-cfworker.ts', ...args);
   },
 });
 
@@ -65,6 +65,22 @@ export const dev = task({
   dependencies: [build],
   run: async () => {
     await shell('yarn dev:worker:preview');
+  },
+});
+
+export const watch = task({
+  name: 'watch',
+  dependencies: [build],
+  run: async () => {
+    await runTask(buildCfWorker, '--watch');
+  },
+});
+
+export const watchNode = task({
+  name: 'watch:node',
+  dependencies: [build],
+  run: async () => {
+    await runTask(buildNode, '--watch');
   },
 });
 
