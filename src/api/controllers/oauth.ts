@@ -1,7 +1,7 @@
 export function route(hono: THono) {
   hono.get('/auth/github', async (c) => {
     const clientId = process.env.GITHUB_CLIENT_ID;
-    return c.redirect(`https://github.com/login/oauth/authorize?client_id=${clientId}`);
+    return c.redirect(`https://github.com/login/oauth/authorize?client_id=${clientId}&scope=read:user%20repo`);
   });
 
   hono.get('/auth/github/callback', async (c) => {
