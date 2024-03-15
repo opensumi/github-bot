@@ -4,7 +4,9 @@ export function route(hono: THono) {
     // Redirect to GitHub OAuth
     // state: originalState|originalUrl
     return c.redirect(
-      `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=read:user%20repo&state=${c.req.query('state')}`,
+      `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=read:user%20repo&state=${c.req.query(
+        'state',
+      )}`,
     );
   });
 
@@ -29,11 +31,9 @@ export function route(hono: THono) {
         console.log('request github error: ', err);
       });
 
-      if (res && state) {
+    if (res && state) {
       const [originalState, originalUrl] = state.split('|');
-      return c.redirect(
-        `${originalUrl}?access_token=${res.access_token}`,
-      );
+      return c.redirect(`${originalUrl}?access_token=${res.access_token}`);
     }
 
     return c.html('error', 500);
