@@ -11,6 +11,7 @@ Environment.from('node', {
   KV: new NodeKV(),
   MESSAGE_QUEUE: new NodeQueue(),
   metricsDataset: new NodeAnalyticsEngineDataset(),
+  ENVIRONMENT: 'local',
 });
 
 import './base';
