@@ -52,5 +52,5 @@ export class GitHubKVManager {
 
   getOauthAppConfig = async (id: string) => {
     return await this.oauthKV.getJSON(id);
-  }
+  };
 }

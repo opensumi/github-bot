@@ -30,7 +30,7 @@ export function route(hono: THono) {
             <div id="main"></div>
             <script src="${cdnBase}/${version}/bundle.js"></script>
           </body>
-        </html> `
+        </html>`,
     );
   });
 }

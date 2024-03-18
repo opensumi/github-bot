@@ -2,7 +2,9 @@ import { GitHubKVManager } from '@/kv/github';
 
 export function route(hono: THono) {
   hono.get('/auth/github/:id', async (c) => {
-    const kv = await GitHubKVManager.instance().getOauthAppConfig(c.req.param('id'));
+    const kv = await GitHubKVManager.instance().getOauthAppConfig(
+      c.req.param('id'),
+    );
     if (!kv) {
       return c.html('error', 500);
     }
@@ -11,16 +13,18 @@ export function route(hono: THono) {
     // 透传 state 参数，用于登录后重定向到原始页面
     // state: originalState|originalUrl
     return c.redirect(
-      `https://github.com/login/oauth/authorize?client_id=${kv.clientId}&scope=read:user%20repo&state=${c.req.query(
-        'state'
-      )}`
+      `https://github.com/login/oauth/authorize?client_id=${
+        kv.clientId
+      }&scope=read:user%20repo&state=${c.req.query('state')}`,
     );
   });
 
   hono.get('/auth/github/callback/:id', async (c) => {
     const code = c.req.query('code');
     const state = c.req.query('state');
-    const kv = await GitHubKVManager.instance().getOauthAppConfig(c.req.param('id'));
+    const kv = await GitHubKVManager.instance().getOauthAppConfig(
+      c.req.param('id'),
+    );
     if (!kv) {
       return c.html('error', 500);
     }

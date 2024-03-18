@@ -2,13 +2,12 @@ import { KVManager, OpenSumiRunCommon } from '@/kv';
 
 import { IOpenSumiRunCDNVersion } from './types';
 
-
 export class OpenSumiRunKVManager {
   cdnVersion: KVManager<IOpenSumiRunCDNVersion>;
 
   constructor() {
     this.cdnVersion = KVManager.for<IOpenSumiRunCDNVersion>(
-      OpenSumiRunCommon.OPENSUMI_RUN_CDN_VERSION_PREFIX
+      OpenSumiRunCommon.OPENSUMI_RUN_CDN_VERSION_PREFIX,
     );
   }
 
