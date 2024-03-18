@@ -7,6 +7,7 @@ import { CommandCenter } from '@opensumi/bot-commander';
 const testEnv: IRuntimeEnv = {
   KV: new LocalKV(),
   MESSAGE_QUEUE: new NodeQueue(),
+  ENVIRONMENT: 'unittest',
 };
 
 describe('command center', () => {
