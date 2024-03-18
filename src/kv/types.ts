@@ -141,6 +141,7 @@ export interface IAdminInfo {
 
 export interface IOpenSumiRunConfig {
   version: string;
+  cdnBase: string;
 }
 
 export interface IOpenSumiRunOriginalTrialToken {
