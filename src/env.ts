@@ -32,6 +32,10 @@ export default class Environment {
     return this._timeout;
   }
 
+  get environment() {
+    return this.env.ENVIRONMENT;
+  }
+
   static instance() {
     if (!this.#instance) {
       throw new Error('Environment is not initialized');
