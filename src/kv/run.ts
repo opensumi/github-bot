@@ -1,13 +1,19 @@
 import { KVManager, OpenSumiRunCommon } from '@/kv';
 
-import { IOpenSumiRunCDNVersion } from './types';
+import { IOpenSumiRunConfig, IOpenSumiRunOriginalTrialToken } from './types';
 
 export class OpenSumiRunKVManager {
-  cdnVersion: KVManager<IOpenSumiRunCDNVersion>;
+  cdnVersion: KVManager<IOpenSumiRunConfig>;
+
+  originalTrialToken: KVManager<IOpenSumiRunOriginalTrialToken>;
 
   constructor() {
-    this.cdnVersion = KVManager.for<IOpenSumiRunCDNVersion>(
+    this.cdnVersion = KVManager.for<IOpenSumiRunConfig>(
       OpenSumiRunCommon.OPENSUMI_RUN_CDN_VERSION_PREFIX,
+    );
+
+    this.originalTrialToken = KVManager.for<IOpenSumiRunOriginalTrialToken>(
+      OpenSumiRunCommon.OPENSUMI_RUN_ORIGINAL_TRIAL_TOKEN_PREFIX,
     );
   }
 
@@ -23,4 +29,9 @@ export class OpenSumiRunKVManager {
     const cdnVersionData = await this.cdnVersion.getJSON('');
     return cdnVersionData?.version || '0.0.1';
   };
+
+  getTrialToken = async (env: 'local' | 'prod' | 'unittest') => {
+    const trialTokenData = await this.originalTrialToken.getJSON('');
+    return trialTokenData ? trialTokenData[env] : undefined;
+  }
 }

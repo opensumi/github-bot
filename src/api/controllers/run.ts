@@ -7,6 +7,7 @@ export function route(hono: THono) {
   hono.get('/ide/:group/:project', async (c) => {
     const env = Environment.instance().environment;
     const version = await OpenSumiRunKVManager.instance().getCdnVersion();
+    const originTrial = await OpenSumiRunKVManager.instance().getTrialToken(env);
 
     const cdnBase =
       env === 'prod'
@@ -27,6 +28,12 @@ export function route(hono: THono) {
             <link rel="stylesheet" href="${cdnBase}/${version}/main.css	" />
           </head>
           <body>
+            <script>
+              const otMeta = document.createElement('meta');
+              otMeta.httpEquiv = 'origin-trial';
+              otMeta.content = '${originTrial}';
+              document.head.append(otMeta);
+            </script>
             <div id="main"></div>
             <script src="${cdnBase}/${version}/bundle.js"></script>
           </body>

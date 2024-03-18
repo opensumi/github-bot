@@ -19,6 +19,8 @@ export namespace GitHubCommon {
 
 export namespace OpenSumiRunCommon {
   export const OPENSUMI_RUN_CDN_VERSION_PREFIX = 'opensumi/run/cdn-version';
+
+  export const OPENSUMI_RUN_ORIGINAL_TRIAL_TOKEN_PREFIX = 'opensumi/run/original-trial-token';
 }
 
 export namespace Common {
