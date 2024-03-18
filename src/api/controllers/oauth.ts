@@ -1,31 +1,14 @@
 import { GitHubKVManager } from '@/kv/github';
 
 export function route(hono: THono) {
-  hono.get('/auth/github/:id', async (c) => {
-    const kv = await GitHubKVManager.instance().getOauthAppConfig(
-      c.req.param('id'),
-    );
-    if (!kv) {
-      return c.html('error', 500);
-    }
-
-    // 重定向到 github 登录页面
-    // 透传 state 参数，用于登录后重定向到原始页面
-    // state: originalState|originalUrl
-    return c.redirect(
-      `https://github.com/login/oauth/authorize?client_id=${
-        kv.clientId
-      }&scope=read:user%20repo&state=${c.req.query('state')}`,
-    );
-  });
-
-  hono.get('/auth/github/callback/:id', async (c) => {
+  hono.get('/auth/callback/:id', async (c) => {
     const code = c.req.query('code');
     const state = c.req.query('state');
-    const kv = await GitHubKVManager.instance().getOauthAppConfig(
+    const config = await GitHubKVManager.instance().getOauthAppConfig(
       c.req.param('id'),
     );
-    if (!kv) {
+
+    if (!config) {
       return c.html('error', 500);
     }
 
@@ -36,8 +19,8 @@ export function route(hono: THono) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        client_id: kv.clientId,
-        client_secret: kv.clientSecret,
+        client_id: config.clientId,
+        client_secret: config.clientSecret,
         code,
       }),
     })
@@ -54,5 +37,24 @@ export function route(hono: THono) {
     }
 
     return c.html('error', 500);
+  });
+
+  hono.get('/auth/github/:id', async (c) => {
+    const config = await GitHubKVManager.instance().getOauthAppConfig(
+      c.req.param('id'),
+    );
+
+    if (!config) {
+      return c.html('error', 500);
+    }
+
+    // 重定向到 github 登录页面
+    // 透传 state 参数，用于登录后重定向到原始页面
+    // state: originalState|originalUrl
+    return c.redirect(
+      `https://github.com/login/oauth/authorize?client_id=${
+        config.clientId
+      }&scope=read:user%20repo&state=${c.req.query('state')}`,
+    );
   });
 }
