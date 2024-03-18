@@ -40,7 +40,7 @@ declare global {
   }
 
   interface IRuntimeEnv {
-    readonly ENVIRONMENT: 'prod' | 'local';
+    readonly ENVIRONMENT: 'prod' | 'local' | 'unittest';
     readonly KV: IKVNamespace;
     readonly MESSAGE_QUEUE: Queue<TQueueMessage>;
 

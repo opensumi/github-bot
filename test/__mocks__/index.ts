@@ -12,6 +12,7 @@ export function prepareEnv() {
   Environment.from('node', {
     KV: kv,
     MESSAGE_QUEUE: {} as any,
+    ENVIRONMENT: 'unittest',
   });
 
   kv.put(
