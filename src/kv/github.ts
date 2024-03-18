@@ -1,10 +1,11 @@
 import { GitHubCommon, KVManager } from '@/kv';
 
-import { AppSetting, ISetting } from './types';
+import { AppSetting, IGitHubOauthAppConfig, ISetting } from './types';
 
 export class GitHubKVManager {
   appSettingsKV: KVManager<AppSetting>;
   settingsKV: KVManager<ISetting>;
+  oauthKV: KVManager<IGitHubOauthAppConfig>;
 
   private constructor() {
     this.appSettingsKV = KVManager.for<AppSetting>(
@@ -12,6 +13,9 @@ export class GitHubKVManager {
     );
     this.settingsKV = KVManager.for<ISetting>(
       GitHubCommon.GITHUB_SETTINGS_PREFIX,
+    );
+    this.oauthKV = KVManager.for<IGitHubOauthAppConfig>(
+      GitHubCommon.GITHUB_OAUTH_SETTINGS_PREFIX,
     );
   }
 
@@ -45,4 +49,8 @@ export class GitHubKVManager {
 
     return webhooks;
   };
+
+  getOauthAppConfig = async (id: string) => {
+    return await this.oauthKV.getJSON(id);
+  }
 }

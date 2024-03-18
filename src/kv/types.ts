@@ -138,3 +138,12 @@ export interface IAdminInfo {
    */
   tokenByScope?: Record<string, string>;
 }
+
+export interface IOpenSumiRunCDNVersion {
+  version: string;
+}
+
+export interface IGitHubOauthAppConfig {
+  clientId: string;
+  clientSecret: string;
+}

@@ -1,7 +1,18 @@
 import { html } from 'hono/html';
 
+import Environment from '@/env';
+import { OpenSumiRunKVManager } from '@/kv/run';
+
 export function route(hono: THono) {
   hono.get('/ide/:group/:project', async (c) => {
+    const env = Environment.instance().environment;
+    const version = await OpenSumiRunKVManager.instance().getCdnVersion();
+
+    const cdnBase =
+      env === 'prod'
+        ? 'https://g.alicdn.com/opensumi/run'
+        : 'https://dev.g.alicdn.com/opensumi/run';
+
     return c.html(
       html`<!DOCTYPE html>
         <html>
@@ -13,16 +24,13 @@ export function route(hono: THono) {
               href="https://opensumi.com/favicon-32x32.png?v=844070368776e5e9503bdeccf498ee66"
             />
             <script src="https://g.alicdn.com/code/lib/??react/16.14.0/umd/react.production.min.js,react-dom/16.14.0/umd/react-dom.production.min.js"></script>
-            <link
-              rel="stylesheet"
-              href="https://dev.g.alicdn.com/opensumi/run/0.0.1/main.css	"
-            />
+            <link rel="stylesheet" href="${cdnBase}/${version}/main.css	" />
           </head>
           <body>
             <div id="main"></div>
-            <script src="https://dev.g.alicdn.com/opensumi/run/0.0.1/bundle.js"></script>
+            <script src="${cdnBase}/${version}/bundle.js"></script>
           </body>
-        </html> `,
+        </html> `
     );
   });
 }

@@ -1,19 +1,29 @@
+import { GitHubKVManager } from '@/kv/github';
+
 export function route(hono: THono) {
-  hono.get('/auth/github', async (c) => {
-    const clientId = process.env.GITHUB_CLIENT_ID;
+  hono.get('/auth/github/:id', async (c) => {
+    const kv = await GitHubKVManager.instance().getOauthAppConfig(c.req.param('id'));
+    if (!kv) {
+      return c.html('error', 500);
+    }
+
     // 重定向到 github 登录页面
     // 透传 state 参数，用于登录后重定向到原始页面
     // state: originalState|originalUrl
     return c.redirect(
-      `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=read:user%20repo&state=${c.req.query(
-        'state',
-      )}`,
+      `https://github.com/login/oauth/authorize?client_id=${kv.clientId}&scope=read:user%20repo&state=${c.req.query(
+        'state'
+      )}`
     );
   });
 
-  hono.get('/auth/github/callback', async (c) => {
+  hono.get('/auth/github/callback/:id', async (c) => {
     const code = c.req.query('code');
     const state = c.req.query('state');
+    const kv = await GitHubKVManager.instance().getOauthAppConfig(c.req.param('id'));
+    if (!kv) {
+      return c.html('error', 500);
+    }
 
     const res = await fetch('https://github.com/login/oauth/access_token', {
       method: 'POST',
@@ -22,8 +32,8 @@ export function route(hono: THono) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        client_id: process.env.GITHUB_CLIENT_ID,
-        client_secret: process.env.GITHUB_CLIENT_SECRET,
+        client_id: kv.clientId,
+        client_secret: kv.clientSecret,
         code,
       }),
     })
