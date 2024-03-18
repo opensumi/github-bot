@@ -138,3 +138,18 @@ export interface IAdminInfo {
    */
   tokenByScope?: Record<string, string>;
 }
+
+export interface IOpenSumiRunConfig {
+  version: string;
+}
+
+export interface IOpenSumiRunOriginalTrialToken {
+  local: string;
+  prod: string;
+  unittest: string;
+}
+
+export interface IGitHubOauthAppConfig {
+  clientId: string;
+  clientSecret: string;
+}
