@@ -6,8 +6,8 @@ export function route(hono: THono) {
     // state: originalState|originalUrl
     return c.redirect(
       `https://github.com/login/oauth/authorize?client_id=${clientId}&scope=read:user%20repo&state=${c.req.query(
-        'state'
-      )}`
+        'state',
+      )}`,
     );
   });
 
@@ -33,7 +33,7 @@ export function route(hono: THono) {
       });
 
     if (res && state) {
-      const [originalState, originalUrl] = state.split('|');
+      const [, originalUrl] = state.split('|');
       // 获取 state 参数，重定向到原始页面
       // 携带 access_token 参数，前端自行缓存后请求
       return c.redirect(`${originalUrl}?access_token=${res.access_token}`);
