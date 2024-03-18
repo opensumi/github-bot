@@ -7,7 +7,9 @@ export function route(hono: THono) {
   hono.get('/ide/:group/:project', async (c) => {
     const env = Environment.instance().environment;
     const version = await OpenSumiRunKVManager.instance().getCdnVersion();
-    const originTrial = await OpenSumiRunKVManager.instance().getTrialToken(env);
+    const originTrial = await OpenSumiRunKVManager.instance().getTrialToken(
+      env,
+    );
 
     const cdnBase =
       env === 'prod'

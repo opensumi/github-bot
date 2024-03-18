@@ -33,5 +33,5 @@ export class OpenSumiRunKVManager {
   getTrialToken = async (env: 'local' | 'prod' | 'unittest') => {
     const trialTokenData = await this.originalTrialToken.getJSON('');
     return trialTokenData ? trialTokenData[env] : undefined;
-  }
+  };
 }

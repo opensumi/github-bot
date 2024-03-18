@@ -1,12 +1,10 @@
-import { KVManager } from "@/kv";
+import { KVManager } from '@/kv';
 
 export class OriginTrialTokenKVManager {
   token: KVManager<string>;
 
   constructor() {
-    this.token = KVManager.for<string>(
-      OriginTrailToken.TOKEN_PREFIX,
-    );
+    this.token = KVManager.for<string>(OriginTrailToken.TOKEN_PREFIX);
   }
 
   private static _instance: OriginTrialTokenKVManager;
