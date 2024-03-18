@@ -3,13 +3,13 @@ import { KVManager, OpenSumiRunCommon } from '@/kv';
 import { IOpenSumiRunConfig, IOpenSumiRunOriginalTrialToken } from './types';
 
 export class OpenSumiRunKVManager {
-  cdnVersion: KVManager<IOpenSumiRunConfig>;
+  cdnConfig: KVManager<IOpenSumiRunConfig>;
 
   originalTrialToken: KVManager<IOpenSumiRunOriginalTrialToken>;
 
   constructor() {
-    this.cdnVersion = KVManager.for<IOpenSumiRunConfig>(
-      OpenSumiRunCommon.OPENSUMI_RUN_CDN_VERSION_PREFIX,
+    this.cdnConfig = KVManager.for<IOpenSumiRunConfig>(
+      OpenSumiRunCommon.OPENSUMI_RUN_CDN_INFO_PREFIX,
     );
 
     this.originalTrialToken = KVManager.for<IOpenSumiRunOriginalTrialToken>(
@@ -25,9 +25,14 @@ export class OpenSumiRunKVManager {
     return this._instance;
   }
 
-  getCdnVersion = async () => {
-    const cdnVersionData = await this.cdnVersion.getJSON('');
-    return cdnVersionData?.version || '0.0.1';
+  getCdnConfig = async () => {
+    const cdnVersionData = await this.cdnConfig.getJSON('');
+    return (
+      cdnVersionData || {
+        version: '0.0.1',
+        cdnBase: 'https://g.alicdn.com/opensumi/run',
+      }
+    );
   };
 
   getTrialToken = async (env: 'local' | 'prod' | 'unittest') => {
