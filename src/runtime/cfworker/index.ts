@@ -7,7 +7,11 @@ import { TQueueMessage } from '@/queue/types';
 import { RequiredField } from '@/types';
 import { Logger } from '@/utils/logger';
 
-const app = new Hono<{ Bindings: IRuntimeEnv }>() as THono;
+import { commonOptions } from '../base';
+
+const app = new Hono<{ Bindings: IRuntimeEnv }>({
+  ...commonOptions,
+}) as THono;
 
 ignition(app);
 

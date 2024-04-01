@@ -7,7 +7,7 @@ import * as OpenSumiRun from './run';
 import * as Static from './static';
 import * as Webhook from './webhook';
 
-export const registerBlueprint = (hono: THono) => {
+export const registerControllers = (hono: THono) => {
   Ding.route(hono);
   GitHub.route(hono);
   Proxy.route(hono);
@@ -15,5 +15,8 @@ export const registerBlueprint = (hono: THono) => {
   Static.route(hono);
   Configuration.route(hono);
   Auth.route(hono);
-  OpenSumiRun.route(hono);
+
+  const opensumiRun = hono.basePath('/run');
+  OpenSumiRun.route(opensumiRun);
+  Auth.route(opensumiRun);
 };

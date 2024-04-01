@@ -4,9 +4,13 @@ import { Hono } from 'hono';
 
 import { ignition } from '@/api';
 
+import { commonOptions } from '../base';
+
 const port = process.env.PORT ? Number(process.env.PORT) : 8787;
 
-const app = new Hono() as THono;
+const app = new Hono({
+  ...commonOptions,
+}) as THono;
 ignition(app);
 
 serve(

@@ -6,7 +6,7 @@ import { ValidationError } from '@/github';
 import favicon from '../public/favicon.svg';
 import html from '../public/index.html';
 
-import { registerBlueprint } from './controllers';
+import { registerControllers } from './controllers';
 import { applyMiddleware } from './middleware';
 import { logger } from './middleware/logger';
 
@@ -45,7 +45,7 @@ export function ignition(hono: THono) {
     return c.text('User-agent: *\nDisallow: /', 200);
   });
 
-  registerBlueprint(hono);
+  registerControllers(hono);
 
   hono.notFound((c) => {
     return c.send.error(404, 'no router found');
