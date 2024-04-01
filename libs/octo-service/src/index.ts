@@ -46,6 +46,20 @@ export function range(from: number, to: number): number[] {
   return r;
 }
 
+export function meetTimeSpan(
+  t: Date | number | string,
+  from: number,
+  to?: number,
+) {
+  const time = new Date(t).getTime();
+
+  if (to) {
+    return time >= from && time <= to;
+  }
+
+  return time >= from;
+}
+
 export class GitHubService {
   pr: PRService;
   constructor(protected _octo?: Octokit) {
@@ -262,7 +276,7 @@ export class GitHubService {
       latestStars.data &&
       latestStars.data[0] &&
       latestStars.data[0].starred_at &&
-      new Date(latestStars.data[0].starred_at).getTime() >= from
+      meetTimeSpan(latestStars.data[0].starred_at, from, to)
     ) {
       star_increment += latestStars.data.length;
       latestStars = await this.getRepoStargazers(owner, repo, pageCount--);
@@ -274,8 +288,7 @@ export class GitHubService {
     for (startIndex = 1; startIndex < latestStars.data.length; startIndex++) {
       if (
         latestStars.data[startIndex] &&
-        new Date((latestStars.data[startIndex] as any).starred_at).getTime() >=
-          from
+        meetTimeSpan((latestStars.data[startIndex] as any).starred_at, from, to)
       ) {
         break;
       }
@@ -327,22 +340,20 @@ export class GitHubService {
         if (!issues.data[index]) {
           continue;
         }
-        const updateTime = new Date(issues.data[index].updated_at).getTime();
-        if (updateTime >= from && updateTime <= to) {
-          if (!issues.data[index].html_url.includes('issues')) {
+        if (meetTimeSpan(issues.data[index].updated_at, from, to)) {
+          const item = issues.data[index];
+          if (!item) {
+            continue;
+          }
+
+          if (!item.html_url.includes('issues')) {
             // 说明获取到的为 PullRequest
             continue;
           }
-          if (
-            issues.data[index].closed_at &&
-            new Date(issues.data[index].closed_at!).getTime() >= from
-          ) {
+          if (item.closed_at && meetTimeSpan(item.closed_at, from, to)) {
             issue_closed_increment++;
           }
-          if (
-            issues.data[index].created_at &&
-            new Date(issues.data[index].created_at!).getTime() >= from
-          ) {
+          if (item.created_at && meetTimeSpan(item.created_at, from, to)) {
             issue_increment++;
           }
         } else {
@@ -386,30 +397,43 @@ export class GitHubService {
     }
 
     let pull_increment = 0;
+    let bot_pull_increment = 0;
+
     let pull_closed_increment = 0;
+    let bot_pull_closed_increment = 0;
+    let pull_merged_increment = 0;
+    let bot_pull_merged_increment = 0;
+
     let done = false;
-    let pulls;
+    let pulls: Awaited<ReturnType<typeof this.getRepoPulls>>;
     let curPage = 1;
     while (!done && curPage <= pageCount) {
       pulls = await this.getRepoPulls(owner, repo, curPage++);
 
-      for (let index = 0; index < pulls?.data?.length; index++) {
-        if (!pulls.data[index]) {
+      for (let index = 0; index < pulls.data.length; index++) {
+        const item = pulls.data[index];
+        if (!item) {
           continue;
         }
-        const updateTime = new Date(pulls.data[index].updated_at).getTime();
-        if (updateTime >= from && updateTime <= to) {
-          if (
-            pulls.data[index].closed_at &&
-            new Date(pulls.data[index].closed_at!).getTime() >= from
-          ) {
+
+        if (meetTimeSpan(item.updated_at, from, to)) {
+          if (item.closed_at && meetTimeSpan(item.closed_at, from, to)) {
             pull_closed_increment++;
+            if (item.user?.type === 'Bot') {
+              bot_pull_closed_increment++;
+            }
           }
-          if (
-            pulls.data[index].created_at &&
-            new Date(pulls.data[index].created_at!).getTime() >= from
-          ) {
+          if (item.merged_at && meetTimeSpan(item.merged_at, from, to)) {
+            pull_merged_increment++;
+            if (item.user?.type === 'Bot') {
+              bot_pull_merged_increment++;
+            }
+          }
+          if (item.created_at && meetTimeSpan(item.created_at, from, to)) {
             pull_increment++;
+            if (item.user?.type === 'Bot') {
+              bot_pull_increment++;
+            }
           }
         } else {
           done = true;
@@ -421,6 +445,10 @@ export class GitHubService {
     return {
       pull_increment,
       pull_closed_increment,
+      pull_merged_increment,
+      bot_pull_increment,
+      bot_pull_closed_increment,
+      bot_pull_merged_increment,
     };
   }
 
@@ -478,13 +506,10 @@ export class GitHubService {
           if (!pull.merged_at) {
             continue;
           }
-          const prMergeTime = new Date(pull.merged_at).getTime();
-          if (!(prMergeTime >= startDate && prMergeTime <= endDate)) {
+          if (!meetTimeSpan(pull.merged_at, startDate, endDate)) {
             continue;
           }
-          if (pull.user?.type === 'Bot') {
-            continue;
-          }
+
           const login = pull.user?.login;
           if (!login) {
             continue;
@@ -593,12 +618,12 @@ export class GitHubService {
       if (!commit.commit.committer?.date) {
         continue;
       }
-      const commitStartTime = new Date(commit.commit.committer.date).getTime();
       const login = commit.author?.login || commit.commit.committer?.name;
       if (
-        !(
-          commitStartTime >= new Date(startDate).getTime() &&
-          commitStartTime <= new Date(endDate).getTime()
+        !meetTimeSpan(
+          commit.commit.committer.date,
+          new Date(startDate).getTime(),
+          new Date(endDate).getTime(),
         )
       ) {
         break;
@@ -724,7 +749,7 @@ export class GitHubService {
         issue: issues.data,
       };
     } catch (error) {
-      console.log(`🚀 ~ file: index.ts:723 ~ GitHubService ~ error:`, error);
+      console.log(`🚀 ~ GitHubService ~ error:`, error);
       return undefined;
     }
   }
