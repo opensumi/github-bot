@@ -54,7 +54,7 @@ export class KVItem<T> {
   static #cache: Map<string, KVItem<any>> = new Map();
   manager: KVManager<T>;
   private constructor(public key: string) {
-    this.manager = KVManager.for<T>(key);
+    this.manager = KVManager.for<T>('');
   }
 
   static for<T>(key: string): KVItem<T> {
