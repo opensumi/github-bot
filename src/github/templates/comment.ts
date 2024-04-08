@@ -82,7 +82,8 @@ const spicificUserSkiper = {
       throw new StopHandleError('skiped by railway-app[bot] skiper');
     }
 
-    return false;
+    // skip all railway-app[bot] comment
+    return true;
   },
 } as Partial<Record<string, (payload: any) => boolean>>;
 
@@ -110,29 +111,33 @@ function renderComment(
   const action = payload.action;
 
   if (action === 'edited') {
-    if (!meaningfulCommentEditUser.has(comment.user.login)) {
-      throw new StopHandleError(
-        `do not render ${comment.user.login} comment edit event`,
-      );
-    }
+    throw new StopHandleError(
+      `do not render ${comment.user.login} comment edit event`,
+    );
 
-    const from = (payload as THasChanges).changes?.body?.from;
-    if (from === undefined) {
-      throw new StopHandleError('no from in comment edit');
-    }
+    // if (!meaningfulCommentEditUser.has(comment.user.login)) {
+    //   throw new StopHandleError(
+    //     `do not render ${comment.user.login} comment edit event`,
+    //   );
+    // }
 
-    const now = comment.body;
-    if (now === from) {
-      throw new StopHandleError('no change in comment edit');
-    }
+    // const from = (payload as THasChanges).changes?.body?.from;
+    // if (from === undefined) {
+    //   throw new StopHandleError('no from in comment edit');
+    // }
 
-    const skiper = spicificUserSkiper[comment.user.login];
-    if (skiper) {
-      const result = skiper(payload);
-      if (result) {
-        throw new StopHandleError('skiped by spicificUserSkiper');
-      }
-    }
+    // const now = comment.body;
+    // if (now === from) {
+    //   throw new StopHandleError('no change in comment edit');
+    // }
+
+    // const skiper = spicificUserSkiper[comment.user.login];
+    // if (skiper) {
+    //   const result = skiper(payload);
+    //   if (result) {
+    //     throw new StopHandleError('skiped by spicificUserSkiper');
+    //   }
+    // }
   }
 
   return Template(
