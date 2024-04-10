@@ -191,11 +191,17 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
 
         this.onBatchDoneForTest(results);
 
-        await Promise.allSettled(
-          results.map(({ markdown, eventName }) =>
-            sendToDing(markdown, eventName as EmitterWebhookEventName, setting),
-          ),
-        );
+        for (const { markdown, eventName } of results) {
+          try {
+            await sendToDing(
+              markdown,
+              eventName as EmitterWebhookEventName,
+              setting,
+            );
+          } catch (error) {
+            console.error('github app worker error', error);
+          }
+        }
       }),
     );
 
