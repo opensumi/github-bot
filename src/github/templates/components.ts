@@ -189,6 +189,9 @@ export type TextTplInput = {
   notCapitalizeTitle?: boolean;
   doNotRenderBody?: boolean;
   autoRef?: boolean;
+
+  blockUsers?: Set<string>;
+  blockActions?: Set<string>;
 };
 
 export type TemplateRenderResult = {
@@ -217,6 +220,8 @@ export type HandlerResult = {
 
 const raw = (v: string) => v;
 
+export const defaultBlockUsers = new Set(['renovate[bot]']);
+
 export const Template: TextTpl = (data, ctx, options) => {
   const {
     payload,
@@ -227,8 +232,28 @@ export const Template: TextTpl = (data, ctx, options) => {
     notCapitalizeTitle,
     autoRef,
     contentLimit = -1,
+    blockActions,
+    event,
+    blockUsers,
   } = data;
   const action = data.action ?? payload.action;
+
+  if (!action) {
+    throw new Error('action is required for event ' + event);
+  }
+
+  if (blockActions && blockActions.has(action)) {
+    throw new StopHandleError(
+      `skip event ${event} action ${action} because it is in blockActions`,
+    );
+  }
+
+  if (blockUsers && payload.sender && blockUsers.has(payload.sender.login)) {
+    throw new StopHandleError(
+      `skip event ${event} action ${action} because it is in blockUsers`,
+    );
+  }
+
   const repo = payload.repository;
 
   let repoInfo = RepositoryLink(repo) + ' ';
@@ -266,12 +291,7 @@ export const Template: TextTpl = (data, ctx, options) => {
     compactText && compactText.add(refText);
   }
 
-  let event = data.event;
-  if (!notCapitalizeTitle) {
-    event = capitalize(event);
-  }
-
-  let titleText = `${event} ${action}`;
+  let titleText = `${notCapitalizeTitle ? event : capitalize(event)} ${action}`;
   if (!ctx?.setting?.notDisplayRepoName) {
     titleText = `[{{repository.name}}] ${titleText}`;
   }

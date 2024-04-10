@@ -53,40 +53,6 @@ export function CommentBody(comment: {
   return text;
 }
 
-const meaningfulCommentEditUser = new Set<string>([
-  'dependabot[bot]',
-  'renovate[bot]',
-  'dependabot-preview[bot]',
-  'railway-app[bot]',
-  'codecov[bot]',
-  'CLAassistant',
-]);
-
-const spicificUserSkiper = {
-  'railway-app[bot]': (payload: any) => {
-    const comment = payload.comment;
-
-    const from = (payload as THasChanges).changes?.body?.from;
-    if (from === undefined) {
-      throw new StopHandleError('no from in comment edit');
-    }
-    const now = comment.body;
-    if (now === from) {
-      throw new StopHandleError('no change in comment edit');
-    }
-
-    if (now.includes('Deploying') && from.includes('Deploying')) {
-      throw new StopHandleError('skiped by railway-app[bot] skiper');
-    }
-    if (now.includes('REMOVED') && from.includes('REMOVED')) {
-      throw new StopHandleError('skiped by railway-app[bot] skiper');
-    }
-
-    // skip all railway-app[bot] comment
-    return true;
-  },
-} as Partial<Record<string, (payload: any) => boolean>>;
-
 function renderComment(
   name: Name,
   payload: {
@@ -110,36 +76,6 @@ function renderComment(
   const location = NameBlock[name];
   const action = payload.action;
 
-  if (action === 'edited') {
-    throw new StopHandleError(
-      `do not render ${comment.user.login} comment edit event`,
-    );
-
-    // if (!meaningfulCommentEditUser.has(comment.user.login)) {
-    //   throw new StopHandleError(
-    //     `do not render ${comment.user.login} comment edit event`,
-    //   );
-    // }
-
-    // const from = (payload as THasChanges).changes?.body?.from;
-    // if (from === undefined) {
-    //   throw new StopHandleError('no from in comment edit');
-    // }
-
-    // const now = comment.body;
-    // if (now === from) {
-    //   throw new StopHandleError('no change in comment edit');
-    // }
-
-    // const skiper = spicificUserSkiper[comment.user.login];
-    // if (skiper) {
-    //   const result = skiper(payload);
-    //   if (result) {
-    //     throw new StopHandleError('skiped by spicificUserSkiper');
-    //   }
-    // }
-  }
-
   return Template(
     {
       payload,
@@ -149,6 +85,8 @@ function renderComment(
       title: `{{sender | link:sender}} ${action} [comment](${comment.html_url}) on [${location}](${data.html_url})`,
       body: CommentBody(payload.comment),
       compactTitle: `{{sender | link:sender}} ${action} [comment](${data.html_url}):  \n`,
+      blockUsers: new Set<string>(['railway-app[bot]']),
+      blockActions: new Set(['edited']),
     },
     ctx,
   );

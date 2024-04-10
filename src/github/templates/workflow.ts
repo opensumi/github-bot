@@ -1,13 +1,11 @@
 import { Octokit } from '@octokit/rest';
 
-import { StringBuilder } from '@/utils/string-builder';
-
 import { Context, ExtractPayload } from '../types';
 
 import { Template, StopHandleError, TemplateRenderResult } from './components';
 
 const conclusionToAdv = (
-  conclusion:
+  conclusion?:
     | 'success'
     | 'failure'
     | 'neutral'
@@ -15,7 +13,8 @@ const conclusionToAdv = (
     | 'timed_out'
     | 'action_required'
     | 'stale'
-    | 'skipped',
+    | 'skipped'
+    | null,
 ) => {
   switch (conclusion) {
     case 'success':
@@ -65,7 +64,7 @@ export async function handleWorkflowRun(
         payload,
         event: 'workflow',
         title: `workflow [[{{workflow.name}}]({{workflow_run.html_url}})] ${conclusionToAdv(
-          payload.workflow_run.conclusion!,
+          payload.workflow_run.conclusion,
         )}`,
       },
       ctx,

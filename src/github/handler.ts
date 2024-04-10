@@ -13,6 +13,7 @@ import Environment from '@/env';
 import { Logger } from '@/utils/logger';
 
 import {
+  defaultBlockUsers,
   getTemplates,
   StopHandleError,
   TemplateRenderResult,
@@ -71,8 +72,6 @@ export async function validateGithub(
   } as EmitterWebhookEvent;
 }
 
-const blockedUser = new Set(['renovate[bot]']);
-
 export const setupWebhooksTemplate = (
   webhooks: Webhooks<{ octokit?: Octokit }>,
   context: Context,
@@ -90,7 +89,8 @@ export const setupWebhooksTemplate = (
     webhooks.on(eventName, async ({ id, name, payload, octokit }) => {
       if ((payload as IHasSender)?.sender) {
         const name = (payload as IHasSender).sender.login;
-        if (blockedUser.has(name)) {
+        if (defaultBlockUsers.has(name)) {
+          console.log('skip event because of blocked user:', name);
           return;
         }
       }
