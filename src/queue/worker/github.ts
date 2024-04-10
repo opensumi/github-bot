@@ -1,4 +1,5 @@
 import { EmitterWebhookEventName, Webhooks } from '@octokit/webhooks';
+import { orderBy, sortBy } from 'lodash';
 import chunk from 'lodash/chunk';
 import groupBy from 'lodash/groupBy';
 import DefaultMap from 'mnemonist/default-map';
@@ -106,7 +107,10 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
   }
 
   async run() {
-    const byId = groupBy(this.queue, (v) => v.body.botId);
+    const byId = groupBy(
+      orderBy(this.queue, 'timestamp', 'asc'),
+      (v) => v.body.botId,
+    );
 
     const result = await Promise.allSettled(
       Object.entries(byId).map(async ([botId, messages]) => {
