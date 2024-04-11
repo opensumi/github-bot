@@ -1,17 +1,14 @@
 import { SupportedUpstreams } from '../gateway';
 
+import { ControllerFacade } from './base';
 import * as Configuration from './configuration';
 import * as Ding from './ding';
 import * as GitHub from './github';
 import * as Auth from './oauth';
 import * as Proxy from './proxy';
-import * as OpenSumiRun from './run';
+import { OpenSumiRunWithIDEPrefix, OpenSumiRun } from './run';
 import * as Static from './static';
 import * as Webhook from './webhook';
-
-interface ControllerFacade {
-  route(hono: THono): void;
-}
 
 const defaultControllers = [
   Ding,
@@ -21,10 +18,11 @@ const defaultControllers = [
   Static,
   Configuration,
   Auth,
+  OpenSumiRunWithIDEPrefix,
 ] as ControllerFacade[];
 
 const domainSpecificControllers = {
-  [SupportedUpstreams.Run]: [OpenSumiRun, Auth],
+  [SupportedUpstreams.Run]: [OpenSumiRunWithIDEPrefix, OpenSumiRun, Auth],
 } as Record<SupportedUpstreams, ControllerFacade[]>;
 
 function applyControllers(hono: THono, controllers: ControllerFacade[]) {

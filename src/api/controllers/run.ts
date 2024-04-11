@@ -3,8 +3,10 @@ import { html } from 'hono/html';
 import Environment from '@/env';
 import { OpenSumiRunKVManager } from '@/kv/run';
 
-export function route(hono: THono) {
-  hono.get('/ide/:group/:project', async (c) => {
+import { ControllerFacade } from './base';
+
+function route(hono: THono, prefix = '') {
+  hono.get(`${prefix}/:group/:project`, async (c) => {
     const env = Environment.instance().environment;
     const kvManager = OpenSumiRunKVManager.instance();
 
@@ -41,3 +43,15 @@ export function route(hono: THono) {
     );
   });
 }
+
+export const OpenSumiRunWithIDEPrefix: ControllerFacade = {
+  route(hono) {
+    return route(hono, '/ide');
+  },
+};
+
+export const OpenSumiRun: ControllerFacade = {
+  route(hono) {
+    return route(hono);
+  },
+};

@@ -5,7 +5,10 @@ export enum SupportedUpstreams {
 }
 
 export const domainSpecific = {
-  [SupportedUpstreams.Run]: new Set<string>(['opensumi.run']),
+  [SupportedUpstreams.Run]: new Set<string>([
+    'opensumi.run',
+    'github.opensumi.run',
+  ]),
 };
 
 export function dispatch(request: Request) {
