@@ -1,3 +1,4 @@
+import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import { prettyJSON } from 'hono/pretty-json';
 
@@ -7,10 +8,17 @@ import favicon from '../public/favicon.svg';
 import html from '../public/index.html';
 
 import { registerControllers } from './controllers';
+import { dispatch } from './gateway';
 import { applyMiddleware } from './middleware';
 import { logger } from './middleware/logger';
 
-export function ignition(hono: THono) {
+export function ignition() {
+  const hono = new Hono({
+    getPath(request: Request) {
+      return dispatch(request);
+    },
+  }) as THono;
+
   hono.use('*', async (c, next) => {
     const waitUntil = c.executionCtx.waitUntil.bind(c.executionCtx);
     c.executionCtx.waitUntil = (promise) => {
@@ -64,4 +72,6 @@ export function ignition(hono: THono) {
     }
     return c.send.error(500, 'server internal error');
   });
+
+  return hono;
 }

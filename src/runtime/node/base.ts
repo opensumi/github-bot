@@ -1,17 +1,11 @@
 import 'dotenv/config';
 import { serve } from '@hono/node-server';
-import { Hono } from 'hono';
 
 import { ignition } from '@/api';
 
-import { commonOptions } from '../base';
-
 const port = process.env.PORT ? Number(process.env.PORT) : 8787;
 
-const app = new Hono({
-  ...commonOptions,
-}) as THono;
-ignition(app);
+const app = ignition();
 
 serve(
   {

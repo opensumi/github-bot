@@ -1,5 +1,3 @@
-import { Hono } from 'hono';
-
 import { ignition } from '@/api';
 import Environment from '@/env';
 import { createConsumer } from '@/queue';
@@ -7,13 +5,7 @@ import { TQueueMessage } from '@/queue/types';
 import { RequiredField } from '@/types';
 import { Logger } from '@/utils/logger';
 
-import { commonOptions } from '../base';
-
-const app = new Hono<{ Bindings: IRuntimeEnv }>({
-  ...commonOptions,
-}) as THono;
-
-ignition(app);
+const app = ignition();
 
 export default {
   fetch: async (request: Request, env: IRuntimeEnv, ctx: ExecutionContext) => {

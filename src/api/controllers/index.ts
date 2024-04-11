@@ -1,3 +1,5 @@
+import { SupportedUpstreams } from '../gateway';
+
 import * as Configuration from './configuration';
 import * as Ding from './ding';
 import * as GitHub from './github';
@@ -7,16 +9,37 @@ import * as OpenSumiRun from './run';
 import * as Static from './static';
 import * as Webhook from './webhook';
 
-export const registerControllers = (hono: THono) => {
-  Ding.route(hono);
-  GitHub.route(hono);
-  Proxy.route(hono);
-  Webhook.route(hono);
-  Static.route(hono);
-  Configuration.route(hono);
-  Auth.route(hono);
+interface ControllerFacade {
+  route(hono: THono): void;
+}
 
-  const opensumiRun = hono.basePath('/run');
-  OpenSumiRun.route(opensumiRun);
-  Auth.route(opensumiRun);
+const defaultControllers = [
+  Ding,
+  GitHub,
+  Proxy,
+  Webhook,
+  Static,
+  Configuration,
+  Auth,
+] as ControllerFacade[];
+
+const domainSpecificControllers = {
+  [SupportedUpstreams.Run]: [OpenSumiRun, Auth],
+} as Record<SupportedUpstreams, ControllerFacade[]>;
+
+function applyControllers(hono: THono, controllers: ControllerFacade[]) {
+  controllers.forEach((controller) => {
+    controller.route(hono);
+  });
+}
+
+export const registerControllers = (hono: THono) => {
+  applyControllers(hono, defaultControllers);
+
+  Object.entries(domainSpecificControllers).forEach(
+    ([basePath, controllers]) => {
+      const blueprint = hono.basePath(basePath);
+      applyControllers(blueprint, controllers);
+    },
+  );
 };
