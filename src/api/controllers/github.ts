@@ -132,7 +132,11 @@ export function route(hono: THono) {
         'X-GitHub-Api-Version': '2022-11-28',
       },
     });
-
-    return c.json(result.data, result.status);
+    return c.json(
+      {
+        success: result.status === 204,
+      },
+      result.status,
+    );
   });
 }

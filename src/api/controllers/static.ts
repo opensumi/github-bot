@@ -11,7 +11,7 @@ const map = {
   'ding-info': DingInfo,
   'ding-setting': DingSetting,
   setting: Setting,
-} as Record<SettingType, object>;
+} as Record<SettingType, any>;
 
 export function route(hono: THono) {
   const group = new Hono();
