@@ -12,10 +12,11 @@ export const domainSpecific = {
 };
 
 export function dispatch(request: Request) {
+  const rawPath = getPath(request);
+
   const hostname = new URL(request.url).hostname;
   if (domainSpecific[SupportedUpstreams.Run].has(hostname)) {
-    return SupportedUpstreams.Run;
+    return SupportedUpstreams.Run + rawPath;
   }
-
-  return getPath(request);
+  return rawPath;
 }
