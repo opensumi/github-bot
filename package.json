@@ -59,7 +59,7 @@
     "mdast-util-gfm-autolink-literal": "^1.0.3",
     "mdast-util-to-markdown": "^1.5.0",
     "micromark-extension-gfm": "^2.0.1",
-    "micromark-extension-gfm-autolink-literal": "^1.0.3",
+    "micromark-extension-gfm-autolink-literal": "^2.0.0",
     "mnemonist": "^0.39.5",
     "mri": "^1.2.0",
     "openai-fetch": "^1.1.0",
