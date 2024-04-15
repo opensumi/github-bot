@@ -8716,11 +8716,11 @@ __metadata:
   linkType: hard
 
 "mnemonist@npm:^0.39.5":
-  version: 0.39.5
-  resolution: "mnemonist@npm:0.39.5"
+  version: 0.39.8
+  resolution: "mnemonist@npm:0.39.8"
   dependencies:
     obliterator: ^2.0.1
-  checksum: 6669d687a434226924b2c84ee6eb7ce7d0f83dfc5caad8bcc164c73c0c11fb6d43cbe32636e710f068046f4b40a56c3032532554e93e02640aafc6ca3dd222e6
+  checksum: af611a79546949deb7f5044cc9a501fefe9e576a1a2f6461b2636eced1104ca7e066641add6358bc9b7b8c79cc7b080caad1e1d70fc400ae7961a955515f18bc
   languageName: node
   linkType: hard
 
