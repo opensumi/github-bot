@@ -13,7 +13,7 @@ import Environment from '@/env';
 import { Logger } from '@/utils/logger';
 
 import {
-  defaultBlockUsers,
+  depManageBotToIgnore,
   getTemplates,
   StopHandleError,
   TemplateRenderResult,
@@ -89,7 +89,7 @@ export const setupWebhooksTemplate = (
     webhooks.on(eventName, async ({ id, name, payload, octokit }) => {
       if ((payload as IHasSender)?.sender) {
         const name = (payload as IHasSender).sender.login;
-        if (defaultBlockUsers.has(name)) {
+        if (depManageBotToIgnore.has(name)) {
           console.log('skip event because of blocked user:', name);
           return;
         }

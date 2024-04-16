@@ -220,7 +220,10 @@ export type HandlerResult = {
 
 const raw = (v: string) => v;
 
-export const defaultBlockUsers = new Set(['renovate[bot]']);
+export const depManageBotToIgnore = new Set([
+  'renovate[bot]',
+  'dependabot[bot]',
+]);
 
 export const Template: TextTpl = (data, ctx, options) => {
   const {
