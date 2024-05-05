@@ -19,4 +19,16 @@ export interface IRegexResolveResult {
   command: string;
 }
 
-export type IResolveResult = ITextResolveResult | IRegexResolveResult;
+export interface IStarResolveResult {
+  handler: any[];
+  type: 'star';
+  /**
+   * removed prefix
+   */
+  command: string;
+}
+
+export type IResolveResult =
+  | ITextResolveResult
+  | IRegexResolveResult
+  | IStarResolveResult;

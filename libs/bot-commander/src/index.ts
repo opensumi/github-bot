@@ -11,6 +11,7 @@ import type {
   IResolveResult,
   FuncName,
   ITextResolveResult,
+  IStarResolveResult,
 } from './types';
 
 export { CompareFunc, FuncName, equalFunc, regex, startsWith };
@@ -56,19 +57,24 @@ export interface ICommandCenterOptions<C> {
 }
 
 export class CommandCenter<C extends Record<string, any>> {
-  fallbackHandler: TFallbackHandler<C> | undefined;
+  protected starHandlers: TFallbackHandler<C>[] = [];
 
-  registry = new Registry<string, THandler<C>>();
-  regexRegistry = new Registry<RegExp, THandler<C>>();
+  protected registry = new Registry<string, THandler<C>>();
+  protected regexRegistry = new Registry<RegExp, THandler<C>>();
 
-  prefixes = [] as string[];
+  protected prefixes = [] as string[];
+
   constructor(private options: ICommandCenterOptions<C> = {}) {
     this.prefixes = options.prefix ?? ['/'];
   }
 
-  async all(handler: TFallbackHandler<C>) {
-    this.fallbackHandler = handler;
+  all(handler: TFallbackHandler<C>) {
+    this.starHandlers.push(handler);
+    return () => {
+      this.starHandlers = this.starHandlers.filter((h) => h !== handler);
+    };
   }
+
   async on(pattern: RegExp, handler: TRegexHandler<C>): Promise<void>;
   async on(
     pattern: string,
@@ -119,13 +125,16 @@ export class CommandCenter<C extends Record<string, any>> {
       );
       return;
     }
+
+    const { handler } = this.registry.find(toResolve) ?? {};
+
     const result = {
       type: 'text',
       command: toResolve,
+      handler,
     } as IResolveResult;
-    let { handler } = this.registry.find(toResolve) ?? {};
 
-    if (!handler) {
+    if (!result.handler) {
       const tmp = this.regexRegistry.find(toResolve);
       if (tmp) {
         const { data, handler: regexHandler } = tmp;
@@ -133,19 +142,19 @@ export class CommandCenter<C extends Record<string, any>> {
         (result as IRegexResolveResult).type = 'regex';
         (result as IRegexResolveResult).regex = data;
         (result as IRegexResolveResult).result = regexResult;
-        handler = regexHandler;
+        (result as IRegexResolveResult).handler = regexHandler;
       }
     }
 
-    if (!handler && this.fallbackHandler) {
+    if (!result.handler && this.starHandlers.length > 0) {
       console.log(`${text} fallback to *`);
-      handler = this.fallbackHandler;
-    }
-    if (handler) {
-      console.log(`${text} will be handled`);
+      (result as IStarResolveResult).type = 'star';
+      (result as IStarResolveResult).handler = this.starHandlers;
     }
 
-    result.handler = handler;
+    if (result.handler) {
+      console.log(`${text} will be handled`);
+    }
 
     return result;
   }
@@ -164,16 +173,12 @@ export class CommandCenter<C extends Record<string, any>> {
     await this.options?.replyText?.(c)(text);
   }
 
-  async tryHandle(
-    str: string,
-    payload: C,
-    options?: { timeout?: number | null },
-  ) {
+  async tryHandle(str: string, ctx: C, options?: { timeout?: number | null }) {
     // remove redundant \r\n
     str = str.trim();
     const result = await this.resolve(str);
     const c = {
-      ...payload,
+      ...ctx,
       text: str,
       result,
       cc: this,
