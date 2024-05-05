@@ -1,4 +1,5 @@
 import { sign } from '@opensumi/workers-utils/lib/crypto';
+import { DWClient } from 'dingtalk-stream/client';
 
 export async function doSign(secret: string, content: string): Promise<string> {
   const mac = await sign(secret, content);
@@ -45,4 +46,28 @@ export async function send(
   });
   console.log('response:', await resp.text());
   return resp;
+}
+
+export async function sendFromClient(
+  client: DWClient,
+  messageId: string,
+  webhookUrl: string,
+  dingContent: any,
+) {
+  const accessToken = await client.getAccessToken();
+
+  const resp = await fetch(webhookUrl, {
+    body: JSON.stringify(dingContent),
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json;charset=UTF-8',
+      'x-acs-dingtalk-access-token': accessToken,
+    },
+  });
+
+  const data = await resp.json();
+
+  // stream模式下，服务端推送消息到client后，会监听client响应，如果消息长时间未响应会在一定时间内(60s)重试推消息，可以通过此方法返回消息响应，避免多次接收服务端消息。
+  // 机器人topic，可以通过socketCallBackResponse方法返回消息响应
+  client.socketCallBackResponse(messageId, data);
 }

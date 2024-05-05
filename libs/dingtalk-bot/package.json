@@ -10,7 +10,8 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@opensumi/workers-utils": "workspace:^"
+    "@opensumi/workers-utils": "workspace:^",
+    "dingtalk-stream": "^2.1.4"
   },
   "publishConfig": {
     "access": "public",

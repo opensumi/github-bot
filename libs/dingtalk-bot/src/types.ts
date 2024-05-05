@@ -1,3 +1,5 @@
+import type { RobotTextMessage } from 'dingtalk-stream';
+
 export interface TextMessage {
   content: string;
 }
@@ -12,24 +14,11 @@ export enum ConversationType {
   group = '2',
 }
 
-export interface Message {
-  msgtype: string;
-  text: TextMessage;
-  msgId: string;
-  createAt: number;
-  conversationType: ConversationType;
-  conversationId: string;
-  senderId: string;
-  senderNick: string;
-  senderCorpId?: string;
-  sessionWebhook: string;
-  sessionWebhookExpiredTime: number;
-  isAdmin: boolean;
+export interface Message extends RobotTextMessage {
+  conversationType: ConversationType | string;
 }
 
 export interface PrivateMessage extends Message {
-  chatbotCorpId: string;
-  senderStaffId?: string;
   conversationType: ConversationType.private;
 }
 
