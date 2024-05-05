@@ -5,7 +5,11 @@ interface RegistryItem<K, T> {
   handler: T;
 }
 
-export class Registry<K, T> {
+abstract class BaseRegistry {}
+
+export class RegexRegistry extends BaseRegistry {}
+
+export class Registry<K, T> extends BaseRegistry {
   private _array = new Map<K, [T, CompareFunc<K>]>();
 
   get handlers() {

@@ -1,6 +1,5 @@
 import { IDingInfo } from '@/kv/types';
 import { StringBuilder } from '@/utils/string-builder';
-import { startsWith } from '@opensumi/bot-commander';
 import { code } from '@opensumi/dingtalk-bot/lib/types';
 
 import { IMCommandCenter } from './types';
@@ -17,7 +16,6 @@ export function registerCommonCommand(it: IMCommandCenter) {
       await bot.replyText('更新信息成功');
     },
     undefined,
-    startsWith,
   );
 
   it.on('getGroupInfo', async ({ bot, ctx }) => {

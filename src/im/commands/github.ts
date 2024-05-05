@@ -3,7 +3,6 @@ import { markdown } from '@/github/dingtalk';
 import { parseGitHubUrl } from '@/github/gfm';
 import { renderPrOrIssue } from '@/github/renderer';
 import { StringBuilder } from '@/utils';
-import { startsWith } from '@opensumi/bot-commander';
 import { code } from '@opensumi/dingtalk-bot/lib/types';
 
 import { IBotAdapter } from '../types';
@@ -85,7 +84,6 @@ export function registerGitHubCommand(it: IMCommandCenter) {
       await bot.replyText('已经发给你啦');
     },
     [],
-    startsWith,
   );
 
   it.on(
@@ -130,7 +128,6 @@ export function registerGitHubCommand(it: IMCommandCenter) {
       }
     },
     [],
-    startsWith,
   );
 
   it.on(
@@ -150,7 +147,6 @@ export function registerGitHubCommand(it: IMCommandCenter) {
       await bot.reply(content);
     },
     ['stars'],
-    startsWith,
   );
 
   it.on('bind-github', async ({ bot, ctx }) => {

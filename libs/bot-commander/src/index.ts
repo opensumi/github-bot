@@ -4,7 +4,7 @@ import { isPromiseCanceledError } from '@opensumi/ide-utils/lib/errors';
 import mri from 'mri';
 
 import { Registry } from './registry';
-import { equalFunc, regex, startsWith } from './rules';
+import { equalFunc, regex } from './rules';
 import type {
   CompareFunc,
   IRegexResolveResult,
@@ -14,7 +14,7 @@ import type {
   IStarResolveResult,
 } from './types';
 
-export { CompareFunc, FuncName, equalFunc, regex, startsWith };
+export { CompareFunc, FuncName, equalFunc, regex };
 
 export interface IArgv<T> {
   raw: mri.Argv<T>;
@@ -75,25 +75,15 @@ export class CommandCenter<C extends Record<string, any>> {
     };
   }
 
-  async on(pattern: RegExp, handler: TRegexHandler<C>): Promise<void>;
-  async on(
-    pattern: string,
-    handler: TTextHandler<C>,
-    alias?: string[],
-    rule?: CompareFunc<string>,
-  ): Promise<void>;
-  async on(
-    pattern: string | RegExp,
-    handler: THandler<C>,
-    alias?: string[],
-    rule: CompareFunc<string> = equalFunc,
-  ) {
+  on(pattern: RegExp, handler: TRegexHandler<C>): void;
+  on(pattern: string, handler: TTextHandler<C>, alias?: string[]): void;
+  on(pattern: string | RegExp, handler: THandler<C>, alias?: string[]) {
     if (pattern) {
       if (typeof pattern === 'string') {
-        this.registry.add(pattern, handler, rule);
+        this.registry.add(pattern, handler, equalFunc);
         if (alias && Array.isArray(alias)) {
           for (const a of alias) {
-            this.registry.add(a, handler, rule);
+            this.registry.add(a, handler, equalFunc);
           }
         }
       } else if (typeof pattern === 'object' && pattern instanceof RegExp) {

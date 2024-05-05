@@ -1,5 +1,4 @@
 import { BACKPORT_PR_WORKFLOW, getActionsUrl } from '@/constants/opensumi';
-import { startsWith } from '@opensumi/bot-commander';
 import { removeCommandPrefix } from '@opensumi/bot-commander/lib/utils';
 
 import { GitHubCommandCenter } from '../types';
@@ -84,7 +83,6 @@ Please see: <${getActionsUrl(BACKPORT_PR_WORKFLOW)}>`,
       );
     },
     undefined,
-    startsWith,
   );
 
   it.on('next', async (ctx) => {
