@@ -1,8 +1,131 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`github utils can handle pull_request_opened 1`] = `
+"#### [code](https://github.com/code) opened [pull request](https://github.com/opensumi/core/pull/3628)
+
+#### [#3628 fix(style): update menubar right style](https://github.com/opensumi/core/pull/3628)
+
+> main <- fix/menu-bar-right-style\\
+> Requested reviewers: [Ricbet](https://github.com/Ricbet)
+
+---
+
+### Types
+
+* [x] 💄 Style Changes
+
+### Background or solution
+
+右侧 menubar 的布局应该为 flex
+
+before:
+![](https://github.com/opensumi/core/assets/1/4d2e88bd-f224-4e71-954e-3578b875de60)
+
+after:
+
+![](https://github.com/opensumi/core/assets/1/05dffb86-b9bc-4300-9132-692fc1b4542a)
+
+### Changelog
+"
+`;
+
+exports[`github utils can not handle img tag 1`] = `
+"<img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google" width="272" height="92">
+"
+`;
+
+exports[`github utils can standardize markdown code block: \`\`\`\` 1`] = `
+"大概是这样的代码示例来注册 \`custom-shceme:///any/thing/you/want\` 的文档内容
+
+\`\`\`typescript
+import { ClientAppContribution, Domain, Emitter, IDisposable, MaybePromise, URI } from "@opensumi/ide-core-browser";
+import { IEditorDocumentModelContentRegistry } from "@opensumi/ide-editor/lib/browser/index";
+import { Autowired} from '@opensumi/di';
+@Domain(ClientAppContribution)
+export class ExampleContribution implements ClientAppContribution {
+  @Autowired(IEditorDocumentModelContentRegistry)
+  private readonly contentRegistry: IEditorDocumentModelContentRegistry;
+  onStart() {
+    const dataChangeEmitter = new Emitter<URI>();
+    this.contentRegistry.registerEditorDocumentModelContentProvider({
+      handlesScheme: (scheme) => {
+        return scheme === 'custom-scheme';
+      },
+      provideEditorDocumentModelContent: async (uri) => {
+        // 这里从服务器拿数据
+        const data = await fetchSomeDataFromServer(uri.toString());
+        return data;
+      },
+      preferLanguageForUri: (uri) => {
+        return 'json';
+      },
+      isReadonly: function (uri: URI): MaybePromise<boolean> {
+        // 返回 true 禁止用户编辑
+        return true;
+      },
+      onDidChangeContent: dataChangeEmitter.event,
+    })
+  }
+  // 当服务器告诉你要更新数据，这个时候要通知编辑器需要更新
+  WhenServerTellsYouDataNeedToBeUpdated((someUriNeedToBeUpdate: URI) =>{
+    dataChangeEmitter.fire(someUriNeedToBeUpdate);
+  });
+}
+\`\`\`
+
+注册完以后就可以在这个组件内显示内容
+
+\`\`\`
+<CodeEditor style={{"height": "500px"}} uri={URI.parse('custom-scheme:///path/something')}/>
+\`\`\`
+"
+`;
+
+exports[`github utils can standardizeMarkdown 1`] = `
+"您好！以下是一个简单的shell脚本，可以实现替换指定文件中的内容：
+
+\`\`\`
+#!/bin/bash
+
+echo "请输入要替换的内容："
+read old_content
+
+echo "请输入替换后的内容："
+read new_content
+
+echo "请输入要替换的文件路径："
+read file_path
+
+sed -i "s/$old_content/$new_content/g" $file_path
+
+echo "替换完成！"
+\`\`\`
+
+以上脚本中，\`read\` 命令用于读取用户输入的内容，\`sed\` 命令用于进行替换操作。在命令中，\`-i\` 表示直接修改文件内容，\`s\` 表示替换操作，\`g\` 表示全局匹配。其中 \`$old_content\` 和 \`$new_content\` 分别表示用户输入的要替换的内容和替换后的内容。
+"
+`;
+
 exports[`github utils can transform image 1`] = `
 "![](https://user-images.githubusercontent.com/2226423/153811718-2babbfa7-e63f-4ec7-9fd3-9f450beaad9b.png)
 看起来这个分支有个报错关于 TerminalClient 的,有可能是 init 时机有点问题"
+`;
+
+exports[`github utils can transform inline code 1`] = `
+"这里应该需要在框架内注册一个配置项 \`workbench.colorTheme\`，预期是在切换到 HC 主题时，这里的配置项值为：
+
+\`\`\`
+"workbench.colorTheme": "GitHub Theme High Contrast",
+\`\`\`
+
+同样的，还有 \`workbench.iconTheme\` 也是一样逻辑
+相关代码位置见：
+应用颜色主题：<https://github.com/opensumi/core/blob/3455b10620badfe7b03a02d66136d3226b7891b8/packages/theme/src/browser/workbench.theme.service.ts#L171>
+应用图标主题：
+<https://github.com/opensumi/core/blob/3455b10620badfe7b03a02d66136d3226b7891b8/packages/theme/src/browser/icon.service.ts#L403>
+注册默认配置逻辑见：
+<https://github.com/opensumi/core/blob/3455b10620badfe7b03a02d66136d3226b7891b8/packages/theme/src/browser/icon.service.ts>
+欢迎开发者贡献代码，或等待我们后续实现。
+"
 `;
 
 exports[`github utils can transform markdown to limitable 1`] = `
@@ -13,4 +136,14 @@ exports[`github utils can transform markdown to limitable 1`] = `
 看起来这个分支有个报错关于 TerminalClient 的,有可能是 init 时机有点问题asdfg# a## b
 ",
 }
+`;
+
+exports[`github utils will escape some markdown syntax 1`] = `
+"hi\\~
+"
+`;
+
+exports[`github utils will not transform br/sub 1`] = `
+"[![](https://cla-assistant.io/pull/badge/not_signed)](https://cla-assistant.io/opensumi/core?pullRequest=2482) <br/>Thank you for your submission! We really appreciate it. Like many open source projects, we ask that you all sign our [Contributor License Agreement](https://cla-assistant.io/opensumi/core?pullRequest=2482) before we can accept your contribution.<br/>**1** out of **2** committers have signed the CLA.<br/><br/>:white\\_check\\_mark: miserylee<br/>:x: lijifei<br/><hr/>**lijifei** seems not to be a GitHub user. You need a GitHub account to be able to sign the CLA. If you have already a GitHub account, please [add the email address used for this commit to your account](https://help.github.com/articles/why-are-my-commits-linked-to-the-wrong-user/#commits-are-not-linked-to-any-user).<br/><sub>You have signed the CLA already but the status is still pending? Let us [recheck](https://cla-assistant.io/check/opensumi/core?pullRequest=2482) it.</sub>
+"
 `;

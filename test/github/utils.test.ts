@@ -5,6 +5,7 @@ import {
   parseGitHubUrl,
 } from '@/github/gfm';
 import { standardizeMarkdown } from '@/github/renderer/make-mark';
+import { handlePr } from '@/github/templates/prOrIssue';
 import {
   StringBuilder,
   limitLine,
@@ -12,6 +13,10 @@ import {
   transformMarkdownToLimitable,
 } from '@/utils/string-builder';
 import * as DingUtils from '@opensumi/dingtalk-bot/lib/utils';
+
+import { pr3628_open } from '../fixtures';
+
+import { ctx } from './ctx';
 
 const commentWithImg = `<img width="954" alt="image" src="https://user-images.githubusercontent.com/2226423/153811718-2babbfa7-e63f-4ec7-9fd3-9f450beaad9b.png">
 看起来这个分支有个报错关于 TerminalClient 的,有可能是 init 时机有点问题`;
@@ -198,6 +203,7 @@ describe('github utils', () => {
     const preText = data.message.content.parts[0];
     const result = standardizeMarkdown(preText);
     console.log(`🚀 ~ file: utils.test.ts:183 ~ it ~ result:`, result);
+    expect(result).toMatchSnapshot();
   });
   it('can standardize markdown code block: ````', () => {
     const preText = `
@@ -255,12 +261,14 @@ export class ExampleContribution implements ClientAppContribution {
     `;
     const result = standardizeMarkdown(preText);
     console.log(`🚀 ~ file: utils.test.ts:183 ~ it ~ result:`, result);
+    expect(result).toMatchSnapshot();
   });
 
   it('will not transform br/sub', () => {
     const data = `[![CLA assistant check](https://cla-assistant.io/pull/badge/not_signed)](https://cla-assistant.io/opensumi/core?pullRequest=2482) <br/>Thank you for your submission! We really appreciate it. Like many open source projects, we ask that you all sign our [Contributor License Agreement](https://cla-assistant.io/opensumi/core?pullRequest=2482) before we can accept your contribution.<br/>**1** out of **2** committers have signed the CLA.<br/><br/>:white_check_mark: miserylee<br/>:x: lijifei<br/><hr/>**lijifei** seems not to be a GitHub user. You need a GitHub account to be able to sign the CLA. If you have already a GitHub account, please [add the email address used for this commit to your account](https://help.github.com/articles/why-are-my-commits-linked-to-the-wrong-user/#commits-are-not-linked-to-any-user).<br/><sub>You have signed the CLA already but the status is still pending? Let us [recheck](https://cla-assistant.io/check/opensumi/core?pullRequest=2482) it.</sub>`;
     const result = standardizeMarkdown(data);
     console.log(`it ~ result:`, result);
+    expect(result).toMatchSnapshot();
   });
   it('can transform inline code', () => {
     const data = `
@@ -285,6 +293,7 @@ https://github.com/opensumi/core/blob/3455b10620badfe7b03a02d66136d3226b7891b8/p
 
   `;
     const result = standardizeMarkdown(data);
+    expect(result).toMatchSnapshot();
     console.log(`it ~ result:`, result);
   });
   it('can not handle img tag', () => {
@@ -292,12 +301,13 @@ https://github.com/opensumi/core/blob/3455b10620badfe7b03a02d66136d3226b7891b8/p
     <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google" width="272" height="92">
     `;
     const result = standardizeMarkdown(data);
+    expect(result).toMatchSnapshot();
     console.log(`it ~ result:`, result);
   });
   it('will escape some markdown syntax', () => {
     const data = `hi~`;
     const result = standardizeMarkdown(data);
-    expect(result).toContain(`hi\\~`);
+    expect(result).toMatchSnapshot();
     console.log(`it ~ result:`, result);
   });
 
@@ -312,5 +322,11 @@ asdfg
 ## b
     `);
     expect(d).toMatchSnapshot();
+  });
+  it('can handle pull_request_opened', async () => {
+    const result = await handlePr(pr3628_open, ctx);
+
+    const standardized = standardizeMarkdown(result.text);
+    expect(standardized).toMatchSnapshot();
   });
 });

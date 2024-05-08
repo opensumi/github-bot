@@ -207,11 +207,6 @@ type TextTpl = (
       notDisplayRepoName?: boolean;
     };
   },
-  options?: {
-    hooks?: {
-      afterRender?: (result: string) => string;
-    };
-  },
 ) => TemplateRenderResult;
 
 export type HandlerResult = {
@@ -225,7 +220,7 @@ export const depManageBotToIgnore = new Set([
   'dependabot[bot]',
 ]);
 
-export const Template: TextTpl = (data, ctx, options) => {
+export const Template: TextTpl = (data, ctx) => {
   const {
     payload,
     title: bodyTitle,
@@ -264,14 +259,16 @@ export const Template: TextTpl = (data, ctx, options) => {
     repoInfo = '';
   }
 
-  const text = new StringBuilder(`#### ${repoInfo}${bodyTitle.trim()}  `);
-  let compactText: StringBuilder | undefined;
+  const textBuilder = new StringBuilder(
+    `#### ${repoInfo}${bodyTitle.trim()}  `,
+  );
+  let compactTextBuilder: StringBuilder | undefined;
   if (compactTitle) {
-    compactText = new StringBuilder(compactTitle);
+    compactTextBuilder = new StringBuilder(compactTitle);
   }
 
   if (target) {
-    text.add(target);
+    textBuilder.add(target);
     // compact text do not need target
   }
 
@@ -281,7 +278,7 @@ export const Template: TextTpl = (data, ctx, options) => {
   }
 
   if (bodyText) {
-    text.addDivider('', true);
+    textBuilder.addDivider('', true);
 
     if (contentLimit && contentLimit > 0) {
       bodyText = limitTextByPosition(bodyText, contentLimit);
@@ -290,8 +287,8 @@ export const Template: TextTpl = (data, ctx, options) => {
     payload.bodyText = bodyText;
 
     const refText = autoRef ? '{{bodyText|ref}}' : '{{bodyText}}';
-    text.add(refText);
-    compactText && compactText.add(refText);
+    textBuilder.add(refText);
+    compactTextBuilder && compactTextBuilder.add(refText);
   }
 
   let titleText = `${notCapitalizeTitle ? event : capitalize(event)} ${action}`;
@@ -299,15 +296,13 @@ export const Template: TextTpl = (data, ctx, options) => {
     titleText = `[{{repository.name}}] ${titleText}`;
   }
 
-  const title = new StringBuilder(titleText);
-
-  const afterRender = options?.hooks?.afterRender ?? raw;
+  const titleBuilder = new StringBuilder(titleText);
 
   return {
-    title: afterRender(title.render(payload)),
-    text: afterRender(text.render(payload)),
-    compactText: compactText
-      ? afterRender(compactText.render(payload))
+    title: titleBuilder.render(payload),
+    text: textBuilder.render(payload),
+    compactText: compactTextBuilder
+      ? compactTextBuilder.render(payload)
       : undefined,
   };
 };

@@ -5,14 +5,14 @@ import { toMarkdown } from 'mdast-util-to-markdown';
 import { gfm } from 'micromark-extension-gfm';
 
 export function parseMarkdown(text: string) {
-  const tree = fromMarkdown(trimLeadingWS(text), {
+  const tree = fromMarkdown(trimLeadingWhiteSpace(text), {
     extensions: [gfm()],
     mdastExtensions: [gfmFromMarkdown()],
   });
   return tree;
 }
 
-function trimLeadingWS(str: string) {
+function trimLeadingWhiteSpace(str: string) {
   /*
     Get the initial indentation
     But ignore new line characters
@@ -49,6 +49,12 @@ export function makeMarkdown(tree: Parent) {
     listItemIndent: 'one',
     rule: '-',
     fence: '`',
+    handlers: {
+      // remove the image alt text
+      image: (node) => {
+        return `![](${node.url})`;
+      },
+    },
     fences: true,
   });
 }
