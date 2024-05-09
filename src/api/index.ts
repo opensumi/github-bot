@@ -12,7 +12,10 @@ import { logger } from './middleware/logger';
 export function ignition() {
   const hono = new Hono({
     getPath(request: Request) {
-      return dispatch(request);
+      const target = dispatch(request);
+      console.log(`[dispatch] ${request.url} ->`, target);
+
+      return target;
     },
   }) as THono;
 

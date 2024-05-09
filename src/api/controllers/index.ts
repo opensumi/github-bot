@@ -26,17 +26,6 @@ const OpenSumiRunHome = {
   },
 };
 
-const githubBotControllers = [
-  SimpleHome,
-  Ding,
-  GitHub,
-  Proxy,
-  Webhook,
-  Static,
-  Configuration,
-  Auth,
-] as ControllerFacade[];
-
 const applyBaseController = (hono: THono) => {
   hono.get('/favicon.ico', async (c) => {
     return c.body(favicon, 200, {
@@ -50,7 +39,7 @@ const applyBaseController = (hono: THono) => {
 };
 
 const controllers = {
-  '': githubBotControllers,
+  '': [SimpleHome, Ding, GitHub, Proxy, Webhook, Static, Configuration, Auth],
   [ERuleName.Run]: [
     OpenSumiRunWithIDEPrefix,
     OpenSumiRun,

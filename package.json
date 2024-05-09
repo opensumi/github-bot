@@ -21,6 +21,7 @@
     "watch:node": "hereby",
     "dev": "hereby",
     "dev:node": "nodemon ./dist/node",
+    "dev:node:debug": "nodemon --inspect --inspect-brk ./dist/node",
     "dev:worker:preview": "run-p dev:worker dev:proxy",
     "dev:worker": "wrangler dev",
     "dev:proxy": "tsx dev.ts",
