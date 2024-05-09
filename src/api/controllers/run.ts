@@ -5,7 +5,7 @@ import { OpenSumiRunKVManager } from '@/kv/run';
 
 import { ControllerFacade } from './base';
 
-function route(hono: THono, prefix = '') {
+function registerOpenSumiRun(hono: THono, prefix = '') {
   hono.get(`${prefix}/:group/:project`, async (c) => {
     const env = Environment.instance().environment;
     const kvManager = OpenSumiRunKVManager.instance();
@@ -46,12 +46,12 @@ function route(hono: THono, prefix = '') {
 
 export const OpenSumiRunWithIDEPrefix: ControllerFacade = {
   route(hono) {
-    return route(hono, '/ide');
+    registerOpenSumiRun(hono, '/ide');
   },
 };
 
 export const OpenSumiRun: ControllerFacade = {
   route(hono) {
-    return route(hono);
+    registerOpenSumiRun(hono);
   },
 };

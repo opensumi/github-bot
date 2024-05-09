@@ -4,9 +4,6 @@ import { prettyJSON } from 'hono/pretty-json';
 
 import { ValidationError } from '@/github';
 
-import favicon from '../public/favicon.svg';
-import html from '../public/index.html';
-
 import { registerControllers } from './controllers';
 import { dispatch } from './gateway';
 import { applyMiddleware } from './middleware';
@@ -40,18 +37,6 @@ export function ignition() {
 
   hono.use('*', logger());
   hono.use('*', prettyJSON());
-
-  hono.get('/', (c) => c.html(html));
-
-  hono.get('/favicon.ico', async (c) => {
-    return c.body(favicon, 200, {
-      'content-type': 'image/svg+xml',
-    });
-  });
-
-  hono.get('/robots.txt', async (c) => {
-    return c.text('User-agent: *\nDisallow: /', 200);
-  });
 
   registerControllers(hono);
 
