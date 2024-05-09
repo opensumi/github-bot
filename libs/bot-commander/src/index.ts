@@ -14,7 +14,7 @@ import type {
   IStarResolveResult,
 } from './types';
 
-export { CompareFunc, FuncName, equalFunc, regex };
+export { CompareFunc, FuncName, regex };
 
 export interface IArgv<T> {
   raw: mri.Argv<T>;
@@ -214,6 +214,29 @@ export class CommandCenter<C extends Record<string, any>> {
     } else {
       console.log('no handler found for', str);
     }
+  }
+
+  help() {
+    let text = '';
+    const prefix = this.prefixes.filter(Boolean).join('、');
+    if (prefix) {
+      text += `前缀：${prefix}\n`;
+    }
+
+    text += '支持的命令：\n';
+
+    this.registry.handlers.forEach(([key, [_, compareFunc]]) => {
+      text += `- ${key}: ${compareFunc.name}\n`;
+    });
+
+    this.regexRegistry.handlers.forEach(([key, [_, compareFunc]]) => {
+      text += `- ${key}: ${compareFunc.name}\n`;
+    });
+    if (this.starHandlers) {
+      text += `- *: fallbackHandler\n`;
+    }
+
+    return text;
   }
 }
 

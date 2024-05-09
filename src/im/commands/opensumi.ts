@@ -1,6 +1,5 @@
 import { RC_WORKFLOW_FILE } from '@/constants/opensumi';
 import { markdown } from '@/github/dingtalk';
-import { equalFunc } from '@opensumi/bot-commander';
 
 import { IBotAdapter } from '../types';
 
@@ -247,6 +246,5 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
       await bot.replyText('Starts generating monthly report.');
     },
     [],
-    equalFunc,
   );
 }

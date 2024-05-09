@@ -31,26 +31,7 @@ export function registerCommonCommand(it: IMCommandCenter) {
   });
 
   it.on('help', async ({ bot }) => {
-    const text = new StringBuilder();
-    const prefix = it.prefixes.filter(Boolean).join('、');
-    if (prefix) {
-      text.add('前缀：' + prefix);
-    }
-
-    text.add('支持的命令：', true);
-
-    it.registry.handlers.forEach(([key, [_, compareFunc]]) => {
-      text.add(`- ${key}: ${compareFunc.name}`);
-    });
-
-    it.regexRegistry.handlers.forEach(([key, [_, compareFunc]]) => {
-      text.add(`- ${key}: ${compareFunc.name}`);
-    });
-    if (it.fallbackHandler) {
-      text.add(`- *: fallbackHandler`);
-    }
-
-    await bot.replyText(text.build());
+    await bot.replyText(it.help());
   });
 
   it.on('ping', async ({ bot }) => {
