@@ -1,5 +1,5 @@
 import { CoreRepo } from '@/constants/opensumi';
-import { markdown } from '@/github/dingtalk';
+import { convertToDingMarkdown } from '@/github/dingtalk';
 
 import { IBotAdapter } from '../types';
 
@@ -51,7 +51,10 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     await app.opensumiOctoService.deployBot();
     await app.opensumiOctoService.deployBotPre();
     await bot.reply(
-      markdown('开始部署机器人', '开始部署机器人 & 预发机器人' + text),
+      convertToDingMarkdown(
+        '开始部署机器人',
+        '开始部署机器人 & 预发机器人' + text,
+      ),
     );
   });
 
@@ -87,7 +90,7 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
 
     await app.opensumiOctoService.deployBotPre(workflowRef);
     await bot.reply(
-      markdown('开始部署预发机器人', '开始部署预发机器人' + text),
+      convertToDingMarkdown('开始部署预发机器人', '开始部署预发机器人' + text),
     );
   });
 
@@ -147,7 +150,7 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     try {
       await app.opensumiOctoService.syncVersion(version, workflowRef);
       await bot.reply(
-        markdown(
+        convertToDingMarkdown(
           'starts synchronizing packages',
           `[starts synchronizing packages${
             version ? `@${version}` : ''
@@ -207,7 +210,7 @@ async function publishNextVersion({ ctx, bot }: IMCommandCenterContext) {
 
       await app.opensumiOctoService.releaseNextVersion(ref, workflowRef);
       await bot.reply(
-        markdown(
+        convertToDingMarkdown(
           'Starts releasing the next version',
           `Starts releasing the [next version](https://github.com/opensumi/core/actions/workflows/${CoreRepo.NEXT_WORKFLOW_FILE}) on ${ref}\n\n${text}`,
         ),

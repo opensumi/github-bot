@@ -1,7 +1,7 @@
 import throttle from 'lodash/throttle';
 
 import { Conversation } from '@/ai/conversation';
-import { markdown } from '@/github/dingtalk';
+import { convertToDingMarkdown } from '@/github/dingtalk';
 import { Context } from '@/im/commands';
 
 import { IBotAdapter } from './types';
@@ -47,7 +47,7 @@ export class OpenAI {
 
   async reply(text: string): Promise<void> {
     await this.bot.reply(
-      markdown(
+      convertToDingMarkdown(
         text.slice(0, 30),
         `${text.trim()}\n\n> Powered By OpenAI gpt-3.5-turbo`,
       ),

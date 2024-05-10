@@ -1,5 +1,5 @@
 import { App } from '@/github/app';
-import { markdown } from '@/github/dingtalk';
+import { convertToDingMarkdown } from '@/github/dingtalk';
 import { parseGitHubUrl } from '@/github/gfm';
 import { renderPrOrIssue } from '@/github/renderer';
 import { StringBuilder } from '@/utils';
@@ -34,7 +34,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
     const full_name = repoData.data?.full_name;
     if (full_name) {
       await bot.reply(
-        markdown(
+        convertToDingMarkdown(
           `${full_name} Open Graph`,
           `![](${bot.getProxiedUrl(
             `https://opengraph.githubassets.com/${makeid(16)}/${full_name}`,
@@ -105,7 +105,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
           const full_name = result.data?.full_name;
           if (full_name) {
             await bot.reply(
-              markdown(
+              convertToDingMarkdown(
                 `${full_name} Open Graph`,
                 `![](${bot.getProxiedUrl(
                   `https://opengraph.githubassets.com/${makeid(
@@ -201,7 +201,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
       }
 
       await bot.reply(
-        markdown(
+        convertToDingMarkdown(
           `${githubUserId}'s prs of ${owner}/${repo}`,
           builder.toString(),
         ),
@@ -284,7 +284,7 @@ async function replyGitHubIssue(
   );
   if (issue) {
     const data = renderPrOrIssue(issue);
-    await bot.reply(markdown(data.title, data.text));
+    await bot.reply(convertToDingMarkdown(data.title, data.text));
   } else {
     await bot.replyText(
       `${issueNumber} 不是 ${owner}/${repo} 仓库有效的 issue number`,

@@ -2,6 +2,7 @@ import { EmitterWebhookEventName } from '@octokit/webhooks';
 
 import { standardizeMarkdown } from '@/github/renderer/make-mark';
 import { ISetting } from '@/kv/types';
+import { limitTextByPosition } from '@/utils';
 import {
   Markdown,
   markdown as _markdown,
@@ -10,8 +11,12 @@ import { send } from '@opensumi/dingtalk-bot/lib/utils';
 
 import { MarkdownContent } from './types';
 
-export function markdown(title: string, text: string): Markdown {
-  return _markdown(title, standardizeMarkdown(text));
+/**
+ * 钉钉最大 5000 字
+ */
+export function convertToDingMarkdown(title: string, text: string): Markdown {
+  const _text = limitTextByPosition(text, 5000 - title.length - 10);
+  return _markdown(title, standardizeMarkdown(_text));
 }
 
 function dingSecurityInterception(text: string) {
@@ -29,7 +34,7 @@ export async function sendToDing(
     return;
   }
 
-  const dingContent = markdown(data.title, data.text);
+  const dingContent = convertToDingMarkdown(data.title, data.text);
   dingContent.markdown.text = dingSecurityInterception(
     dingContent.markdown.text,
   );
