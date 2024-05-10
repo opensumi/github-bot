@@ -20,8 +20,12 @@ export function AtSenderLink(sender: { login: string; html_url: string }) {
   return `[@${sender.login}](${sender.html_url})`;
 }
 
-export function ReleaseLink(release: { name: string; html_url: string }) {
-  return `[${release.name}](${release.html_url})`;
+export function ReleaseLink(release: {
+  name: string;
+  tag_name: string;
+  html_url: string;
+}) {
+  return `[${release.name || release.tag_name}](${release.html_url})`;
 }
 
 export function IssuesText(
