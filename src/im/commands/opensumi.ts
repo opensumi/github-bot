@@ -1,10 +1,10 @@
-import { RC_WORKFLOW_FILE } from '@/constants/opensumi';
+import { CoreRepo } from '@/constants/opensumi';
 import { markdown } from '@/github/dingtalk';
 
 import { IBotAdapter } from '../types';
 
 import { KnownRepo } from './constants';
-import { Context, IMCommandCenter } from './types';
+import { Context, IMCommandCenter, IMCommandCenterContext } from './types';
 import { hasApp, replyIfAppNotDefined } from './utils';
 
 /**
@@ -101,44 +101,11 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
       return;
     }
 
-    const { app } = ctx;
+    await bot.replyText(
+      '[rc 命令已经 deprecated, 请使用 nx 命令] 开始发布 next 版本',
+    );
 
-    let ref = ctx.parsed.raw.ref;
-    let workflowRef: string | undefined = undefined;
-    if (!ref) {
-      if (ctx.parsed['_'].length > 1) {
-        ref = ctx.parsed['_'][1];
-      }
-      if (ctx.parsed.raw['workflow-ref']) {
-        workflowRef = ctx.parsed.raw['workflow-ref'];
-      } else {
-        workflowRef = ref;
-      }
-    }
-
-    if (ref) {
-      try {
-        await app.octoService.getRefInfoByRepo(ref, 'opensumi', 'core');
-
-        const text = await app.opensumiOctoService.getLastNCommitsText({
-          owner: 'opensumi',
-          repo: 'core',
-          ref,
-        });
-
-        await app.opensumiOctoService.releaseRCVersion(ref, workflowRef);
-        await bot.reply(
-          markdown(
-            'Starts releasing the release candidate',
-            `Starts releasing the [release candidate](https://github.com/opensumi/core/actions/workflows/${RC_WORKFLOW_FILE}) on ${ref}\n\n${text}`,
-          ),
-        );
-      } catch (error) {
-        await bot.replyText(`执行出错：${(error as Error).message}`);
-      }
-    } else {
-      await bot.replyText(`使用方法 rc --ref v2.xx 或 rc v2.xx`);
-    }
+    await publishNextVersion({ ctx, bot });
   });
 
   it.on('nx', async ({ bot, ctx }) => {
@@ -151,43 +118,7 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
       return;
     }
 
-    const { app } = ctx;
-
-    let ref = ctx.parsed.raw.ref;
-    let workflowRef: string | undefined = undefined;
-    if (!ref) {
-      if (ctx.parsed['_'].length > 1) {
-        ref = ctx.parsed['_'][1];
-      }
-      if (ctx.parsed.raw['workflow-ref']) {
-        workflowRef = ctx.parsed.raw['workflow-ref'];
-      } else {
-        workflowRef = ref;
-      }
-    }
-
-    if (ref) {
-      try {
-        await app.octoService.getRefInfoByRepo(ref, 'opensumi', 'core');
-        const text = await app.opensumiOctoService.getLastNCommitsText({
-          owner: 'opensumi',
-          repo: 'core',
-          ref,
-        });
-
-        await app.opensumiOctoService.releaseRCVersion(ref, workflowRef);
-        await bot.reply(
-          markdown(
-            'Starts releasing the release candidate',
-            `Starts releasing the [release candidate](https://github.com/opensumi/core/actions/workflows/${RC_WORKFLOW_FILE}) on ${ref}\n\n${text}`,
-          ),
-        );
-      } catch (error) {
-        await bot.replyText(`执行出错：${(error as Error).message}`);
-      }
-    } else {
-      await bot.replyText(`使用方法 nx --ref v2.xx 或 nx v2.xx`);
-    }
+    await publishNextVersion({ ctx, bot });
   });
 
   it.on('sync', async ({ bot, ctx }) => {
@@ -247,4 +178,44 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     },
     [],
   );
+}
+
+async function publishNextVersion({ ctx, bot }: IMCommandCenterContext) {
+  const app = ctx.app!;
+
+  let ref = ctx.parsed.raw.ref;
+  let workflowRef: string | undefined = undefined;
+  if (!ref) {
+    if (ctx.parsed['_'].length > 1) {
+      ref = ctx.parsed['_'][1];
+    }
+    if (ctx.parsed.raw['workflow-ref']) {
+      workflowRef = ctx.parsed.raw['workflow-ref'];
+    } else {
+      workflowRef = ref;
+    }
+  }
+
+  if (ref) {
+    try {
+      await app.octoService.getRefInfoByRepo(ref, 'opensumi', 'core');
+      const text = await app.opensumiOctoService.getLastNCommitsText({
+        owner: 'opensumi',
+        repo: 'core',
+        ref,
+      });
+
+      await app.opensumiOctoService.releaseNextVersion(ref, workflowRef);
+      await bot.reply(
+        markdown(
+          'Starts releasing the next version',
+          `Starts releasing the [next version](https://github.com/opensumi/core/actions/workflows/${CoreRepo.NEXT_WORKFLOW_FILE}) on ${ref}\n\n${text}`,
+        ),
+      );
+    } catch (error) {
+      await bot.replyText(`执行出错：${(error as Error).message}`);
+    }
+  } else {
+    await bot.replyText(`使用方法 nx --ref v2.xx 或 nx v2.xx`);
+  }
 }

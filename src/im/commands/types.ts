@@ -14,7 +14,7 @@ export interface Context<T = any> {
 
 export type ContextWithApp<T = any> = Required<Context<T>>;
 
-interface IMCommandCenterContext {
+export interface IMCommandCenterContext {
   bot: IBotAdapter;
   ctx: Context;
 }

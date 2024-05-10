@@ -1,4 +1,4 @@
-import { BACKPORT_PR_WORKFLOW, getActionsUrl } from '@/constants/opensumi';
+import { ActionsRepo, getActionsUrl } from '@/constants/opensumi';
 import { removeCommandPrefix } from '@opensumi/bot-commander/lib/utils';
 
 import { GitHubCommandCenter } from '../types';
@@ -79,7 +79,7 @@ export function registerPullRequestCommand(it: GitHubCommandCenter) {
       await app.replyComment(
         ctx,
         `Backporting to \`${targetBranch}\` branch is started.  
-Please see: <${getActionsUrl(BACKPORT_PR_WORKFLOW)}>`,
+Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
       );
     },
     undefined,
