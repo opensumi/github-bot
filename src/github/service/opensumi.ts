@@ -1,4 +1,4 @@
-import { CoreRepo, ActionsRepo } from '@/constants/opensumi';
+import { ActionsRepo } from '@/constants/opensumi';
 import { GitHubService } from '@opensumi/octo-service';
 
 import { firstLine } from '../renderer/line';
@@ -6,9 +6,7 @@ import { firstLine } from '../renderer/line';
 export class OpenSumiOctoService extends GitHubService {
   async releaseNextVersion(branch: string, workflowRef = 'main') {
     const workflow = await this.octo.actions.createWorkflowDispatch({
-      owner: 'opensumi',
-      repo: 'core',
-      workflow_id: ActionsRepo.RELEASE_NEXT_BY_REF,
+      ...ActionsRepo.RELEASE_NEXT_BY_REF_WORKFLOW,
       ref: workflowRef,
       inputs: {
         ref: branch,

@@ -201,7 +201,13 @@ async function publishNextVersion({ ctx, bot }: IMCommandCenterContext) {
 
   if (ref) {
     try {
-      await app.octoService.getRefInfoByRepo(ref, 'opensumi', 'core');
+      try {
+        await app.octoService.getRefInfoByRepo(ref, 'opensumi', 'core');
+      } catch (error) {
+        await bot.replyText(
+          `找不到 ref: ${ref}, 错误信息: ${(error as Error).message}`,
+        );
+      }
       const text = await app.opensumiOctoService.getLastNCommitsText({
         owner: 'opensumi',
         repo: 'core',
