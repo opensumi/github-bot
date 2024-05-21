@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$ref": "#/definitions/IOpenSumiRunConfig",
+  "definitions": {
+    "IOpenSumiRunConfig": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "cdnBase": {
+          "type": "string"
+        }
+      },
+      "required": ["version", "cdnBase"],
+      "additionalProperties": false
+    }
+  }
+}

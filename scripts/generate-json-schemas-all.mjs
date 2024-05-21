@@ -49,3 +49,8 @@ createTypeSchema('AppSetting', 'app-settings');
 createTypeSchema('ISetting', 'setting');
 createTypeSchema('IDingBotSetting', 'ding-setting');
 createTypeSchema('IDingInfo', 'ding-info');
+
+createTypeSchema('IOpenSumiRunConfig', 'run-config');
+createTypeSchema('IOpenSumiRunOriginalTrialToken', 'run-original-trial-token');
+
+createTypeSchema('IGitHubOauthAppConfig', 'github-oauth-app-config');
