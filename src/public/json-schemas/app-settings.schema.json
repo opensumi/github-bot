@@ -53,7 +53,7 @@
         "event": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/WebhookEventName"
+            "$ref": "#/definitions/EmitterWebhookEventName"
           },
           "description": "要将哪些事件发送到钉钉群中。注意：设置了当前字段，isCommunity 就会失效"
         },
@@ -103,7 +103,7 @@
         "event": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/WebhookEventName"
+            "$ref": "#/definitions/EmitterWebhookEventName"
           },
           "description": "哪些事件需要推送到这个 webhook，如：`release.released`。 不填写则推送所有事件"
         },
@@ -115,10 +115,6 @@
       },
       "required": ["url", "secret"],
       "additionalProperties": false
-    },
-    "WebhookEventName": {
-      "$ref": "#/definitions/EmitterWebhookEventName",
-      "format": "selectize"
     },
     "EmitterWebhookEventName": {
       "type": "string",
@@ -387,7 +383,8 @@
         "workflow_run.completed",
         "workflow_run.in_progress",
         "workflow_run.requested"
-      ]
+      ],
+      "format": "selectize"
     },
     "IInstallationSetting": {
       "type": "object",

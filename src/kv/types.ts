@@ -3,7 +3,7 @@ import type { EmitterWebhookEventName as _EmitterWebhookEventName } from '@octok
 /**
  * @format selectize
  */
-export type EmitterWebhookEventName = _EmitterWebhookEventName;
+export type EmitterWebhookEventName = `${_EmitterWebhookEventName}`;
 
 export interface IDingWebhookItem {
   /**
