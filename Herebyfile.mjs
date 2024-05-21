@@ -6,10 +6,13 @@ async function runTs(file, ...args) {
 }
 
 async function runTask(task, ...args) {
+  console.log(`[RUN] Starting ${task.options.name}`, ...args);
   await task.options.run(...args);
+  console.log(`[RUN] Finished ${task.options.name}`);
 }
 
 async function shell(command) {
+  console.log(`[RUN] ${command}`);
   await execaCommand(command, {
     stdio: 'inherit',
   });
@@ -72,15 +75,10 @@ export const watch = task({
   name: 'watch',
   dependencies: [build],
   run: async () => {
-    await runTask(buildCfWorker, '--watch');
-  },
-});
-
-export const watchNode = task({
-  name: 'watch:node',
-  dependencies: [build],
-  run: async () => {
-    await runTask(buildNode, '--watch');
+    await Promise.all([
+      runTask(buildCfWorker, '--watch'),
+      runTask(buildNode, '--watch'),
+    ]);
   },
 });
 

@@ -5,7 +5,7 @@ import { objectRequired } from '../utils/validator';
 
 export function middleware(hono: THono) {
   hono.use('/github/app/*', async (c, next) => {
-    const headers = c.req.headers;
+    const headers = c.req.raw.headers;
 
     assert(
       headers.get('User-Agent')?.startsWith('GitHub-Hookshot/'),
