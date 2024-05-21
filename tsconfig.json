@@ -4,7 +4,7 @@
     "module": "commonjs",
     "allowJs": true,
     "target": "esnext",
-    "lib": ["esnext"],
+    "lib": ["esnext", "DOM"],
     "alwaysStrict": true,
     "strict": true,
     "preserveConstEnums": true,
@@ -16,15 +16,15 @@
     "types": ["./node_modules/@cloudflare/workers-types", "@types/jest"],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx"
   },
   "include": [
     "./src/**/*.ts",
     "./test/**/*.ts",
     "./scripts/**/*.ts",
-    "./typings/**/*.d.ts",
-    "libs/octo-service/src/types.ts",
-    "libs/dingtalk-bot/src/utils.ts"
+    "./typings/**/*.d.ts"
   ],
   "exclude": ["node_modules"]
 }
