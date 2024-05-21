@@ -1,7 +1,7 @@
 import { execa, execaCommand } from 'execa';
 import { task } from 'hereby';
 
-async function runTs(file, ...args) {
+async function tsx(file, ...args) {
   await execa('tsx', [file, ...args]);
 }
 
@@ -21,14 +21,14 @@ async function shell(command) {
 export const buildNode = task({
   name: 'build:node',
   run: async (...args) => {
-    await runTs('build-node.ts', ...args);
+    await tsx('build-node.ts', ...args);
   },
 });
 
 export const buildCfWorker = task({
   name: 'build:cfworker',
   run: async (...args) => {
-    await runTs('build-cfworker.ts', ...args);
+    await tsx('build-cfworker.ts', ...args);
   },
 });
 
@@ -67,7 +67,7 @@ export const dev = task({
   name: 'dev',
   dependencies: [build],
   run: async () => {
-    await shell('yarn dev:worker:preview');
+    await runTask(devWorkerPreview);
   },
 });
 
@@ -82,8 +82,44 @@ export const watch = task({
   },
 });
 
+export const devNode = task({
+  name: 'dev:node',
+  run: async () => {
+    await Promise.all([runTask(watch), shell('nodemon ./dist/node')]);
+  },
+});
+
+export const devNodeDebug = task({
+  name: 'dev:node:debug',
+  run: async () => {
+    await shell('nodemon --inspect --inspect-brk ./dist/node');
+  },
+});
+
+export const devWorker = task({
+  name: 'dev:worker',
+  run: async () => {
+    await shell('wrangler dev');
+  },
+});
+
+export const devProxy = task({
+  name: 'dev:proxy',
+  run: async () => {
+    await tsx('dev.ts');
+  },
+});
+
+export const devWorkerPreview = task({
+  name: 'dev:worker:preview',
+  run: async () => {
+    await Promise.all([runTask(devWorker), runTask(devProxy)]);
+  },
+});
+
 export default task({
-  name: 'run npm script',
+  name: 'npm script',
+  hiddenFromTaskList: true,
   run: async () => {
     if (process.env.npm_lifecycle_event === undefined) {
       throw new Error('No script specified');
