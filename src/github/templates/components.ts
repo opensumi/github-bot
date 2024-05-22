@@ -5,19 +5,24 @@ import { StringBuilder, limitTextByPosition } from '@/utils/string-builder';
 import { render } from '../renderer';
 
 export function RepositoryLink(repository: { name: string; html_url: string }) {
-  return `[[${repository.name}]](${repository.html_url})`;
+  return `[[${escapeUsername(repository.name)}]](${repository.html_url})`;
+}
+
+function escapeUsername(text: string) {
+  // 替换 [ 为 \[
+  return text.replace(/\[/g, '\\[');
 }
 
 export function SenderLink(sender: { login: string; html_url: string }) {
-  return `[${sender.login}](${sender.html_url})`;
+  return `[${escapeUsername(sender.login)}](${sender.html_url})`;
 }
 
 export function TeamLink(team: { name: string; html_url: string }) {
-  return `[${team.name}](${team.html_url})`;
+  return `[${escapeUsername(team.name)}](${team.html_url})`;
 }
 
 export function AtSenderLink(sender: { login: string; html_url: string }) {
-  return `[@${sender.login}](${sender.html_url})`;
+  return `[@${escapeUsername(sender.login)}](${sender.html_url})`;
 }
 
 export function ReleaseLink(release: {
@@ -25,7 +30,9 @@ export function ReleaseLink(release: {
   tag_name: string;
   html_url: string;
 }) {
-  return `[${release.name || release.tag_name}](${release.html_url})`;
+  return `[${escapeUsername(release.name || release.tag_name)}](${
+    release.html_url
+  })`;
 }
 
 export function IssuesText(
@@ -216,8 +223,6 @@ type TextTpl = (
 export type HandlerResult = {
   text: TextTplInput;
 };
-
-const raw = (v: string) => v;
 
 export const depManageBotToIgnore = new Set([
   'renovate[bot]',

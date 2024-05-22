@@ -13,3 +13,43 @@ exports[`github templates comment can handle commit_comment 1`] = `
   "title": "Commit comment created",
 }
 `;
+
+exports[`github templates comment can handle issue comment 1`] = `
+{
+  "compactText": "[Codertocat](https://github.com/Codertocat) created [comment](https://github.com/Codertocat/Hello-World/issues/1):  
+
+You are totally right! I'll get this fixed right away.",
+  "text": "#### [Codertocat](https://github.com/Codertocat) created [comment](https://github.com/Codertocat/Hello-World/issues/1#issuecomment-492700400) on [issue](https://github.com/Codertocat/Hello-World/issues/1)  
+#### [#1 Spelling error in the README file](https://github.com/Codertocat/Hello-World/issues/1)
+
+***
+
+You are totally right! I'll get this fixed right away.",
+  "title": "Issue comment created",
+}
+`;
+
+exports[`github templates comment can handle issue comment created 1`] = `
+{
+  "compactText": "[opensumi\\[bot]](https://github.com/apps/opensumi) created [comment](https://github.com/opensumi/core/pull/3703):  
+
+<!-- versionInfo: PR Next | 3.0.2-next-1716281731.0 -->
+🎉 PR Next publish successful!
+
+\`\`\`
+3.0.2-next-1716281731.0
+\`\`\`",
+  "text": "#### [opensumi\\[bot]](https://github.com/apps/opensumi) created [comment](https://github.com/opensumi/core/pull/3703#issuecomment-2122122281) on [pull request](https://github.com/opensumi/core/pull/3703)  
+#### [#3703 feat: support monaco editor worker](https://github.com/opensumi/core/pull/3703)
+
+***
+
+<!-- versionInfo: PR Next | 3.0.2-next-1716281731.0 -->
+🎉 PR Next publish successful!
+
+\`\`\`
+3.0.2-next-1716281731.0
+\`\`\`",
+  "title": "Pull request comment created",
+}
+`;

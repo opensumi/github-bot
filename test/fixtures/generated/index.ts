@@ -4,6 +4,7 @@ import {
   CommitCommentCreatedEvent,
   DiscussionCreatedEvent,
   DiscussionCommentCreatedEvent,
+  IssueCommentCreatedEvent,
   PullRequestOpenedEvent,
   PullRequestClosedEvent,
   PullRequestReviewSubmittedEvent,
@@ -16,6 +17,7 @@ import {
 import _commit_comment_611372_0_created from './commit_comment_611372_0_created.json';
 import _discussion_90_0_created from './discussion_90_0_created.json';
 import _discussion_comment_90_0_created from './discussion_comment_90_0_created.json';
+import _issue_comment_1_0_created from './issue_comment_1_0_created.json';
 import _pull_request_2_0_opened from './pull_request_2_0_opened.json';
 import _pull_request_2_12_opened from './pull_request_2_12_opened.json';
 import _pull_request_2_13_opened from './pull_request_2_13_opened.json';
@@ -38,6 +40,8 @@ export const discussion_90_0_created =
   _discussion_90_0_created as unknown as DiscussionCreatedEvent;
 export const discussion_comment_90_0_created =
   _discussion_comment_90_0_created as unknown as DiscussionCommentCreatedEvent;
+export const issue_comment_1_0_created =
+  _issue_comment_1_0_created as unknown as IssueCommentCreatedEvent;
 export const pull_request_2_0_opened =
   _pull_request_2_0_opened as unknown as PullRequestOpenedEvent;
 export const pull_request_2_3_closed =

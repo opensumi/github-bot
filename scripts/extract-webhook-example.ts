@@ -116,6 +116,19 @@ for (const webhook of WEBHOOKS) {
       );
     });
   }
+  if (webhook.name === 'issue_comment') {
+    const issue_comment = webhook as WebhookDefinition<'issue_comment'>;
+    issue_comment.examples.forEach((v, i) => {
+      if (i > 0) {
+        return;
+      }
+      writeFile(
+        `issue_comment_${v.issue.number}_${i}_${v.action}`,
+        'issue_comment_' + v.action,
+        v,
+      );
+    });
+  }
 }
 
 const tsContent = `
