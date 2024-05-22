@@ -4,9 +4,10 @@ export class MockMessage<T> implements Message<T> {
   id = String(mockMessageId++);
   timestamp = new Date();
   constructor(public body: T) {}
+  attempts = 0;
 
   retry(): void {
-    // throw new Error('Method not implemented.');
+    this.attempts += 1;
   }
   ack(): void {
     // throw new Error('Method not implemented.');

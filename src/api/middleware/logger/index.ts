@@ -1,8 +1,6 @@
 import type { MiddlewareHandler } from 'hono';
 import { getPath } from 'hono/utils/url';
 
-import Environment from '@/env';
-
 enum LogPrefix {
   Incoming = '-->',
   Outgoing = '<--',
@@ -68,45 +66,10 @@ export const logger = (
   fn: PrintFunc = console.log,
 ): MiddlewareHandler<THonoEnvironment> => {
   return async (c, next) => {
-    const { method, raw } = c.req;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { method } = c.req;
     const path = getPath(c.req.raw);
 
-    if (raw.cf) {
-      try {
-        Environment.instance().metrics?.writeDataPoint({
-          blobs: [
-            (raw.cf as any).colo,
-            (raw.cf as any).country,
-            (raw.cf as any).city!,
-            (raw.cf as any).region!,
-            (raw.cf as any).timezone!,
-          ],
-          doubles: [
-            (raw.cf as any).metroCode as any,
-            (raw.cf as any).longitude as any,
-            (raw.cf as any).latitude,
-          ],
-          indexes: [(raw.cf as any).postalCode as any],
-        });
-      } catch (error) {
-        console.log(`🚀 ~ file: index.ts:92 ~ return ~ error:`, error);
-      }
-    }
-
     log(fn, LogPrefix.Incoming, method, path);
-
-    logMessage(
-      fn,
-      LogPrefix.Incoming,
-      'headers',
-      JSON.stringify(
-        Array.from(raw.headers.entries()).reduce((acc, [k, v]) => {
-          acc[k] = v;
-          return acc;
-        }, {} as Record<any, any>),
-      ),
-    );
 
     const start = Date.now();
 

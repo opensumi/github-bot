@@ -425,10 +425,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cloudflare/workers-types@npm:^4.20230228.0":
-  version: 4.20240129.0
-  resolution: "@cloudflare/workers-types@npm:4.20240129.0"
-  checksum: e2f0394c58978aa8ca476b2c6e91a8c9bd4297de0c12ebb3084a31b112b28637fe193d7ec2cfa57912a79feaf31fb87eb82c4b0eda03fb7d6d3f3c23c1f3b2da
+"@cloudflare/workers-types@npm:^4.20240512.0":
+  version: 4.20240512.0
+  resolution: "@cloudflare/workers-types@npm:4.20240512.0"
+  checksum: 4a8671a7884c75a305b064c34470e7fb09ab2c967a9388be6bc046030d6ad4e46a2ca9e92288c2eb6d49624e357683f0e1f4bd0d2de1f540a9964635faf87a3b
   languageName: node
   linkType: hard
 
@@ -5620,7 +5620,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "github-bot@workspace:."
   dependencies:
-    "@cloudflare/workers-types": ^4.20230228.0
+    "@cloudflare/workers-types": ^4.20240512.0
     "@hono/node-server": ^1.11.1
     "@octokit/app": ^14.0.0
     "@octokit/core": ^5.0.0
