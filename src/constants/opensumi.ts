@@ -4,6 +4,13 @@ export namespace CoreRepo {
 
 export const VERSION_SYNC_KEYWORD = 'versionInfo';
 
+export const kBackportKeyword = 'backport';
+
+export type RepoInfo = {
+  owner: string;
+  repo: string;
+};
+
 export namespace ActionsRepo {
   const info = {
     owner: 'opensumi',
@@ -12,7 +19,6 @@ export namespace ActionsRepo {
 
   export const PR_NEXT_RELEASE_FILE = 'release-next.yml';
   export const PR_NEXT_WORKFLOW = {
-    ...info,
     workflow_id: PR_NEXT_RELEASE_FILE,
     ref: 'main',
   };

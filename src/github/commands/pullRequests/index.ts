@@ -1,9 +1,12 @@
-import { ActionsRepo, getActionsUrl } from '@/constants/opensumi';
+import {
+  ActionsRepo,
+  getActionsUrl,
+  kBackportKeyword,
+} from '@/constants/opensumi';
+import { StopError } from '@opensumi/bot-commander';
 import { removeCommandPrefix } from '@opensumi/bot-commander/lib/utils';
 
 import { GitHubCommandCenter } from '../types';
-
-const kBackportKeyword = 'backport';
 
 export function extractTargetBranchNameFromCommand(str: string) {
   const text = removeCommandPrefix(str, kBackportKeyword);
@@ -21,14 +24,24 @@ export function extractTargetBranchNameFromCommand(str: string) {
   return;
 }
 
+const allowedRepo = new Set<string>(['opensumi/core']);
+
+function constrainRepo(fullname: string) {
+  if (!allowedRepo.has(fullname)) {
+    throw new StopError('This command is not allowed in this repository');
+  }
+}
+
 export function registerPullRequestCommand(it: GitHubCommandCenter) {
   // backport to v2.23
   it.on(
     kBackportKeyword,
     async (ctx) => {
       const { app, payload } = ctx;
+      constrainRepo(payload.repository.full_name);
 
       const { issue } = payload;
+
       const pull_request = issue.pull_request;
       if (!pull_request) {
         // only handle pull request
@@ -90,6 +103,8 @@ Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
     const owner = payload.repository.owner.login;
     const repo = payload.repository.name;
 
+    constrainRepo(payload.repository.full_name);
+
     const user = payload.sender.login;
     let userHaveWritePerm = await app.octoService.checkRepoWritePermission(
       owner,
@@ -121,8 +136,8 @@ Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
     }
 
     const result = await app.octoService.getPrByNumber(
-      payload.repository.owner.login,
-      payload.repository.name,
+      owner,
+      repo,
       issue.number,
     );
     if (!result) {
@@ -134,6 +149,8 @@ Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
     }
 
     await app.opensumiOctoService.prNextRelease({
+      owner,
+      repo,
       pull_number: issue.number,
     });
     await app.createReactionForIssueComment(ctx, 'eyes');

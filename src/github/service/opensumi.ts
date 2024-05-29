@@ -1,4 +1,4 @@
-import { ActionsRepo } from '@/constants/opensumi';
+import { ActionsRepo, RepoInfo } from '@/constants/opensumi';
 import { GitHubService } from '@opensumi/octo-service';
 
 import { firstLine } from '../renderer/line';
@@ -107,9 +107,15 @@ export class OpenSumiOctoService extends GitHubService {
     return workflow;
   }
 
-  async prNextRelease({ pull_number }: { pull_number: number }) {
+  async prNextRelease({
+    pull_number,
+    owner,
+    repo,
+  }: { pull_number: number } & RepoInfo) {
     const workflow = await this.octo.actions.createWorkflowDispatch({
       ...ActionsRepo.PR_NEXT_WORKFLOW,
+      owner,
+      repo,
       inputs: {
         pull_number: pull_number.toString(),
       },
