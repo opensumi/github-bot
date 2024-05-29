@@ -2079,11 +2079,11 @@ __metadata:
   linkType: hard
 
 "@octokit/webhooks-examples@npm:^7.3.0":
-  version: 7.3.0
-  resolution: "@octokit/webhooks-examples@npm:7.3.0"
+  version: 7.5.1
+  resolution: "@octokit/webhooks-examples@npm:7.5.1"
   dependencies:
     "@octokit/webhooks-types": ^7.0.0
-  checksum: d5c5f5dc795fe61962f18d49dc4b98083211d96d57a569497f9813f18120ef54ae4e033430d68da02900b542b689068860396cf5e1327a7eb7722c4408614176
+  checksum: d834228d5d24dfceb53b71eb2fa8fae36336c7649f3e52189392fe812be824439bdae5001fb64bd4e59c9f3a11cf60d29917b7cdc3f3fd9f389607d861707584
   languageName: node
   linkType: hard
 
