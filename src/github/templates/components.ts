@@ -9,8 +9,7 @@ export function RepositoryLink(repository: { name: string; html_url: string }) {
 }
 
 function escapeUsername(text: string) {
-  // 替换 [ 为 \[
-  return text.replace(/\[/g, '\\[');
+  return text.replace(/\[/g, '\\[').replace(/\]/g, '\\]');
 }
 
 export function SenderLink(sender: { login: string; html_url: string }) {
