@@ -107,15 +107,9 @@ export class OpenSumiOctoService extends GitHubService {
     return workflow;
   }
 
-  async prNextRelease({
-    pull_number,
-    owner,
-    repo,
-  }: { pull_number: number } & RepoInfo) {
+  async prNextRelease({ pull_number }: { pull_number: number }) {
     const workflow = await this.octo.actions.createWorkflowDispatch({
       ...ActionsRepo.PR_NEXT_WORKFLOW,
-      owner,
-      repo,
       inputs: {
         pull_number: pull_number.toString(),
       },

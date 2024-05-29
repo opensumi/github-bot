@@ -149,8 +149,6 @@ Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
     }
 
     await app.opensumiOctoService.prNextRelease({
-      owner,
-      repo,
       pull_number: issue.number,
     });
     await app.createReactionForIssueComment(ctx, 'eyes');

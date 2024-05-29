@@ -19,6 +19,7 @@ export namespace ActionsRepo {
 
   export const PR_NEXT_RELEASE_FILE = 'release-next.yml';
   export const PR_NEXT_WORKFLOW = {
+    ...info,
     workflow_id: PR_NEXT_RELEASE_FILE,
     ref: 'main',
   };
