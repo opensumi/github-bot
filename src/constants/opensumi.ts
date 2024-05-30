@@ -51,6 +51,20 @@ export namespace ActionsRepo {
     workflow_id: MONTHLY_REPORT_FILE,
     ref: 'main',
   };
+
+  export const SYNC_FILE = 'sync.yml';
+  export const SYNC_WORKFLOW = {
+    ...info,
+    workflow_id: SYNC_FILE,
+    ref: 'main',
+  };
+
+  export const SYNC_CODEBLITZ_FILE = 'codeblitz-sync.yml';
+  export const SYNC_CODEBLITZ_WORKFLOW = {
+    ...info,
+    workflow_id: SYNC_CODEBLITZ_FILE,
+    ref: 'main',
+  };
 }
 
 export function getActionsUrl({

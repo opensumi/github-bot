@@ -3,7 +3,7 @@ import { Octokit } from '@octokit/rest';
 import { HandlerFunction } from '@octokit/webhooks/dist-types/types';
 
 import { PrivilegeEvent } from '@/constants';
-import { VERSION_SYNC_KEYWORD } from '@/constants/opensumi';
+import { ActionsRepo, VERSION_SYNC_KEYWORD } from '@/constants/opensumi';
 import Environment from '@/env';
 import { AppSetting } from '@/kv/types';
 import { GitHubService } from '@opensumi/octo-service';
@@ -51,13 +51,30 @@ export class App {
     );
   }
 
-  handleSyncVersion = async (data: string) => {
+  handleSyncVersion = async (fullname: string, data: string) => {
     const [tag, version] = data.split(' | ');
-    await this.opensumiOctoService.syncVersion(version);
+
+    let file = '';
+    let name = '';
+    switch (fullname) {
+      case 'opensumi/core':
+        file = ActionsRepo.SYNC_FILE;
+        name = 'opensumi';
+        await this.opensumiOctoService.syncVersion(version);
+        break;
+      case 'opensumi/codeblitz':
+        file = ActionsRepo.SYNC_CODEBLITZ_FILE;
+        name = 'codeblitz';
+        await this.opensumiOctoService.syncCodeblitzVersion(version);
+        break;
+      default:
+        throw new Error('unknown repo');
+    }
+
     await sendToDing(
       {
         title: 'Starts Synchronizing',
-        text: `${tag} has published. [starts synchronizing packages@${version} to npmmirror](https://github.com/opensumi/actions/actions/workflows/sync.yml)`,
+        text: `[${fullname}] ${tag} has published. [starts synchronizing ${name} packages@${version} to npmmirror](https://github.com/opensumi/actions/actions/workflows/${file})`,
       },
       PrivilegeEvent,
       this.ctx.setting,
@@ -77,7 +94,8 @@ export class App {
       }
     >
   >[0]) => {
-    const { comment } = payload;
+    const { comment, repository } = payload;
+    const fullname = repository.full_name;
 
     await issueCc.tryHandle(
       comment.body,
@@ -97,7 +115,7 @@ export class App {
     const commands = parseCommandInMarkdownComments(comment.body);
     if (commands) {
       if (commands[VERSION_SYNC_KEYWORD]) {
-        await this.handleSyncVersion(commands[VERSION_SYNC_KEYWORD]);
+        await this.handleSyncVersion(fullname, commands[VERSION_SYNC_KEYWORD]);
       }
     }
   };

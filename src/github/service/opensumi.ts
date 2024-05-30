@@ -80,11 +80,38 @@ export class OpenSumiOctoService extends GitHubService {
     if (version) {
       inputs.version = version;
     }
+
+    const _workflow = {
+      ...ActionsRepo.SYNC_WORKFLOW,
+    };
+
+    if (workflowRef) {
+      _workflow.ref = workflowRef;
+    }
+
     const workflow = await this.octo.actions.createWorkflowDispatch({
-      owner: 'opensumi',
-      repo: 'actions',
-      workflow_id: 'sync.yml',
-      ref: workflowRef,
+      ..._workflow,
+      inputs,
+    });
+    return workflow;
+  }
+
+  async syncCodeblitzVersion(version?: string, workflowRef = 'main') {
+    const inputs = {} as Record<string, any>;
+    if (version) {
+      inputs.version = version;
+    }
+
+    const _workflow = {
+      ...ActionsRepo.SYNC_CODEBLITZ_WORKFLOW,
+    };
+
+    if (workflowRef) {
+      _workflow.ref = workflowRef;
+    }
+
+    const workflow = await this.octo.actions.createWorkflowDispatch({
+      ..._workflow,
       inputs,
     });
     return workflow;
