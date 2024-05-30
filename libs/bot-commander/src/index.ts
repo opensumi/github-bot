@@ -188,29 +188,27 @@ export class CommandCenter<C extends Record<string, any>> {
         }, timeoutNumber);
       }
 
-      p.then(() => {
-        timeoutToClear && clearTimeout(timeoutToClear);
-      }).catch(async (error) => {
-        if (isPromiseCanceledError(error)) {
-          await this.replyText(c, `executing [${str}] timeout`);
-          return;
-        }
+      await p
+        .then(() => {
+          timeoutToClear && clearTimeout(timeoutToClear);
+        })
+        .catch(async (error) => {
+          if (isPromiseCanceledError(error)) {
+            await this.replyText(c, `executing [${str}] timeout`);
+            return;
+          }
+          if (error instanceof StopError) {
+            console.log('stop executing handler, reason:', error.message);
+            return;
+          }
 
-        await this.replyText(
-          c,
-          `error when executing [${str}]: ${(error as Error).message}`,
-        );
-      });
+          await this.replyText(
+            c,
+            `error when executing [${str}]: ${(error as Error).message}`,
+          );
 
-      try {
-        await p;
-      } catch (error) {
-        if (error instanceof StopError) {
-          console.log('stop executing handler, reason:', error.message);
-          return;
-        }
-        throw error;
-      }
+          throw error;
+        });
     } else {
       console.log('no handler found for', str);
     }
