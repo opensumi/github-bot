@@ -24,9 +24,11 @@ export function extractTargetBranchNameFromCommand(str: string) {
   return;
 }
 
-const allowedRepo = new Set<string>(['opensumi/core']);
+const backportAllowedRepo = new Set<string>(['opensumi/core']);
 
-function constrainRepo(fullname: string) {
+const allowedRepo = new Set<string>(['opensumi/core', 'opensumi/codeblitz']);
+
+function constraintRepo(fullname: string, allowedRepo: Set<string>) {
   if (!allowedRepo.has(fullname)) {
     throw new StopError('This command is not allowed in this repository');
   }
@@ -38,7 +40,7 @@ export function registerPullRequestCommand(it: GitHubCommandCenter) {
     kBackportKeyword,
     async (ctx) => {
       const { app, payload } = ctx;
-      constrainRepo(payload.repository.full_name);
+      constraintRepo(payload.repository.full_name, backportAllowedRepo);
 
       const { issue } = payload;
 
@@ -102,8 +104,8 @@ Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
     const { app, payload } = ctx;
     const owner = payload.repository.owner.login;
     const repo = payload.repository.name;
-
-    constrainRepo(payload.repository.full_name);
+    const fullname = payload.repository.full_name;
+    constraintRepo(fullname, allowedRepo);
 
     const user = payload.sender.login;
     let userHaveWritePerm = await app.octoService.checkRepoWritePermission(
@@ -150,6 +152,7 @@ Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
 
     await app.opensumiOctoService.prNextRelease({
       pull_number: issue.number,
+      fullname,
     });
     await app.createReactionForIssueComment(ctx, 'eyes');
   });

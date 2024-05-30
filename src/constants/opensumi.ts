@@ -24,6 +24,13 @@ export namespace ActionsRepo {
     ref: 'main',
   };
 
+  export const CODEBLITZ_PR_NEXT_RELEASE_FILE = 'codeblitz-release-next.yml';
+  export const CODEBLITZ_PR_NEXT_WORKFLOW = {
+    ...info,
+    workflow_id: CODEBLITZ_PR_NEXT_RELEASE_FILE,
+    ref: 'main',
+  };
+
   export const RELEASE_NEXT_BY_REF = 'release-next-by-ref.yml';
   export const RELEASE_NEXT_BY_REF_WORKFLOW = {
     ...info,
