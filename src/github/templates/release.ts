@@ -9,7 +9,6 @@ export async function handleRelease(
   payload: ExtractPayload<'release'>,
   ctx: Context,
 ): Promise<TemplateRenderResult> {
-  const action = payload.action;
   const release = payload.release;
 
   const builder = new StringBuilder();
@@ -33,13 +32,12 @@ export async function handleRelease(
     {
       payload,
       event: release.name,
-      action,
-      title: `{{ sender | link }} ${action} {{ release | link }}`,
+      title: `{{ sender | link }} {{action}} {{ release | link }}`,
       body: replaceGitHubUrlToMarkdown(builder.render(payload), {
         owner: payload.repository.owner.login,
         repo: payload.repository.name,
       }),
-      notCapitalizeTitle: true,
+      doNotCapitalizeTitle: true,
     },
     ctx,
   );

@@ -4,6 +4,7 @@ exports[`github templates pr or issue can handle issue 1`] = `
 {
   "compactText": undefined,
   "text": "#### [bytemain](https://github.com/bytemain) opened [issue](https://github.com/opensumi/core/issues/2960)  
+
 #### [#2960 [BUG]  Problem 面板闪烁](https://github.com/opensumi/core/issues/2960)
 > Assignees: [bytemain](https://github.com/bytemain)  
 
@@ -22,6 +23,7 @@ exports[`github templates pr or issue can handle pull_request_13_opened 1`] = `
 {
   "compactText": undefined,
   "text": "#### [Codertocat](https://github.com/Codertocat) opened [pull request](https://github.com/Codertocat/Hello-World/pull/2)  
+
 #### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)
 > master <- changes  
 > Requested reviewers: [octocat](http://github.com/octocat)  
@@ -34,6 +36,7 @@ exports[`github templates pr or issue can handle pull_request_closed 1`] = `
 {
   "compactText": undefined,
   "text": "#### [Codertocat](https://github.com/Codertocat) closed [pull request](https://github.com/Codertocat/Hello-World/pull/2)  
+
 #### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)
 > Requested reviewers: [octocat](http://github.com/octocat)  
 > Assignees: [Codertocat](https://github.com/Codertocat)  ",
@@ -45,6 +48,7 @@ exports[`github templates pr or issue can handle pull_request_edit wip 1`] = `
 {
   "compactText": undefined,
   "text": "#### [bytemain](https://github.com/bytemain) edited [pull request](https://github.com/opensumi/core/pull/1235)  
+
 #### [~~#1235 ci: add codeql-analysis.yml~~](https://github.com/opensumi/core/pull/1235)
 #### [#1235 wip: ci: add codeql-analysis.yml](https://github.com/opensumi/core/pull/1235)
 > main <- bytemain-patch-2  ",
@@ -56,6 +60,7 @@ exports[`github templates pr or issue can handle pull_request_edited_base 1`] = 
 {
   "compactText": undefined,
   "text": "#### [bytemain](https://github.com/bytemain) edited [pull request](https://github.com/opensumi/core/pull/1235)  
+
 #### [#1235 wip: ci: add codeql-analysis.yml](https://github.com/opensumi/core/pull/1235)
 > alipay/v2.18 <- bytemain-patch-2  
 > changed the base branch from \`main\` to \`alipay/v2.18\`  ",
@@ -67,6 +72,7 @@ exports[`github templates pr or issue can handle pull_request_opened 1`] = `
 {
   "compactText": undefined,
   "text": "#### [Codertocat](https://github.com/Codertocat) opened [pull request](https://github.com/Codertocat/Hello-World/pull/2)  
+
 #### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)
 > master <- changes  
 

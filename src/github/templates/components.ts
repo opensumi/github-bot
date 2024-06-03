@@ -196,11 +196,13 @@ export type TextTplInput = {
   event: string;
   action?: string;
   contentLimit?: number;
-  notCapitalizeTitle?: boolean;
+  doNotCapitalizeTitle?: boolean;
   doNotRenderBody?: boolean;
   autoRef?: boolean;
 
+  allowUsers?: Set<string>;
   blockUsers?: Set<string>;
+  allowActions?: Set<string>;
   blockActions?: Set<string>;
 };
 
@@ -235,11 +237,13 @@ export const Template: TextTpl = (data, ctx) => {
     compactTitle,
     target,
     body,
-    notCapitalizeTitle,
+    doNotCapitalizeTitle,
     autoRef,
     contentLimit = -1,
-    blockActions,
     event,
+    allowActions,
+    blockActions,
+    allowUsers,
     blockUsers,
   } = data;
   const action = data.action ?? payload.action;
@@ -248,9 +252,21 @@ export const Template: TextTpl = (data, ctx) => {
     throw new Error('action is required for event ' + event);
   }
 
+  if (allowActions && !allowActions.has(action)) {
+    throw new StopHandleError(
+      `skip event ${event} action ${action} because it is not in allowActions`,
+    );
+  }
+
   if (blockActions && blockActions.has(action)) {
     throw new StopHandleError(
       `skip event ${event} action ${action} because it is in blockActions`,
+    );
+  }
+
+  if (allowUsers && payload.sender && !allowUsers.has(payload.sender.login)) {
+    throw new StopHandleError(
+      `skip event ${event} action ${action} because it is not in allowUsers`,
     );
   }
 
@@ -276,6 +292,7 @@ export const Template: TextTpl = (data, ctx) => {
   }
 
   if (target) {
+    textBuilder.addLine();
     textBuilder.add(target);
     // compact text do not need target
   }
@@ -299,7 +316,9 @@ export const Template: TextTpl = (data, ctx) => {
     compactTextBuilder && compactTextBuilder.add(refText);
   }
 
-  let titleText = `${notCapitalizeTitle ? event : capitalize(event)} ${action}`;
+  let titleText = `${
+    doNotCapitalizeTitle ? event : capitalize(event)
+  } ${action}`;
   if (!ctx?.setting?.notDisplayRepoName) {
     titleText = `[{{repository.name}}] ${titleText}`;
   }

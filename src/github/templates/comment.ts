@@ -74,17 +74,15 @@ function renderComment(
 ): TemplateRenderResult {
   const comment = payload.comment;
   const location = NameBlock[name];
-  const action = payload.action;
 
   return Template(
     {
       payload,
-      action,
       event: `${location} comment`,
       target: IssuesTitleLink(data),
-      title: `{{sender | link:sender}} ${action} [comment](${comment.html_url}) on [${location}](${data.html_url})`,
+      title: `{{sender | link:sender}} {{action}} [comment](${comment.html_url}) on [${location}](${data.html_url})`,
       body: CommentBody(payload.comment),
-      compactTitle: `{{sender | link:sender}} ${action} [comment](${data.html_url}):  \n`,
+      compactTitle: `{{sender | link:sender}} {{action}} [comment](${data.html_url}):  \n`,
       blockUsers: new Set<string>(['railway-app[bot]', 'ant-codespaces[bot]']),
       blockActions: new Set(['edited']),
     },
@@ -170,24 +168,17 @@ export async function handleReviewComment(
   payload: ExtractPayload<'pull_request_review_comment'>,
   ctx: Context,
 ): Promise<TemplateRenderResult> {
-  const { action } = payload;
   const comment = payload.comment;
-
-  const pr = payload.pull_request;
-
-  if (!allowedReviewCommentAction.has(action)) {
-    throw new StopHandleError(`not support action ${action}`);
-  }
 
   return Template(
     {
       payload,
       event: 'review comment',
-      action,
       target: '#### {{pull_request|link}}',
-      title: `{{sender | link:sender}} ${action} [review comment](${comment.html_url}) on [pull request](${pr.html_url})`,
+      title: `{{sender | link:sender}} {{action}} [review comment](${comment.html_url}) on [pull request]({{pull_request.html_url}})`,
       body: CommentBody(payload.comment),
-      compactTitle: `{{sender | link}} ${action} [review comment](${comment.html_url}):  \n`,
+      compactTitle: `{{sender | link}} {{action}} [review comment](${comment.html_url}):  \n`,
+      allowActions: allowedReviewCommentAction,
     },
     ctx,
   );
