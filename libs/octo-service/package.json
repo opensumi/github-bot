@@ -29,9 +29,6 @@
   "dependencies": {
     "dayjs": "^1.11.9"
   },
-  "devDependencies": {
-    "typescript": "^5.2.2"
-  },
   "peerDependencies": {
     "@octokit/rest": "^19.0.7"
   }
