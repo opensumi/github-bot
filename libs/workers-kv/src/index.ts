@@ -1,10 +1,4 @@
-import kyDefault from 'ky';
-
 import { getAuthHeaders } from './utils';
-
-const ky = kyDefault.extend({
-  throwHttpErrors: false,
-});
 
 export class WorkersKV {
   headers: Record<string, string>;
@@ -16,9 +10,15 @@ export class WorkersKV {
     this.headers = getAuthHeaders(undefined, undefined, cfAuthToken);
   }
 
-  getUrl(key: string) {
+  getUrl(key: string, searchParams?: Record<string, string>) {
     const encoded = encodeURIComponent(key);
-    return `https://api.cloudflare.com/client/v4/accounts/${this.accountId}/storage/kv/namespaces/${this.namespaceId}/values/${encoded}`;
+    let url = `https://api.cloudflare.com/client/v4/accounts/${this.accountId}/storage/kv/namespaces/${this.namespaceId}/values/${encoded}`;
+
+    if (searchParams) {
+      const search = new URLSearchParams(searchParams);
+      url += `?${search.toString()}`;
+    }
+    return url;
   }
 
   put = async (
@@ -29,25 +29,26 @@ export class WorkersKV {
       expiration_ttl?: any;
     },
   ) => {
-    const url = this.getUrl(key);
+    const url = this.getUrl(key, options);
 
-    return await ky.put(url, {
+    return await fetch(url, {
       headers: this.headers,
-      searchParams: options,
+      method: 'PUT',
       body: value,
     });
   };
 
   async get(key: string) {
     const url = this.getUrl(key);
-    return await ky.get(url, {
+    return await fetch(url, {
       headers: this.headers,
     });
   }
 
   async delete(key: string) {
     const url = this.getUrl(key);
-    return await ky.delete(url, {
+    return await fetch(url, {
+      method: 'DELETE',
       headers: this.headers,
     });
   }

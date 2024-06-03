@@ -1,5 +1,4 @@
 import { IDingInfo } from '@/kv/types';
-import { StringBuilder } from '@/utils/string-builder';
 import { code } from '@opensumi/dingtalk-bot/lib/types';
 
 import { IMCommandCenter } from './types';

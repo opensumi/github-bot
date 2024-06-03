@@ -3,6 +3,23 @@
   "version": "1.1.0",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./lib/*": "./src/*.ts"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org",
+    "exports": {
+      ".": {
+        "types": "./lib/index.d.ts",
+        "import": "./lib/index.js",
+        "require": "./lib/index.js",
+        "inner-src": "./src/index.ts"
+      },
+      "./lib/*": "./lib/*.js"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
@@ -12,9 +29,5 @@
   "dependencies": {
     "@opensumi/workers-utils": "workspace:^",
     "dingtalk-stream": "^2.1.4"
-  },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org"
   }
 }

@@ -3,6 +3,21 @@
   "version": "1.0.5",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org",
+    "exports": {
+      ".": {
+        "types": "./lib/index.d.ts",
+        "import": "./lib/index.js",
+        "require": "./lib/index.js",
+        "inner-src": "./src/index.ts"
+      }
+    }
+  },
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
@@ -12,9 +27,5 @@
   "dependencies": {
     "@opensumi/ide-utils": "^2.23.1",
     "mri": "^1.2.0"
-  },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org"
   }
 }

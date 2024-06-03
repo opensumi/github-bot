@@ -3,8 +3,7 @@ import {
   getActionsUrl,
   kBackportKeyword,
 } from '@/constants/opensumi';
-import { StopError } from '@opensumi/bot-commander';
-import { removeCommandPrefix } from '@opensumi/bot-commander/lib/utils';
+import { removeCommandPrefix, StopError } from '@opensumi/bot-commander';
 
 import { GitHubCommandCenter } from '../types';
 

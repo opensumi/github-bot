@@ -241,3 +241,5 @@ export class StopError extends Error {
     super(message);
   }
 }
+
+export * from './utils';

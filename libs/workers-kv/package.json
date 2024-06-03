@@ -3,6 +3,22 @@
   "version": "1.0.4",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./lib/*": "./src/*.ts"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org",
+    "exports": {
+      ".": {
+        "types": "./lib/index.d.ts",
+        "import": "./lib/index.js",
+        "require": "./lib/index.js",
+        "inner-src": "./src/index.ts"
+      }
+    }
+  },
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
@@ -11,9 +27,5 @@
   },
   "devDependencies": {
     "dotenv": "^16.3.1"
-  },
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org"
   }
 }

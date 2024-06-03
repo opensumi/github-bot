@@ -1,7 +1,7 @@
 import { Session } from '@/im/bot';
 import { DingBotAdapter } from '@/im/ding/bot';
 import { DingKVManager } from '@/kv/ding';
-import { verifyMessage } from '@opensumi/dingtalk-bot/lib';
+import { verifyMessage } from '@opensumi/dingtalk-bot';
 
 export function route(hono: THono) {
   hono.post('/ding/:id', async (c) => {
