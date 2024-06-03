@@ -22,18 +22,18 @@ jobs:
     environment: ${{ github.event.inputs.environment }}
     name: Deploy
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js 16
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '20.x'
       - name: Build & Test
         run: |
           yarn
           yarn run build
           yarn run test
       - name: Publish
-        uses: cloudflare/wrangler-action@2.0.0
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           preCommands: yarn build
