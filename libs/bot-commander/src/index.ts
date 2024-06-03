@@ -206,8 +206,6 @@ export class CommandCenter<C extends Record<string, any>> {
             c,
             `error when executing [${str}]: ${(error as Error).message}`,
           );
-
-          throw error;
         });
     } else {
       console.log('no handler found for', str);

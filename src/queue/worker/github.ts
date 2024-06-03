@@ -180,7 +180,9 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
               message.ack();
             } catch (error) {
               console.error('github app worker error', error);
-              message.retry();
+              message.retry({
+                delaySeconds: 1,
+              });
             }
           }),
         );
@@ -230,6 +232,8 @@ class EventComposite {
   toResult() {
     const { mainView, subView } = this;
 
+    const chunkSize = 10;
+
     const result = [] as IResult[];
 
     const separator = '\n\n***\n\n';
@@ -254,7 +258,7 @@ class EventComposite {
 
     if (mainView) {
       if (subView.length > 0) {
-        chunk(subView, 5).forEach((subViews) => {
+        chunk(subView, chunkSize).forEach((subViews) => {
           constructView(mainView, subViews);
         });
       } else {
@@ -265,7 +269,7 @@ class EventComposite {
       if (subView.length === 1) {
         result.push(subView[0]);
       } else {
-        chunk(subView, 5).forEach((subViews) => {
+        chunk(subView, chunkSize).forEach((subViews) => {
           const mainView = subViews.shift() as IResult;
           constructView(mainView, subViews);
         });
