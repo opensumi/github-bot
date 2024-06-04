@@ -38,5 +38,3 @@ jobs:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           preCommands: yarn build
           command: publish --env ${{ github.event.inputs.environment }}
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
