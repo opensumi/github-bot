@@ -2,6 +2,9 @@ import { Link, Text } from 'mdast-util-from-markdown/lib/index';
 
 import { makeMarkdown, parseMarkdown, walk } from './renderer/make-mark';
 
+export const COMMENTS_START = '<!--';
+export const COMMENTS_END = '-->';
+
 interface ReplaceOptions {
   owner: string;
   repo: string;
@@ -76,29 +79,31 @@ export function replaceGitHubUrlToMarkdown(
     }
   });
 
-  text = makeMarkdown(tree);
-
-  return text;
+  return makeMarkdown(tree);
 }
 
 export function replaceGitHubText(text: string) {
-  if (!text.includes('<img')) {
-    return text;
+  // html 语法转为 markdown 语法
+  if (text.includes('<img')) {
+    let tmp = text;
+    let regexResult: RegExpExecArray | null = null;
+    do {
+      // https://stackoverflow.com/questions/1028362/how-do-i-extract-html-img-sources-with-a-regular-expression
+      const imgRegex = /<img\s.*?src=(?:'|\")([^'\">]+)(?:'|\").*?\/?>/gm;
+      regexResult = imgRegex.exec(tmp);
+      if (regexResult) {
+        const newMsg = `![](${regexResult[1]})`;
+        tmp = tmp.replaceAll(regexResult[0], newMsg);
+      }
+    } while (regexResult);
+    return tmp;
   }
 
-  let tmp = text;
-  let regexResult: RegExpExecArray | null = null;
-  do {
-    // https://stackoverflow.com/questions/1028362/how-do-i-extract-html-img-sources-with-a-regular-expression
-    const imgRegex = /<img\s.*?src=(?:'|\")([^'\">]+)(?:'|\").*?\/?>/gm;
-    regexResult = imgRegex.exec(tmp);
-    if (regexResult) {
-      const newMsg = `![](${regexResult[1]})`;
-      tmp = tmp.replaceAll(regexResult[0], newMsg);
-    }
-  } while (regexResult);
-
-  return tmp;
+  // 移除 markdown 注释
+  if (text.includes(COMMENTS_START)) {
+    return text.replace(/(<!--[\s\S]*?-->)/g, '');
+  }
+  return text;
 }
 
 function getUrl(str: string) {

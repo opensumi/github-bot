@@ -17,18 +17,18 @@ export class StringBuilder {
     }
   }
 
-  add(str: string, addExtraLine = false) {
-    addExtraLine && this.addLineIfNecessary();
+  add(str: string) {
     this.array.push(str);
-    addExtraLine && this.addLineIfNecessary();
   }
-  addDivider(prefix = '', addExtraLine = false) {
-    this.add(prefix + '***', addExtraLine);
+  addDivider() {
+    this.appendEmptyLine();
+    this.add('---');
+    this.appendEmptyLine();
   }
   /**
    * if there are content in the last line, then add a new line
    */
-  addLineIfNecessary() {
+  appendEmptyLine() {
     const data = this.array[this.array.length - 1];
     if (data) {
       this.array.push('');

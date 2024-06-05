@@ -5,12 +5,10 @@ exports[`release related can handle release event 1`] = `
   "compactText": undefined,
   "text": "#### [opensumi](https://github.com/opensumi) published [v0.0.0](https://github.com/opensumi/core/releases/tag/v0.0.0)  
 
-***
+---
 
 Tag: v0.0.0
 
-> <!-- Release notes generated using configuration in .github/release.yml at v2.21.2 -->
->
 > ## What's Changed
 >
 > * fix(snippets): register code snippets timing by @Aaaaash in [#1920](https://github.com/opensumi/core/pull/1920)
@@ -34,7 +32,7 @@ exports[`release related transform url correctly 1`] = `
   "compactText": undefined,
   "text": "#### [github](https://github.com/github) published [1.1.0](https://github.com/ant-design/ant-design-mini/releases/tag/1.1.0)  
 
-***
+---
 
 Tag: 1.1.0
 
@@ -44,7 +42,7 @@ Tag: 1.1.0
 >
 > * feat(Container): 无title、headerRight时隐藏header [\`#560\`](https://github.com/ant-design/ant-design-mini/pull/560)
 > * chore(formItem): 删除formItem无用代码 [\`#562\`](https://github.com/ant-design/ant-design-mini/pull/562)
-> * docs(collapse): 文档透出CollapseItem的disabled字段 [\`#561\`](https://github.com/ant-design/ant-design-mini/pull/561)<!-- Release notes generated using configuration in .github/release.yml at v2.21.2 -->
+> * docs(collapse): 文档透出CollapseItem的disabled字段 [\`#561\`](https://github.com/ant-design/ant-design-mini/pull/561)
 >
 > ## What's Changed
 >
@@ -69,12 +67,10 @@ exports[`release related will transform long url to short link 1`] = `
   "compactText": undefined,
   "text": "#### [opensumi](https://github.com/opensumi) published [v0.0.0](https://github.com/opensumi/core/releases/tag/v0.0.0)  
 
-***
+---
 
 Tag: v0.0.0
 
-> <!-- Release notes generated using configuration in .github/release.yml at v2.21.2 -->
->
 > ## What's Changed
 >
 > * fix(snippets): register code snippets timing by @Aaaaash in [#1920](https://github.com/opensumi/core/pull/1920)

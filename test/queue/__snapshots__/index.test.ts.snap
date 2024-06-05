@@ -9,7 +9,7 @@ exports[`queue can composite discussion 1`] = `
 
 #### [#90 Welcome to discussions!](https://github.com/octo-org/octo-repo/discussions/90)
 
-***
+---
 
 We're glad to have you here!
 
@@ -62,7 +62,7 @@ Maybe you should use more emojji on this line.",
 
 #### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)
 
-***
+---
 
 Maybe you should use more emojji on this line.",
       "title": "[Hello-World] Review comment created",

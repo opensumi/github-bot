@@ -303,7 +303,7 @@ export const Template: TextTpl = (data, ctx) => {
   }
 
   if (bodyText) {
-    textBuilder.addDivider('', true);
+    textBuilder.addDivider();
 
     if (contentLimit && contentLimit > 0) {
       bodyText = limitTextByPosition(bodyText, contentLimit);

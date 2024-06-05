@@ -142,13 +142,11 @@ export async function handleCommitComment(
     restText = splitted.slice(1).join('\n');
   }
 
-  const builder = new StringBuilder(`> #### [${title}]({{comment.html_url}})`);
+  const builder = new StringBuilder(`#### [${title}]({{comment.html_url}})`);
 
   if (restText) {
     builder.add(Reference(restText));
   }
-  builder.add(`>`);
-  builder.add('{{comment.body|ref}}');
 
   return Template(
     {
@@ -156,7 +154,8 @@ export async function handleCommitComment(
       event: 'commit comment',
       action: 'created',
       title: `{{sender | link}} {{action}} comment on [${commitRefInfo}]({{comment.html_url}})`,
-      body: builder.build(),
+      target: builder.build(),
+      body: '{{comment.body}}',
     },
     ctx,
   );

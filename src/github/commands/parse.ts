@@ -1,5 +1,4 @@
-const COMMENTS_START = '<!--';
-const COMMENTS_END = '-->';
+import { COMMENTS_END, COMMENTS_START } from '../gfm';
 
 const parsePayload = (body: string) => {
   const lines = body.split('\n');

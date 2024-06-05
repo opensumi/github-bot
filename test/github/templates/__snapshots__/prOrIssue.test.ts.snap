@@ -8,7 +8,7 @@ exports[`github templates pr or issue can handle issue 1`] = `
 #### [#2960 [BUG]  Problem 面板闪烁](https://github.com/opensumi/core/issues/2960)
 > Assignees: [bytemain](https://github.com/bytemain)  
 
-***
+---
 
 打开 settings.json，打开问题面板，操作的时候发现有闪烁现象。
 
@@ -76,7 +76,7 @@ exports[`github templates pr or issue can handle pull_request_opened 1`] = `
 #### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)
 > master <- changes  
 
-***
+---
 
 This is a pretty simple change that we need to pull into master.",
   "title": "Pull request#2 opened",

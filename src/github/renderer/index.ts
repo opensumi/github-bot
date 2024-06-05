@@ -3,7 +3,7 @@ import {
   PullRequestRefInfo,
 } from '@/github/templates/components';
 import { StringBuilder } from '@/utils/string-builder';
-import { IIssueDetail, IPrDetail } from '@opensumi/octo-service/src/types';
+import type { IIssueDetail, IPrDetail } from '@opensumi/octo-service/lib/types';
 
 export { render } from './template-engine';
 
@@ -17,7 +17,7 @@ export function renderPrOrIssue(data: IIssueDetail | IPrDetail) {
     builder.add(PullRequestRefInfo(data.pr));
   }
 
-  builder.addDivider(undefined, true);
+  builder.addDivider();
 
   if (data.type === 'pr') {
     builder.add(data.pr.body || '');

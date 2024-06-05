@@ -4,7 +4,7 @@ exports[`render can render issue 1`] = `
 {
   "text": "#### [#2045 [BUG] 插件 context.globalStoragePath 拿到的和 VSCode 不一样](https://github.com/opensumi/core/issues/2045)
 
-***
+---
 
 vscode 拿到的是有插件名称的子目录的：
 
@@ -32,7 +32,7 @@ exports[`render can render pr 1`] = `
   "text": "#### [#2060 fix: electron cannot work](https://github.com/opensumi/core/pull/2060)
 main <- chore/electron-rebuild  
 
-***
+---
 
 ### Types
 
