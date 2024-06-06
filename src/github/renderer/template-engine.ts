@@ -22,6 +22,8 @@ const defaultOperators = {
       case 'issue':
       case 'discussion':
         return IssuesLink(value);
+      case 'h4':
+        return `#### ${value}`;
     }
 
     return value;

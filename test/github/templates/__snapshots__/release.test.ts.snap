@@ -5,7 +5,7 @@ exports[`release related can handle release event 1`] = `
   "compactText": undefined,
   "text": "#### [opensumi](https://github.com/opensumi) published [v0.0.0](https://github.com/opensumi/core/releases/tag/v0.0.0)  
 
----
+***
 
 Tag: v0.0.0
 
@@ -22,7 +22,8 @@ Tag: v0.0.0
 > * chore(release): v2.20.12 by @erha19 in [#1938](https://github.com/opensumi/core/pull/1938)
 > * fix: make the search references clean up by @yantze in [#1923](https://github.com/opensumi/core/pull/1923)
 >
-> **Full Changelog**: [v2.21.1...v2.21.2](https://github.com/opensumi/core/compare/v2.21.1...v2.21.2)",
+> **Full Changelog**: [v2.21.1...v2.21.2](https://github.com/opensumi/core/compare/v2.21.1...v2.21.2)
+",
   "title": "v0.0.0 published",
 }
 `;
@@ -32,7 +33,7 @@ exports[`release related transform url correctly 1`] = `
   "compactText": undefined,
   "text": "#### [github](https://github.com/github) published [1.1.0](https://github.com/ant-design/ant-design-mini/releases/tag/1.1.0)  
 
----
+***
 
 Tag: 1.1.0
 
@@ -57,7 +58,8 @@ Tag: 1.1.0
 > * chore(release): v2.20.12 by @erha19 in [opensumi/core#1938](https://github.com/opensumi/core/pull/1938)
 > * fix: make the search references clean up by @yantze in [opensumi/core#1923](https://github.com/opensumi/core/pull/1923)
 >
-> **Full Changelog**: [opensumi/core:v2.21.1...v2.21.2](https://github.com/opensumi/core/compare/v2.21.1...v2.21.2) <https://github.com/opensumi/core/pull/test>",
+> **Full Changelog**: [opensumi/core:v2.21.1...v2.21.2](https://github.com/opensumi/core/compare/v2.21.1...v2.21.2) <https://github.com/opensumi/core/pull/test>
+",
   "title": "1.1.0 published",
 }
 `;
@@ -67,7 +69,7 @@ exports[`release related will transform long url to short link 1`] = `
   "compactText": undefined,
   "text": "#### [opensumi](https://github.com/opensumi) published [v0.0.0](https://github.com/opensumi/core/releases/tag/v0.0.0)  
 
----
+***
 
 Tag: v0.0.0
 
@@ -84,7 +86,8 @@ Tag: v0.0.0
 > * chore(release): v2.20.12 by @erha19 in [#1938](https://github.com/opensumi/core/pull/1938)
 > * fix: make the search references clean up by @yantze in [#1923](https://github.com/opensumi/core/pull/1923)
 >
-> **Full Changelog**: [v2.21.1...v2.21.2](https://github.com/opensumi/core/compare/v2.21.1...v2.21.2)",
+> **Full Changelog**: [v2.21.1...v2.21.2](https://github.com/opensumi/core/compare/v2.21.1...v2.21.2)
+",
   "title": "v0.0.0 published",
 }
 `;

@@ -2,6 +2,10 @@ import { replaceGitHubText } from '@/github/gfm';
 import { render } from '@/github/renderer';
 import { makeMarkdown, parseMarkdown, walk } from '@/github/renderer/make-mark';
 
+export interface IBuildOptions {
+  appendNewLineToTheEnd?: boolean;
+}
+
 export class StringBuilder {
   private array = [] as string[];
   constructor(...initial: string[]) {
@@ -21,31 +25,35 @@ export class StringBuilder {
     this.array.push(str);
   }
   addDivider() {
-    this.appendEmptyLine();
-    this.add('---');
-    this.appendEmptyLine();
+    this.appendNewLineToTheEnd();
+    this.add('***');
+    this.appendNewLineToTheEnd();
   }
   /**
    * if there are content in the last line, then add a new line
    */
-  appendEmptyLine() {
+  appendNewLineToTheEnd() {
     const data = this.array[this.array.length - 1];
     if (data) {
-      this.array.push('');
+      this.addLine();
     }
   }
   addLine() {
     this.array.push('');
   }
-  build() {
+  build(options?: IBuildOptions) {
+    if (options?.appendNewLineToTheEnd) {
+      this.appendNewLineToTheEnd();
+    }
+
     return replaceGitHubText(this.array.join('\n'));
   }
   toString() {
     return this.build();
   }
 
-  render(payload: any) {
-    return replaceGitHubText(render(this.build(), payload));
+  render(payload: any, options?: IBuildOptions) {
+    return replaceGitHubText(render(this.build(options), payload));
   }
 }
 

@@ -107,7 +107,7 @@ export function PullRequestRefInfo(data: {
   const head = data.head;
   const base = data.base;
   const headLabel = removeOrgInfo(base.user.login, head.label);
-  return `${base.ref} <- ${headLabel}  `;
+  return `${base.ref} <- ${headLabel}`;
 }
 
 export function AssigneesInfo(
@@ -293,7 +293,7 @@ export const Template: TextTpl = (data, ctx) => {
 
   if (target) {
     textBuilder.addLine();
-    textBuilder.add(target);
+    textBuilder.add(target + '  ');
     // compact text do not need target
   }
 
@@ -327,9 +327,13 @@ export const Template: TextTpl = (data, ctx) => {
 
   return {
     title: titleBuilder.render(payload),
-    text: textBuilder.render(payload),
+    text: textBuilder.render(payload, {
+      appendNewLineToTheEnd: true,
+    }),
     compactText: compactTextBuilder
-      ? compactTextBuilder.render(payload)
+      ? compactTextBuilder.render(payload, {
+          appendNewLineToTheEnd: true,
+        })
       : undefined,
   };
 };

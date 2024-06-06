@@ -5,7 +5,7 @@ exports[`github utils can handle pull_request_opened 1`] = `
 
 #### [#3628 fix(style): update menubar right style](https://github.com/opensumi/core/pull/3628)
 
-> main <- fix/menu-bar-right-style\\
+> main <- fix/menu-bar-right-style
 > Requested reviewers: [Ricbet](https://github.com/Ricbet)
 
 ---

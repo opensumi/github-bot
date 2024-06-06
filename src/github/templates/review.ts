@@ -51,7 +51,7 @@ export async function handleReview(
     {
       payload,
       event: 'review',
-      target: '#### {{pull_request|link}}',
+      target: '{{pull_request|link|h4}}',
       action: titleActionText,
       title: textFirstLine,
       body: '{{review.body}}',

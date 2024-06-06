@@ -7,17 +7,19 @@ exports[`queue can composite discussion 1`] = `
     "markdown": {
       "text": "#### [[octo-repo]](https://github.com/octo-org/octo-repo) [Codertocat](https://github.com/Codertocat) created [discussion](https://github.com/octo-org/octo-repo/discussions/90)  
 
-#### [#90 Welcome to discussions!](https://github.com/octo-org/octo-repo/discussions/90)
+#### [#90 Welcome to discussions!](https://github.com/octo-org/octo-repo/discussions/90)  
 
----
+***
 
 We're glad to have you here!
+
 
 ***
 
 [Codertocat](https://github.com/Codertocat) created [comment](https://github.com/octo-org/octo-repo/discussions/90):  
 
-I have so many questions to ask you!",
+I have so many questions to ask you!
+",
       "title": "[octo-repo] Discussion#90 created",
     },
   },
@@ -31,7 +33,8 @@ exports[`queue can composite pr review 1`] = `
     "markdown": {
       "text": "#### [[Hello-World]](https://github.com/Codertocat/Hello-World) [Codertocat](https://github.com/Codertocat) [requested changes](https://github.com/Codertocat/Hello-World/pull/2#pullrequestreview-237895671) on [pull request](https://github.com/Codertocat/Hello-World/pull/2)  
 
-#### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)
+#### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)  
+
 
 ***
 
@@ -39,11 +42,13 @@ exports[`queue can composite pr review 1`] = `
 
 Maybe you should use more emoji on this line.
 
+
 ***
 
 [Codertocat](https://github.com/Codertocat) created [review comment](https://github.com/Codertocat/Hello-World/pull/2#discussion_r284312630):  
 
-Maybe you should use more emojji on this line.",
+Maybe you should use more emojji on this line.
+",
       "title": "[Hello-World] Review requested changes",
     },
   },
@@ -57,14 +62,16 @@ exports[`queue can composite pr review comment single 1`] = `
     "markdown": {
       "compactText": "[Codertocat](https://github.com/Codertocat) created [review comment](https://github.com/Codertocat/Hello-World/pull/2#discussion_r284312630):  
 
-Maybe you should use more emojji on this line.",
+Maybe you should use more emojji on this line.
+",
       "text": "#### [[Hello-World]](https://github.com/Codertocat/Hello-World) [Codertocat](https://github.com/Codertocat) created [review comment](https://github.com/Codertocat/Hello-World/pull/2#discussion_r284312630) on [pull request](https://github.com/Codertocat/Hello-World/pull/2)  
 
-#### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)
+#### [#2 Update the README with new information.](https://github.com/Codertocat/Hello-World/pull/2)  
 
----
+***
 
-Maybe you should use more emojji on this line.",
+Maybe you should use more emojji on this line.
+",
       "title": "[Hello-World] Review comment created",
     },
   },
@@ -79,7 +86,8 @@ exports[`queue can composite pr review single 1`] = `
       "compactText": undefined,
       "text": "#### [[core]](https://github.com/opensumi/core) [bytemain](https://github.com/bytemain) [approved](https://github.com/opensumi/core/pull/3345#pullrequestreview-1892322711) [pull request](https://github.com/opensumi/core/pull/3345)  
 
-#### [#3345 feat: support SourceControl.historyProvider](https://github.com/opensumi/core/pull/3345)",
+#### [#3345 feat: support SourceControl.historyProvider](https://github.com/opensumi/core/pull/3345)  
+",
       "title": "[core] Review approved",
     },
   },
