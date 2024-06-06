@@ -201,6 +201,14 @@ export class CommandCenter<C extends Record<string, any>> {
             console.log('stop executing handler, reason:', error.message);
             return;
           }
+          if (error instanceof StopErrorWithReply) {
+            console.log(
+              'stop executing handler with reply, reason:',
+              error.message,
+            );
+            await this.replyText(c, error.message);
+            return;
+          }
 
           await this.replyText(
             c,
@@ -237,6 +245,15 @@ export class CommandCenter<C extends Record<string, any>> {
 }
 
 export class StopError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
+
+/**
+ * `StopErrorWithReply` is a special error that will be caught by the command center and reply the message to the user.
+ */
+export class StopErrorWithReply extends Error {
   constructor(message: string) {
     super(message);
   }

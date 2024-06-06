@@ -1,4 +1,4 @@
-import { StopError } from '@opensumi/bot-commander';
+import { StopError, StopErrorWithReply } from '@opensumi/bot-commander';
 
 import { IBotAdapter } from '../types';
 
@@ -12,10 +12,9 @@ export function hasApp<T>(
 
 export async function replyIfAppNotDefined(bot: IBotAdapter, ctx: Context) {
   if (!hasApp(ctx)) {
-    await bot.replyText(
+    throw new StopErrorWithReply(
       'current bot has not configured use GitHub App. Please contact admin.',
     );
-    throw new StopError('current bot has not configured use GitHub App');
   }
 }
 
@@ -25,10 +24,7 @@ export async function getGitHubUserFromDingtalkId(bot: IBotAdapter) {
     dingtalkId,
   );
   if (!githubId) {
-    await bot.replyText(
-      'it seem that you have not bind GitHub account, use `bind-github username` command to bind your GitHub account. e.g. `bind-github bytemain`',
-    );
-    throw new StopError(
+    throw new StopErrorWithReply(
       'it seem that you have not bind GitHub account, use `bind-github username` command to bind your GitHub account. e.g. `bind-github bytemain',
     );
   }

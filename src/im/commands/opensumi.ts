@@ -1,5 +1,6 @@
-import { CoreRepo } from '@/constants/opensumi';
+import { ActionsRepo, getActionsUrl } from '@/constants/opensumi';
 import { convertToDingMarkdown } from '@/github/dingtalk';
+import { StopError, StopErrorWithReply } from '@opensumi/bot-commander';
 
 import { IBotAdapter } from '../types';
 
@@ -23,17 +24,25 @@ async function repoIntercept(bot: IBotAdapter, ctx: Context, repo: string) {
 }
 
 export function registerOpenSumiCommand(it: IMCommandCenter) {
-  it.on('deploy', async ({ bot, ctx }) => {
+  const intercept = async (bot: IBotAdapter, ctx: Context) => {
     if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
-      return;
+      throw new StopError('command only works in opensumi repo');
     }
 
     await replyIfAppNotDefined(bot, ctx);
     if (!hasApp(ctx)) {
-      return;
+      throw new StopErrorWithReply(
+        'current bot has not configured use GitHub App',
+      );
     }
 
-    const { app } = ctx;
+    return hasApp(ctx);
+  };
+
+  it.on('deploy', async ({ bot, ctx }) => {
+    await intercept(bot, ctx);
+
+    const app = ctx.app!;
     let text = '';
     try {
       text =
@@ -59,21 +68,15 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
   });
 
   it.on('deploypre', async ({ bot, ctx }) => {
-    if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
-      return;
-    }
+    await intercept(bot, ctx);
 
-    await replyIfAppNotDefined(bot, ctx);
-    if (!hasApp(ctx)) {
-      return;
-    }
+    const app = ctx.app!;
     let workflowRef: string | undefined = undefined;
 
     if (ctx.parsed.raw['workflow-ref']) {
       workflowRef = ctx.parsed.raw['workflow-ref'];
     }
 
-    const { app } = ctx;
     let text = '';
     try {
       text =
@@ -95,80 +98,40 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
   });
 
   it.on('rc', async ({ bot, ctx }) => {
-    if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
-      return;
-    }
-
-    await replyIfAppNotDefined(bot, ctx);
-    if (!hasApp(ctx)) {
-      return;
-    }
+    await intercept(bot, ctx);
 
     await bot.replyText(
       '[rc 命令已经 deprecated, 请使用 nx 命令] 开始发布 next 版本',
     );
 
-    await publishNextVersion({ ctx, bot });
+    await publishNextVersion('nx', { ctx, bot }, 'core');
   });
 
   it.on('nx', async ({ bot, ctx }) => {
-    if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
-      return;
-    }
+    await intercept(bot, ctx);
+    await publishNextVersion('nx', { ctx, bot }, 'core');
+  });
 
-    await replyIfAppNotDefined(bot, ctx);
-    if (!hasApp(ctx)) {
-      return;
-    }
-
-    await publishNextVersion({ ctx, bot });
+  it.on('nx-cb', async ({ bot, ctx }) => {
+    await intercept(bot, ctx);
+    await publishNextVersion('nx-cb', { ctx, bot }, 'codeblitz');
   });
 
   it.on('sync', async ({ bot, ctx }) => {
-    if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
-      return;
-    }
-
-    await replyIfAppNotDefined(bot, ctx);
-    if (!hasApp(ctx)) {
-      return;
-    }
-
-    const { app } = ctx;
-
-    let version = ctx.parsed.raw.version;
-    let workflowRef: string | undefined = undefined;
-
-    if (!version) {
-      if (ctx.parsed['_'].length > 1) {
-        version = ctx.parsed['_'][1];
-      }
-      if (ctx.parsed.raw['workflow-ref']) {
-        workflowRef = ctx.parsed.raw['workflow-ref'];
-      }
-    }
-    try {
-      await app.opensumiOctoService.syncVersion(version, workflowRef);
-      await bot.reply(
-        convertToDingMarkdown(
-          'starts synchronizing packages',
-          `[starts synchronizing packages${
-            version ? `@${version}` : ''
-          } to npmmirror](https://github.com/opensumi/actions/actions/workflows/sync.yml)`,
-        ),
-      );
-    } catch (error) {
-      await bot.replyText(`执行出错：${(error as Error).message}`);
-    }
+    await intercept(bot, ctx);
+    await syncVersion({ ctx, bot }, 'core');
   });
+  it.on('sync-cb', async ({ bot, ctx }) => {
+    await intercept(bot, ctx);
+    await syncVersion({ ctx, bot }, 'codeblitz');
+  });
+
   it.on(
     'report',
     async ({ bot, ctx }) => {
-      await replyIfAppNotDefined(bot, ctx);
-      if (!hasApp(ctx)) {
-        return;
-      }
-      const { app } = ctx;
+      await intercept(bot, ctx);
+
+      const app = ctx.app!;
 
       const params = {} as { time?: string };
 
@@ -183,7 +146,11 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
   );
 }
 
-async function publishNextVersion({ ctx, bot }: IMCommandCenterContext) {
+async function publishNextVersion(
+  command: string,
+  { ctx, bot }: IMCommandCenterContext,
+  repo: 'core' | 'codeblitz',
+) {
   const app = ctx.app!;
 
   let ref = ctx.parsed.raw.ref;
@@ -202,7 +169,7 @@ async function publishNextVersion({ ctx, bot }: IMCommandCenterContext) {
   if (ref) {
     try {
       try {
-        await app.octoService.getRefInfoByRepo(ref, 'opensumi', 'core');
+        await app.octoService.getRefInfoByRepo(ref, 'opensumi', repo);
       } catch (error) {
         await bot.replyText(
           `找不到 ref: ${ref}, 错误信息: ${(error as Error).message}`,
@@ -210,21 +177,87 @@ async function publishNextVersion({ ctx, bot }: IMCommandCenterContext) {
       }
       const text = await app.opensumiOctoService.getLastNCommitsText({
         owner: 'opensumi',
-        repo: 'core',
+        repo: repo,
         ref,
       });
 
-      await app.opensumiOctoService.releaseNextVersion(ref, workflowRef);
+      const name = repo === 'core' ? 'OpenSumi' : 'CodeBlitz';
+      const workflowInfo =
+        repo === 'core'
+          ? ActionsRepo.RELEASE_NEXT_BY_REF_WORKFLOW
+          : ActionsRepo.CODEBLITZ_RELEASE_NEXT_BY_REF_WORKFLOW;
+
+      await app.opensumiOctoService.releaseNextVersion(
+        workflowInfo,
+        ref,
+        workflowRef,
+      );
       await bot.reply(
         convertToDingMarkdown(
-          'Starts releasing the next version',
-          `Starts releasing the [next version](https://github.com/opensumi/core/actions/workflows/${CoreRepo.NEXT_WORKFLOW_FILE}) on ${ref}\n\n${text}`,
+          `Releasing a next version of ${name}`,
+          `Releasing a [next version of ${name}](${getActionsUrl(
+            workflowInfo,
+          )}) on ${ref}\n\n${text}`,
         ),
       );
     } catch (error) {
       await bot.replyText(`执行出错：${(error as Error).message}`);
     }
   } else {
-    await bot.replyText(`使用方法 nx --ref v2.xx 或 nx v2.xx`);
+    await bot.replyText(`使用方法 ${command} --ref v2.xx 或 ${command} v2.xx`);
+  }
+}
+
+async function syncVersion(
+  { ctx, bot }: IMCommandCenterContext,
+  repo: 'core' | 'codeblitz',
+) {
+  const app = ctx.app!;
+
+  let version = ctx.parsed.raw.version;
+  let workflowRef: string | undefined = undefined;
+
+  if (!version) {
+    if (ctx.parsed['_'].length > 1) {
+      version = ctx.parsed['_'][1];
+    }
+    if (ctx.parsed.raw['workflow-ref']) {
+      workflowRef = ctx.parsed.raw['workflow-ref'];
+    }
+  }
+  try {
+    if (repo === 'core') {
+      const actionUrl = getActionsUrl({
+        ...ActionsRepo.info,
+        workflow_id: ActionsRepo.SYNC_FILE,
+      });
+
+      await app.opensumiOctoService.syncOpenSumiVersion(version, workflowRef);
+      await bot.reply(
+        convertToDingMarkdown(
+          'Synchronizing OpenSumi packages',
+          `[Synchronizing OpenSumi packages${
+            version ? `@${version}` : ''
+          } to npmmirror](${actionUrl})`,
+        ),
+      );
+    } else {
+      const actionUrl = getActionsUrl({
+        ...ActionsRepo.info,
+        workflow_id: ActionsRepo.SYNC_CODEBLITZ_FILE,
+      });
+
+      await app.opensumiOctoService.syncCodeblitzVersion(version, workflowRef);
+      await bot.reply(
+        convertToDingMarkdown(
+          'Synchronizing CodeBlitz packages',
+          `[Synchronizing CodeBlitz packages${
+            version ? `@${version}` : ''
+          } to npmmirror](${actionUrl})`,
+        ),
+      );
+    }
+  } catch (error) {
+    await bot.replyText(`sync 出错：${(error as Error).message}`);
   }
 }

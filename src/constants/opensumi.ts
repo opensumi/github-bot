@@ -1,7 +1,3 @@
-export namespace CoreRepo {
-  export const NEXT_WORKFLOW_FILE = 'release-rc.yml';
-}
-
 export const VERSION_SYNC_KEYWORD = 'versionInfo';
 
 export const kBackportKeyword = 'backport';
@@ -12,7 +8,7 @@ export type RepoInfo = {
 };
 
 export namespace ActionsRepo {
-  const info = {
+  export const info = {
     owner: 'opensumi',
     repo: 'actions',
   };
@@ -35,6 +31,14 @@ export namespace ActionsRepo {
   export const RELEASE_NEXT_BY_REF_WORKFLOW = {
     ...info,
     workflow_id: RELEASE_NEXT_BY_REF,
+    ref: 'main',
+  };
+
+  export const CODEBLITZ_RELEASE_NEXT_BY_REF =
+    'codeblitz-release-next-by-ref.yml';
+  export const CODEBLITZ_RELEASE_NEXT_BY_REF_WORKFLOW = {
+    ...info,
+    workflow_id: CODEBLITZ_RELEASE_NEXT_BY_REF,
     ref: 'main',
   };
 

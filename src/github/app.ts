@@ -60,7 +60,7 @@ export class App {
       case 'opensumi/core':
         file = ActionsRepo.SYNC_FILE;
         name = 'opensumi';
-        await this.opensumiOctoService.syncVersion(version);
+        await this.opensumiOctoService.syncOpenSumiVersion(version);
         break;
       case 'opensumi/codeblitz':
         file = ActionsRepo.SYNC_CODEBLITZ_FILE;

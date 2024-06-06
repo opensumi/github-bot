@@ -4,9 +4,18 @@ import { GitHubService } from '@opensumi/octo-service';
 import { firstLine } from '../renderer/line';
 
 export class OpenSumiOctoService extends GitHubService {
-  async releaseNextVersion(branch: string, workflowRef = 'main') {
+  async releaseNextVersion(
+    workflowInfo: {
+      workflow_id: string;
+      ref: string;
+      owner: string;
+      repo: string;
+    },
+    branch: string,
+    workflowRef = 'main',
+  ) {
     const workflow = await this.octo.actions.createWorkflowDispatch({
-      ...ActionsRepo.RELEASE_NEXT_BY_REF_WORKFLOW,
+      ...workflowInfo,
       ref: workflowRef,
       inputs: {
         ref: branch,
@@ -75,7 +84,7 @@ export class OpenSumiOctoService extends GitHubService {
     });
     return workflow;
   }
-  async syncVersion(version?: string, workflowRef = 'main') {
+  async syncOpenSumiVersion(version?: string, workflowRef = 'main') {
     const inputs = {} as Record<string, any>;
     if (version) {
       inputs.version = version;
