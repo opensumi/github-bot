@@ -1,7 +1,7 @@
 import Environment from '@/env';
 import { GitHubCommon } from '@/kv/constants';
 import { runtimeConfig } from '@/runtime/node/config';
-import { LocalKV } from '@/runtime/node/kv';
+import { InMemoryKV } from '@/runtime/node/kv';
 
 const githubSecret = process.env.GITHUB_TOKEN || 'mock-secret';
 const githubAppId = process.env.GITHUB_APPID || 'mock-app-id';
@@ -9,7 +9,7 @@ const githubPrivateKey =
   process.env.GITHUB_APP_PRIVATE_KEY || 'mock-private-key';
 
 export function prepareEnv() {
-  const kv = new LocalKV();
+  const kv = new InMemoryKV();
   Environment.initialize(runtimeConfig, {
     KV: kv,
     MESSAGE_QUEUE: {} as any,

@@ -1,6 +1,5 @@
 import { Octokit } from '@octokit/core';
 
-import Environment from '@/env';
 import { validateGithub, webhookHandler } from '@/github';
 import { initApp } from '@/github/app';
 import { GitHubKVManager } from '@/kv/github';

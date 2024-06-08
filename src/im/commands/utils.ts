@@ -1,4 +1,4 @@
-import { StopError, StopErrorWithReply } from '@opensumi/bot-commander';
+import { StopErrorWithReply } from '@opensumi/bot-commander';
 
 import { IBotAdapter } from '../types';
 

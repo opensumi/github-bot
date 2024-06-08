@@ -2,17 +2,35 @@ import Environment from '@/env';
 
 export * from './constants';
 
+export type MemoizeFn<T> = (key: string) => Promise<T | null>;
+
+export const memoize = <T>(fn: MemoizeFn<T>, timeout: number) => {
+  let cache: T | null = null;
+  let lastUpdate = 0;
+
+  return async (key: string) => {
+    const now = Date.now();
+    if (now - lastUpdate > timeout || !cache) {
+      cache = await fn(key);
+      lastUpdate = now;
+    }
+
+    return cache;
+  };
+};
+
 export class KVManager<T> {
   kv: IKVNamespace;
 
-  private prefix: string;
-  private constructor(prefix = '') {
-    this.prefix = prefix;
+  private id: string;
+  private constructor(id = '', protected ttl = 0) {
+    this.id = id;
     this.kv = Environment.instance().KV;
+    this.getJSONCached = this.momoizeGetJSON(this.ttl);
   }
 
   f(key: string) {
-    return this.prefix + key;
+    return this.id + key;
   }
 
   async get(key: string) {
@@ -23,8 +41,13 @@ export class KVManager<T> {
     return await this.kv.put(this.f(key), String(data));
   }
 
+  getJSONCached: MemoizeFn<T | null>;
   async getJSON(key: string) {
     return await this.kv.get<T>(this.f(key), 'json');
+  }
+
+  momoizeGetJSON(timeout: number) {
+    return memoize(this.getJSON.bind(this), timeout);
   }
 
   async setJSON(key: string, data: T) {
@@ -36,17 +59,18 @@ export class KVManager<T> {
     const newData = Object.assign({}, oldData, data);
     return await this.kv.put(this.f(key), JSON.stringify(newData));
   }
+
   async delete(key: string) {
     return await this.kv.delete(this.f(key));
   }
 
   static #cache: Map<string, KVManager<any>> = new Map();
 
-  static for<T>(prefix: string): KVManager<T> {
-    if (!this.#cache.has(prefix)) {
-      this.#cache.set(prefix, new KVManager(prefix));
+  static for<T>(key: string, ttl = 0): KVManager<T> {
+    if (!this.#cache.has(key)) {
+      this.#cache.set(key, new KVManager(key, ttl));
     }
-    return this.#cache.get(prefix)!;
+    return this.#cache.get(key)!;
   }
 }
 

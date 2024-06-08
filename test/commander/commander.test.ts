@@ -1,15 +1,9 @@
 import Environment from '@/env';
 import { ISSUE_REGEX } from '@/im/commands/constants';
 import { runtimeConfig } from '@/runtime/node/config';
-import { LocalKV } from '@/runtime/node/kv';
-import { NodeQueue } from '@/runtime/node/queue';
 import { CommandCenter } from '@opensumi/bot-commander';
 
-const testEnv: IRuntimeEnv = {
-  KV: new LocalKV(),
-  MESSAGE_QUEUE: new NodeQueue(),
-  ENVIRONMENT: 'unittest',
-};
+import { testEnv } from '../__mocks__/env';
 
 describe('command center', () => {
   afterEach(() => {
@@ -45,8 +39,6 @@ describe('command center', () => {
 
   it('tryHandle would work', async () => {
     const fn = jest.fn();
-
-    Environment.initialize(runtimeConfig, testEnv);
 
     const cc = new CommandCenter<{
       name: string;

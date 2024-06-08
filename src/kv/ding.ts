@@ -7,8 +7,8 @@ export class DingKVManager {
   infoKV: KVManager<IDingInfo>;
 
   constructor() {
-    this.secretsKV = KVManager.for(DingCommon.SECRETS_PREFIX);
-    this.infoKV = KVManager.for(DingCommon.INFO_PREFIX);
+    this.secretsKV = KVManager.for(DingCommon.SECRETS_PREFIX, 10 * 1000);
+    this.infoKV = KVManager.for(DingCommon.INFO_PREFIX, 10 * 1000);
   }
 
   getSettingById = async (id: string) => {
@@ -52,7 +52,7 @@ export class DingUserKVManager {
   userInfoKV: KVManager<IDingUserInfo>;
 
   constructor() {
-    this.userInfoKV = KVManager.for(DingCommon.USER_INFO_PREFIX);
+    this.userInfoKV = KVManager.for(DingCommon.USER_INFO_PREFIX, 30 * 1000);
   }
 
   async getGitHubUserByDingtalkId(id: string) {

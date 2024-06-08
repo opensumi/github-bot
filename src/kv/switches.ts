@@ -1,4 +1,4 @@
-import { KVManager, Common } from '.';
+import { KVManager, Common, MemoizeFn } from '.';
 
 interface SwitchesItem {
   enabled: boolean;
@@ -13,12 +13,16 @@ export const KnownSwitches = {
 
 export class Switches {
   private switchesKV: KVManager<SwitchesItem>;
+
   private constructor() {
-    this.switchesKV = KVManager.for<SwitchesItem>(Common.SWITCHES_PREFIX);
+    this.switchesKV = KVManager.for<SwitchesItem>(
+      Common.SWITCHES_PREFIX,
+      30 * 1000,
+    );
   }
 
   isEnableFor = async (key: string, id: string) => {
-    const item = await this.switchesKV.getJSON(key);
+    const item = await this.switchesKV.getJSONCached(key);
     if (!item) {
       return false;
     }

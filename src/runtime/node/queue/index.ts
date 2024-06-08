@@ -1,4 +1,4 @@
-export class NodeQueue<T> implements Queue<T> {
+export class InMemoryQueue<T> implements Queue<T> {
   async send(
     message: T,
     options?: QueueSendOptions | undefined,

@@ -10,10 +10,12 @@ export class OpenSumiRunKVManager {
   constructor() {
     this.cdnConfig = KVManager.for<IOpenSumiRunConfig>(
       OpenSumiRunCommon.OPENSUMI_RUN_CDN_INFO_PREFIX,
+      5 * 60 * 1000,
     );
 
     this.originalTrialToken = KVManager.for<IOpenSumiRunOriginalTrialToken>(
       OpenSumiRunCommon.OPENSUMI_RUN_ORIGINAL_TRIAL_TOKEN_PREFIX,
+      5 * 60 * 1000,
     );
   }
 

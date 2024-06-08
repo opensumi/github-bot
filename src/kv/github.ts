@@ -10,12 +10,15 @@ export class GitHubKVManager {
   private constructor() {
     this.appSettingsKV = KVManager.for<AppSetting>(
       GitHubCommon.GITHUB_APP_SETTINGS_PREFIX,
+      60 * 1000,
     );
     this.settingsKV = KVManager.for<ISetting>(
       GitHubCommon.GITHUB_SETTINGS_PREFIX,
+      60 * 1000,
     );
     this.oauthKV = KVManager.for<IGitHubOauthAppConfig>(
       GitHubCommon.GITHUB_OAUTH_SETTINGS_PREFIX,
+      60 * 1000,
     );
   }
 

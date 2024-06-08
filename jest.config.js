@@ -24,8 +24,10 @@ const config = {
     '@/(.*)$': '<rootDir>/src/$1',
   },
   setupFilesAfterEnv: ['<rootDir>/jest-setup.js'],
-  // the summary of all failed tests will be printed if there are ten or more failing tests
-  reporters: [['summary', { summaryThreshold: 1 }]],
 };
+
+if (process.env.CI) {
+  config.reporters = [['summary', { summaryThreshold: 1 }]];
+}
 
 module.exports = config;

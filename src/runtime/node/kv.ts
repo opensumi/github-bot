@@ -40,7 +40,7 @@ export class NodeKV implements IKVNamespace {
   }
 }
 
-export class LocalKV implements IKVNamespace {
+export class InMemoryKV implements IKVNamespace {
   map: Map<any, any>;
   constructor() {
     this.map = new Map();
