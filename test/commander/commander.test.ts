@@ -1,5 +1,6 @@
 import Environment from '@/env';
 import { ISSUE_REGEX } from '@/im/commands/constants';
+import { runtimeConfig } from '@/runtime/node/config';
 import { LocalKV } from '@/runtime/node/kv';
 import { NodeQueue } from '@/runtime/node/queue';
 import { CommandCenter } from '@opensumi/bot-commander';
@@ -45,7 +46,7 @@ describe('command center', () => {
   it('tryHandle would work', async () => {
     const fn = jest.fn();
 
-    Environment.from('node', testEnv);
+    Environment.initialize(runtimeConfig, testEnv);
 
     const cc = new CommandCenter<{
       name: string;
@@ -77,7 +78,7 @@ describe('command center', () => {
     const fn = jest.fn();
     const tokenOnCancellationRequested = jest.fn();
 
-    Environment.from('node', {
+    Environment.initialize(runtimeConfig, {
       ...testEnv,
       TIMEOUT: String(3 * 1000),
     });

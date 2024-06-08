@@ -22,7 +22,7 @@ export function route(hono: THono) {
       return c.send.error(400, 'please set app webhook secret in database');
     }
 
-    let useQueue = Environment.instance().useQueue;
+    let useQueue = false;
     if (!useQueue) {
       useQueue = await Switches.instance().isEnableFor(
         KnownSwitches.enableQueue,

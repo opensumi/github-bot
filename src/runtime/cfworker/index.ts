@@ -5,11 +5,13 @@ import { TQueueMessage } from '@/queue/types';
 import { RequiredField } from '@/types';
 import { Logger } from '@/utils/logger';
 
+import { runtimeConfig } from './config';
+
 const app = ignition();
 
 export default {
   fetch: async (request: Request, env: IRuntimeEnv, ctx: ExecutionContext) => {
-    Environment.from('cfworker', env);
+    Environment.initialize(runtimeConfig, env);
     return app.fetch(request, env, ctx);
   },
   async queue(
@@ -18,7 +20,7 @@ export default {
     ctx: ExecutionContext,
   ) {
     const logger = Logger.instance();
-    Environment.from('cfworker', env);
+    Environment.initialize(runtimeConfig, env);
 
     const consumer = createConsumer();
 

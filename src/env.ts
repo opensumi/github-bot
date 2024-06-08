@@ -1,14 +1,22 @@
-export type TSupportedRuntime = 'cfworker' | 'node';
+import { IRuntimeConfig } from './runtime/base';
+import { parseValidNumber } from './utils/number';
 
 export default class Environment {
   private constructor(
-    public readonly runtime: TSupportedRuntime,
+    public readonly runtimeConfig: IRuntimeConfig,
     private env: IRuntimeEnv,
-  ) {}
+  ) {
+    this._timeout = runtimeConfig.defaultTimeout;
+
+    if (env.TIMEOUT) {
+      const timeout = parseValidNumber(env.TIMEOUT);
+      if (typeof timeout !== 'undefined') {
+        this._timeout = timeout;
+      }
+    }
+  }
 
   static #instance: Environment | null;
-
-  useQueue = false;
 
   get Queue() {
     return this.env.MESSAGE_QUEUE;
@@ -43,26 +51,8 @@ export default class Environment {
     return this.#instance;
   }
 
-  static from(runtime: TSupportedRuntime, env: IRuntimeEnv) {
-    if (this.#instance) {
-      return this.#instance;
-    }
-    const instance = new Environment(runtime, env);
-
-    if (runtime === 'cfworker') {
-      // cloudflare worker 会在 30s 后强制结束 worker，所以这里设置 29s 的超时
-      instance._timeout = 29 * 1000;
-    }
-
-    if (env.TIMEOUT) {
-      const timeout = parseInt(env.TIMEOUT, 10);
-      if (!isNaN(timeout)) {
-        instance._timeout = timeout;
-      }
-    }
-
-    this.#instance = instance;
-    return instance;
+  static initialize(runtimeConfig: IRuntimeConfig, env: IRuntimeEnv) {
+    this.#instance = new Environment(runtimeConfig, env);
   }
 
   static dispose() {

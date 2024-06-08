@@ -1,5 +1,6 @@
 import Environment from '@/env';
 import { GitHubCommon } from '@/kv/constants';
+import { runtimeConfig } from '@/runtime/node/config';
 import { LocalKV } from '@/runtime/node/kv';
 
 const githubSecret = process.env.GITHUB_TOKEN || 'mock-secret';
@@ -9,7 +10,7 @@ const githubPrivateKey =
 
 export function prepareEnv() {
   const kv = new LocalKV();
-  Environment.from('node', {
+  Environment.initialize(runtimeConfig, {
     KV: kv,
     MESSAGE_QUEUE: {} as any,
     ENVIRONMENT: 'unittest',
