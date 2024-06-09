@@ -18,7 +18,7 @@ describe('command center', () => {
 
     const result = await cc.resolve('hello');
     expect(result).toBeDefined();
-    result?.handler();
+    result?.handler({}, cc.parseCommand('hello') as any);
     expect(fn).toBeCalled();
     const notExists = await cc.resolve('something');
     expect(notExists).not.toBeUndefined();
@@ -31,7 +31,7 @@ describe('command center', () => {
     cc.on(ISSUE_REGEX, fn);
     const result = await cc.resolve('#84');
     expect(result).toBeDefined();
-    result?.handler();
+    result?.handler({}, cc.parseCommand('hello') as any);
     expect(fn).toBeCalled();
     const notExists = await cc.resolve('something');
     expect(notExists).not.toBeUndefined();
@@ -46,13 +46,12 @@ describe('command center', () => {
       prefix: ['/'],
     });
 
-    cc.on('hello', async (ctx) => {
+    cc.on('hello', async (ctx, command) => {
       console.log(`🚀 ~ file: commander.test.ts:53 ~ cc.on ~ ctx:`, ctx);
       const { name } = ctx;
       expect(name).toBe('opensumi');
-      expect(ctx.text).toBe('/hello');
-      expect(ctx.result.type).toBe('text');
-      expect(ctx.result.command).toBe('hello');
+      expect(command.raw).toBe('/hello');
+      expect(command.command).toBe('hello');
       expect(ctx.token).toBeDefined();
       fn();
     });

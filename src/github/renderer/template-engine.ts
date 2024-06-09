@@ -22,8 +22,6 @@ const defaultOperators = {
       case 'issue':
       case 'discussion':
         return IssuesLink(value);
-      case 'h4':
-        return `#### ${value}`;
     }
 
     return value;
@@ -36,6 +34,9 @@ const defaultOperators = {
     }
 
     return Reference(value, bodyLimit);
+  },
+  h4: (operator: string, key: string, value) => {
+    return `#### ${value}`;
   },
 } as Record<string, (operator: string, key: string, value: any) => string>;
 
