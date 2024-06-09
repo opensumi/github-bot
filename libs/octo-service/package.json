@@ -30,6 +30,6 @@
     "dayjs": "^1.11.9"
   },
   "peerDependencies": {
-    "@octokit/rest": "^19.0.7"
+    "@octokit/rest": "^20.0.1"
   }
 }
