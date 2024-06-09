@@ -24,6 +24,11 @@ describe('render', () => {
       sender: { login: 'henry', html_url: 'https://bot.internal' },
     });
     expect(b).toBe('hello [henry](https://bot.internal)');
+
+    const h4 = render('{{title|h4}}', {
+      title: 'hello',
+    });
+    expect(h4).toBe('#### hello');
   });
 
   it('can render nested placeholder', () => {

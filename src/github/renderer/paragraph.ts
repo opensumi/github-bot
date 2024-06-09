@@ -1,3 +1,0 @@
-class Paragraph {}
-
-class Line {}
