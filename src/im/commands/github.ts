@@ -66,7 +66,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
 
   it.on(
     'history',
-    async ({ bot, ctx }) => {
+    async ({ bot, ctx }, command) => {
       await replyIfAppNotDefined(bot, ctx);
       if (!hasApp(ctx)) {
         return;
@@ -74,7 +74,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
 
       const { app } = ctx;
 
-      const posArg = ctx.parsed['_'];
+      const posArg = command.argv;
       const { owner, repo } = await getRepoInfoFromCommand(posArg, bot);
       const payload = await app.octoService.getRepoHistory(owner, repo);
       console.log(`🚀 ~ file: github.ts ~ line 127 ~ payload`, payload);
@@ -88,14 +88,14 @@ export function registerGitHubCommand(it: IMCommandCenter) {
 
   it.on(
     'http',
-    async ({ bot, ctx, text }) => {
+    async ({ bot, ctx }, command) => {
       await replyIfAppNotDefined(bot, ctx);
       if (!hasApp(ctx)) {
         return;
       }
 
       const { app } = ctx;
-      const githubUrl = parseGitHubUrl(text);
+      const githubUrl = parseGitHubUrl(command.raw);
       if (githubUrl) {
         if (githubUrl.type === 'repo') {
           const result = await app.octoApp.octokit.repos.get({
@@ -132,7 +132,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
 
   it.on(
     'star',
-    async ({ bot, ctx }) => {
+    async ({ bot, ctx }, command) => {
       await replyIfAppNotDefined(bot, ctx);
       if (!hasApp(ctx)) {
         return;
@@ -140,7 +140,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
 
       const { app } = ctx;
 
-      const posArg = ctx.parsed['_'];
+      const posArg = command.argv;
       const { owner, repo } = await getRepoInfoFromCommand(posArg, bot);
       const payload = await app.octoService.getRepoStarRecords(owner, repo);
       const content = code('json', JSON.stringify(payload));
@@ -149,13 +149,13 @@ export function registerGitHubCommand(it: IMCommandCenter) {
     ['stars'],
   );
 
-  it.on('bind-github', async ({ bot, ctx }) => {
+  it.on('bind-github', async ({ bot, ctx }, command) => {
     await replyIfAppNotDefined(bot, ctx);
     if (!hasApp(ctx)) {
       return;
     }
 
-    const posArg = ctx.parsed['_'];
+    const posArg = command.argv;
 
     if (!(posArg.length > 1)) {
       return;
@@ -175,7 +175,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
 
   it.on(
     'my-pr',
-    async ({ bot, ctx }) => {
+    async ({ bot, ctx }, command) => {
       await replyIfAppNotDefined(bot, ctx);
       if (!hasApp(ctx)) {
         return;
@@ -183,7 +183,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
 
       const { app } = ctx;
       const githubUserId = await getGitHubUserFromDingtalkId(bot);
-      const posArg = ctx.parsed['_'];
+      const posArg = command.argv;
       const { owner, repo } = await getRepoInfoFromCommand(posArg, bot);
       const prs = await app.octoService.pr.getPullRequests(
         owner,

@@ -37,7 +37,7 @@ export function registerPullRequestCommand(it: GitHubCommandCenter) {
   // backport to v2.23
   it.on(
     kBackportKeyword,
-    async (ctx) => {
+    async (ctx, _command) => {
       const { app, payload } = ctx;
       constraintRepo(payload.repository.full_name, backportAllowedRepo);
 
@@ -70,8 +70,7 @@ export function registerPullRequestCommand(it: GitHubCommandCenter) {
         return;
       }
 
-      const { text } = ctx;
-      const { command } = ctx.result;
+      const { command, raw: text } = _command;
       const targetBranch = extractTargetBranchNameFromCommand(command);
 
       if (!targetBranch) {

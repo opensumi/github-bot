@@ -4,9 +4,9 @@ import { IBotAdapter } from '../types';
 
 import { Context } from './types';
 
-export function hasApp<T>(
-  item: Context<T>,
-): item is Context<T> & Required<Pick<Context<T>, 'app'>> {
+export function hasApp(
+  item: Context,
+): item is Context & Required<Pick<Context, 'app'>> {
   return !!item.app;
 }
 

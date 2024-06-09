@@ -6,10 +6,10 @@ import { IMCommandCenter } from './types';
 export function registerCommonCommand(it: IMCommandCenter) {
   it.on(
     'putData',
-    async ({ bot, ctx }) => {
+    async ({ bot }, command) => {
       const info = {} as IDingInfo;
-      if (ctx.parsed.raw['defaultRepo']) {
-        info['defaultRepo'] = ctx.parsed.raw['defaultRepo'];
+      if (command.args['defaultRepo']) {
+        info['defaultRepo'] = command.args['defaultRepo'];
       }
       await bot.kvManager.updateGroupInfo(bot.id, info);
       await bot.replyText('更新信息成功');

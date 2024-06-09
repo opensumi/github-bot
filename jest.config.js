@@ -1,3 +1,9 @@
+const { pathsToModuleNameMapper } = require('ts-jest');
+
+// In the following statement, replace `./tsconfig` with the path to your `tsconfig` file
+// which contains the path mapping (ie the `compilerOptions.paths` option):
+const { compilerOptions } = require('./tsconfig.json');
+
 /** @type {import('jest').Config} */
 const config = {
   transform: {
@@ -7,22 +13,19 @@ const config = {
         useESM: true,
       },
     ],
-    '^.+\\.html$': '<rootDir>/test/transforms/text.js',
-    '^.+\\.svg$': '<rootDir>/test/transforms/text.js',
+    '^.+\\.html$': '<rootDir>/__tests__/transforms/text.js',
+    '^.+\\.svg$': '<rootDir>/__tests__/transforms/text.js',
   },
-  testRegex: '/test/.*\\.test\\.ts$',
-  testPathIgnorePatterns: [
-    '<rootDir>/build/',
-    '<rootDir>/src/lib/',
-    '<rootDir>/node_modules/',
-  ],
+  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.[jt]sx?$',
+  testPathIgnorePatterns: ['<rootDir>/build/', '<rootDir>/node_modules/'],
   '//': 'https://github.com/remarkjs/remark/issues/969',
   transformIgnorePatterns: [],
   collectCoverageFrom: ['src/**/*.{ts,js}'],
-  coveragePathIgnorePatterns: ['/node_modules/', '<rootDir>/src/lib/'],
-  moduleNameMapper: {
-    '@/(.*)$': '<rootDir>/src/$1',
-  },
+  coveragePathIgnorePatterns: ['/node_modules/'],
+
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
+    prefix: '<rootDir>/',
+  }),
   setupFilesAfterEnv: ['<rootDir>/jest-setup.js'],
 };
 

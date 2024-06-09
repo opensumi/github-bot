@@ -20,11 +20,6 @@
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx"
   },
-  "include": [
-    "./src/**/*.ts",
-    "./test/**/*.ts",
-    "./scripts/**/*.ts",
-    "./typings/**/*.d.ts"
-  ],
+  "include": ["./src/**/*.ts", "./scripts/**/*.ts", "./typings/**/*.d.ts"],
   "exclude": ["node_modules"]
 }

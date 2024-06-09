@@ -1,6 +1,10 @@
 import { ActionsRepo, getActionsUrl } from '@/constants/opensumi';
 import { convertToDingMarkdown } from '@/github/dingtalk';
-import { StopError, StopErrorWithReply } from '@opensumi/bot-commander';
+import {
+  ICommand,
+  StopError,
+  StopErrorWithReply,
+} from '@opensumi/bot-commander';
 
 import { IBotAdapter } from '../types';
 
@@ -67,14 +71,14 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     );
   });
 
-  it.on('deploypre', async ({ bot, ctx }) => {
+  it.on('deploypre', async ({ bot, ctx }, command) => {
     await intercept(bot, ctx);
 
     const app = ctx.app!;
     let workflowRef: string | undefined = undefined;
 
-    if (ctx.parsed.raw['workflow-ref']) {
-      workflowRef = ctx.parsed.raw['workflow-ref'];
+    if (command.args['workflow-ref']) {
+      workflowRef = command.args['workflow-ref'];
     }
 
     let text = '';
@@ -97,46 +101,46 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     );
   });
 
-  it.on('rc', async ({ bot, ctx }) => {
+  it.on('rc', async ({ bot, ctx }, command) => {
     await intercept(bot, ctx);
 
     await bot.replyText(
       '[rc 命令已经 deprecated, 请使用 nx 命令] 开始发布 next 版本',
     );
 
-    await publishNextVersion('nx', { ctx, bot }, 'core');
+    await publishNextVersion('nx', { ctx, bot }, command, 'core');
   });
 
-  it.on('nx', async ({ bot, ctx }) => {
+  it.on('nx', async ({ bot, ctx }, command) => {
     await intercept(bot, ctx);
-    await publishNextVersion('nx', { ctx, bot }, 'core');
+    await publishNextVersion('nx', { ctx, bot }, command, 'core');
   });
 
-  it.on('nx-cb', async ({ bot, ctx }) => {
+  it.on('nx-cb', async ({ bot, ctx }, command) => {
     await intercept(bot, ctx);
-    await publishNextVersion('nx-cb', { ctx, bot }, 'codeblitz');
+    await publishNextVersion('nx-cb', { ctx, bot }, command, 'codeblitz');
   });
 
-  it.on('sync', async ({ bot, ctx }) => {
+  it.on('sync', async ({ bot, ctx }, command) => {
     await intercept(bot, ctx);
-    await syncVersion({ ctx, bot }, 'core');
+    await syncVersion({ ctx, bot }, command, 'core');
   });
-  it.on('sync-cb', async ({ bot, ctx }) => {
+  it.on('sync-cb', async ({ bot, ctx }, command) => {
     await intercept(bot, ctx);
-    await syncVersion({ ctx, bot }, 'codeblitz');
+    await syncVersion({ ctx, bot }, command, 'codeblitz');
   });
 
   it.on(
     'report',
-    async ({ bot, ctx }) => {
+    async ({ bot, ctx }, command) => {
       await intercept(bot, ctx);
 
       const app = ctx.app!;
 
       const params = {} as { time?: string };
 
-      if (ctx.parsed.raw.t || ctx.parsed.raw.time) {
-        params.time = ctx.parsed.raw.t || ctx.parsed.raw.time;
+      if (command.args.t || command.args.time) {
+        params.time = command.args.t || command.args.time;
       }
 
       await app.opensumiOctoService.monthlyReport(params);
@@ -149,18 +153,19 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
 async function publishNextVersion(
   command: string,
   { ctx, bot }: IMCommandCenterContext,
+  payload: ICommand<any>,
   repo: 'core' | 'codeblitz',
 ) {
   const app = ctx.app!;
 
-  let ref = ctx.parsed.raw.ref;
+  let ref = payload.args.ref;
   let workflowRef: string | undefined = undefined;
   if (!ref) {
-    if (ctx.parsed['_'].length > 1) {
-      ref = ctx.parsed['_'][1];
+    if (payload.argv.length > 1) {
+      ref = payload.argv[1];
     }
-    if (ctx.parsed.raw['workflow-ref']) {
-      workflowRef = ctx.parsed.raw['workflow-ref'];
+    if (payload.args['workflow-ref']) {
+      workflowRef = payload.args['workflow-ref'];
     } else {
       workflowRef = ref;
     }
@@ -210,19 +215,20 @@ async function publishNextVersion(
 
 async function syncVersion(
   { ctx, bot }: IMCommandCenterContext,
+  command: ICommand<any>,
   repo: 'core' | 'codeblitz',
 ) {
   const app = ctx.app!;
 
-  let version = ctx.parsed.raw.version;
+  let version = command.args.version;
   let workflowRef: string | undefined = undefined;
 
   if (!version) {
-    if (ctx.parsed['_'].length > 1) {
-      version = ctx.parsed['_'][1];
+    if (command.argv.length > 1) {
+      version = command.argv[1];
     }
-    if (ctx.parsed.raw['workflow-ref']) {
-      workflowRef = ctx.parsed.raw['workflow-ref'];
+    if (command.args['workflow-ref']) {
+      workflowRef = command.args['workflow-ref'];
     }
   }
   try {
