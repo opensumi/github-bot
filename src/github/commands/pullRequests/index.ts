@@ -70,8 +70,8 @@ export function registerPullRequestCommand(it: GitHubCommandCenter) {
         return;
       }
 
-      const { command, raw: text } = _command;
-      const targetBranch = extractTargetBranchNameFromCommand(command);
+      const { raw: text, rawWithoutPrefix } = _command;
+      const targetBranch = extractTargetBranchNameFromCommand(rawWithoutPrefix);
 
       if (!targetBranch) {
         await app.replyComment(

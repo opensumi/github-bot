@@ -67,9 +67,11 @@ export class CommandCenter<C extends Record<string, any>> {
 
     let isCommand = false;
     let toResolve = text;
+    let _prefix = '';
     for (const prefix of this.prefixes) {
       if (text.startsWith(prefix)) {
         toResolve = text.slice(prefix.length);
+        _prefix = prefix;
         isCommand = true;
         break;
       }
@@ -89,6 +91,7 @@ export class CommandCenter<C extends Record<string, any>> {
     const result = {
       type: 'text',
       command: toResolve,
+      prefix: _prefix,
       handler,
     } as IResolveResult;
 
@@ -145,6 +148,7 @@ export class CommandCenter<C extends Record<string, any>> {
       const command: ICommand<any> = {
         ...args,
         raw: str,
+        rawWithoutPrefix: str.slice(result.prefix.length),
         command: result.command,
       };
 

@@ -8,6 +8,7 @@ export interface ICommand<T> {
   argv: string[];
 
   raw: string;
+  rawWithoutPrefix: string;
 
   /**
    * removed prefix
@@ -44,26 +45,26 @@ export type CompareFunc<T> = (command: T, userInput: string) => boolean;
 
 export type FuncName = 'equal' | 'startwiths';
 
-export interface ITextResolveResult {
-  handler: TTextHandler<any>;
-  type: 'text';
-
+export interface IBaseResolveResult {
   command: string;
+  prefix: string;
 }
 
-export interface IRegexResolveResult {
+export interface ITextResolveResult extends IBaseResolveResult {
+  handler: TTextHandler<any>;
+  type: 'text';
+}
+
+export interface IRegexResolveResult extends IBaseResolveResult {
   type: 'regex';
   regex: RegExp;
   handler: TRegexHandler<any>;
   result: RegExpExecArray;
-  command: string;
 }
 
-export interface IStarResolveResult {
+export interface IStarResolveResult extends IBaseResolveResult {
   handler: TStarHandler<any>;
   type: 'star';
-
-  command: string;
 }
 
 export type IResolveResult =
