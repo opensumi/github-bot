@@ -1,6 +1,11 @@
 import capitalize from 'lodash/capitalize';
 
-import { StringBuilder, limitTextByPosition } from '@/utils/string-builder';
+import {
+  StringBuilder,
+  ensureEndsWithTwoSpaces,
+  limitTextByPosition,
+  splitByLine,
+} from '@/utils/string-builder';
 
 import { render } from '../renderer';
 
@@ -140,7 +145,7 @@ export function RequestedReviewersInfo(
         : TeamLink(v as ITeamBasic),
     )
     .join(', ');
-  return `Requested reviewers: ${reviewerNames}  `;
+  return `Requested reviewers: ${reviewerNames}`;
 }
 
 export function DeletedPrOrIssueTitleLink(p: {
@@ -167,12 +172,12 @@ export function Reference(text?: string | null | undefined, bodyLimit = -1) {
     text = limitTextByPosition(text, bodyLimit);
   }
 
-  const arrayOfLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
-  const newLines = [];
+  const arrayOfLines = splitByLine(text);
+  const newLines = [] as string[];
 
   for (const line of arrayOfLines) {
     if (line.trim()) {
-      newLines.push(`> ${line}`);
+      newLines.push(`> ${ensureEndsWithTwoSpaces(line)}`);
     } else {
       newLines.push(`>`);
     }
@@ -293,8 +298,7 @@ export const Template: TextTpl = (data, ctx) => {
 
   if (target) {
     textBuilder.addLine();
-    textBuilder.add(target + '  ');
-    // compact text do not need target
+    textBuilder.add(target);
   }
 
   let bodyText = '';
@@ -313,6 +317,7 @@ export const Template: TextTpl = (data, ctx) => {
 
     const refText = autoRef ? '{{bodyText|ref}}' : '{{bodyText}}';
     textBuilder.add(refText);
+    compactTextBuilder && compactTextBuilder.addLine();
     compactTextBuilder && compactTextBuilder.add(refText);
   }
 

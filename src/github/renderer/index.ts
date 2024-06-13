@@ -14,7 +14,7 @@ export function renderPrOrIssue(data: IIssueDetail | IPrDetail) {
   const builder = new StringBuilder();
   builder.add(IssuesTitleLink(data.issue));
   if (data.type === 'pr') {
-    builder.add(PullRequestRefInfo(data.pr));
+    builder.add(`> ${PullRequestRefInfo(data.pr)}`);
   }
 
   builder.addDivider();

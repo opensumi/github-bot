@@ -22,15 +22,15 @@ globalStoragePath /Users/artin/.mini-ide/extension-storage
 `;
 
 exports[`render can render nested placeholder 1`] = `
-"> > 123
-> > 456
-> > 789"
+"> > 123  
+> > 456  
+> > 789  "
 `;
 
 exports[`render can render pr 1`] = `
 {
-  "text": "#### [#2060 fix: electron cannot work](https://github.com/opensumi/core/pull/2060)
-main <- chore/electron-rebuild
+  "text": "#### [#2060 fix: electron cannot work](https://github.com/opensumi/core/pull/2060)  
+> main <- chore/electron-rebuild
 
 ***
 

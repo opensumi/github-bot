@@ -1,12 +1,15 @@
 import { Octokit } from '@octokit/rest';
 import { Repository, User } from '@octokit/webhooks-types';
 
-import { StringBuilder, limitLine } from '@/utils/string-builder';
+import {
+  StringBuilder,
+  getFirstLineAndRest,
+  limitLine,
+} from '@/utils/string-builder';
 
-import { ExtractPayload, Context, THasChanges } from '../types';
+import { ExtractPayload, Context } from '../types';
 
 import {
-  StopHandleError,
   TemplateRenderResult,
   IssuesTitleLink,
   Template,
@@ -82,7 +85,7 @@ function renderComment(
       target: IssuesTitleLink(data),
       title: `{{sender | link:sender}} {{action}} [comment](${comment.html_url}) on [${location}](${data.html_url})`,
       body: CommentBody(payload.comment),
-      compactTitle: `{{sender | link:sender}} {{action}} [comment](${data.html_url}):  \n`,
+      compactTitle: `{{sender | link:sender}} {{action}} [comment](${data.html_url}):`,
       blockUsers: new Set<string>(['railway-app[bot]', 'ant-codespaces[bot]']),
       blockActions: new Set(['edited']),
     },
@@ -135,17 +138,14 @@ export async function handleCommitComment(
     }
   }
 
-  let restText = '';
-  const splitted = title.split('\n');
-  if (splitted.length > 1) {
-    title = splitted[0];
-    restText = splitted.slice(1).join('\n');
-  }
+  const { firstLine, rest } = getFirstLineAndRest(title);
+
+  title = firstLine;
 
   const builder = new StringBuilder(`#### [${title}]({{comment.html_url}})`);
 
-  if (restText) {
-    builder.add(Reference(restText));
+  if (rest) {
+    builder.add(Reference(rest));
   }
 
   return Template(
@@ -176,7 +176,7 @@ export async function handleReviewComment(
       target: '{{pull_request|link|h4}}',
       title: `{{sender | link:sender}} {{action}} [review comment](${comment.html_url}) on [pull request]({{pull_request.html_url}})`,
       body: CommentBody(payload.comment),
-      compactTitle: `{{sender | link}} {{action}} [review comment](${comment.html_url}):  \n`,
+      compactTitle: `{{sender | link}} {{action}} [review comment](${comment.html_url}):`,
       allowActions: allowedReviewCommentAction,
     },
     ctx,

@@ -46,7 +46,50 @@ export class StringBuilder {
       this.appendNewLineToTheEnd();
     }
 
-    return replaceGitHubText(this.array.join('\n'));
+    let newLines = this.array.map((v) => {
+      if (v.trim()) {
+        return v;
+      }
+      return '';
+    });
+
+    if (newLines.length > 1) {
+      // 过滤掉连续的空行
+      // 如果大于 1 行，则确保每一行被正确换行
+      // 正确换行有两种形式：1. 该行有内容且该行以两个空格结尾，2. 该行与下一行之间有一个空行
+      const finalLines = [] as string[];
+
+      for (let i = 0; i < newLines.length; i++) {
+        const line = newLines[i];
+        const isLastLine = i === newLines.length - 1;
+        const nextLine = newLines[i + 1];
+        if (line) {
+          if (nextLine) {
+            // 当前行和下一行都有内容
+            finalLines.push(ensureEndsWithTwoSpaces(line));
+          } else {
+            // 当前行有内容，但下一行为空行
+            finalLines.push(line);
+          }
+        } else {
+          // 当前行为空行
+          if (nextLine) {
+            // 当前行为空行，下一行有内容
+            finalLines.push(line);
+          } else {
+            // 当前行和下一行都为空行
+            if (isLastLine) {
+              // 最后一行为空行
+              finalLines.push(line);
+            }
+          }
+        }
+      }
+
+      newLines = finalLines;
+    }
+
+    return replaceGitHubText(newLines.join('\n'));
   }
   toString() {
     return this.build();
@@ -144,4 +187,19 @@ export function limitLine(
     .slice(start, start + count)
     .map((v) => lineProcess(v));
   return finalLines.join('\n').trim();
+}
+
+export function getFirstLineAndRest(text: string) {
+  const arrayOfLines = text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
+  const firstLine = arrayOfLines[0];
+  const rest = arrayOfLines.slice(1).join('\n');
+  return { firstLine, rest };
+}
+
+export function splitByLine(text: string) {
+  return text.replace(/\r\n|\n\r|\n|\r/g, '\n').split('\n');
+}
+
+export function ensureEndsWithTwoSpaces(text: string) {
+  return text.endsWith('  ') ? text : text + '  ';
 }
