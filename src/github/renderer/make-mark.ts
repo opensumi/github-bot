@@ -43,7 +43,11 @@ export function walk(root: Parent, cb: (token: Content) => boolean | void) {
   });
 }
 
-export function makeMarkdown(tree: Parent) {
+export interface IMakeMarkdownOptions {
+  handleImageUrl?: (url: string) => string;
+}
+
+export function makeMarkdown(tree: Parent, options?: IMakeMarkdownOptions) {
   return toMarkdown(tree, {
     extensions: [gfmToMarkdown()],
     listItemIndent: 'one',
@@ -52,14 +56,20 @@ export function makeMarkdown(tree: Parent) {
     handlers: {
       // remove the image alt text
       image: (node) => {
-        return `![](${node.url})`;
+        const url = options?.handleImageUrl
+          ? options.handleImageUrl(node.url)
+          : node.url;
+        return `![](${url})`;
       },
     },
     fences: true,
   });
 }
 
-export function standardizeMarkdown(text: string) {
+export function standardizeMarkdown(
+  text: string,
+  options?: IMakeMarkdownOptions,
+) {
   const tree = parseMarkdown(text);
-  return makeMarkdown(tree);
+  return makeMarkdown(tree, options);
 }

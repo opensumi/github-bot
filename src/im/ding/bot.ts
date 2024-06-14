@@ -77,8 +77,4 @@ export class DingBotAdapter implements IBotAdapter {
     console.log(`DingBot ~ reply:`, JSON.stringify(content));
     await send(content, this.msg.sessionWebhook);
   }
-
-  getProxiedUrl(url: string) {
-    return this.c.getProxiedUrl(url);
-  }
 }

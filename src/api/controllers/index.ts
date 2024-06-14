@@ -1,5 +1,6 @@
 import favicon from '../../public/favicon.svg';
 import html from '../../public/index.html';
+import { context } from '../context';
 import { ERuleName } from '../gateway';
 
 import { ControllerFacade } from './base';
@@ -26,6 +27,32 @@ const OpenSumiRunHome = {
   },
 };
 
+const HealthEndpoint = {
+  route: (hono: THono) => {
+    hono.get('/health', (c) => {
+      let uptime: number;
+
+      if (
+        typeof process !== 'undefined' &&
+        typeof process.uptime === 'function'
+      ) {
+        uptime = process.uptime();
+      } else if (
+        typeof performance !== 'undefined' &&
+        typeof performance.now === 'function'
+      ) {
+        uptime = performance.now();
+      } else {
+        uptime = -1;
+      }
+      return c.json({
+        uptime,
+        timestamp: Date.now(),
+      });
+    });
+  },
+};
+
 const applyBaseController = (hono: THono) => {
   hono.get('/favicon.ico', async (c) => {
     return c.body(favicon, 200, {
@@ -39,12 +66,23 @@ const applyBaseController = (hono: THono) => {
 };
 
 const controllers = {
-  '': [SimpleHome, Ding, GitHub, Proxy, Webhook, Static, Configuration, Auth],
+  '': [
+    SimpleHome,
+    Ding,
+    GitHub,
+    Proxy,
+    Webhook,
+    Static,
+    Configuration,
+    Auth,
+    HealthEndpoint,
+  ],
   [ERuleName.Run]: [
     OpenSumiRunWithIDEPrefix,
     OpenSumiRun,
     Auth,
     OpenSumiRunHome,
+    HealthEndpoint,
   ],
 } as Record<ERuleName, ControllerFacade[]>;
 

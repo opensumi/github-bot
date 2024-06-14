@@ -1,11 +1,13 @@
 import { StatusCode } from 'hono/utils/http-status';
 
+import { store } from '../context';
+
 import * as GitHub from './github';
 
 export const enhanceContext = (hono: THono) => {
   hono.use('*', async (c, next) => {
     const url = new URL(c.req.url);
-    const origin = `${url.origin}/`;
+    const origin = url.origin;
     c.origin = origin;
     c.send = {
       error: (
@@ -33,6 +35,12 @@ export const enhanceContext = (hono: THono) => {
 
     await next();
   });
+
+  hono.use(
+    store<THonoEnvironment>((ctx) => ({
+      ctx,
+    })),
+  );
 };
 
 export function applyMiddleware(hono: THono) {

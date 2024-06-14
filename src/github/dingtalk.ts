@@ -1,6 +1,10 @@
 import { EmitterWebhookEventName } from '@octokit/webhooks';
 
-import { standardizeMarkdown } from '@/github/renderer/make-mark';
+import { context } from '@/api/context';
+import {
+  IMakeMarkdownOptions,
+  standardizeMarkdown,
+} from '@/github/renderer/make-mark';
 import { ISetting } from '@/kv/types';
 import { limitTextByPosition } from '@/utils';
 import {
@@ -14,15 +18,27 @@ import { MarkdownContent } from './types';
 /**
  * 钉钉最大 5000 字
  */
-export function convertToDingMarkdown(title: string, text: string): Markdown {
+export function convertToDingMarkdown(
+  title: string,
+  text: string,
+  options?: IMakeMarkdownOptions,
+): Markdown {
   const _text = limitTextByPosition(text, 5000 - title.length - 10);
-  return _markdown(title, standardizeMarkdown(_text));
+  return _markdown(title, standardizeMarkdown(_text, options));
 }
 
 function dingSecurityInterception(text: string) {
   text = text.replaceAll('dingtalk://dingtalkclient/page/link?url=', '');
   return text;
 }
+
+export const createImageProxy = () => {
+  return {
+    handleImageUrl: (url: string) => {
+      return context().getProxiedUrl(url);
+    },
+  };
+};
 
 export async function sendToDing(
   data: MarkdownContent,
@@ -34,7 +50,12 @@ export async function sendToDing(
     return;
   }
 
-  const dingContent = convertToDingMarkdown(data.title, data.text);
+  const dingContent = convertToDingMarkdown(
+    data.title,
+    data.text,
+    createImageProxy(),
+  );
+
   dingContent.markdown.text = dingSecurityInterception(
     dingContent.markdown.text,
   );

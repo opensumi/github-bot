@@ -11,7 +11,6 @@ export interface IBotAdapter {
 
   replyText(text: string, contentExtra?: Record<string, any>): Promise<void>;
   reply(content: SendMessage): Promise<void>;
-  getProxiedUrl(url: string): string;
 
   handle(): Promise<void>;
 }

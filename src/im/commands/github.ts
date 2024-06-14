@@ -1,5 +1,5 @@
 import { App } from '@/github/app';
-import { convertToDingMarkdown } from '@/github/dingtalk';
+import { convertToDingMarkdown, createImageProxy } from '@/github/dingtalk';
 import { parseGitHubUrl } from '@/github/gfm';
 import { renderPrOrIssue } from '@/github/renderer';
 import { StringBuilder } from '@/utils';
@@ -36,9 +36,8 @@ export function registerGitHubCommand(it: IMCommandCenter) {
       await bot.reply(
         convertToDingMarkdown(
           `${full_name} Open Graph`,
-          `![](${bot.getProxiedUrl(
-            `https://opengraph.githubassets.com/${makeid(16)}/${full_name}`,
-          )})`,
+          `![](https://opengraph.githubassets.com/${makeid(16)}/${full_name})`,
+          createImageProxy(),
         ),
       );
     }
@@ -107,11 +106,10 @@ export function registerGitHubCommand(it: IMCommandCenter) {
             await bot.reply(
               convertToDingMarkdown(
                 `${full_name} Open Graph`,
-                `![](${bot.getProxiedUrl(
-                  `https://opengraph.githubassets.com/${makeid(
-                    16,
-                  )}/${full_name}`,
-                )})`,
+                `![](https://opengraph.githubassets.com/${makeid(
+                  16,
+                )}/${full_name})`,
+                createImageProxy(),
               ),
             );
           }
