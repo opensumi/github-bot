@@ -18,7 +18,7 @@ describe('KV', () => {
       expect(json).toEqual({ key: 'value' });
     });
     it('can cache', async () => {
-      const manager = KVManager.for<any>('test', 1000);
+      const manager = KVManager.for<any>('test', 2 * 1000);
 
       const spy = jest.spyOn(manager.kv, 'get');
 
