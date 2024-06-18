@@ -15,6 +15,9 @@ export const asyncLocalStorage = <T>() => {
       }),
     get: (key: keyof T) => {
       const store = localStorage.getStore() as T;
+      if (!store) {
+        throw new Error('no async store found');
+      }
       return store[key];
     },
   };
