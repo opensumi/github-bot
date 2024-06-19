@@ -22,6 +22,17 @@ const resolvePlugin = {
   },
 } as Plugin;
 
+function wrapNodeExternal(list: string[]) {
+  const external = new Set<string>();
+  list.forEach((name) => {
+    external.add(`node:${name}`);
+    external.add(name);
+  });
+  return Array.from(external);
+}
+
+const externalNodeBuiltins = wrapNodeExternal(['async_hooks']);
+
 async function buildWorker() {
   const context = await createContext({
     ...buildParams,
@@ -32,6 +43,7 @@ async function buildWorker() {
     treeShaking: true,
     plugins: [resolvePlugin],
     define: DEFAULT_BUILD_ARGS,
+    external: externalNodeBuiltins,
   });
 
   if (argv['watch']) {
