@@ -7,3 +7,8 @@ pre-commit:
     prettier:
       glob: '*.{js,ts,jsx,tsx,css,less,scss,vue,json,gql,md}'
       run: yarn prettier {staged_files} -w
+
+commit-msg:
+  commands:
+    lint-commit-msg:
+      run: yarn commitlint --edit
