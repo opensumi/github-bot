@@ -39,6 +39,13 @@ export const buildLibs = task({
   },
 });
 
+export const watchLibs = task({
+  name: 'watch:libs',
+  run: async () => {
+    await shell('lerna run watch --stream');
+  },
+});
+
 export const gen = task({
   name: 'gen',
   run: async () => {

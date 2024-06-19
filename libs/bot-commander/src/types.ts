@@ -40,8 +40,15 @@ export type TStarHandler<C> = (
 ) => Promise<void>;
 
 export type THandler<C> = TRegexHandler<C> | TTextHandler<C> | TStarHandler<C>;
+export type TInterceptor<C> = (
+  ctx: C & BaseContext,
+  command: ICommand<any>,
+) => Promise<boolean> | boolean;
 
-export type CompareFunc<T> = (command: T, userInput: string) => boolean;
+export interface CompareFunc<T> {
+  (command: T, userInput: string): boolean;
+  displayName: string;
+}
 
 export type FuncName = 'equal' | 'startwiths';
 

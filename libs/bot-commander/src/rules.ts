@@ -7,11 +7,9 @@ export const equalFunc: CompareFunc<string> = (
   return command === userInput;
 };
 
+equalFunc.displayName = 'equal';
+
 export const regex = (reg: RegExp, userInput: string) => {
   return Boolean(userInput.match(reg));
 };
-
-export const rules = {
-  equalFunc: equalFunc.name,
-  regex: regex.name,
-};
+regex.displayName = 'regex';

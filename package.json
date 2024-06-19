@@ -18,6 +18,7 @@
     "build:cfworker": "hereby",
     "build:node": "hereby",
     "watch": "hereby",
+    "watch:libs": "hereby",
     "dev": "hereby",
     "dev:node": "hereby",
     "dev:node:debug": "hereby",

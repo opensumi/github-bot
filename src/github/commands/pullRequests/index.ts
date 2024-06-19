@@ -25,7 +25,10 @@ export function extractTargetBranchNameFromCommand(str: string) {
 
 const backportAllowedRepo = new Set<string>(['opensumi/core']);
 
-const allowedRepo = new Set<string>(['opensumi/core', 'opensumi/codeblitz']);
+const nextAllowedRepo = new Set<string>([
+  'opensumi/core',
+  'opensumi/codeblitz',
+]);
 
 function constraintRepo(fullname: string, allowedRepo: Set<string>) {
   if (!allowedRepo.has(fullname)) {
@@ -103,7 +106,7 @@ Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
     const owner = payload.repository.owner.login;
     const repo = payload.repository.name;
     const fullname = payload.repository.full_name;
-    constraintRepo(fullname, allowedRepo);
+    constraintRepo(fullname, nextAllowedRepo);
 
     const user = payload.sender.login;
     let userHaveWritePerm = await app.octoService.checkRepoWritePermission(

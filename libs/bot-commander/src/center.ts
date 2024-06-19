@@ -1,3 +1,5 @@
+import { AsyncLocalStorage } from 'node:async_hooks';
+
 import { createCancelablePromise } from '@opensumi/ide-utils/lib/async';
 import { isPromiseCanceledError } from '@opensumi/ide-utils/lib/errors';
 import mri from 'mri';
@@ -16,7 +18,14 @@ import type {
   BaseContext,
   ICommand,
   RegexContext,
+  TInterceptor,
 } from './types';
+
+interface InterceptorStore {
+  interceptor: TInterceptor<any>;
+}
+
+const interceptorStorage = new AsyncLocalStorage<InterceptorStore>();
 
 export interface ICommandCenterOptions<C> {
   prefix?: string[];
@@ -46,16 +55,33 @@ export class CommandCenter<C extends Record<string, any>> {
   on(pattern: RegExp, handler: TRegexHandler<C>): void;
   on(pattern: string, handler: TTextHandler<C>, alias?: string[]): void;
   on(pattern: string | RegExp, handler: THandler<C>, alias?: string[]) {
+    const makeWrapper = (interceptor: TInterceptor<C>) => {
+      return async (ctx: any, command: ICommand<any>) => {
+        const result = await interceptor(ctx, command);
+        if (result) {
+          console.log('interceptor return true, stop executing handler');
+          return;
+        }
+        await handler(ctx, command);
+      };
+    };
+
+    let wrapper = handler;
+    const interceptor = interceptorStorage.getStore();
+    if (interceptor) {
+      wrapper = makeWrapper(interceptor.interceptor);
+    }
+
     if (pattern) {
       if (typeof pattern === 'string') {
-        this.registry.add(pattern, handler, equalFunc);
+        this.registry.add(pattern, wrapper, equalFunc);
         if (alias && Array.isArray(alias)) {
           for (const a of alias) {
-            this.registry.add(a, handler, equalFunc);
+            this.registry.add(a, wrapper, equalFunc);
           }
         }
       } else if (typeof pattern === 'object' && pattern instanceof RegExp) {
-        this.regexRegistry.add(pattern, handler, regex);
+        this.regexRegistry.add(pattern, wrapper, regex);
       }
     }
   }
@@ -154,7 +180,7 @@ export class CommandCenter<C extends Record<string, any>> {
 
       (ctx as unknown as RegexContext).result = result as IRegexResolveResult;
 
-      const p = createCancelablePromise((token) => {
+      const p = createCancelablePromise(async (token) => {
         (ctx as unknown as BaseContext).token = token;
         return result.handler(ctx, command);
       });
@@ -210,16 +236,28 @@ export class CommandCenter<C extends Record<string, any>> {
     text += '支持的命令：\n';
 
     this.registry.handlers.forEach(([key, [_, compareFunc]]) => {
-      text += `- ${key}: ${compareFunc.name}\n`;
+      text += `- ${key}: ${compareFunc.displayName}\n`;
     });
 
     this.regexRegistry.handlers.forEach(([key, [_, compareFunc]]) => {
-      text += `- ${key}: ${compareFunc.name}\n`;
+      text += `- ${key}: ${compareFunc.displayName}\n`;
     });
     if (this.starHandlers) {
       text += `- *: fallbackHandler\n`;
     }
 
     return text;
+  }
+
+  intercept(
+    callback: () => Promise<void> | void,
+    interceptor: TInterceptor<C>,
+  ) {
+    interceptorStorage.run(
+      {
+        interceptor,
+      },
+      callback,
+    );
   }
 }

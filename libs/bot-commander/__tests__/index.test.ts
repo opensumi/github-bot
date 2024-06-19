@@ -23,5 +23,38 @@ describe('bot-commander', () => {
       expect(result.raw).toBe('/test 12345');
       expect(result.command).toBe('test');
     });
+    it('intercept', async () => {
+      const center = new CommandCenter();
+      const deferred = new Deferred<ICommand<any>>();
+      center.intercept(
+        () => {
+          center.on('test', async (ctx, command) => {
+            deferred.resolve(command);
+          });
+        },
+        async (ctx, command) => {
+          command.command = 'hacked';
+          return false;
+        },
+      );
+
+      let triggered = false;
+      let intercepted = false;
+      center.intercept(
+        () => {
+          center.on('test2', async (ctx, command) => {
+            triggered = true;
+          });
+        },
+        (ctx, command) => {
+          intercepted = true;
+          return true;
+        },
+      );
+
+      await center.tryHandle('/test2 12345', { hello: '123' });
+      expect(triggered).toBe(false);
+      expect(intercepted).toBe(true);
+    });
   });
 });
