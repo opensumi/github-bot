@@ -1,11 +1,13 @@
+import { sleep } from '@opensumi/ide-utils/lib/async';
+
 import { KVManager } from '@/kv';
+
 import '../__mocks__/env';
 
 describe('KV', () => {
   describe('KVManager', () => {
     it('should create a KVManager', async () => {
       const manager = KVManager.for<any>('test', 0);
-      console.log('manager', manager);
       await manager.set('key1', 'value');
       await manager.setJSON('key', {
         key: 'value',
@@ -33,8 +35,7 @@ describe('KV', () => {
       expect(b).toEqual({ key: 'value' });
 
       expect(spy).toBeCalledTimes(1);
-
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await sleep(2000);
 
       const c = await manager.getJSONCached('key');
       expect(c).toEqual({ key: 'value' });

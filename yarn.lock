@@ -2324,6 +2324,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@opensumi/ide-utils@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "@opensumi/ide-utils@npm:3.1.1"
+  dependencies:
+    iconv-lite: "npm:^0.6.3"
+    jschardet: "npm:3.0.0"
+    mri: "npm:^1.2.0"
+    nanoid: "npm:3.3.4"
+    vscode-uri: "npm:3.0.2"
+  checksum: 10/51c050223e3e6b1591c0c985524a10cbe125cd6aa3985aba7f867c7a85eda1f6719ff4062d3dc22dacfacebf3ea8b815f1776e36ea83287b1718574c989de188
+  languageName: node
+  linkType: hard
+
 "@opensumi/octo-service@workspace:^, @opensumi/octo-service@workspace:libs/octo-service":
   version: 0.0.0-use.local
   resolution: "@opensumi/octo-service@workspace:libs/octo-service"
@@ -6140,7 +6153,7 @@ __metadata:
     "@opensumi/bot-commander": "workspace:^"
     "@opensumi/cfworker-builder": "workspace:^"
     "@opensumi/dingtalk-bot": "workspace:^"
-    "@opensumi/ide-utils": "npm:^2.23.1"
+    "@opensumi/ide-utils": "npm:^3.1.1"
     "@opensumi/octo-service": "workspace:^"
     "@opensumi/workers-kv": "workspace:^"
     "@opensumi/workers-utils": "workspace:^"

@@ -1,3 +1,5 @@
+import { sleep } from '@opensumi/ide-utils';
+
 import Environment from '@/env';
 import { ISSUE_REGEX } from '@/im/commands/constants';
 import { runtimeConfig } from '@/runtime/node/config';
@@ -63,9 +65,6 @@ describe('command center', () => {
     Environment.dispose();
   });
   it('try handle would canceled if timeout', async () => {
-    const sleep = (ms: number) =>
-      new Promise((resolve) => setTimeout(resolve, ms));
-
     const fn = jest.fn();
     const tokenOnCancellationRequested = jest.fn();
 

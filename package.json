@@ -47,7 +47,7 @@
     "@opensumi/bot-commander": "workspace:^",
     "@opensumi/cfworker-builder": "workspace:^",
     "@opensumi/dingtalk-bot": "workspace:^",
-    "@opensumi/ide-utils": "^2.23.1",
+    "@opensumi/ide-utils": "^3.1.1",
     "@opensumi/octo-service": "workspace:^",
     "@opensumi/workers-kv": "workspace:^",
     "@opensumi/workers-utils": "workspace:^",
