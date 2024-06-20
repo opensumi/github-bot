@@ -7,7 +7,7 @@ import {
   limitLine,
 } from '@/utils/string-builder';
 
-import { ExtractPayload, Context } from '../types';
+import { ExtractPayload, Context, ContextWithOctokit } from '../types';
 
 import {
   TemplateRenderResult,
@@ -114,9 +114,7 @@ export async function handleDiscussionComment(
 
 export async function handleCommitComment(
   payload: ExtractPayload<'commit_comment'>,
-  ctx: Context & {
-    octokit?: Octokit;
-  },
+  ctx: ContextWithOctokit,
 ): Promise<TemplateRenderResult> {
   const repo = payload.repository;
   const comment = payload.comment;

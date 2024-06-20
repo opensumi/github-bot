@@ -1,3 +1,4 @@
+import { Octokit } from '@octokit/rest';
 import { EmitterWebhookEventName } from '@octokit/webhooks/dist-types/types';
 import { WebhookEventName, WebhookEventMap } from '@octokit/webhooks-types';
 
@@ -11,6 +12,10 @@ export interface Context {
    * some event will be rendered more concise in order to avoid the message is too long
    */
   queueMode?: boolean;
+}
+
+export interface ContextWithOctokit extends Context {
+  octokit?: Octokit;
 }
 
 export type ExtractPayload<TEmitterEvent extends EmitterWebhookEventName> =

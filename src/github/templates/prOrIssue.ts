@@ -2,7 +2,12 @@ import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
 
 import { StringBuilder } from '@/utils/string-builder';
 
-import { ExtractPayload, THasChanges, Context } from '../types';
+import {
+  ExtractPayload,
+  THasChanges,
+  Context,
+  ContextWithOctokit,
+} from '../types';
 
 import {
   IssuesTitleLink,
@@ -88,10 +93,11 @@ function render(
 
 export async function handlePr(
   payload: ExtractPayload<'pull_request'>,
-  ctx: Context,
+  ctx: ContextWithOctokit,
 ) {
   const nameBlock = 'pull request';
   const data = payload.pull_request;
+
   let action = payload.action as string;
 
   let shouldRenderBody = true;
