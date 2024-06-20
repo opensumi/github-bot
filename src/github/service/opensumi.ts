@@ -169,4 +169,14 @@ export class OpenSumiOctoService extends GitHubService {
     });
     return workflow;
   }
+
+  async updateLockfileForPr({ pull_number }: { pull_number: number }) {
+    const workflow = await this.octo.actions.createWorkflowDispatch({
+      ...ActionsRepo.UPDATE_LOCKFILE_WORKFLOW,
+      inputs: {
+        pull_number: pull_number.toString(),
+      },
+    });
+    return workflow;
+  }
 }

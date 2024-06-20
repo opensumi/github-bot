@@ -69,6 +69,13 @@ export namespace ActionsRepo {
     workflow_id: SYNC_CODEBLITZ_FILE,
     ref: 'main',
   };
+
+  export const UPDATE_LOCKFILE_FILE = 'update-lockfile.yml';
+  export const UPDATE_LOCKFILE_WORKFLOW = {
+    ...info,
+    workflow_id: UPDATE_LOCKFILE_FILE,
+    ref: 'main',
+  };
 }
 
 export function getActionsUrl({
