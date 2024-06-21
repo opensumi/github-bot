@@ -80,7 +80,6 @@ describe('command center', () => {
     });
 
     cc.on('hello', async (ctx) => {
-      console.log(`🚀 ~ file: commander.test.ts:53 ~ cc.on ~ ctx:`, ctx);
       await Promise.race([
         (async () => {
           await sleep(5 * 1000);

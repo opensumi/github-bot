@@ -20,6 +20,7 @@ describe('KV', () => {
       expect(json).toEqual({ key: 'value' });
     });
     it('can cache', async () => {
+      jest.useFakeTimers();
       const manager = KVManager.for<any>('test', 500);
 
       const spy = jest.spyOn(manager.kv, 'get');
@@ -36,12 +37,20 @@ describe('KV', () => {
 
       // should only call once, the second time should get from cache
       expect(spy).toBeCalledTimes(1);
-      await sleep(4000);
+
+      jest.advanceTimersByTime(300);
 
       const c = await manager.getJSONCached('key');
       expect(c).toEqual({ key: 'value' });
+      expect(spy).toBeCalledTimes(1);
+
+      jest.advanceTimersByTime(4000);
+
+      const d = await manager.getJSONCached('key');
+      expect(d).toEqual({ key: 'value' });
 
       expect(spy).toBeCalledTimes(2);
-    }, 10000);
+      jest.useRealTimers();
+    });
   });
 });
