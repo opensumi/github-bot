@@ -14,6 +14,8 @@ kv_namespaces = [
     { binding = "KV", id = "{{KV_LOCAL_ID}}", preview_id = "{{KV_LOCAL_ID}}" },
 ]
 
+[[analytics_engine_datasets]]
+binding = "metricsDataset"
 
 [[queues.producers]]
 queue = "{{QUEUE_NAME_LOCAL}}"
@@ -24,14 +26,14 @@ queue = "{{QUEUE_NAME_LOCAL}}"
 max_batch_size = 10
 max_batch_timeout = 1
 
+[placement]
+mode = "smart"
+
 [env.prod]
 name = "sumi-webhook"
 vars = { ENVIRONMENT = "prod" }
 
 kv_namespaces = [{ binding = "KV", id = "{{KV_PROD_ID}}" }]
-
-[[analytics_engine_datasets]]
-binding = "metricsDataset"
 
 [[env.prod.queues.producers]]
 queue = "{{QUEUE_NAME_PROD}}"
@@ -42,5 +44,5 @@ queue = "{{QUEUE_NAME_PROD}}"
 max_batch_size = 10
 max_batch_timeout = 1
 
-[placement]
-mode = "smart"
+[[env.prod.analytics_engine_datasets]]
+binding = "metricsDataset"
