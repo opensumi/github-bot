@@ -20,7 +20,7 @@ describe('KV', () => {
       expect(json).toEqual({ key: 'value' });
     });
     it('can cache', async () => {
-      const manager = KVManager.for<any>('test', 2 * 1000);
+      const manager = KVManager.for<any>('test', 500);
 
       const spy = jest.spyOn(manager.kv, 'get');
 
@@ -34,8 +34,9 @@ describe('KV', () => {
       const b = await manager.getJSONCached('key');
       expect(b).toEqual({ key: 'value' });
 
+      // should only call once, the second time should get from cache
       expect(spy).toBeCalledTimes(1);
-      await sleep(2000);
+      await sleep(4000);
 
       const c = await manager.getJSONCached('key');
       expect(c).toEqual({ key: 'value' });
