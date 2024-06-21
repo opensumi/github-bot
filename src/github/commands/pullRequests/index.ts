@@ -5,7 +5,11 @@ import {
 } from '@/constants/opensumi';
 import { removeCommandPrefix, StopError } from '@opensumi/bot-commander';
 
-import { GitHubCommandCenter } from '../types';
+import {
+  CommandContext,
+  GitHubCommandCenter,
+  IssueCommentEvent,
+} from '../types';
 
 export function extractTargetBranchNameFromCommand(str: string) {
   const text = removeCommandPrefix(str, kBackportKeyword);
@@ -37,34 +41,42 @@ function constraintRepo(fullname: string, allowedRepo: Set<string>) {
   }
 }
 
+async function checkIsPullRequestAndUserHasPermission(ctx: CommandContext) {
+  const { app, payload } = ctx;
+  const owner = payload.repository.owner.login;
+  const repo = payload.repository.name;
+  const { issue } = payload;
+
+  const pull_request = issue.pull_request;
+  if (!pull_request) {
+    // only handle pull request
+    return;
+  }
+
+  const user = payload.sender.login;
+  const userHaveWritePerm = await app.octoService.checkRepoWritePermission(
+    owner,
+    repo,
+    user,
+  );
+
+  if (!userHaveWritePerm) {
+    await app.createReactionForIssueComment(ctx, 'confused');
+    throw new StopError(
+      `User ${user} does not have write permission to the repository`,
+    );
+  }
+}
+
 export function registerPullRequestCommand(it: GitHubCommandCenter) {
   // backport to v2.23
   it.on(
     kBackportKeyword,
     async (ctx, _command) => {
       const { app, payload } = ctx;
-      const owner = payload.repository.owner.login;
-      const repo = payload.repository.name;
-      constraintRepo(payload.repository.full_name, backportAllowedRepo);
-
       const { issue } = payload;
-
-      const pull_request = issue.pull_request;
-      if (!pull_request) {
-        // only handle pull request
-        return;
-      }
-
-      const user = payload.sender.login;
-      const userHaveWritePerm = await app.octoService.checkRepoWritePermission(
-        owner,
-        repo,
-        user,
-      );
-      if (!userHaveWritePerm) {
-        await app.createReactionForIssueComment(ctx, 'confused');
-        return;
-      }
+      constraintRepo(payload.repository.full_name, backportAllowedRepo);
+      await checkIsPullRequestAndUserHasPermission(ctx);
 
       const result = await app.octoService.getPrByNumber(
         payload.repository.owner.login,
@@ -171,31 +183,24 @@ Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
 
   it.on('update-lock', async (ctx) => {
     const { app, payload } = ctx;
-    const owner = payload.repository.owner.login;
-    const repo = payload.repository.name;
+    const { issue } = payload;
     const fullname = payload.repository.full_name;
     constraintRepo(fullname, updateLockfileAllowedRepo);
-
-    const user = payload.sender.login;
-    const userHaveWritePerm = await app.octoService.checkRepoWritePermission(
-      owner,
-      repo,
-      user,
-    );
-
-    if (!userHaveWritePerm) {
-      await app.createReactionForIssueComment(ctx, 'confused');
-      return;
-    }
-
-    const { issue } = payload;
-    const pull_request = issue.pull_request;
-    if (!pull_request) {
-      // only handle pull request
-      return;
-    }
+    await checkIsPullRequestAndUserHasPermission(ctx);
 
     await app.opensumiOctoService.updateLockfileForPr({
+      pull_number: issue.number,
+    });
+    await app.createReactionForIssueComment(ctx, 'rocket');
+  });
+  it.on('create-merge-commit', async (ctx) => {
+    const { app, payload } = ctx;
+    const { issue } = payload;
+    const fullname = payload.repository.full_name;
+    constraintRepo(fullname, updateLockfileAllowedRepo);
+    await checkIsPullRequestAndUserHasPermission(ctx);
+
+    await app.opensumiOctoService.createMergeCommitForPr({
       pull_number: issue.number,
     });
     await app.createReactionForIssueComment(ctx, 'rocket');

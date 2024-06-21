@@ -7,9 +7,11 @@ import type { App } from '../app';
 
 export type IssueCommentHandler = () => Promise<void>;
 
+export type IssueCommentEvent = ExtractPayload<'issue_comment'>;
+
 export interface CommandContext {
   app: App;
-  payload: ExtractPayload<'issue_comment'>;
+  payload: IssueCommentEvent;
   id: string;
   name: string;
   octokit: Octokit;

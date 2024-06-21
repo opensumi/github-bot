@@ -76,6 +76,13 @@ export namespace ActionsRepo {
     workflow_id: UPDATE_LOCKFILE_FILE,
     ref: 'main',
   };
+
+  export const CREATE_MERGE_COMMIT_FILE = 'create-merge-commit.yml';
+  export const CREATE_MERGE_COMMIT_WORKFLOW = {
+    ...info,
+    workflow_id: CREATE_MERGE_COMMIT_FILE,
+    ref: 'main',
+  };
 }
 
 export function getActionsUrl({

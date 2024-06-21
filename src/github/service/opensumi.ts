@@ -179,4 +179,14 @@ export class OpenSumiOctoService extends GitHubService {
     });
     return workflow;
   }
+
+  async createMergeCommitForPr({ pull_number }: { pull_number: number }) {
+    const workflow = await this.octo.actions.createWorkflowDispatch({
+      ...ActionsRepo.CREATE_MERGE_COMMIT_WORKFLOW,
+      inputs: {
+        pull_number: pull_number.toString(),
+      },
+    });
+    return workflow;
+  }
 }
