@@ -66,7 +66,8 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     await bot.reply(
       convertToDingMarkdown(
         '开始部署机器人',
-        '开始部署机器人 & 预发机器人' + text,
+        '[开始部署机器人 & 预发机器人](https://github.com/opensumi/github-bot/actions)' +
+          text,
       ),
     );
   });
@@ -97,7 +98,11 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
 
     await app.opensumiOctoService.deployBotPre(workflowRef);
     await bot.reply(
-      convertToDingMarkdown('开始部署预发机器人', '开始部署预发机器人' + text),
+      convertToDingMarkdown(
+        '开始部署预发机器人',
+        '[开始部署预发机器人](https://github.com/opensumi/github-bot/actions)' +
+          text,
+      ),
     );
   });
 
