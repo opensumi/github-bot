@@ -1,5 +1,5 @@
+import { RootContent, Parent, Nodes } from 'mdast';
 import { fromMarkdown } from 'mdast-util-from-markdown';
-import { Content, Parent } from 'mdast-util-from-markdown/lib/index';
 import { gfmFromMarkdown, gfmToMarkdown } from 'mdast-util-gfm';
 import { toMarkdown } from 'mdast-util-to-markdown';
 import { gfm } from 'micromark-extension-gfm';
@@ -30,7 +30,7 @@ function trimLeadingWhiteSpace(str: string) {
   }
 }
 
-export function walk(root: Parent, cb: (token: Content) => boolean | void) {
+export function walk(root: Parent, cb: (token: RootContent) => boolean | void) {
   root.children.forEach((node) => {
     if (node) {
       const skip = cb(node);
@@ -47,7 +47,7 @@ export interface IMakeMarkdownOptions {
   handleImageUrl?: (url: string) => string;
 }
 
-export function makeMarkdown(tree: Parent, options?: IMakeMarkdownOptions) {
+export function makeMarkdown(tree: Nodes, options?: IMakeMarkdownOptions) {
   return toMarkdown(tree, {
     extensions: [gfmToMarkdown()],
     listItemIndent: 'one',
