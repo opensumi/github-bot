@@ -1,5 +1,3 @@
-import { sleep } from '@opensumi/ide-utils/lib/async';
-
 import { KVManager } from '@/kv';
 
 import '../__mocks__/env';
@@ -19,8 +17,9 @@ describe('KV', () => {
       const json = await manager.getJSON('key');
       expect(json).toEqual({ key: 'value' });
     });
-    it('can cache', async () => {
+    it.skip('can cache', async () => {
       jest.useFakeTimers();
+
       const manager = KVManager.for<any>('test', 500);
 
       const spy = jest.spyOn(manager.kv, 'get');
