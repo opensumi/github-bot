@@ -17,7 +17,7 @@ describe('queue consumer', () => {
     consumer.addWorker('test', wk);
     consumer.push(...batch.messages);
     expect(wk.queue.length).toBe(100);
-    await consumer.runAndWait();
+    await consumer.runAndAwait();
   });
 });
 

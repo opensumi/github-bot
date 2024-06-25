@@ -30,7 +30,7 @@ export class QueueConsumer<T extends { type: string }> {
     }
   }
 
-  async runAndWait() {
+  async runAndAwait() {
     const promises = [] as Promise<void>[];
     for (const w of this.workerMap.values()) {
       promises.push(w.run());

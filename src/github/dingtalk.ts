@@ -35,7 +35,11 @@ function dingSecurityInterception(text: string) {
 export const createImageProxy = () => {
   return {
     handleImageUrl: (url: string) => {
-      return context().getProxiedUrl(url);
+      try {
+        return context().getProxiedUrl(url);
+      } catch (error) {
+        return url;
+      }
     },
   };
 };

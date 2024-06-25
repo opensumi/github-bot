@@ -1,6 +1,6 @@
 import { StatusCode } from 'hono/utils/http-status';
 
-import { store } from '../context';
+import { middleware } from '../context';
 
 import * as GitHub from './github';
 
@@ -37,7 +37,7 @@ export const enhanceContext = (hono: THono) => {
   });
 
   hono.use(
-    store<THonoEnvironment>((ctx) => ({
+    middleware<THonoEnvironment>((ctx) => ({
       ctx,
     })),
   );

@@ -25,10 +25,9 @@ export default {
     const consumer = createConsumer();
 
     consumer.push(...batch.messages);
-
     ctx.waitUntil(
       consumer
-        .runAndWait()
+        .runAndAwait()
         .then((res) => {
           logger.info('queue done', res);
         })

@@ -6,8 +6,8 @@ export type ContinuationContext = {
   ctx: Context<THonoEnvironment>;
 };
 
-const { store, get } = asyncLocalStorage<ContinuationContext>();
+const { middleware, get } = asyncLocalStorage<ContinuationContext>();
 
-export { store };
+export { middleware };
 
 export const context = () => get('ctx');
