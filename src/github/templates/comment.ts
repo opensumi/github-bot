@@ -86,7 +86,11 @@ function renderComment(
       title: `{{sender | link:sender}} {{action}} [comment](${comment.html_url}) on [${location}](${data.html_url})`,
       body: CommentBody(payload.comment),
       compactTitle: `{{sender | link:sender}} {{action}} [comment](${data.html_url}):`,
-      blockUsers: new Set<string>(['railway-app[bot]', 'ant-codespaces[bot]']),
+      blockUsers: new Set<string>([
+        'railway-app[bot]',
+        'ant-codespaces[bot]',
+        'coderabbitai[bot]',
+      ]),
       blockActions: new Set(['edited']),
     },
     ctx,
