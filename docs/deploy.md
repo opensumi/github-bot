@@ -13,7 +13,7 @@ All you need to do is to have a Cloudflare account, then:
 ```sh
 yarn
 yarn wrangler login
-yarn run publish:local
+yarn run deploy:local
 ```
 
 because we set `name` attribute in `wrangler.toml`, so this func will be deploy at:

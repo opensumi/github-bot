@@ -25,11 +25,10 @@ jobs:
           yarn
           yarn run build
           yarn run test
+          yarn build
 
       - name: Deploy to Pre
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          preCommands: yarn build
-          command: deploy
