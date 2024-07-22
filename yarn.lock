@@ -12583,8 +12583,8 @@ __metadata:
   linkType: hard
 
 "ts-json-schema-generator@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "ts-json-schema-generator@npm:2.1.1"
+  version: 2.3.0
+  resolution: "ts-json-schema-generator@npm:2.3.0"
   dependencies:
     "@types/json-schema": "npm:^7.0.15"
     commander: "npm:^12.0.0"
@@ -12592,10 +12592,11 @@ __metadata:
     json5: "npm:^2.2.3"
     normalize-path: "npm:^3.0.0"
     safe-stable-stringify: "npm:^2.4.3"
+    tslib: "npm:^2.6.2"
     typescript: "npm:^5.4.5"
   bin:
     ts-json-schema-generator: bin/ts-json-schema-generator.js
-  checksum: 10/f00a7a243cb3b70e9e324f210e1df331e8e27796fe4922751c461946b2bafd2e32e18ed64ef09a8520220356786b03e00f741ad496dbb3178f0e6ca8196d89c5
+  checksum: 10/087c3a2d59122192384209595f469764e6a1624ca6360346188ab7753f964383403b18c0da2964de505ce394ecc37927319d18f23f483cae8cf603d8a79989c0
   languageName: node
   linkType: hard
 
@@ -12636,7 +12637,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.2.0":
+"tslib@npm:^2.2.0, tslib@npm:^2.6.2":
   version: 2.6.3
   resolution: "tslib@npm:2.6.3"
   checksum: 10/52109bb681f8133a2e58142f11a50e05476de4f075ca906d13b596ae5f7f12d30c482feb0bff167ae01cfc84c5803e575a307d47938999246f5a49d174fc558c
