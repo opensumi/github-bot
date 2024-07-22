@@ -158,8 +158,7 @@ export function route(hono: THono) {
     return c.html(
       html`${raw(ConfigurationHTML)}
         <script type="module">
-          import defaultSchema from '${schemaUrl}' assert { type: 'json' };
-
+          const defaultSchema = await (await fetch('${schemaUrl}')).json();
           window.starting_value = ${raw(JSON.stringify(data ?? {}))};
           window.submit_url =
             '${c.origin}/configuration/${id}/${type}?token=${token}';

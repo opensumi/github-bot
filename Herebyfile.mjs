@@ -74,7 +74,7 @@ export const dev = task({
   name: 'dev',
   dependencies: [build],
   run: async () => {
-    await runTask(devWorkerPreview);
+    await runTask(devNode);
   },
 });
 

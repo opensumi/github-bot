@@ -27,7 +27,7 @@ export function run() {
     const v = process.env[key];
     if (v && match.index) {
       magic.update(match.index, match.index + match[0].length, v);
-      console.log(`"${key}" will be replaced to "[redacted]"`);
+      console.log(`updated: "${key}" -> 🤫`);
     } else {
       console.warn(`env variable "${key}" not found.`);
     }
