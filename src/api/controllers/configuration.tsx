@@ -139,7 +139,7 @@ export function route(hono: THono) {
     if (!settingsTypes.includes(type as SettingType)) {
       return c.text('Not Found:' + type, 404);
     }
-    const schemaUrl = `${c.origin}static/json-schemas/${type}`;
+    const schemaUrl = `${c.origin}/static/json-schemas/${type}`;
 
     let data = null;
 
@@ -162,7 +162,7 @@ export function route(hono: THono) {
 
           window.starting_value = ${raw(JSON.stringify(data ?? {}))};
           window.submit_url =
-            '${c.origin}configuration/${id}/${type}?token=${token}';
+            '${c.origin}/configuration/${id}/${type}?token=${token}';
           window._options = {
             schema: defaultSchema,
             startval: window.starting_value,
