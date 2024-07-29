@@ -1091,9 +1091,9 @@ __metadata:
   linkType: hard
 
 "@hono/node-server@npm:^1.11.1":
-  version: 1.11.1
-  resolution: "@hono/node-server@npm:1.11.1"
-  checksum: 10/f331bf70ac094f4b24af12906ef726e395c55ee8ffef14bf5019657c50c3a8bc279eb8f0542941abff910bb79c72c9dc4764f65f711c02d78a496a8639f7b86e
+  version: 1.12.0
+  resolution: "@hono/node-server@npm:1.12.0"
+  checksum: 10/7aa7ec225130a12b8320d0fa79ab037bf7cdbf6bfbf4a97fe4b7e2cbaa3211f9623d872b39b19c6efcc5782dd1b9c802190b31263595467d87ca8795e4b224bc
   languageName: node
   linkType: hard
 
