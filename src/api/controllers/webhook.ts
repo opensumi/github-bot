@@ -9,6 +9,28 @@ import { sendToDing } from '@/github/dingtalk';
 import { GitHubKVManager } from '@/kv/github';
 
 export function route(hono: THono) {
+  hono.get('/webhook/:id', async (c) => {
+    const id = c.req.param('id') ?? c.req.query('id');
+    if (!id) {
+      return c.send.error(400, 'need a valid id');
+    }
+
+    const setting = await GitHubKVManager.instance().getSettingById(id);
+
+    if (setting) {
+      return c.json({
+        success: true,
+      });
+    }
+
+    return c.json(
+      {
+        success: false,
+      },
+      404,
+    );
+  });
+
   hono.post('/webhook/:id', async (c) => {
     const id = c.req.param('id') ?? c.req.query('id');
     if (!id) {
