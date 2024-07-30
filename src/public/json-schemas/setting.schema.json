@@ -18,7 +18,7 @@
         },
         "contentLimit": {
           "type": "number",
-          "description": "通知的内容长度限制，超过这个长度的内容会被截断"
+          "description": "通知的内容长度限制，超过这个长度的内容会被截断, -1 表示不截断（但消息仍受各平台能发送的最大字符影响，钉钉为 5k 字符）"
         },
         "isCommunity": {
           "type": "boolean",
@@ -40,21 +40,12 @@
               "type": "string"
             }
           },
-          "description": "通知 workflow 的成功、失败事件 键是仓库的名字，值是某个 workflow 的名字(yml 中配置的 name 字段)",
-          "examples": [
-            {
-              "opensumi/actions": ["sync to npmmirror"]
-            }
-          ]
+          "description": "通知 workflow 的成功、失败事件 键是仓库的名字，值是某个 workflow 的名字(yml 中配置的 name 字段) 比如说：`{ 'opensumi/actions': ['sync to npmmirror'] }`"
         },
         "notDisplayRepoName": {
           "type": "boolean",
           "description": "不在消息中展示 repo 名字，适合单仓库",
           "default": false
-        },
-        "installation": {
-          "$ref": "#/definitions/IInstallationSetting",
-          "description": "一般不需要配置这个，仅用于 OpenSumi 社区"
         }
       },
       "required": ["githubSecret", "dingWebhooks", "contentLimit"],
@@ -356,19 +347,6 @@
         "workflow_run.requested"
       ],
       "format": "selectize"
-    },
-    "IInstallationSetting": {
-      "type": "object",
-      "properties": {
-        "flags": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "number"
-          }
-        }
-      },
-      "required": ["flags"],
-      "additionalProperties": false
     }
   }
 }

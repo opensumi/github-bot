@@ -1,10 +1,13 @@
-import { existsSync, mkdirSync, writeFile } from 'fs';
+//@ts-check
+
+import { existsSync, mkdirSync } from 'fs';
+import {writeFile} from 'fs/promises';
 import { resolve, dirname as _dirname } from 'path';
 
 import prettier from 'prettier';
 import { createGenerator } from 'ts-json-schema-generator';
 
-const { format, resolveConfig, resolveConfigFile } = prettier;
+const { format, resolveConfig } = prettier;
 
 const __dirname = _dirname(new URL(import.meta.url).pathname);
 
@@ -14,10 +17,21 @@ const config = {
   tsconfig: resolve(__dirname, '../tsconfig.build.json'),
 };
 
-function usePrettier(schema) {
+const prettierConfigFile = await prettier.resolveConfigFile();
+
+let prettierConfig = {};
+if (prettierConfigFile) {
+  const result = await resolveConfig(prettierConfigFile);
+  if (result) {
+    prettierConfig = result;
+  }
+}
+
+
+async function usePrettier(schema) {
   return format(schema, {
     parser: 'json',
-    ...resolveConfig(resolveConfigFile.sync()),
+    ...prettierConfig,
   });
 }
 
@@ -31,7 +45,7 @@ function ensureDirSync(file) {
   mkdirSync(dirname);
 }
 
-function createTypeSchema(type, name) {
+async function createTypeSchema(type, name) {
   const schema = generator.createSchema(type);
   const schemaString = JSON.stringify(schema, null, 2);
   const output_path = resolve(
@@ -40,9 +54,7 @@ function createTypeSchema(type, name) {
     `${name}.schema.json`,
   );
   ensureDirSync(output_path);
-  writeFile(output_path, usePrettier(schemaString), (err) => {
-    if (err) throw err;
-  });
+  await writeFile(output_path, await usePrettier(schemaString));
 }
 
 createTypeSchema('AppSetting', 'app-settings');

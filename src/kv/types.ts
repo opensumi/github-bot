@@ -36,7 +36,7 @@ export interface ISetting {
    */
   dingWebhooks: IDingWebhookItem[];
   /**
-   * 通知的内容长度限制，超过这个长度的内容会被截断
+   * 通知的内容长度限制，超过这个长度的内容会被截断, -1 表示不截断（但消息仍受各平台能发送的最大字符影响，钉钉为 5k 字符）
    */
   contentLimit: number;
   /**
@@ -53,7 +53,7 @@ export interface ISetting {
   /**
    * 通知 workflow 的成功、失败事件
    * 键是仓库的名字，值是某个 workflow 的名字(yml 中配置的 name 字段)
-   * @example { 'opensumi/actions': ['sync to npmmirror'] }
+   * 比如说：`{ 'opensumi/actions': ['sync to npmmirror'] }`
    */
   workflowEventToNotify?: Record<string, string[]>;
   /**
@@ -61,13 +61,12 @@ export interface ISetting {
    * @default false
    */
   notDisplayRepoName?: boolean;
-  /**
-   * 一般不需要配置这个，仅用于 OpenSumi 社区
-   */
-  installation?: IInstallationSetting;
 }
 
 export interface IInstallationSetting {
+  /**
+   * 键是 flag，值是 installation id
+   */
   flags: Record<string, number>;
 }
 
@@ -91,6 +90,10 @@ export type AppSetting = ISetting & {
    * github id of the user who can release
    */
   userWhoCanRelease?: string[];
+  /**
+   * 提供了一个接口，可以通过 flag 置换 GitHub 的 installation token
+   */
+  installation?: IInstallationSetting;
 };
 
 export interface IDingBotSetting {
