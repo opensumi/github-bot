@@ -9,30 +9,13 @@ import {
   SettingsNameMap,
   SettingType,
 } from '@/kv/types';
+import UnauthorizedHTML from '@/public/configuration/401.html';
 import ConfigurationHTML from '@/public/configuration/configuration.html';
 
 declare module 'hono' {
   interface Context {
     validLevel: EValidLevel;
   }
-}
-
-export function Status401() {
-  const handleClick = () => {
-    const tokenElement = document.getElementById('token') as HTMLInputElement;
-    const token = tokenElement.value;
-    const params = new URLSearchParams(window.location.search);
-    params.set('token', token);
-    window.location.search = params.toString();
-  };
-
-  return (
-    <html>
-      <h1>Unauthorized!</h1>
-      <input type="password" id="token" />
-      <button onClick={handleClick}>Submit</button>
-    </html>
-  );
 }
 
 export function route(hono: THono) {
@@ -48,8 +31,7 @@ export function route(hono: THono) {
       return;
     }
 
-    console.log('Unauthorized', token, id);
-    return c.render(<Status401 />);
+    return c.html(UnauthorizedHTML, 401);
   });
 
   hono.get('/configuration/:id', async (c) => {
@@ -61,7 +43,7 @@ export function route(hono: THono) {
     const settingsTypes = LevelSettingsMap[c.validLevel];
 
     return c.html(
-      html`<!DOCTYPE html>
+      html`<!doctype html>
         <h1>Please select an item to continue:</h1>
 
         ${settingsTypes.map(
