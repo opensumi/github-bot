@@ -25,7 +25,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@opensumi/ide-utils": "^2.23.1",
+    "@opensumi/ide-utils": "^3.2.1",
     "mri": "^1.2.0"
   }
 }
