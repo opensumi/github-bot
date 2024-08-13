@@ -11,6 +11,7 @@ module.exports = {
   rules: {
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-namespace': 'off',
+    '@typescript-eslint/no-explicit-any': 'warn',
     'import/order': [
       'error',
       {

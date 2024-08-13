@@ -171,8 +171,6 @@ async function publishNextVersion(
     }
     if (payload.args['workflow-ref']) {
       workflowRef = payload.args['workflow-ref'];
-    } else {
-      workflowRef = ref;
     }
   }
 
@@ -187,21 +185,21 @@ async function publishNextVersion(
       }
       const text = await app.opensumiOctoService.getLastNCommitsText({
         owner: 'opensumi',
-        repo: repo,
+        repo,
         ref,
       });
 
       const name = repo === 'core' ? 'OpenSumi' : 'CodeBlitz';
       const workflowInfo =
         repo === 'core'
-          ? ActionsRepo.RELEASE_NEXT_BY_REF_WORKFLOW
-          : ActionsRepo.CODEBLITZ_RELEASE_NEXT_BY_REF_WORKFLOW;
+          ? { ...ActionsRepo.RELEASE_NEXT_BY_REF_WORKFLOW }
+          : { ...ActionsRepo.CODEBLITZ_RELEASE_NEXT_BY_REF_WORKFLOW };
 
-      await app.opensumiOctoService.releaseNextVersion(
-        workflowInfo,
-        ref,
-        workflowRef,
-      );
+      if (workflowRef) {
+        workflowInfo.ref = workflowRef;
+      }
+
+      await app.opensumiOctoService.releaseNextVersion(workflowInfo, ref);
       await bot.reply(
         convertToDingMarkdown(
           `Releasing a next version of ${name}`,

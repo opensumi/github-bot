@@ -12,11 +12,9 @@ export class OpenSumiOctoService extends GitHubService {
       repo: string;
     },
     branch: string,
-    workflowRef = 'main',
   ) {
     const workflow = await this.octo.actions.createWorkflowDispatch({
       ...workflowInfo,
-      ref: workflowRef,
       inputs: {
         ref: branch,
       },
