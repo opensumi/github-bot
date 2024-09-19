@@ -14,8 +14,12 @@ serve(
         request,
         {},
         {
-          waitUntil(promise) {
-            promise;
+          async waitUntil(promise) {
+            try {
+              await promise;
+            } catch (error) {
+              console.error(error);
+            }
           },
           passThroughOnException() {
             //
@@ -23,9 +27,10 @@ serve(
         },
       );
     },
-    port: port,
+    hostname: '0.0.0.0',
+    port,
   },
   (info) => {
-    console.log(`Listening on http://localhost:${info.port}`);
+    console.log(`Listening on http://0.0.0.0:${info.port}`);
   },
 );
