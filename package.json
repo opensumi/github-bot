@@ -1,6 +1,7 @@
 {
-  "name": "github-bot",
-  "packageManager": "yarn@4.2.2",
+  "name": "@opensumi/github-bot",
+  "packageManager": "yarn@4.5.0",
+  "private": true,
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/opensumi/github-bot.git",
