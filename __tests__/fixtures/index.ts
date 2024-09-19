@@ -1,6 +1,7 @@
 import {
   PullRequestEditedEvent,
   PullRequestReviewSubmittedEvent,
+  PullRequestReviewCommentCreatedEvent,
   ReleasePublishedEvent,
   IssuesOpenedEvent,
   PullRequestOpenedEvent,
@@ -18,6 +19,7 @@ import _pull_request_edited_wip from './pull_request_edited_wip.json';
 import _pull_request_review_4_submitted_changes_requested from './pull_request_review_4_submitted_changes_requested.json';
 import _pull_request_review_submitted_approved from './pull_request_review_submitted_approved.json';
 import _release_published from './release_published.json';
+import _review_comment_created from './review_comment_created.json';
 
 export const pull_request_review_4_submitted_changes_requested =
   _pull_request_review_4_submitted_changes_requested as unknown as PullRequestReviewSubmittedEvent;
@@ -42,5 +44,8 @@ export const pull_request_review_submitted_approved =
 export const pr3628_open = _pr3628_open as PullRequestOpenedEvent;
 export const issue_comment_created =
   _issue_comment_created as IssueCommentCreatedEvent;
+
+export const review_comment_created =
+  _review_comment_created as PullRequestReviewCommentCreatedEvent;
 
 export * from './generated';
