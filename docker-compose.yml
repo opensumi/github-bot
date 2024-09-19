@@ -1,7 +1,0 @@
-version: '3.0'
-services:
-  bot:
-    build: .
-    ports:
-      - '9099:8080'
-    env_file: .env
