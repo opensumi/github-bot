@@ -1091,9 +1091,11 @@ __metadata:
   linkType: hard
 
 "@hono/node-server@npm:^1.11.1":
-  version: 1.12.0
-  resolution: "@hono/node-server@npm:1.12.0"
-  checksum: 10/7aa7ec225130a12b8320d0fa79ab037bf7cdbf6bfbf4a97fe4b7e2cbaa3211f9623d872b39b19c6efcc5782dd1b9c802190b31263595467d87ca8795e4b224bc
+  version: 1.13.0
+  resolution: "@hono/node-server@npm:1.13.0"
+  peerDependencies:
+    hono: ^4
+  checksum: 10/6e1b44fa156e51c9d97c6f3dfafbb14cb6fc20ed169ff5819d79fd067f764080dcd1357417f023fdb33f22a705c23c4ef2f41fa51b4144467783c1767d749e52
   languageName: node
   linkType: hard
 
