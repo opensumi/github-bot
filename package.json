@@ -91,7 +91,7 @@
     "lerna": "^8.1.6",
     "nodemon": "^3.1.4",
     "prettier": "^3.3.3",
-    "smee-client": "^1.2.3",
+    "smee-client": "^2.0.3",
     "string.prototype.replaceall": "^1.0.7",
     "ts-jest": "^29.0.5",
     "ts-json-schema-generator": "^2.1.1",
