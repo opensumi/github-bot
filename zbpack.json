@@ -1,5 +1,5 @@
 {
-  "cache_dependencies": true,
+  "cache_dependencies": false,
   "build_command": "yarn build:node",
   "start_command": "node dist/node/index.js",
   "app_dir": "/"
