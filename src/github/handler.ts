@@ -1,11 +1,13 @@
 import { Octokit } from '@octokit/rest';
-import { Webhooks } from '@octokit/webhooks';
 import {
-  WebhookEventHandlerError,
+  Webhooks,
   EmitterWebhookEventName,
   EmitterWebhookEvent,
+} from '@octokit/webhooks';
+import type {
+  WebhookEventHandlerError,
+  WebhookEventName,
 } from '@octokit/webhooks/dist-types/types';
-import type { WebhookEventName } from '@octokit/webhooks-types';
 import { HonoRequest } from 'hono';
 
 import { error, json } from '@/api/utils/response';
@@ -21,13 +23,15 @@ import {
 import type { Context, IHasSender } from './types';
 
 export class ValidationError extends Error {
-  constructor(public statusCode: number, message: string) {
+  constructor(
+    public statusCode: number,
+    message: string,
+  ) {
     super(message);
   }
 }
 
 export async function validateGithub(
-  // eslint-disable-next-line @typescript-eslint/ban-types
   req: HonoRequest<any, {}>,
   webhooks: Webhooks,
 ): Promise<EmitterWebhookEvent> {
@@ -158,12 +162,12 @@ export async function webhookHandler(
     } catch (err) {
       let status = 500;
       if ((err as WebhookEventHandlerError).name === 'AggregateError') {
-        const statusCode = Array.from(err as WebhookEventHandlerError)[0]
-          .status;
+        const statusCode = (err as WebhookEventHandlerError).errors[0].status;
         if (statusCode) {
           status = statusCode;
         }
       }
+
       if ((err as any).code) {
         status = (err as any).code;
       }
