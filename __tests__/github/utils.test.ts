@@ -10,7 +10,6 @@ import {
   StringBuilder,
   limitLine,
   limitTextByPosition,
-  transformMarkdownToLimitable,
 } from '@/utils/string-builder';
 import * as DingUtils from '@opensumi/dingtalk-bot/lib/utils';
 
@@ -85,7 +84,7 @@ describe('github utils', () => {
     const urls = [] as string[];
     jest
       .spyOn(DingUtils, 'send')
-      .mockImplementation(async (content, url, secret): Promise<any> => {
+      .mockImplementation(async (content, url): Promise<any> => {
         urls.push(url);
       });
 
@@ -311,18 +310,6 @@ https://github.com/opensumi/core/blob/3455b10620badfe7b03a02d66136d3226b7891b8/p
     console.log(`it ~ result:`, result);
   });
 
-  it('can transform markdown to limitable', () => {
-    const d = transformMarkdownToLimitable(`
-    ${commentWithImg}
-\`\`\`
-asdfg
-\`\`\`
-
-# a
-## b
-    `);
-    expect(d).toMatchSnapshot();
-  });
   it('can handle pull_request_opened', async () => {
     const result = await handlePr(pr3628_open, ctx);
 

@@ -15,6 +15,11 @@ import { send } from '@opensumi/dingtalk-bot/lib/utils';
 
 import { MarkdownContent } from './types';
 
+function dingSecurityInterception(text: string) {
+  text = text.replaceAll('dingtalk://dingtalkclient/page/link?url=', '');
+  return text;
+}
+
 /**
  * 钉钉最大 5000 字
  */
@@ -23,13 +28,9 @@ export function convertToDingMarkdown(
   text: string,
   options?: IMakeMarkdownOptions,
 ): Markdown {
-  const _text = limitTextByPosition(text, 5000 - title.length - 10);
-  return _markdown(title, standardizeMarkdown(_text, options));
-}
-
-function dingSecurityInterception(text: string) {
-  text = text.replaceAll('dingtalk://dingtalkclient/page/link?url=', '');
-  return text;
+  text = dingSecurityInterception(text);
+  text = limitTextByPosition(text, 5000 - title.length - 10);
+  return _markdown(title, standardizeMarkdown(text, options));
 }
 
 export const createImageProxy = () => {
@@ -37,7 +38,7 @@ export const createImageProxy = () => {
     handleImageUrl: (url: string) => {
       try {
         return context().getProxiedUrl(url);
-      } catch (error) {
+      } catch {
         return url;
       }
     },
@@ -58,10 +59,6 @@ export async function sendToDing(
     data.title,
     data.text,
     createImageProxy(),
-  );
-
-  dingContent.markdown.text = dingSecurityInterception(
-    dingContent.markdown.text,
   );
 
   await sendContentToDing(dingContent, eventName, setting);

@@ -1,3 +1,7 @@
+import { writeFile } from 'fs/promises';
+import path from 'path';
+
+import { convertToDingMarkdown } from '@/github/dingtalk';
 import { handleReviewComment } from '@/github/templates/comment';
 import { handleReview } from '@/github/templates/review';
 
@@ -19,8 +23,18 @@ describe('github templates pr review', () => {
   });
   it('can handle complex code review', async () => {
     const result = await handleReviewComment(review_comment_created, ctx);
-    console.log(`review_comment_created ~ result`, result);
     expect(result).toMatchSnapshot();
+
+    if (process.env.WRITE_FILE) {
+      writeFile(
+        path.join(__dirname, './review_comment_created.md'),
+        result.text,
+      );
+    }
+
+    const dingContent = convertToDingMarkdown(result.title, result.text);
+
+    expect(dingContent).toMatchSnapshot();
   });
   it('can handle pull_request_review_2_1_dismissed_dismissed', async () => {
     const result = await handleReview(
