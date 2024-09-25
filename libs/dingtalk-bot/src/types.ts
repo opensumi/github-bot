@@ -67,6 +67,7 @@ export type Markdown = Base<
     text: string;
   }
 >;
+
 export type Text = Base<
   'text',
   {
@@ -74,7 +75,63 @@ export type Text = Base<
   }
 >;
 
-export type SendMessage = Image | Markdown | Text;
+export type Link = Base<
+  'link',
+  {
+    title: string;
+    text: string;
+    messageUrl: string;
+    picUrl: string;
+  }
+>;
+
+export type SingleActionCard = Base<
+  'actionCard',
+  {
+    /**
+     * 首屏会话透出的展示内容。
+     */
+    title: string;
+    /**
+     * markdown格式的消息。
+     */
+    text: string;
+
+    singleTitle: string;
+    singleURL: string;
+  }
+>;
+
+export type MultiActionCard = Base<
+  'actionCard',
+  {
+    /**
+     * 首屏会话透出的展示内容。
+     */
+    title: string;
+    /**
+     * markdown格式的消息。
+     */
+    text: string;
+    btns: {
+      title: string;
+      actionURL: string;
+    }[];
+    /**
+     * 0：按钮竖直排列
+     * 1：按钮横向排列
+     */
+    btnOrientation?: '0' | '1';
+  }
+>;
+
+export type SendMessage =
+  | Image
+  | Markdown
+  | Text
+  | Link
+  | SingleActionCard
+  | MultiActionCard;
 
 export function atDingtalkIds(...atDingtalkIds: string[]): At {
   return {
