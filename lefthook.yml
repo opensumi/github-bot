@@ -6,7 +6,9 @@ pre-commit:
       run: yarn eslint {staged_files}
     prettier:
       glob: '*.{js,ts,jsx,tsx,css,less,scss,vue,json,gql,md}'
-      run: yarn prettier {staged_files} -w
+      run:
+        yarn prettier {staged_files} -w
+        git update-index --again
 
 commit-msg:
   commands:
