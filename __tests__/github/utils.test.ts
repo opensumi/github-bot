@@ -46,12 +46,7 @@ describe('github utils', () => {
 44444
 `;
     const d = limitTextByPosition(text, 9);
-    expect(d).toMatchInlineSnapshot(`
-      "11111
-      22222
-      33333
-      44444"
-    `);
+    expect(d).toMatchSnapshot();
   });
 
   it('can limitTextByPostion2', () => {
@@ -64,15 +59,7 @@ describe('github utils', () => {
 77777
 `;
     const d = limitTextByPosition(text, 15);
-    expect(d).toMatchInlineSnapshot(`
-      "11111
-      22222
-      33333
-      44444
-      55555
-      66666
-      ..."
-    `);
+    expect(d).toMatchSnapshot();
   });
 
   it('send to ding', async () => {

@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`comment render comment with number 1`] = `
+[
+  "123123",
+]
+`;
+
+exports[`comment renderCommentBody 1`] = `
+[
+  "Merging [#466](https://codecov.io/gh/opensumi/core/pull/466?src=pr&el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=opensumi) (5aeef71) into [main](https://codecov.io/gh/opensumi/core/commit/f3c09bbed6a9db6737bb4f93adcce4aae3e3ff85?el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=opensumi) (f3c09bb) will **increase** coverage by \`0.00%\`.",
+  "The diff coverage is \`0.00%\`.",
+]
+`;

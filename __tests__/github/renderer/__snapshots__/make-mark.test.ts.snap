@@ -50,7 +50,7 @@ Script:
 rg --type ts --type js $'FRAME_FOUR'
 
 # 在 .ts 和 .js 文件中搜索对 FRAME_FIVE 的使用
-rg --type ts --type js $'FRAME_FIVE'  
+rg --type ts --type js $'FRAME_FIVE'
 
 \`\`\`
 
@@ -139,7 +139,7 @@ Script:
 rg --type ts --type js $'FRAME_FOUR'
 
 # 在 .ts 和 .js 文件中搜索对 FRAME_FIVE 的使用
-rg --type ts --type js $'FRAME_FIVE'  
+rg --type ts --type js $'FRAME_FIVE'
 
 \`\`\`
 

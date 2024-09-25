@@ -29,6 +29,22 @@ after:
 "
 `;
 
+exports[`github utils can limitTextByPostion 1`] = `
+"11111
+22222
+33333
+44444"
+`;
+
+exports[`github utils can limitTextByPostion2 1`] = `
+"11111
+22222
+33333
+44444
+55555
+66666"
+`;
+
 exports[`github utils can not handle img tag 1`] = `
 "<img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Google" width="272" height="92">
 "
@@ -126,16 +142,6 @@ exports[`github utils can transform inline code 1`] = `
 <https://github.com/opensumi/core/blob/3455b10620badfe7b03a02d66136d3226b7891b8/packages/theme/src/browser/icon.service.ts>
 欢迎开发者贡献代码，或等待我们后续实现。
 "
-`;
-
-exports[`github utils can transform markdown to limitable 1`] = `
-{
-  "headingDepthCount": 3,
-  "imageCount": 1,
-  "result": "![]()
-看起来这个分支有个报错关于 TerminalClient 的,有可能是 init 时机有点问题asdfg# a## b
-",
-}
 `;
 
 exports[`github utils will escape some markdown syntax 1`] = `

@@ -12,22 +12,13 @@ describe('comment', () => {
       user: { login: 'codecov-commenter' },
     });
     console.log(`🚀 ~ file: comments.test.ts ~ line 21 ~ d`, d);
-    expect(d.split('\n')).toMatchInlineSnapshot(`
-      [
-        "Merging [#466](https://codecov.io/gh/opensumi/core/pull/466?src=pr&el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=opensumi) (5aeef71) into [main](https://codecov.io/gh/opensumi/core/commit/f3c09bbed6a9db6737bb4f93adcce4aae3e3ff85?el=desc&utm_medium=referral&utm_source=github&utm_content=comment&utm_campaign=pr+comments&utm_term=opensumi) (f3c09bb) will **increase** coverage by \`0.00%\`.",
-        "The diff coverage is \`0.00%\`.",
-      ]
-    `);
+    expect(d.split('\n')).toMatchSnapshot();
   });
   it('render comment with number', () => {
     const d = CommentBody({
       body: `123123`,
       user: { login: 'hello' },
     });
-    expect(d.trim().split('\n')).toMatchInlineSnapshot(`
-      [
-        "123123",
-      ]
-    `);
+    expect(d.trim().split('\n')).toMatchSnapshot();
   });
 });
