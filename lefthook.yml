@@ -3,11 +3,11 @@ pre-commit:
   commands:
     lint:
       glob: '*.{js,ts,jsx,tsx}'
-      run: yarn lint {staged_files}
-    prettier:
+      run: yarn lint --diagnostic-level=error {staged_files}
+    format:
       glob: '*.{js,ts,jsx,tsx,css,less,scss,vue,json,gql,md}'
       run: |
-        yarn lint:fix {staged_files}
+        yarn lint:fix --diagnostic-level=error {staged_files}
         git update-index --again
 
 commit-msg:
