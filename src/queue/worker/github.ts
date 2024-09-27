@@ -1,7 +1,7 @@
 import { EmitterWebhookEventName, Webhooks } from '@octokit/webhooks';
-import { orderBy } from 'lodash';
 import chunk from 'lodash/chunk';
 import groupBy from 'lodash/groupBy';
+import orderBy from 'lodash/orderBy';
 import DefaultMap from 'mnemonist/default-map';
 
 import { initApp } from '@/github/app';
@@ -54,9 +54,8 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
   }
 
   async createGitHubApp(botId: string): Promise<IOctokitShape | undefined> {
-    const appSetting = await GitHubKVManager.instance().getAppSettingById(
-      botId,
-    );
+    const appSetting =
+      await GitHubKVManager.instance().getAppSettingById(botId);
 
     if (!appSetting) {
       this.logger.error('github app worker error: setting not found', botId);

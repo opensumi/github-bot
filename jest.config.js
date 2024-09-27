@@ -12,7 +12,6 @@ const config = {
   },
   testMatch: ['**/__tests__/**/*.(spec|test).[jt]s?(x)'],
   testPathIgnorePatterns: ['<rootDir>/build/', '<rootDir>/node_modules/'],
-  '//': 'https://github.com/remarkjs/remark/issues/969',
   transformIgnorePatterns: [],
   collectCoverageFrom: ['src/**/*.{ts,js}'],
   coveragePathIgnorePatterns: ['/node_modules/'],
@@ -22,8 +21,6 @@ const config = {
   setupFilesAfterEnv: ['<rootDir>/jest-setup.js'],
 };
 
-if (process.env.CI) {
-  config.reporters = [['summary', { summaryThreshold: 1 }]];
-}
+config.reporters = [['summary', { summaryThreshold: 1 }]];
 
 module.exports = config;
