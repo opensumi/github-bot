@@ -6,7 +6,7 @@ import { TQueueMessage } from './types';
 import { BaseWorker } from './worker';
 import { GitHubEventWorker } from './worker/github';
 
-export class QueueConsumer<T extends { type: string }> {
+export class QueueBatchConsumer<T extends { type: string }> {
   logger = Logger.instance();
 
   private workerMap = new MultiMap<string, BaseWorker<T>>();
@@ -21,7 +21,7 @@ export class QueueConsumer<T extends { type: string }> {
       const workers = this.workerMap.get(v.body.type);
       if (!workers) {
         this.logger.error('no worker found for', v.body.type);
-        return;
+        continue;
       }
 
       for (const worker of workers) {
@@ -39,8 +39,8 @@ export class QueueConsumer<T extends { type: string }> {
   }
 }
 
-export const createConsumer = () => {
-  const consumer = new QueueConsumer<TQueueMessage>();
+export const createBatchConsumer = () => {
+  const consumer = new QueueBatchConsumer<TQueueMessage>();
   consumer.addWorker('github-app', new GitHubEventWorker('app'));
   consumer.addWorker('github-webhook', new GitHubEventWorker('webhook'));
   return consumer;

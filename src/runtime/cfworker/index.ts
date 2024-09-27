@@ -1,6 +1,6 @@
 import { ignition } from '@/api';
 import Environment from '@/env';
-import { createConsumer } from '@/queue';
+import { createBatchConsumer } from '@/queue';
 import { TQueueMessage } from '@/queue/types';
 import { RequiredField } from '@/types';
 import { Logger } from '@/utils/logger';
@@ -22,7 +22,7 @@ export default {
     const logger = Logger.instance();
     Environment.initialize(runtimeConfig, env);
 
-    const consumer = createConsumer();
+    const consumer = createBatchConsumer();
 
     consumer.push(...batch.messages);
     ctx.waitUntil(

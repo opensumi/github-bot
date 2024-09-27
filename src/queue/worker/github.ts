@@ -12,6 +12,7 @@ import { Logger } from '@/utils/logger';
 
 import { IGitHubEventQueueMessage } from '../types';
 
+import { memoize, pMemoize } from '@opensumi/ide-utils';
 import { BaseWorker } from '.';
 
 export function createUniqueMessageId(
@@ -50,7 +51,13 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
     // do nothing
   }
 
+  private _appMap = new Map<string, IOctokitShape>();
   async createGitHubApp(botId: string): Promise<IOctokitShape | undefined> {
+    const cached = this._appMap.get(botId);
+    if (cached) {
+      return cached;
+    }
+
     const appSetting =
       await GitHubKVManager.instance().getAppSettingById(botId);
 
@@ -68,13 +75,22 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
     }
 
     const app = await initApp(appSetting);
+    this._appMap.set(botId, {
+      webhooks: app.webhooks,
+      setting: appSetting,
+    });
     return {
       webhooks: app.webhooks,
       setting: appSetting,
     };
   }
 
+  private _webhookMap = new Map<string, IOctokitShape>();
   async createWebhook(botId: string): Promise<IOctokitShape | undefined> {
+    const cached = this._webhookMap.get(botId);
+    if (cached) {
+      return cached;
+    }
     const _setting = await GitHubKVManager.instance().getSettingById(botId);
     if (!_setting) {
       this.logger.error('github app worker error: setting not found', botId);
@@ -96,6 +112,10 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
     });
     const setting = _setting;
 
+    this._webhookMap.set(botId, {
+      webhooks,
+      setting,
+    });
     return {
       webhooks,
       setting,

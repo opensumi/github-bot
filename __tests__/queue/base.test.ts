@@ -1,4 +1,4 @@
-import { QueueConsumer } from '@/queue';
+import { QueueBatchConsumer } from '@/queue';
 import { BaseWorker } from '@/queue/worker';
 
 import { MockMessage, MockMessageBatch } from '../__mocks__/queue/message';
@@ -11,7 +11,7 @@ class Worker<T> extends BaseWorker<T> {
 
 describe('queue consumer', () => {
   it('can work', async () => {
-    const consumer = new QueueConsumer<FakeMessage>();
+    const consumer = new QueueBatchConsumer<FakeMessage>();
     const batch = createMessageBatch();
     const wk = new Worker<FakeMessage>();
     consumer.addWorker('test', wk);
