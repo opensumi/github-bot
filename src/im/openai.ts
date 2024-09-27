@@ -1,4 +1,4 @@
-import throttle from 'lodash/throttle';
+import { throttle } from 'es-toolkit';
 
 import { Conversation } from '@/ai/conversation';
 import { convertToDingMarkdown } from '@/github/dingtalk';

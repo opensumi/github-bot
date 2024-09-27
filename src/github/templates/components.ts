@@ -1,4 +1,4 @@
-import capitalize from 'lodash/capitalize';
+import { capitalize } from 'es-toolkit/string';
 
 import {
   StringBuilder,

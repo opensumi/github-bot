@@ -1,7 +1,5 @@
 import { EmitterWebhookEventName, Webhooks } from '@octokit/webhooks';
-import { orderBy } from 'lodash';
-import chunk from 'lodash/chunk';
-import groupBy from 'lodash/groupBy';
+import { chunk, groupBy, orderBy } from 'es-toolkit';
 import DefaultMap from 'mnemonist/default-map';
 
 import { initApp } from '@/github/app';
