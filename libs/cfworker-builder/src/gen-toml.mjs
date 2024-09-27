@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-import { readFileSync, writeFileSync, watch as _watch } from 'fs';
+import { watch as _watch, readFileSync, writeFileSync } from 'fs';
 
 import MagicString from 'magic-string';
 

@@ -1,4 +1,4 @@
-import { KVManager, DingCommon } from '@/kv';
+import { DingCommon, KVManager } from '@/kv';
 
 import { IDingBotSetting, IDingInfo, IDingUserInfo } from './types';
 

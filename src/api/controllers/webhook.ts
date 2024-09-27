@@ -1,9 +1,9 @@
 import { Webhooks } from '@octokit/webhooks';
 
 import {
-  webhookHandler,
   setupWebhooksTemplate,
   validateGithub,
+  webhookHandler,
 } from '@/github';
 import { sendToDing } from '@/github/dingtalk';
 import { GitHubKVManager } from '@/kv/github';

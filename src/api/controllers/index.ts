@@ -9,7 +9,7 @@ import * as Ding from './ding';
 import * as GitHub from './github';
 import * as Auth from './oauth';
 import * as Proxy from './proxy';
-import { OpenSumiRunWithIDEPrefix, OpenSumiRun } from './run';
+import { OpenSumiRun, OpenSumiRunWithIDEPrefix } from './run';
 import * as Static from './static';
 import * as Webhook from './webhook';
 

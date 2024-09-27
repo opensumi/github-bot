@@ -8,17 +8,17 @@ import { StopError, StopErrorWithReply } from './errors';
 import { Registry } from './registry';
 import { equalFunc, regex } from './rules';
 import type {
+  BaseContext,
+  ICommand,
   IRegexResolveResult,
   IResolveResult,
   IStarResolveResult,
-  TStarHandler,
-  THandler,
-  TRegexHandler,
-  TTextHandler,
-  BaseContext,
-  ICommand,
   RegexContext,
+  THandler,
   TInterceptor,
+  TRegexHandler,
+  TStarHandler,
+  TTextHandler,
 } from './types';
 
 interface InterceptorStore {

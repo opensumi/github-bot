@@ -1,4 +1,4 @@
-import { RootContent, Parent, Nodes } from 'mdast';
+import { Nodes, Parent, RootContent } from 'mdast';
 import { fromMarkdown } from 'mdast-util-from-markdown';
 import { gfmFromMarkdown, gfmToMarkdown } from 'mdast-util-gfm';
 import { toMarkdown } from 'mdast-util-to-markdown';

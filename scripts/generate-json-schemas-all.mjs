@@ -1,8 +1,8 @@
 //@ts-check
 
 import { existsSync, mkdirSync } from 'fs';
-import {writeFile} from 'fs/promises';
-import { resolve, dirname as _dirname } from 'path';
+import { dirname as _dirname, resolve } from 'path';
+import { writeFile } from 'fs/promises';
 
 import prettier from 'prettier';
 import { createGenerator } from 'ts-json-schema-generator';
@@ -26,7 +26,6 @@ if (prettierConfigFile) {
     prettierConfig = result;
   }
 }
-
 
 async function usePrettier(schema) {
   return format(schema, {

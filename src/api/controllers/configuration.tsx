@@ -6,8 +6,8 @@ import { GitHubKVManager } from '@/kv/github';
 import {
   EValidLevel,
   LevelSettingsMap,
-  SettingsNameMap,
   SettingType,
+  SettingsNameMap,
 } from '@/kv/types';
 import UnauthorizedHTML from '@/public/configuration/401.html';
 import ConfigurationHTML from '@/public/configuration/configuration.html';
@@ -140,10 +140,10 @@ export function route(hono: THono) {
     return c.html(
       html`${raw(ConfigurationHTML)}
         <script type="module">
-          const defaultSchema = await (await fetch('${schemaUrl}')).json();
+          const defaultSchema = await (await fetch("${schemaUrl}")).json();
           window.starting_value = ${raw(JSON.stringify(data ?? {}))};
           window.submit_url =
-            '${c.origin}/configuration/${id}/${type}?token=${token}';
+            "${c.origin}/configuration/${id}/${type}?token=${token}";
           window._options = {
             schema: defaultSchema,
             startval: window.starting_value,

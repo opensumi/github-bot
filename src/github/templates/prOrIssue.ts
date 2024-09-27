@@ -1,24 +1,24 @@
-import { Issue, PullRequest, Discussion } from '@octokit/webhooks-types';
+import { Discussion, Issue, PullRequest } from '@octokit/webhooks-types';
 
 import { StringBuilder } from '@/utils/string-builder';
 
 import {
-  ExtractPayload,
-  THasChanges,
   Context,
   ContextWithOctokit,
+  ExtractPayload,
+  THasChanges,
 } from '../types';
 
 import {
-  IssuesTitleLink,
-  DeletedPrOrIssueTitleLink,
-  StopHandleError,
-  PullRequestRefInfo,
   AssigneesInfo,
+  DeletedPrOrIssueTitleLink,
+  IssuesTitleLink,
+  PullRequestRefInfo,
   RequestedReviewersInfo,
+  StopHandleError,
   Template,
-  prettyUnderlineWord,
   TemplateRenderResult,
+  prettyUnderlineWord,
 } from './components';
 
 export type Name = 'issues' | 'pull_request' | 'discussion';

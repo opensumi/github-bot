@@ -1,6 +1,6 @@
 import type { ConversationKVManager } from '@/ai/conversation/kvManager';
 import type { DingKVManager, DingUserKVManager } from '@/kv/ding';
-import { SendMessage, Message } from '@opensumi/dingtalk-bot/lib/types';
+import { Message, SendMessage } from '@opensumi/dingtalk-bot/lib/types';
 
 export interface IBotAdapter {
   id: string;

@@ -1,9 +1,9 @@
-import { readFile } from 'fs/promises';
 import path from 'path';
+import { readFile } from 'fs/promises';
 
 import { convertToDingMarkdown } from '@/github/dingtalk';
 import { replaceGitHubText } from '@/github/gfm';
-import { parseMarkdown, makeMarkdown } from '@/github/renderer/make-mark';
+import { makeMarkdown, parseMarkdown } from '@/github/renderer/make-mark';
 
 describe('github renderer make-mark', () => {
   it('parse and make', async () => {

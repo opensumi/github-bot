@@ -1,7 +1,7 @@
 export function getURL(_url: string) {
   try {
     return new URL(_url);
-  } catch (error) {
+  } catch (_error) {
     return undefined;
   }
 }

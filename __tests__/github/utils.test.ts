@@ -1,8 +1,8 @@
 import { sendToDing } from '@/github/dingtalk';
 import {
-  replaceGitHubUrlToMarkdown,
-  replaceGitHubText,
   parseGitHubUrl,
+  replaceGitHubText,
+  replaceGitHubUrlToMarkdown,
 } from '@/github/gfm';
 import { standardizeMarkdown } from '@/github/renderer/make-mark';
 import { handlePr } from '@/github/templates/prOrIssue';
@@ -71,7 +71,7 @@ describe('github utils', () => {
     const urls = [] as string[];
     jest
       .spyOn(DingUtils, 'send')
-      .mockImplementation(async (content, url): Promise<any> => {
+      .mockImplementation(async (_content, url): Promise<any> => {
         urls.push(url);
       });
 

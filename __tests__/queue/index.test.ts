@@ -11,20 +11,20 @@ import { prepareEnv } from '../__mocks__';
 import { MockMessageBatch } from '../__mocks__/queue/message';
 import { MockGitHubEventWorker } from '../__mocks__/webhooks';
 import {
-  pull_request_2_3_closed,
-  pull_request_2_0_opened,
-  pull_request_2_13_opened,
-  pull_request_edited_wip,
-  pull_request_edited_base,
-  issue_opened_event,
-  release_published,
   antd_mini_release_published,
-  pull_request_2_review_comment_0_created,
-  pull_request_review_4_submitted_changes_requested,
-  pull_request_2_review_comment_1_created,
   discussion_90_0_created,
   discussion_comment_90_0_created,
+  issue_opened_event,
+  pull_request_2_0_opened,
+  pull_request_2_3_closed,
+  pull_request_2_13_opened,
+  pull_request_2_review_comment_0_created,
+  pull_request_2_review_comment_1_created,
+  pull_request_edited_base,
+  pull_request_edited_wip,
+  pull_request_review_4_submitted_changes_requested,
   pull_request_review_submitted_approved,
+  release_published,
 } from '../fixtures';
 
 const botId = 'mock';

@@ -2,10 +2,10 @@ import get from 'lodash/get';
 
 import {
   IssuesLink,
+  Reference,
   ReleaseLink,
   RepositoryLink,
   SenderLink,
-  Reference,
 } from '../templates';
 
 const defaultOperators = {
@@ -26,7 +26,7 @@ const defaultOperators = {
 
     return value;
   },
-  ref: (operator: string, key: string, value) => {
+  ref: (operator: string, _key: string, value) => {
     let bodyLimit = -1;
     const [, limit] = operator.split(':', 2);
     if (limit !== undefined) {
@@ -35,7 +35,7 @@ const defaultOperators = {
 
     return Reference(value, bodyLimit);
   },
-  h4: (operator: string, key: string, value) => {
+  h4: (_operator: string, _key: string, value) => {
     return `#### ${value}`;
   },
 } as Record<string, (operator: string, key: string, value: any) => string>;

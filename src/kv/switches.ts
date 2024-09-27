@@ -1,4 +1,4 @@
-import { KVManager, Common, MemoizeFn } from '.';
+import { Common, KVManager, MemoizeFn } from '.';
 
 interface SwitchesItem {
   enabled: boolean;

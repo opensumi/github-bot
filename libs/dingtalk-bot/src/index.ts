@@ -9,7 +9,7 @@ function validateTimestamp(timestamp: string) {
       return true;
     }
     return false;
-  } catch (err) {
+  } catch (_err) {
     return false;
   }
 }

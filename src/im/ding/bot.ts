@@ -2,7 +2,7 @@ import { Context } from 'hono';
 
 import { ConversationKVManager } from '@/ai/conversation/kvManager';
 import Environment from '@/env';
-import { initApp, App } from '@/github/app';
+import { App, initApp } from '@/github/app';
 import { DingKVManager, DingUserKVManager } from '@/kv/ding';
 import { GitHubKVManager } from '@/kv/github';
 import { IDingBotSetting } from '@/kv/types';

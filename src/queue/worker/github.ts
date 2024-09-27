@@ -49,14 +49,13 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  onBatchDoneForTest(results: IResult[]) {
+  onBatchDoneForTest(_results: IResult[]) {
     // do nothing
   }
 
   async createGitHubApp(botId: string): Promise<IOctokitShape | undefined> {
-    const appSetting = await GitHubKVManager.instance().getAppSettingById(
-      botId,
-    );
+    const appSetting =
+      await GitHubKVManager.instance().getAppSettingById(botId);
 
     if (!appSetting) {
       this.logger.error('github app worker error: setting not found', botId);

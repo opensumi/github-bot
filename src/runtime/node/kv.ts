@@ -58,7 +58,7 @@ export class InMemoryKV implements IKVNamespace {
   async put(
     key: string,
     value: string | ArrayBuffer | FormData | ReadableStream<any>,
-    options?:
+    _options?:
       | {
           expiration?: string | number | undefined;
           expirationTtl?: string | number | undefined;

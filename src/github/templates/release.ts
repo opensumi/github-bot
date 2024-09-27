@@ -3,7 +3,7 @@ import { StringBuilder } from '@/utils/string-builder';
 import { replaceGitHubUrlToMarkdown } from '../gfm';
 import { Context, ExtractPayload } from '../types';
 
-import { TemplateRenderResult, Template } from './components';
+import { Template, TemplateRenderResult } from './components';
 
 export async function handleRelease(
   payload: ExtractPayload<'release'>,

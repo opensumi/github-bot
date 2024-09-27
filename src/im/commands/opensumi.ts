@@ -15,7 +15,7 @@ import { hasApp, replyIfAppNotDefined } from './utils';
 /**
  * 拦截本次请求
  */
-async function repoIntercept(bot: IBotAdapter, ctx: Context, repo: string) {
+async function repoIntercept(bot: IBotAdapter, _ctx: Context, repo: string) {
   const defaultRepo = await bot.kvManager.getDefaultRepo(bot.id);
   if (!defaultRepo) {
     return true;

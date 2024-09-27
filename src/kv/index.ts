@@ -23,7 +23,10 @@ export class KVManager<T> {
   kv: IKVNamespace;
 
   private id: string;
-  private constructor(id = '', protected ttl = 0) {
+  private constructor(
+    id = '',
+    protected ttl = 0,
+  ) {
     this.id = id;
     this.kv = Environment.instance().KV;
     this.getJSONCached = this.momoizeGetJSON(this.ttl);

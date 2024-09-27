@@ -10,7 +10,7 @@ describe('bot-commander', () => {
       const center = new CommandCenter();
 
       const deferred = new Deferred<ICommand<any>>();
-      center.on('test', async (ctx, command) => {
+      center.on('test', async (_ctx, command) => {
         deferred.resolve(command);
         const text = removeCommandPrefix(command.command, 'test');
         console.log(`🚀 ~ center.on ~ text:`, text);
@@ -28,11 +28,11 @@ describe('bot-commander', () => {
       const deferred = new Deferred<ICommand<any>>();
       center.intercept(
         () => {
-          center.on('test', async (ctx, command) => {
+          center.on('test', async (_ctx, command) => {
             deferred.resolve(command);
           });
         },
-        async (ctx, command) => {
+        async (_ctx, command) => {
           command.command = 'hacked';
           return false;
         },
@@ -42,11 +42,11 @@ describe('bot-commander', () => {
       let intercepted = false;
       center.intercept(
         () => {
-          center.on('test2', async (ctx, command) => {
+          center.on('test2', async (_ctx, _command) => {
             triggered = true;
           });
         },
-        (ctx, command) => {
+        (_ctx, _command) => {
           intercepted = true;
           return true;
         },

@@ -1,12 +1,12 @@
-import { handlePr, handleIssue } from '@/github/templates/prOrIssue';
+import { handleIssue, handlePr } from '@/github/templates/prOrIssue';
 
 import {
-  pull_request_2_3_closed,
-  pull_request_2_0_opened,
-  pull_request_2_13_opened,
-  pull_request_edited_wip,
-  pull_request_edited_base,
   issue_opened_event,
+  pull_request_2_0_opened,
+  pull_request_2_3_closed,
+  pull_request_2_13_opened,
+  pull_request_edited_base,
+  pull_request_edited_wip,
 } from '../../fixtures';
 import { ctx } from '../ctx';
 

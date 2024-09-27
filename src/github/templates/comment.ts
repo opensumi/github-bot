@@ -7,13 +7,13 @@ import {
   limitLine,
 } from '@/utils/string-builder';
 
-import { ExtractPayload, Context, ContextWithOctokit } from '../types';
+import { Context, ContextWithOctokit, ExtractPayload } from '../types';
 
 import {
-  TemplateRenderResult,
   IssuesTitleLink,
-  Template,
   Reference,
+  Template,
+  TemplateRenderResult,
 } from './components';
 import { Name, NameBlock } from './prOrIssue';
 

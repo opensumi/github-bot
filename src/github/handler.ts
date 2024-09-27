@@ -1,11 +1,11 @@
 import { Octokit } from '@octokit/rest';
 import { Webhooks } from '@octokit/webhooks';
-import {
-  WebhookEventHandlerError,
-  EmitterWebhookEventName,
-  EmitterWebhookEvent,
-} from '@octokit/webhooks/dist-types/types';
 import type { WebhookEventName } from '@octokit/webhooks-types';
+import {
+  EmitterWebhookEvent,
+  EmitterWebhookEventName,
+  WebhookEventHandlerError,
+} from '@octokit/webhooks/dist-types/types';
 import { HonoRequest } from 'hono';
 
 import { error, json } from '@/api/utils/response';
@@ -13,15 +13,18 @@ import Environment from '@/env';
 import { Logger } from '@/utils/logger';
 
 import {
-  depManageBotToIgnore,
-  getTemplates,
   StopHandleError,
   TemplateRenderResult,
+  depManageBotToIgnore,
+  getTemplates,
 } from './templates';
 import type { Context, IHasSender } from './types';
 
 export class ValidationError extends Error {
-  constructor(public statusCode: number, message: string) {
+  constructor(
+    public statusCode: number,
+    message: string,
+  ) {
     super(message);
   }
 }

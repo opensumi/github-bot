@@ -3,7 +3,7 @@ import 'dotenv/config';
 import { context as createContext } from 'esbuild';
 import mri from 'mri';
 
-import { buildParams, DEFAULT_BUILD_ARGS } from './build';
+import { DEFAULT_BUILD_ARGS, buildParams } from './build';
 
 const argv = mri(process.argv.slice(2));
 

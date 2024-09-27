@@ -2,16 +2,16 @@
 
 import {
   CommitCommentCreatedEvent,
-  DiscussionCreatedEvent,
   DiscussionCommentCreatedEvent,
+  DiscussionCreatedEvent,
   IssueCommentCreatedEvent,
-  PullRequestOpenedEvent,
   PullRequestClosedEvent,
-  PullRequestReviewSubmittedEvent,
-  PullRequestReviewDismissedEvent,
+  PullRequestOpenedEvent,
   PullRequestReviewCommentCreatedEvent,
   PullRequestReviewCommentDeletedEvent,
   PullRequestReviewCommentEditedEvent,
+  PullRequestReviewDismissedEvent,
+  PullRequestReviewSubmittedEvent,
 } from '@octokit/webhooks-types';
 
 import _commit_comment_611372_0_created from './commit_comment_611372_0_created.json';
@@ -19,11 +19,11 @@ import _discussion_90_0_created from './discussion_90_0_created.json';
 import _discussion_comment_90_0_created from './discussion_comment_90_0_created.json';
 import _issue_comment_1_0_created from './issue_comment_1_0_created.json';
 import _pull_request_2_0_opened from './pull_request_2_0_opened.json';
+import _pull_request_2_3_closed from './pull_request_2_3_closed.json';
+import _pull_request_2_4_closed from './pull_request_2_4_closed.json';
 import _pull_request_2_12_opened from './pull_request_2_12_opened.json';
 import _pull_request_2_13_opened from './pull_request_2_13_opened.json';
 import _pull_request_2_14_opened from './pull_request_2_14_opened.json';
-import _pull_request_2_3_closed from './pull_request_2_3_closed.json';
-import _pull_request_2_4_closed from './pull_request_2_4_closed.json';
 import _pull_request_2_review_comment_0_created from './pull_request_2_review_comment_0_created.json';
 import _pull_request_2_review_comment_1_created from './pull_request_2_review_comment_1_created.json';
 import _pull_request_2_review_comment_2_created from './pull_request_2_review_comment_2_created.json';

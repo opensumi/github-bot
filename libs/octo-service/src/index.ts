@@ -556,7 +556,7 @@ export class GitHubService {
         per_page: 100,
       });
       return data;
-    } catch (e) {}
+    } catch (_e) {}
     return [];
   }
 
@@ -577,7 +577,7 @@ export class GitHubService {
         until,
       });
       return data;
-    } catch (e) {}
+    } catch (_e) {}
     return [];
   }
 
@@ -674,7 +674,7 @@ export class GitHubService {
       if (isMentor) {
         return TEAM_MEMBERS.MENTOR;
       }
-    } catch (e) {}
+    } catch (_e) {}
     try {
       const isCoreMember =
         (
@@ -687,7 +687,7 @@ export class GitHubService {
       if (isCoreMember) {
         return TEAM_MEMBERS.CORE_MEMBER;
       }
-    } catch (e) {}
+    } catch (_e) {}
     try {
       const isContributor =
         (
@@ -700,7 +700,7 @@ export class GitHubService {
       if (isContributor) {
         return TEAM_MEMBERS.CONTRIBUTOR;
       }
-    } catch (e) {}
+    } catch (_e) {}
     return TEAM_MEMBERS.NONE;
   }
 

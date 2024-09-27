@@ -3,7 +3,10 @@ import { Context } from 'hono';
 import { IBotAdapter } from './types';
 
 export class Session {
-  constructor(public c: Context<THonoEnvironment>, public impl: IBotAdapter) {}
+  constructor(
+    public c: Context<THonoEnvironment>,
+    public impl: IBotAdapter,
+  ) {}
 
   async run() {
     await this.impl.handle().catch(async (err) => {

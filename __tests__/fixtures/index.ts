@@ -1,11 +1,11 @@
 import {
-  PullRequestEditedEvent,
-  PullRequestReviewSubmittedEvent,
-  PullRequestReviewCommentCreatedEvent,
-  ReleasePublishedEvent,
-  IssuesOpenedEvent,
-  PullRequestOpenedEvent,
   IssueCommentCreatedEvent,
+  IssuesOpenedEvent,
+  PullRequestEditedEvent,
+  PullRequestOpenedEvent,
+  PullRequestReviewCommentCreatedEvent,
+  PullRequestReviewSubmittedEvent,
+  ReleasePublishedEvent,
 } from '@octokit/webhooks-types';
 
 import _antd_mini_release_published from './antd_mini_release_published.json';

@@ -2,7 +2,7 @@ import { Octokit } from '@octokit/rest';
 
 import { Context, ExtractPayload } from '../types';
 
-import { Template, StopHandleError, TemplateRenderResult } from './components';
+import { StopHandleError, Template, TemplateRenderResult } from './components';
 
 const conclusionToAdv = (
   conclusion?:
