@@ -1,6 +1,5 @@
 import { Context } from 'hono';
 
-import { ConversationKVManager } from '@/ai/conversation/kvManager';
 import Environment from '@/env';
 import { App, initApp } from '@/github/app';
 import { DingKVManager, DingUserKVManager } from '@/kv/ding';
@@ -19,7 +18,6 @@ function prepare(s: string) {
 
 export class DingBotAdapter implements IBotAdapter {
   githubKVManager: GitHubKVManager;
-  conversationKVManager: ConversationKVManager;
   userInfoKVManager: DingUserKVManager;
 
   constructor(
@@ -31,7 +29,6 @@ export class DingBotAdapter implements IBotAdapter {
     public setting: IDingBotSetting,
   ) {
     this.githubKVManager = GitHubKVManager.instance();
-    this.conversationKVManager = new ConversationKVManager(msg);
     this.userInfoKVManager = new DingUserKVManager();
   }
 

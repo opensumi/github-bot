@@ -14,7 +14,3 @@ export const cc = new CommandCenter({
 registerCommonCommand(cc);
 registerGitHubCommand(cc);
 registerOpenSumiCommand(cc);
-
-if (process.env.IF_DEF__CHATGPT) {
-  require('./chatgpt').registerChatGPTCommand(cc);
-}

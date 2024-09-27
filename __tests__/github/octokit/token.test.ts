@@ -1,4 +1,12 @@
-import { checkTokenValid } from '@/github/octokit/token';
+export async function checkTokenValid(token: string) {
+  const response = await fetch('https://api.github.com/users/bytemain', {
+    headers: {
+      Authorization: `token ${token}`,
+    },
+  });
+  console.log('check token valid:', response.status);
+  return response.status !== 401;
+}
 
 describe.skip('octokit token related', () => {
   it('can check bad credential', async () => {

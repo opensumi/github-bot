@@ -9,7 +9,6 @@ const argv = mri(process.argv.slice(2));
 
 const define = {
   ...DEFAULT_BUILD_ARGS,
-  'process.env.IF_DEF__CHATGPT': JSON.stringify(true),
 } as Record<string, string>;
 
 async function buildNode() {

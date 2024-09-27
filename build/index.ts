@@ -1,8 +1,6 @@
 import { BuildOptions } from 'esbuild';
 
-export const DEFAULT_BUILD_ARGS = {
-  'process.env.IF_DEF__CHATGPT': JSON.stringify(false),
-};
+export const DEFAULT_BUILD_ARGS = {};
 
 export const buildParams = {
   minify: false,
