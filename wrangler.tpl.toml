@@ -16,8 +16,8 @@ kv_namespaces = [
     { binding = "KV", id = "{{KV_LOCAL_ID}}", preview_id = "{{KV_LOCAL_ID}}" },
 ]
 
-[[analytics_engine_datasets]]
-binding = "metricsDataset"
+[observability]
+enabled = true
 
 [[queues.producers]]
 queue = "{{QUEUE_NAME_LOCAL}}"
@@ -45,6 +45,3 @@ binding = "MESSAGE_QUEUE"
 queue = "{{QUEUE_NAME_PROD}}"
 max_batch_size = 10
 max_batch_timeout = 1
-
-[[env.prod.analytics_engine_datasets]]
-binding = "metricsDataset"

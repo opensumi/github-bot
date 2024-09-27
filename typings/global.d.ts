@@ -47,8 +47,6 @@ declare global {
     readonly OPENAI_API_KEY?: string;
     readonly TIMEOUT?: string;
     readonly wechaty?: any;
-
-    readonly metricsDataset?: AnalyticsEngineDataset;
     [key: string]: unknown;
   }
 

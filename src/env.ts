@@ -26,10 +26,6 @@ export default class Environment {
     return this.env.KV;
   }
 
-  get metrics() {
-    return this.env.metricsDataset!;
-  }
-
   get OPENAI_API_KEY() {
     return this.env.OPENAI_API_KEY;
   }
