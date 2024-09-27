@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Preference Editor</title>
+    <title>配置编辑</title>
     <script src="https://registry.npmmirror.com/@json-editor/json-editor/2.10.1/files/dist/jsoneditor.js"></script>
     <script src="https://registry.npmmirror.com/ace-builds/1.14.0/files/src-min/ace.js"></script>
     <script
@@ -17,40 +17,114 @@
     />
     <link rel="stylesheet" id="theme-link" />
     <link rel="stylesheet" id="iconlib-link" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      h1,
+      h2,
+      h3 {
+        color: #333;
+      }
+      .btn {
+        margin: 5px 0;
+      }
+      #json-editor-form {
+        margin-top: 20px;
+      }
+      #output-textarea {
+        margin-top: 10px;
+      }
+      .form-control {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+      }
+      .label {
+        display: inline-block;
+        padding: 0.2em 0.6em 0.3em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.25em;
+      }
+      .label-success {
+        background-color: #28a745;
+      }
+      .label-danger {
+        background-color: #dc3545;
+      }
+      /* 样式复选框 */
+      input[type="checkbox"] {
+        appearance: none;
+        height: 1.4rem;
+        width: 1.4rem; /* 添加宽度以确保复选框是正方形 */
+        padding: 0.05rem 0.3rem;
+        border-radius: 4px;
+        outline: none;
+        cursor: pointer;
+        position: relative;
+        display: inline-block;
+        vertical-align: middle; /* 垂直居中 */
+        border: 2px solid #b0c4de; /* 边框颜色变淡 */
+      }
+
+      input[type="checkbox"]:checked {
+        background-color: #007bff;
+        border-color: #007bff;
+      }
+
+      input[type="checkbox"]:checked::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 6px;
+        height: 12px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
+    </style>
   </head>
   <body>
     <div class="container grid-xl" style="padding: 15px 0">
       <div class="row columns md:flex">
-        <div class="col-8 col-md-8 w-8/12">
-          <h1>Editor</h1>
+        <div class="col-7 col-md-7 w-7/12">
+          <h1>配置</h1>
           <div id="json-editor-form"></div>
         </div>
-        <div class="col-4 col-md-4 w-4/12">
+        <div class="col-5 col-md-5 w-5/12">
           <div>
-            <button id="submit" class="btn btn-primary">Submit</button>
-            <button id="restore" class="btn btn-secondary">Reset</button>
+            <button id="submit" class="btn btn-primary">提交</button>
+            <button id="restore" class="btn btn-secondary">重置</button>
           </div>
-          <h2>Validation</h2>
-          <span id="valid_indicator" class="label label-success"></span>
-          <label for="validate-textarea"
-            >This will update whenever the form changes to show validation
-            errors if there are any.</label
-          >
-          <br />
+          <h3>
+            校验 <span id="valid_indicator" class="label label-success"></span>
+          </h3>
           <textarea
             id="validate-textarea"
             readonly
             disabled
             class="form-control"
           ></textarea>
-          <h2>JSON Output</h2>
+          <h2>直接编辑 JSON</h2>
           <label for="output-textarea"></label>
           <p>
-            You can also make changes to the JSON here and set the value in the
-            editor by clicking "Sync to Form"
+            您可以在此处对 JSON 进行更改，单击 “同步到表单”
+            可设置编辑器中的值
           </p>
           <button class="btn btn-primary btn-block" id="setvalue">
-            &lt;- Sync to Form
+            &lt;- 同步到表单
           </button>
           <textarea
             id="output-textarea"
@@ -60,68 +134,49 @@
           ></textarea>
         </div>
       </div>
-      <div class="row columns md:flex">
-        <div class="col-12 col-md-12 w-12/12">
-          <h2>Schema</h2>
-          <label for="schema-textarea"
-            >You can change the schema and see how the generated form looks.
-            After you make changes, click "Update Schema"</label
-          >
-          <button class="btn btn-primary btn-block" id="setschema">
-            Update Schema
-          </button>
-          <textarea id="schema-textarea" style="height: 100vh"></textarea>
-        </div>
-      </div>
     </div>
     <script type="module">
-      // parse url -> merge options -> refreshUI() -> initJsoneditor() -> direct link
-
-      /* ------------------------------------------------------------------- data */
-
       var data = {};
 
       var defaultOptions = {
-        iconlib: 'spectre',
-        theme: 'spectre',
-        object_layout: 'normal',
-        show_errors: 'always',
+        iconlib: "spectre",
+        theme: "spectre",
+        object_layout: "normal",
+        show_errors: "always",
         enable_array_copy: true,
         show_opt_in: true,
         array_controls_top: true,
+        disable_edit_json: true,
+        disable_properties: true,
+        remove_button_labels: true,
+        disable_array_delete_last_row: true,
       };
 
       var jsoneditor = null;
 
-      var head = document.getElementsByTagName('head')[0];
-      var iconlibLink = document.querySelector('#iconlib-link');
-      var jsonEditorForm = document.querySelector('#json-editor-form');
-      var setSchema = document.querySelector('#setschema');
-      var setValue = document.querySelector('#setvalue');
-      var themeLink = document.querySelector('#theme-link');
-      var validateTextarea = document.querySelector('#validate-textarea');
+      var iconlibLink = document.querySelector("#iconlib-link");
+      var jsonEditorForm = document.querySelector("#json-editor-form");
+      var setValue = document.querySelector("#setvalue");
+      var themeLink = document.querySelector("#theme-link");
+      var validateTextarea = document.querySelector("#validate-textarea");
 
       var aceConfig = {
-        mode: 'ace/mode/json',
+        mode: "ace/mode/json",
         selection: false,
         maxLines: Infinity,
         minLines: 5,
       };
 
-      var outputTextarea = ace.edit('output-textarea', aceConfig);
-
-      var schemaTextarea = ace.edit('schema-textarea', aceConfig);
-
-      /* -------------------------------------------------------------- parse url */
+      var outputTextarea = ace.edit("output-textarea", aceConfig);
 
       var parseData = function () {
         var url = window.location.search;
         var queryParamsString = url.substring(1, url.length);
-        var queryParams = queryParamsString.split('&');
+        var queryParams = queryParamsString.split("&");
 
         if (queryParamsString.length) {
           queryParams.forEach(function (queryParam) {
-            var splittedParam = queryParam.split('=');
+            var splittedParam = queryParam.split("=");
             var param = splittedParam[0];
             var value = splittedParam[1];
           });
@@ -130,7 +185,6 @@
         mergeOptions();
       };
       window.parseData = parseData;
-      /* ----------------------------------------------------------- mergeOptions */
 
       var mergeOptions = function () {
         data.options = Object.assign(
@@ -141,90 +195,21 @@
         refreshUI();
       };
 
-      /* -------------------------------------------------------------- refreshUI */
-
       var refreshUI = function () {
-        // schema
-        schemaTextarea.setValue(JSON.stringify(data.options.schema, null, 2));
-
         // theme
         var themeMap = {
-          barebones: '',
-          bootstrap3:
-            'https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css',
-          bootstrap4:
-            'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
-          bootstrap5:
-            'https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css',
-          html: '',
           spectre:
-            'https://registry.npmmirror.com/spectre.css/0.5.9/files/dist/spectre.min.css',
-          tailwind:
-            'https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/1.9.6/tailwind.min.css',
+            "https://registry.npmmirror.com/spectre.css/0.5.9/files/dist/spectre.min.css",
         };
         themeLink.href = themeMap[data.options.theme];
 
         // iconlLib
         var iconLibMap = {
-          fontawesome5:
-            'https://use.fontawesome.com/releases/v5.6.1/css/all.css',
           spectre:
-            'https://registry.npmmirror.com/spectre.css/0.5.9/files/dist/spectre-icons.min.css',
+            "https://registry.npmmirror.com/spectre.css/0.5.9/files/dist/spectre-icons.min.css",
         };
 
         iconlibLink.href = iconLibMap[data.options.iconlib];
-
-        if (data.selectedLibs || data.unselectedLibs) {
-          var booleanOptions = booleanOptionsSelect.children;
-          for (var i = 0; i < booleanOptions.length; i++) {
-            var booleanValue = booleanOptions[i];
-            if (data.options[booleanValue.value]) {
-              booleanValue.selected = true;
-            }
-          }
-
-          var libSelectChildren = libSelect.children;
-          for (var i = 0; i < libSelectChildren.length; i++) {
-            var child = libSelectChildren[i];
-            child.selected = data.selectedLibs.includes(child.value);
-          }
-
-          // remove libraries
-          data.unselectedLibs.forEach(function (selectedLib) {
-            var concat = libMapping[selectedLib].js.concat(
-              libMapping[selectedLib].css,
-            );
-            concat.forEach(function () {
-              var className = '.external_' + selectedLib;
-              var toRemove = head.querySelector(className);
-              if (toRemove) {
-                toRemove.parentNode.removeChild(toRemove);
-              }
-            });
-          });
-
-          // add libraries
-          data.selectedLibs.forEach(function (selectedLib) {
-            // add js
-            libMapping[selectedLib].js.forEach(function (js) {
-              var scriptElement = document.createElement('script');
-              scriptElement.type = 'text/javascript';
-              scriptElement.src = js;
-              scriptElement.async = false;
-              scriptElement.classList.add('external_' + selectedLib);
-              head.appendChild(scriptElement);
-            });
-            // add css
-            libMapping[selectedLib].css.forEach(function (css) {
-              var linkElement = document.createElement('link');
-              linkElement.setAttribute('rel', 'stylesheet');
-              linkElement.setAttribute('type', 'text/css');
-              linkElement.setAttribute('href', css);
-              linkElement.classList.add('external_' + selectedLib);
-              head.appendChild(linkElement);
-            });
-          });
-        }
 
         initJsoneditor();
       };
@@ -241,7 +226,7 @@
         jsoneditor = new window.JSONEditor(jsonEditorForm, data.options);
 
         // listen for changes
-        jsoneditor.on('change', function () {
+        jsoneditor.on("change", function () {
           // output
           var json = jsoneditor.getValue();
           outputTextarea.setValue(JSON.stringify(json, null, 2));
@@ -251,82 +236,70 @@
           if (validationErrors.length) {
             validateTextarea.value = JSON.stringify(validationErrors, null, 2);
           } else {
-            validateTextarea.value = 'valid';
+            validateTextarea.value = "valid";
           }
         });
 
         // Hook up the submit button to log to the console
         document
-          .getElementById('submit')
-          .addEventListener('click', function () {
+          .getElementById("submit")
+          .addEventListener("click", function () {
             // Get the value from the editor
             const result = jsoneditor.validate();
-            console.log(`🚀 ~ file: index.html:72 ~ result:`, result);
+            console.log(`result:`, result);
             console.log(jsoneditor.getValue());
             if (result.length) {
-              alert('Invalid JSON' + JSON.stringify(result, null, 2));
+              alert("Invalid JSON" + JSON.stringify(result, null, 2));
               return;
             }
 
             fetch(window.submit_url, {
-              method: 'POST',
+              method: "POST",
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
               },
               body: JSON.stringify(jsoneditor.getValue()),
             })
               .then((response) => response.json())
               .then((data) => {
-                alert('Success:\n' + JSON.stringify(data, null, 2));
-                console.log('Success:', data);
+                alert("Success:\n" + JSON.stringify(data, null, 2));
+                console.log("Success:", data);
               })
               .catch((error) => {
-                alert('Error:\n' + JSON.stringify(error, null, 2));
-                console.error('Error:', error);
+                alert("Error:\n" + JSON.stringify(error, null, 2));
+                console.error("Error:", error);
               });
           });
 
         // Hook up the Restore to Default button
         document
-          .getElementById('restore')
-          .addEventListener('click', function () {
+          .getElementById("restore")
+          .addEventListener("click", function () {
             jsoneditor.setValue(starting_value);
           });
         // Hook up the validation indicator to update its
         // status whenever the jsoneditor changes
-        jsoneditor.on('change', function () {
+        jsoneditor.on("change", function () {
           // Get an array of errors from the validator
           var errors = jsoneditor.validate();
 
-          var indicator = document.getElementById('valid_indicator');
+          var indicator = document.getElementById("valid_indicator");
 
           // Not valid
           if (errors.length) {
-            indicator.className = 'label label-danger';
-            indicator.textContent = 'not valid';
+            indicator.className = "label label-danger";
+            indicator.textContent = "not valid";
           }
           // Valid
           else {
-            indicator.className = 'label label-success';
-            indicator.textContent = 'valid';
+            indicator.className = "label label-success";
+            indicator.textContent = "valid";
           }
         });
       };
 
-      /* -------------------------------------------------------- event listeners */
-
-      setValue.addEventListener('click', function () {
+      setValue.addEventListener("click", function () {
         jsoneditor.setValue(JSON.parse(outputTextarea.getValue()));
-      });
-
-      setSchema.addEventListener('click', function () {
-        try {
-          data.options.schema = JSON.parse(schemaTextarea.getValue());
-        } catch (e) {
-          alert('Invalid Schema: ' + e.message);
-          return;
-        }
-        refreshUI();
       });
     </script>
   </body>
