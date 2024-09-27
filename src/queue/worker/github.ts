@@ -104,7 +104,7 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
 
   async run() {
     const byId = groupBy(
-      orderBy(this.queue, 'timestamp', 'asc'),
+      orderBy(this.queue, ['timestamp'], ['asc']),
       (v) => v.body.botId,
     );
 
