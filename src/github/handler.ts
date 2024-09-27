@@ -30,7 +30,6 @@ export class ValidationError extends Error {
 }
 
 export async function validateGithub(
-  // eslint-disable-next-line @typescript-eslint/ban-types
   req: HonoRequest<any, {}>,
   webhooks: Webhooks,
 ): Promise<EmitterWebhookEvent> {

@@ -48,7 +48,6 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
     super();
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onBatchDoneForTest(_results: IResult[]) {
     // do nothing
   }
