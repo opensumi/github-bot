@@ -778,7 +778,7 @@ export class GitHubService {
     owner: string,
     repo: string,
     username: string,
-    requestLevel: string,
+    requestLevel: 'write' | 'admin',
   ) {
     // Permission levels higher in the array have higher access to the repo.
     const perms = ['none', 'read', 'write', 'admin'];
@@ -793,13 +793,5 @@ export class GitHubService {
     const requestPermIndex = perms.indexOf(requestLevel);
     const userPermIndex = perms.indexOf(perm);
     return userPermIndex >= requestPermIndex;
-  }
-
-  async checkRepoWritePermission(
-    owner: string,
-    repo: string,
-    username: string,
-  ) {
-    return this.checkRepoPermission(owner, repo, username, 'write');
   }
 }

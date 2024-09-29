@@ -5,11 +5,7 @@ import {
 } from '@/constants/opensumi';
 import { StopError, removeCommandPrefix } from '@opensumi/bot-commander';
 
-import {
-  CommandContext,
-  GitHubCommandCenter,
-  IssueCommentEvent,
-} from '../types';
+import { CommandContext, GitHubCommandCenter } from '../types';
 
 export function extractTargetBranchNameFromCommand(str: string) {
   const text = removeCommandPrefix(str, kBackportKeyword);
@@ -41,7 +37,10 @@ function constraintRepo(fullname: string, allowedRepo: Set<string>) {
   }
 }
 
-async function checkIsPullRequestAndUserHasPermission(ctx: CommandContext) {
+async function checkIsPullRequestAndUserHasPermission(
+  ctx: CommandContext,
+  requestLevel: 'write' | 'admin',
+) {
   const { app, payload } = ctx;
   const owner = payload.repository.owner.login;
   const repo = payload.repository.name;
@@ -54,10 +53,11 @@ async function checkIsPullRequestAndUserHasPermission(ctx: CommandContext) {
   }
 
   const user = payload.sender.login;
-  const userHaveWritePerm = await app.octoService.checkRepoWritePermission(
+  const userHaveWritePerm = await app.octoService.checkRepoPermission(
     owner,
     repo,
     user,
+    requestLevel,
   );
 
   if (!userHaveWritePerm) {
@@ -76,7 +76,7 @@ export function registerPullRequestCommand(it: GitHubCommandCenter) {
       const { app, payload } = ctx;
       const { issue } = payload;
       constraintRepo(payload.repository.full_name, backportAllowedRepo);
-      await checkIsPullRequestAndUserHasPermission(ctx);
+      await checkIsPullRequestAndUserHasPermission(ctx, 'write');
 
       const result = await app.octoService.getPrByNumber(
         payload.repository.owner.login,
@@ -135,10 +135,11 @@ Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
     constraintRepo(fullname, nextAllowedRepo);
 
     const user = payload.sender.login;
-    let userHaveWritePerm = await app.octoService.checkRepoWritePermission(
+    let userHaveWritePerm = await app.octoService.checkRepoPermission(
       owner,
       repo,
       user,
+      'write',
     );
     if (!userHaveWritePerm) {
       if (
@@ -186,7 +187,7 @@ Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
     const { issue } = payload;
     const fullname = payload.repository.full_name;
     constraintRepo(fullname, updateLockfileAllowedRepo);
-    await checkIsPullRequestAndUserHasPermission(ctx);
+    await checkIsPullRequestAndUserHasPermission(ctx, 'write');
 
     await app.opensumiOctoService.updateLockfileForPr({
       pull_number: issue.number,
@@ -198,7 +199,7 @@ Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
     const { issue } = payload;
     const fullname = payload.repository.full_name;
     constraintRepo(fullname, updateLockfileAllowedRepo);
-    await checkIsPullRequestAndUserHasPermission(ctx);
+    await checkIsPullRequestAndUserHasPermission(ctx, 'admin');
 
     await app.opensumiOctoService.createMergeCommitForPr({
       pull_number: issue.number,
