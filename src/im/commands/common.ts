@@ -28,12 +28,4 @@ export function registerCommonCommand(it: IMCommandCenter) {
       ),
     );
   });
-
-  it.on('help', async ({ bot }) => {
-    await bot.replyText(it.help());
-  });
-
-  it.on('ping', async ({ bot }) => {
-    await bot.replyText('pong');
-  });
 }

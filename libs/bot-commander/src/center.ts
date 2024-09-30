@@ -43,6 +43,14 @@ export class CommandCenter<C extends Record<string, any>> {
 
   constructor(private options: ICommandCenterOptions<C> = {}) {
     this.prefixes = options.prefix ?? ['/'];
+
+    this.on('ping', async (c) => {
+      await this.replyText(c, 'pong');
+    });
+
+    this.on('help', async (c) => {
+      await this.replyText(c, this.help());
+    });
   }
 
   all(handler: TStarHandler<C>) {
