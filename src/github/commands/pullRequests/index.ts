@@ -113,7 +113,7 @@ export function registerPullRequestCommand(it: GitHubCommandCenter) {
         return;
       }
 
-      await app.opensumiOctoService.backportPr({
+      await app.octoService.backportPr({
         pull_number: issue.number,
         target_branch: targetBranch,
       });
@@ -143,8 +143,8 @@ Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
     );
     if (!userHaveWritePerm) {
       if (
-        app.ctx.setting.userWhoCanRelease &&
-        app.ctx.setting.userWhoCanRelease.includes(user)
+        app.setting.userWhoCanRelease &&
+        app.setting.userWhoCanRelease.includes(user)
       ) {
         userHaveWritePerm = true;
       }
@@ -175,7 +175,7 @@ Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
       return;
     }
 
-    await app.opensumiOctoService.prNextRelease({
+    await app.octoService.prNextRelease({
       pull_number: issue.number,
       fullname,
     });
@@ -189,7 +189,7 @@ Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
     constraintRepo(fullname, updateLockfileAllowedRepo);
     await checkIsPullRequestAndUserHasPermission(ctx, 'write');
 
-    await app.opensumiOctoService.updateLockfileForPr({
+    await app.octoService.updateLockfileForPr({
       pull_number: issue.number,
     });
     await app.createReactionForIssueComment(ctx, 'rocket');
@@ -201,7 +201,7 @@ Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
     constraintRepo(fullname, updateLockfileAllowedRepo);
     await checkIsPullRequestAndUserHasPermission(ctx, 'admin');
 
-    await app.opensumiOctoService.createMergeCommitForPr({
+    await app.octoService.createMergeCommitForPr({
       pull_number: issue.number,
     });
     await app.createReactionForIssueComment(ctx, 'rocket');

@@ -51,7 +51,7 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     try {
       text =
         '\n\n' +
-        (await app.opensumiOctoService.getLastNCommitsText({
+        (await app.octoService.getLastNCommitsText({
           owner: 'opensumi',
           repo: 'github-bot',
         }));
@@ -61,8 +61,8 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
       );
     }
 
-    await app.opensumiOctoService.deployBot();
-    await app.opensumiOctoService.deployBotPre();
+    await app.octoService.deployBot();
+    await app.octoService.deployBotPre();
     await bot.reply(
       convertToDingMarkdown(
         '开始部署机器人',
@@ -86,7 +86,7 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     try {
       text =
         '\n\n' +
-        (await app.opensumiOctoService.getLastNCommitsText({
+        (await app.octoService.getLastNCommitsText({
           owner: 'opensumi',
           repo: 'github-bot',
         }));
@@ -96,7 +96,7 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
       );
     }
 
-    await app.opensumiOctoService.deployBotPre(workflowRef);
+    await app.octoService.deployBotPre(workflowRef);
     await bot.reply(
       convertToDingMarkdown(
         '开始部署预发机器人',
@@ -148,7 +148,7 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
         params.time = command.args.t || command.args.time;
       }
 
-      await app.opensumiOctoService.monthlyReport(params);
+      await app.octoService.monthlyReport(params);
       await bot.replyText('Starts generating monthly report.');
     },
     [],
@@ -183,7 +183,7 @@ async function publishNextVersion(
           `找不到 ref: ${ref}, 错误信息: ${(error as Error).message}`,
         );
       }
-      const text = await app.opensumiOctoService.getLastNCommitsText({
+      const text = await app.octoService.getLastNCommitsText({
         owner: 'opensumi',
         repo,
         ref,
@@ -199,7 +199,7 @@ async function publishNextVersion(
         workflowInfo.ref = workflowRef;
       }
 
-      await app.opensumiOctoService.releaseNextVersion(workflowInfo, ref);
+      await app.octoService.releaseNextVersion(workflowInfo, ref);
       await bot.reply(
         convertToDingMarkdown(
           `Releasing a next version of ${name}`,
@@ -241,7 +241,7 @@ async function syncVersion(
         workflow_id: ActionsRepo.SYNC_FILE,
       });
 
-      await app.opensumiOctoService.syncOpenSumiVersion(version, workflowRef);
+      await app.octoService.syncOpenSumiVersion(version, workflowRef);
       await bot.reply(
         convertToDingMarkdown(
           'Synchronizing OpenSumi packages',
@@ -256,7 +256,7 @@ async function syncVersion(
         workflow_id: ActionsRepo.SYNC_CODEBLITZ_FILE,
       });
 
-      await app.opensumiOctoService.syncCodeblitzVersion(version, workflowRef);
+      await app.octoService.syncCodeblitzVersion(version, workflowRef);
       await bot.reply(
         convertToDingMarkdown(
           'Synchronizing CodeBlitz packages',

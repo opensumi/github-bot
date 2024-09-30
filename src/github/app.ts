@@ -6,7 +6,6 @@ import { PrivilegeEvent } from '@/constants';
 import { ActionsRepo, VERSION_SYNC_KEYWORD } from '@/constants/opensumi';
 import Environment from '@/env';
 import { AppSetting } from '@/kv/types';
-import { GitHubService } from '@opensumi/octo-service';
 
 import { CommandContext, issueCc } from './commands';
 import { parseCommandInMarkdownComments } from './commands/parse';
@@ -15,16 +14,13 @@ import { setupWebhooksTemplate } from './handler';
 import { OpenSumiOctoService } from './service/opensumi';
 
 export class App {
-  ctx: {
-    setting: AppSetting;
-  };
-  octoService: GitHubService;
-  opensumiOctoService: OpenSumiOctoService;
+  octoService: OpenSumiOctoService;
 
   octoApp: OctoApp<{ Octokit: typeof Octokit }>;
 
-  constructor(setting: AppSetting) {
+  constructor(public setting: AppSetting) {
     const { appSettings, githubSecret } = setting;
+    this.octoService = new OpenSumiOctoService();
 
     this.octoApp = new OctoApp({
       appId: appSettings.appId,
@@ -34,12 +30,6 @@ export class App {
       },
       Octokit: Octokit,
     });
-    this.ctx = {
-      setting,
-    };
-
-    this.octoService = new GitHubService();
-    this.opensumiOctoService = new OpenSumiOctoService();
 
     this.octoApp.webhooks.on(
       'issue_comment.created',
@@ -60,12 +50,12 @@ export class App {
       case 'opensumi/core':
         file = ActionsRepo.SYNC_FILE;
         name = 'opensumi';
-        await this.opensumiOctoService.syncOpenSumiVersion(version);
+        await this.octoService.syncOpenSumiVersion(version);
         break;
       case 'opensumi/codeblitz':
         file = ActionsRepo.SYNC_CODEBLITZ_FILE;
         name = 'codeblitz';
-        await this.opensumiOctoService.syncCodeblitzVersion(version);
+        await this.octoService.syncCodeblitzVersion(version);
         break;
       default:
         throw new Error('unknown repo');
@@ -77,7 +67,7 @@ export class App {
         text: `[${fullname}] ${tag} has published. [starts synchronizing ${name} packages@${version} to npmmirror](https://github.com/opensumi/actions/actions/workflows/${file})`,
       },
       PrivilegeEvent,
-      this.ctx.setting,
+      this.setting,
     );
   };
 
@@ -179,17 +169,17 @@ export class App {
   }
 
   async init() {
-    const octo = await this.getOcto();
-    this.octoService.octo = octo;
-    this.opensumiOctoService.octo = octo;
+    this.octoService.octo = await this.getOcto();
   }
 
   listenWebhooks() {
     setupWebhooksTemplate(
       this.octoApp.webhooks,
-      this.ctx,
+      {
+        setting: this.setting,
+      },
       async ({ markdown, eventName }) => {
-        await sendToDing(markdown, eventName, this.ctx.setting);
+        await sendToDing(markdown, eventName, this.setting);
       },
     );
   }
