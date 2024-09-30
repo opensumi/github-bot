@@ -2133,6 +2133,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@octokit/openapi-types@npm:^22.2.0":
+  version: 22.2.0
+  resolution: "@octokit/openapi-types@npm:22.2.0"
+  checksum: 10/0471b0c789fada5aa2390e6f82ba477738228ef7d2d986dda9aab0cb625d1562bd178ba0ba4d2655ce841079cd5efff9e58ece2077c27e569ea22109ea301830
+  languageName: node
+  linkType: hard
+
 "@octokit/plugin-enterprise-rest@npm:6.0.1":
   version: 6.0.1
   resolution: "@octokit/plugin-enterprise-rest@npm:6.0.1"
@@ -2301,6 +2308,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@octokit/types@npm:^13.6.0":
+  version: 13.6.0
+  resolution: "@octokit/types@npm:13.6.0"
+  dependencies:
+    "@octokit/openapi-types": "npm:^22.2.0"
+  checksum: 10/461d018f46d69a781778743826f2f98546cdecead2a03226a298f41075a041518cd5faa3d2c1d6968c09d4accc61c42a49939ed58e4d006a208e4718a49be05e
+  languageName: node
+  linkType: hard
+
 "@octokit/types@npm:^9.0.0, @octokit/types@npm:^9.2.3":
   version: 9.3.2
   resolution: "@octokit/types@npm:9.3.2"
@@ -2395,7 +2411,7 @@ __metadata:
     "@octokit/app": "npm:^14.0.0"
     "@octokit/core": "npm:^5.0.0"
     "@octokit/rest": "npm:^20.0.1"
-    "@octokit/types": "npm:^11.1.0"
+    "@octokit/types": "npm:^13.6.0"
     "@octokit/webhooks": "npm:^12.0.3"
     "@octokit/webhooks-examples": "npm:^7.3.0"
     "@opensumi/bot-commander": "workspace:^"
