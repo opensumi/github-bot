@@ -22,11 +22,12 @@
   },
   "scripts": {
     "build": "tsc",
-    "watch": "tsc -w",
+    "watch": "../../node_modules/.bin/tsc -w",
     "test": "jest",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
+    "@opensumi/bot-commander": "workspace:^",
     "@opensumi/workers-utils": "workspace:^",
     "dingtalk-stream": "^2.1.4"
   }

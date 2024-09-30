@@ -55,3 +55,7 @@ export async function verifyMessage(headers: Headers, token: string) {
     // return 'not valid ding msg, missing validation field';
   }
 }
+
+export { IBotAdapter } from './bot/base-adapter';
+export { DingBotAdapter } from './bot/dingtalk-adapter';
+export { Session } from './bot/session';

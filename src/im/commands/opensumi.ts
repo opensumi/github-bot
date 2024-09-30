@@ -9,7 +9,7 @@ import {
 import { IBotAdapter } from '../types';
 
 import { KnownRepo } from './constants';
-import { Context, IMCommandCenter, IMCommandCenterContext } from './types';
+import { CommandCenterContext, Context, IMCommandCenter } from './types';
 import { hasApp, replyIfAppNotDefined } from './utils';
 
 /**
@@ -157,7 +157,7 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
 
 async function publishNextVersion(
   command: string,
-  { ctx, bot }: IMCommandCenterContext,
+  { ctx, bot }: CommandCenterContext,
   payload: ICommand<any>,
   repo: 'core' | 'codeblitz',
 ) {
@@ -217,7 +217,7 @@ async function publishNextVersion(
 }
 
 async function syncVersion(
-  { ctx, bot }: IMCommandCenterContext,
+  { ctx, bot }: CommandCenterContext,
   command: ICommand<any>,
   repo: 'core' | 'codeblitz',
 ) {

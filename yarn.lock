@@ -2377,6 +2377,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@opensumi/dingtalk-bot@workspace:libs/dingtalk-bot"
   dependencies:
+    "@opensumi/bot-commander": "workspace:^"
     "@opensumi/workers-utils": "workspace:^"
     dingtalk-stream: "npm:^2.1.4"
   languageName: unknown

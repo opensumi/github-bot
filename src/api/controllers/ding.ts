@@ -1,7 +1,6 @@
-import { Session } from '@/im/bot';
 import { DingBotAdapter } from '@/im/ding/bot';
 import { DingKVManager } from '@/kv/ding';
-import { verifyMessage } from '@opensumi/dingtalk-bot';
+import { Session, verifyMessage } from '@opensumi/dingtalk-bot';
 
 export function route(hono: THono) {
   hono.post('/ding/:id', async (c) => {
@@ -36,7 +35,6 @@ export function route(hono: THono) {
     }
 
     const session = new Session(
-      c,
       new DingBotAdapter(
         id,
         c,
@@ -47,7 +45,7 @@ export function route(hono: THono) {
       ),
     );
 
-    session.runInBackground();
+    c.executionCtx.waitUntil(session.run());
 
     return c.send.message('ok');
   });
