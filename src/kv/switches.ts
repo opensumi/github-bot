@@ -8,7 +8,7 @@ interface SwitchesItem {
 }
 
 export const KnownSwitches = {
-  enableQueue: 'cfworker_enableQueue',
+  EnableQueue: 'cfworker_enableQueue',
 };
 
 export class Switches {

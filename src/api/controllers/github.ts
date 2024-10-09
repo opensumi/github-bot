@@ -24,7 +24,7 @@ export function route(hono: THono) {
     let useQueue = false;
     if (!useQueue) {
       useQueue = await Switches.instance().isEnableFor(
-        KnownSwitches.enableQueue,
+        KnownSwitches.EnableQueue,
         id,
       );
     }

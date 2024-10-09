@@ -4,10 +4,7 @@ import { existsSync, mkdirSync } from 'fs';
 import { dirname as _dirname, resolve } from 'path';
 import { writeFile } from 'fs/promises';
 
-import prettier from 'prettier';
 import { createGenerator } from 'ts-json-schema-generator';
-
-const { format, resolveConfig } = prettier;
 
 const __dirname = _dirname(new URL(import.meta.url).pathname);
 
@@ -17,22 +14,7 @@ const config = {
   tsconfig: resolve(__dirname, '../tsconfig.build.json'),
 };
 
-const prettierConfigFile = await prettier.resolveConfigFile();
 
-let prettierConfig = {};
-if (prettierConfigFile) {
-  const result = await resolveConfig(prettierConfigFile);
-  if (result) {
-    prettierConfig = result;
-  }
-}
-
-async function usePrettier(schema) {
-  return format(schema, {
-    parser: 'json',
-    ...prettierConfig,
-  });
-}
 
 const generator = createGenerator(config);
 
@@ -53,7 +35,7 @@ async function createTypeSchema(type, name) {
     `${name}.schema.json`,
   );
   ensureDirSync(output_path);
-  await writeFile(output_path, await usePrettier(schemaString));
+  await writeFile(output_path, schemaString);
 }
 
 createTypeSchema('AppSetting', 'app-settings');
