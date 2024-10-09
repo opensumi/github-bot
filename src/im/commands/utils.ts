@@ -2,6 +2,7 @@ import { StopErrorWithReply } from '@opensumi/bot-commander';
 
 import { IBotAdapter } from '../types';
 
+import { DingUserKVManager } from '@/kv/ding';
 import { Session } from '@opensumi/dingtalk-bot';
 import { Context } from './types';
 
@@ -19,13 +20,10 @@ export async function replyIfAppNotDefined(_bot: IBotAdapter, ctx: Context) {
   }
 }
 
-export async function getGitHubUserFromDingtalkId(
-  bot: IBotAdapter,
-  session: Session,
-) {
+export async function getGitHubUserFromDingtalkId(session: Session) {
   const dingtalkId = session.msg.senderId;
   const githubId =
-    await bot.userInfoKVManager.getGitHubUserByDingtalkId(dingtalkId);
+    await DingUserKVManager.instance().getGitHubUserByDingtalkId(dingtalkId);
   if (!githubId) {
     throw new StopErrorWithReply(
       'it seem that you have not bind GitHub account, use `bind-github username` command to bind your GitHub account. e.g. `bind-github bytemain',

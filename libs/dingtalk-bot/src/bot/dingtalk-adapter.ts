@@ -15,7 +15,7 @@ export class DingBotAdapter<
     this.cc = new CommandCenter(commandOptions);
   }
 
-  public async constructContext(
+  protected async constructContext(
     session: Session,
   ): Promise<CommandCenterContext> {
     return {

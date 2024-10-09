@@ -17,32 +17,23 @@ import { registerOpenSumiCommand } from '../commands/opensumi';
 import { CommandCenterContext } from '../commands/types';
 
 export class DingBotAdapter extends BaseDingBotAdapter<CommandCenterContext> {
-  userInfoKVManager: DingUserKVManager;
-
   constructor(
     public id: string,
     public c: Context<THonoEnvironment>,
-    public kvManager: DingKVManager,
     public ctx: ExecutionContext,
     public setting: IDingBotSetting,
   ) {
     super(id, {
       prefix: [''],
+      timeout: Environment.instance().timeout,
     });
 
     registerCommonCommand(this.cc);
     registerGitHubCommand(this.cc);
     registerOpenSumiCommand(this.cc);
-
-    this.userInfoKVManager = new DingUserKVManager();
-  }
-  override async handle(session: Session): Promise<void> {
-    super.handle(session, {
-      timeout: Environment.instance().timeout,
-    });
   }
 
-  override async constructContext(
+  protected override async constructContext(
     session: Session,
   ): Promise<CommandCenterContext> {
     let app: App | undefined;
@@ -54,7 +45,7 @@ export class DingBotAdapter extends BaseDingBotAdapter<CommandCenterContext> {
     return {
       bot: this,
       session,
-      ctx: { message: session.msg, app },
+      ctx: { app },
     };
   }
 }

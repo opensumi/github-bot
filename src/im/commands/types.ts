@@ -6,7 +6,6 @@ import { Message } from '@opensumi/dingtalk-bot/lib/types';
 import { IBotAdapter } from '../types';
 
 export interface Context {
-  message: Message;
   app?: App;
 }
 

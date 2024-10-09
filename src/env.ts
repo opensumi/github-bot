@@ -30,7 +30,7 @@ export default class Environment {
     return this.env.OPENAI_API_KEY;
   }
 
-  private _timeout: number | null = null;
+  private _timeout: number | undefined = undefined;
 
   get timeout() {
     return this._timeout;

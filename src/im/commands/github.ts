@@ -7,6 +7,7 @@ import { code } from '@opensumi/dingtalk-bot/lib/types';
 
 import { IBotAdapter } from '../types';
 
+import { DingKVManager, DingUserKVManager } from '@/kv/ding';
 import { Session } from '@opensumi/dingtalk-bot';
 import { ISSUE_REGEX, REPO_REGEX } from './constants';
 import { IMCommandCenter } from './types';
@@ -170,9 +171,9 @@ export function registerGitHubCommand(it: IMCommandCenter) {
 
     const githubId = posArg[1];
 
-    const senderId = ctx.message.senderId;
+    const senderId = session.msg.senderId;
 
-    await bot.userInfoKVManager.updateGitHubUserByDingtalkId(
+    await DingUserKVManager.instance().updateGitHubUserByDingtalkId(
       senderId,
       githubId,
     );
@@ -189,7 +190,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
       }
 
       const { app } = ctx;
-      const githubUserId = await getGitHubUserFromDingtalkId(bot, session);
+      const githubUserId = await getGitHubUserFromDingtalkId(session);
       const posArg = command.argv;
       const { owner, repo } = await getRepoInfoFromCommand(
         posArg,
@@ -223,7 +224,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
 }
 
 async function getDefaultRepo(bot: IBotAdapter, session: Session) {
-  const defaultRepo = await bot.kvManager.getDefaultRepo(bot.id);
+  const defaultRepo = await DingKVManager.instance().getDefaultRepo(bot.id);
   if (!defaultRepo) {
     await session.replyText(
       'pls set defaultRepo first. e.g. `putData --defaultRepo opensumi/core`',
@@ -243,7 +244,7 @@ async function getRepoInfoFromCommand(
   bot: IBotAdapter,
   session: Session,
 ) {
-  const defaultRepo = await bot.kvManager.getDefaultRepo(bot.id);
+  const defaultRepo = await DingKVManager.instance().getDefaultRepo(bot.id);
   let owner, repo;
   if (defaultRepo) {
     owner = defaultRepo.owner;

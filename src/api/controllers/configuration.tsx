@@ -97,11 +97,9 @@ export function route(hono: THono) {
     } else if (type === 'setting') {
       await GitHubKVManager.instance().setSettingById(id, data);
     } else if (type === 'ding-setting') {
-      const kvManager = new DingKVManager();
-      await kvManager.setSettingById(id, data);
+      await DingKVManager.instance().setSettingById(id, data);
     } else if (type === 'ding-info') {
-      const kvManager = new DingKVManager();
-      await kvManager.setDingInfo(id, data);
+      await DingKVManager.instance().setDingInfo(id, data);
     }
     return c.json({ success: true });
   });
@@ -130,11 +128,9 @@ export function route(hono: THono) {
     } else if (type === 'setting') {
       data = await GitHubKVManager.instance().getSettingById(id);
     } else if (type === 'ding-setting') {
-      const kvManager = new DingKVManager();
-      data = await kvManager.getSettingById(id);
+      data = await DingKVManager.instance().getSettingById(id);
     } else if (type === 'ding-info') {
-      const kvManager = new DingKVManager();
-      data = await kvManager.getDingInfo(id);
+      data = await DingKVManager.instance().getDingInfo(id);
     }
 
     return c.html(

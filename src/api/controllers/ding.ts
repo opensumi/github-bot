@@ -9,7 +9,7 @@ export function route(hono: THono) {
     if (!id) {
       return c.send.error(400, 'need a valid id');
     }
-    const kvManager = new DingKVManager();
+    const kvManager = DingKVManager.instance();
     const setting = await kvManager.getSettingById(id);
     if (!setting) {
       return c.send.error(
@@ -34,7 +34,7 @@ export function route(hono: THono) {
       return c.send.error(403, errMessage);
     }
 
-    const bot = new DingBotAdapter(id, c, kvManager, c.executionCtx, setting);
+    const bot = new DingBotAdapter(id, c, c.executionCtx, setting);
     const session = new Session(await c.req.json());
 
     c.executionCtx.waitUntil(bot.handle(session));
