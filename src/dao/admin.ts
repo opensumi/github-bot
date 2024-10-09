@@ -2,7 +2,7 @@ import { Common } from './constants';
 import { KVItem } from './kv';
 import { EValidLevel, IAdminInfo } from './types';
 
-export class CommonKVManager {
+export class CommonKVDAO {
   kvItem: KVItem<IAdminInfo>;
 
   constructor() {

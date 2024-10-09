@@ -3,7 +3,7 @@ import { KVManager } from './kv';
 
 import { IOpenSumiRunConfig, IOpenSumiRunOriginalTrialToken } from './types';
 
-export class OpenSumiRunKVManager {
+export class OpenSumiRunDAO {
   cdnConfig: KVManager<IOpenSumiRunConfig>;
 
   originalTrialToken: KVManager<IOpenSumiRunOriginalTrialToken>;
@@ -20,10 +20,10 @@ export class OpenSumiRunKVManager {
     );
   }
 
-  private static _instance: OpenSumiRunKVManager;
+  private static _instance: OpenSumiRunDAO;
   static instance() {
     if (!this._instance) {
-      this._instance = new OpenSumiRunKVManager();
+      this._instance = new OpenSumiRunDAO();
     }
     return this._instance;
   }

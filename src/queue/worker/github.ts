@@ -2,7 +2,7 @@ import { EmitterWebhookEventName, Webhooks } from '@octokit/webhooks';
 import { chunk, groupBy, orderBy } from 'es-toolkit';
 import DefaultMap from 'mnemonist/default-map';
 
-import { GitHubKVManager } from '@/dao/github';
+import { GitHubDAO } from '@/dao/github';
 import { ISetting } from '@/dao/types';
 import { initApp } from '@/github/app';
 import { sendToDing } from '@/github/dingtalk';
@@ -58,8 +58,7 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
       return cached;
     }
 
-    const appSetting =
-      await GitHubKVManager.instance().getAppSettingById(botId);
+    const appSetting = await GitHubDAO.instance().getAppSettingById(botId);
 
     if (!appSetting) {
       this.logger.error('github app worker error: setting not found', botId);
@@ -91,7 +90,7 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
     if (cached) {
       return cached;
     }
-    const _setting = await GitHubKVManager.instance().getSettingById(botId);
+    const _setting = await GitHubDAO.instance().getSettingById(botId);
     if (!_setting) {
       this.logger.error('github app worker error: setting not found', botId);
       return;

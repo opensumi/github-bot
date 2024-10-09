@@ -1,6 +1,6 @@
 import { Webhooks } from '@octokit/webhooks';
 
-import { GitHubKVManager } from '@/dao/github';
+import { GitHubDAO } from '@/dao/github';
 import {
   setupWebhooksTemplate,
   validateGithub,
@@ -15,7 +15,7 @@ export function route(hono: THono) {
       return c.send.error(400, 'need a valid id');
     }
 
-    const setting = await GitHubKVManager.instance().getSettingById(id);
+    const setting = await GitHubDAO.instance().getSettingById(id);
 
     if (setting) {
       return c.json({
@@ -36,7 +36,7 @@ export function route(hono: THono) {
     if (!id) {
       return c.send.error(400, 'need a valid id');
     }
-    const setting = await GitHubKVManager.instance().getSettingById(id);
+    const setting = await GitHubDAO.instance().getSettingById(id);
 
     if (!setting) {
       return c.send.error(400, 'id not found in database');

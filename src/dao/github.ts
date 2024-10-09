@@ -2,7 +2,7 @@ import { GitHubCommon } from './constants';
 import { KVManager } from './kv';
 import { AppSetting, IGitHubOauthAppConfig, ISetting } from './types';
 
-export class GitHubKVManager {
+export class GitHubDAO {
   appSettingsKV: KVManager<AppSetting>;
   settingsKV: KVManager<ISetting>;
   oauthKV: KVManager<IGitHubOauthAppConfig>;
@@ -22,10 +22,10 @@ export class GitHubKVManager {
     );
   }
 
-  private static _instance: GitHubKVManager;
+  private static _instance: GitHubDAO;
   static instance() {
     if (!this._instance) {
-      this._instance = new GitHubKVManager();
+      this._instance = new GitHubDAO();
     }
     return this._instance;
   }

@@ -1,8 +1,8 @@
 import { html, raw } from 'hono/html';
 
-import { CommonKVManager } from '@/dao/admin';
-import { DingKVManager } from '@/dao/ding';
-import { GitHubKVManager } from '@/dao/github';
+import { CommonKVDAO } from '@/dao/admin';
+import { DingDAO } from '@/dao/ding';
+import { GitHubDAO } from '@/dao/github';
 import {
   EValidLevel,
   LevelSettingsMap,
@@ -23,7 +23,7 @@ export function route(hono: THono) {
     const token = c.req.query('token');
     const id = c.req.param('id');
 
-    const kv = new CommonKVManager();
+    const kv = new CommonKVDAO();
     const validLevel = await kv.isTokenValidFor(token, id);
     if (validLevel > EValidLevel.None) {
       c.validLevel = validLevel;
@@ -63,7 +63,7 @@ export function route(hono: THono) {
     }
 
     const token = body['token'];
-    const kv = new CommonKVManager();
+    const kv = new CommonKVDAO();
     const validLevel = await kv.isTokenValidFor(token, id);
 
     if (validLevel < EValidLevel.Admin) {
@@ -93,13 +93,13 @@ export function route(hono: THono) {
     }
     const data = await c.req.json();
     if (type === 'app-settings') {
-      await GitHubKVManager.instance().setAppSettingById(id, data);
+      await GitHubDAO.instance().setAppSettingById(id, data);
     } else if (type === 'setting') {
-      await GitHubKVManager.instance().setSettingById(id, data);
+      await GitHubDAO.instance().setSettingById(id, data);
     } else if (type === 'ding-setting') {
-      await DingKVManager.instance().setSettingById(id, data);
+      await DingDAO.instance().setSettingById(id, data);
     } else if (type === 'ding-info') {
-      await DingKVManager.instance().setDingInfo(id, data);
+      await DingDAO.instance().setDingInfo(id, data);
     }
     return c.json({ success: true });
   });
@@ -124,13 +124,13 @@ export function route(hono: THono) {
     let data = null;
 
     if (type === 'app-settings') {
-      data = await GitHubKVManager.instance().getAppSettingById(id);
+      data = await GitHubDAO.instance().getAppSettingById(id);
     } else if (type === 'setting') {
-      data = await GitHubKVManager.instance().getSettingById(id);
+      data = await GitHubDAO.instance().getSettingById(id);
     } else if (type === 'ding-setting') {
-      data = await DingKVManager.instance().getSettingById(id);
+      data = await DingDAO.instance().getSettingById(id);
     } else if (type === 'ding-info') {
-      data = await DingKVManager.instance().getDingInfo(id);
+      data = await DingDAO.instance().getDingInfo(id);
     }
 
     return c.html(

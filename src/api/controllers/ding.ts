@@ -1,4 +1,4 @@
-import { DingKVManager } from '@/dao/ding';
+import { DingDAO } from '@/dao/ding';
 import { DingBotAdapter } from '@/im/ding/bot';
 import { Session, verifyMessage } from '@opensumi/dingtalk-bot';
 
@@ -9,7 +9,7 @@ export function route(hono: THono) {
     if (!id) {
       return c.send.error(400, 'need a valid id');
     }
-    const kvManager = DingKVManager.instance();
+    const kvManager = DingDAO.instance();
     const setting = await kvManager.getSettingById(id);
     if (!setting) {
       return c.send.error(

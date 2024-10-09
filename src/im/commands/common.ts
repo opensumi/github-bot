@@ -1,7 +1,7 @@
 import { IDingInfo } from '@/dao/types';
 import { code } from '@opensumi/dingtalk-bot/lib/types';
 
-import { DingKVManager } from '@/dao/ding';
+import { DingDAO } from '@/dao/ding';
 import { IMCommandCenter } from './types';
 
 export function registerCommonCommand(it: IMCommandCenter) {
@@ -12,7 +12,7 @@ export function registerCommonCommand(it: IMCommandCenter) {
       if (command.args['defaultRepo']) {
         info['defaultRepo'] = command.args['defaultRepo'];
       }
-      await DingKVManager.instance().updateGroupInfo(bot.id, info);
+      await DingDAO.instance().updateGroupInfo(bot.id, info);
       await session.replyText('更新信息成功');
     },
     undefined,

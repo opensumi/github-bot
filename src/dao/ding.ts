@@ -2,7 +2,7 @@ import { DingCommon } from './constants';
 import { KVManager } from './kv';
 import { IDingBotSetting, IDingInfo, IDingUserInfo } from './types';
 
-export class DingKVManager {
+export class DingDAO {
   secretsKV: KVManager<IDingBotSetting>;
   infoKV: KVManager<IDingInfo>;
 
@@ -11,10 +11,10 @@ export class DingKVManager {
     this.infoKV = KVManager.for(DingCommon.INFO_PREFIX, 10 * 1000);
   }
 
-  private static _instance: DingKVManager;
+  private static _instance: DingDAO;
   static instance() {
     if (!this._instance) {
-      this._instance = new DingKVManager();
+      this._instance = new DingDAO();
     }
     return this._instance;
   }

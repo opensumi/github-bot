@@ -1,6 +1,6 @@
 import { html } from 'hono/html';
 
-import { OpenSumiRunKVManager } from '@/dao/run';
+import { OpenSumiRunDAO } from '@/dao/run';
 import Environment from '@/env';
 
 import { ControllerFacade } from './base';
@@ -8,7 +8,7 @@ import { ControllerFacade } from './base';
 function registerOpenSumiRun(hono: THono, prefix = '') {
   hono.get(`${prefix}/:group/:project`, async (c) => {
     const env = Environment.instance().environment;
-    const kvManager = OpenSumiRunKVManager.instance();
+    const kvManager = OpenSumiRunDAO.instance();
 
     const config = await kvManager.getCdnConfig();
     const originTrial = await kvManager.getTrialToken(env);

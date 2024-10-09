@@ -1,10 +1,10 @@
-import { GitHubKVManager } from '@/dao/github';
+import { GitHubDAO } from '@/dao/github';
 
 export function route(hono: THono) {
   hono.get('/auth/callback/:id', async (c) => {
     const code = c.req.query('code');
     const state = c.req.query('state');
-    const config = await GitHubKVManager.instance().getOauthAppConfig(
+    const config = await GitHubDAO.instance().getOauthAppConfig(
       c.req.param('id'),
     );
 
@@ -40,7 +40,7 @@ export function route(hono: THono) {
   });
 
   hono.get('/auth/github/:id', async (c) => {
-    const config = await GitHubKVManager.instance().getOauthAppConfig(
+    const config = await GitHubDAO.instance().getOauthAppConfig(
       c.req.param('id'),
     );
 

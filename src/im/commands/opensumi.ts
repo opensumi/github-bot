@@ -8,7 +8,7 @@ import {
 
 import { IBotAdapter } from '../types';
 
-import { DingKVManager } from '@/dao/ding';
+import { DingDAO } from '@/dao/ding';
 import { KnownRepo } from './constants';
 import { CommandCenterContext, Context, IMCommandCenter } from './types';
 import { hasApp, replyIfAppNotDefined } from './utils';
@@ -17,7 +17,7 @@ import { hasApp, replyIfAppNotDefined } from './utils';
  * 拦截本次请求
  */
 async function repoIntercept(bot: IBotAdapter, _ctx: Context, repo: string) {
-  const defaultRepo = await DingKVManager.instance().getDefaultRepo(bot.id);
+  const defaultRepo = await DingDAO.instance().getDefaultRepo(bot.id);
   if (!defaultRepo) {
     return true;
   }

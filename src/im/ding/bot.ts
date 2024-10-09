@@ -1,7 +1,7 @@
 import { Context } from 'hono';
 
-import { DingKVManager, DingUserKVManager } from '@/dao/ding';
-import { GitHubKVManager } from '@/dao/github';
+import { DingDAO, DingUserKVManager } from '@/dao/ding';
+import { GitHubDAO } from '@/dao/github';
 import { IDingBotSetting } from '@/dao/types';
 import Environment from '@/env';
 import { App, initApp } from '@/github/app';
@@ -37,7 +37,7 @@ export class DingBotAdapter extends BaseDingBotAdapter<CommandCenterContext> {
     session: Session,
   ): Promise<CommandCenterContext> {
     let app: App | undefined;
-    const setting = await GitHubKVManager.instance().getAppSettingById(this.id);
+    const setting = await GitHubDAO.instance().getAppSettingById(this.id);
     if (setting) {
       app = await initApp(setting);
     }

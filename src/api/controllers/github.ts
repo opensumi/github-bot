@@ -1,6 +1,6 @@
 import { Octokit } from '@octokit/core';
 
-import { GitHubKVManager } from '@/dao/github';
+import { GitHubDAO } from '@/dao/github';
 import { KnownSwitches, Switches } from '@/dao/switches';
 import { validateGithub, webhookHandler } from '@/github';
 import { initApp } from '@/github/app';
@@ -12,7 +12,7 @@ export function route(hono: THono) {
       return c.send.error(400, 'need a valid id');
     }
 
-    const setting = await GitHubKVManager.instance().getAppSettingById(id);
+    const setting = await GitHubDAO.instance().getAppSettingById(id);
 
     if (!setting) {
       return c.send.error(400, 'id not found in database');
@@ -62,7 +62,7 @@ export function route(hono: THono) {
     }
 
     // 先查数据库有没有设置这个 id 对应的 installation id
-    const setting = await GitHubKVManager.instance().getAppSettingById(id);
+    const setting = await GitHubDAO.instance().getAppSettingById(id);
 
     if (!setting) {
       return c.send.error(400, 'id not found in database');
@@ -106,7 +106,7 @@ export function route(hono: THono) {
     }
 
     // 先查数据库有没有设置这个 id 对应的 installation id
-    const setting = await GitHubKVManager.instance().getAppSettingById(id);
+    const setting = await GitHubDAO.instance().getAppSettingById(id);
 
     if (!setting) {
       return c.send.error(400, 'id not found in database');
