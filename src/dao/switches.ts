@@ -1,4 +1,5 @@
-import { Common, KVManager, MemoizeFn } from '.';
+import { Common } from './constants';
+import { KVManager } from './kv';
 
 interface SwitchesItem {
   enabled: boolean;

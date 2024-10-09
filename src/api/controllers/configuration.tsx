@@ -1,14 +1,14 @@
 import { html, raw } from 'hono/html';
 
-import { CommonKVManager } from '@/kv/admin';
-import { DingKVManager } from '@/kv/ding';
-import { GitHubKVManager } from '@/kv/github';
+import { CommonKVManager } from '@/dao/admin';
+import { DingKVManager } from '@/dao/ding';
+import { GitHubKVManager } from '@/dao/github';
 import {
   EValidLevel,
   LevelSettingsMap,
   SettingType,
   SettingsNameMap,
-} from '@/kv/types';
+} from '@/dao/types';
 import UnauthorizedHTML from '@/public/configuration/401.html';
 import ConfigurationHTML from '@/public/configuration/configuration.html';
 

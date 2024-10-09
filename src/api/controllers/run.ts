@@ -1,7 +1,7 @@
 import { html } from 'hono/html';
 
+import { OpenSumiRunKVManager } from '@/dao/run';
 import Environment from '@/env';
-import { OpenSumiRunKVManager } from '@/kv/run';
 
 import { ControllerFacade } from './base';
 

@@ -8,7 +8,7 @@ import {
 
 import { IBotAdapter } from '../types';
 
-import { DingKVManager } from '@/kv/ding';
+import { DingKVManager } from '@/dao/ding';
 import { KnownRepo } from './constants';
 import { CommandCenterContext, Context, IMCommandCenter } from './types';
 import { hasApp, replyIfAppNotDefined } from './utils';

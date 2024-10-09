@@ -2,7 +2,7 @@ import { StopErrorWithReply } from '@opensumi/bot-commander';
 
 import { IBotAdapter } from '../types';
 
-import { DingUserKVManager } from '@/kv/ding';
+import { DingUserKVManager } from '@/dao/ding';
 import { Session } from '@opensumi/dingtalk-bot';
 import { Context } from './types';
 

@@ -1,4 +1,4 @@
-import type { DingKVManager, DingUserKVManager } from '@/kv/ding';
+import type { DingKVManager, DingUserKVManager } from '@/dao/ding';
 
 export interface IBotAdapter {
   id: string;

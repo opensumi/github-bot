@@ -1,7 +1,7 @@
-import { IDingInfo } from '@/kv/types';
+import { IDingInfo } from '@/dao/types';
 import { code } from '@opensumi/dingtalk-bot/lib/types';
 
-import { DingKVManager } from '@/kv/ding';
+import { DingKVManager } from '@/dao/ding';
 import { IMCommandCenter } from './types';
 
 export function registerCommonCommand(it: IMCommandCenter) {

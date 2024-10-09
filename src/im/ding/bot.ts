@@ -1,10 +1,10 @@
 import { Context } from 'hono';
 
+import { DingKVManager, DingUserKVManager } from '@/dao/ding';
+import { GitHubKVManager } from '@/dao/github';
+import { IDingBotSetting } from '@/dao/types';
 import Environment from '@/env';
 import { App, initApp } from '@/github/app';
-import { DingKVManager, DingUserKVManager } from '@/kv/ding';
-import { GitHubKVManager } from '@/kv/github';
-import { IDingBotSetting } from '@/kv/types';
 import {
   DingBotAdapter as BaseDingBotAdapter,
   Session,

@@ -1,5 +1,5 @@
-import { Common, KVItem } from '@/kv';
-
+import { Common } from './constants';
+import { KVItem } from './kv';
 import { EValidLevel, IAdminInfo } from './types';
 
 export class CommonKVManager {

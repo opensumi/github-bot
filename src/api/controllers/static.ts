@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 
-import { SettingType } from '@/kv/types';
+import { SettingType } from '@/dao/types';
 import AppSettings from '@/public/json-schemas/app-settings.schema.json';
 import DingInfo from '@/public/json-schemas/ding-info.schema.json';
 import DingSetting from '@/public/json-schemas/ding-setting.schema.json';

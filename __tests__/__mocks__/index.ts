@@ -1,5 +1,5 @@
+import { GitHubCommon } from '@/dao/constants';
 import Environment from '@/env';
-import { GitHubCommon } from '@/kv/constants';
 import { runtimeConfig } from '@/runtime/node/config';
 import { InMemoryKV } from '@/runtime/node/kv';
 

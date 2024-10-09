@@ -1,12 +1,12 @@
 import { Webhooks } from '@octokit/webhooks';
 
+import { GitHubKVManager } from '@/dao/github';
 import {
   setupWebhooksTemplate,
   validateGithub,
   webhookHandler,
 } from '@/github';
 import { sendToDing } from '@/github/dingtalk';
-import { GitHubKVManager } from '@/kv/github';
 
 export function route(hono: THono) {
   hono.get('/webhook/:id', async (c) => {

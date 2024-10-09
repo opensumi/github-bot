@@ -2,12 +2,12 @@ import { EmitterWebhookEventName, Webhooks } from '@octokit/webhooks';
 import { chunk, groupBy, orderBy } from 'es-toolkit';
 import DefaultMap from 'mnemonist/default-map';
 
+import { GitHubKVManager } from '@/dao/github';
+import { ISetting } from '@/dao/types';
 import { initApp } from '@/github/app';
 import { sendToDing } from '@/github/dingtalk';
 import { setupWebhooksTemplate } from '@/github/handler';
 import { TemplateRenderResult } from '@/github/templates';
-import { GitHubKVManager } from '@/kv/github';
-import { ISetting } from '@/kv/types';
 import { Logger } from '@/utils/logger';
 
 import { IGitHubEventQueueMessage } from '../types';

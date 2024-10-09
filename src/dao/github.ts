@@ -1,5 +1,5 @@
-import { GitHubCommon, KVManager } from '@/kv';
-
+import { GitHubCommon } from './constants';
+import { KVManager } from './kv';
 import { AppSetting, IGitHubOauthAppConfig, ISetting } from './types';
 
 export class GitHubKVManager {

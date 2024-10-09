@@ -1,9 +1,9 @@
 import { Octokit } from '@octokit/core';
 
+import { GitHubKVManager } from '@/dao/github';
+import { KnownSwitches, Switches } from '@/dao/switches';
 import { validateGithub, webhookHandler } from '@/github';
 import { initApp } from '@/github/app';
-import { GitHubKVManager } from '@/kv/github';
-import { KnownSwitches, Switches } from '@/kv/switches';
 
 export function route(hono: THono) {
   hono.post('/github/app/:id', async (c) => {

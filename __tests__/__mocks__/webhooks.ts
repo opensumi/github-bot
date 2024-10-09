@@ -1,6 +1,6 @@
 import { Webhooks } from '@octokit/webhooks';
 
-import { GitHubKVManager } from '@/kv/github';
+import { GitHubKVManager } from '@/dao/github';
 import { GitHubEventWorker, IOctokitShape } from '@/queue/worker/github';
 
 export class MockGitHubEventWorker extends GitHubEventWorker {

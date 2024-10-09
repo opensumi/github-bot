@@ -1,4 +1,5 @@
-import { KVManager, OpenSumiRunCommon } from '@/kv';
+import { OpenSumiRunCommon } from './constants';
+import { KVManager } from './kv';
 
 import { IOpenSumiRunConfig, IOpenSumiRunOriginalTrialToken } from './types';
 

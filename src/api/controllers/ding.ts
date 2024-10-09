@@ -1,5 +1,5 @@
+import { DingKVManager } from '@/dao/ding';
 import { DingBotAdapter } from '@/im/ding/bot';
-import { DingKVManager } from '@/kv/ding';
 import { Session, verifyMessage } from '@opensumi/dingtalk-bot';
 
 export function route(hono: THono) {

@@ -2,7 +2,7 @@ import { Octokit } from '@octokit/rest';
 import { WebhookEventMap, WebhookEventName } from '@octokit/webhooks-types';
 import { EmitterWebhookEventName } from '@octokit/webhooks/dist-types/types';
 
-import { ISetting } from '@/kv/types';
+import { ISetting } from '@/dao/types';
 
 export interface Context {
   setting: ISetting;

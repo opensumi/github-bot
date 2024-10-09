@@ -1,4 +1,4 @@
-import { KVManager } from '@/kv';
+import { KVManager } from '@/dao';
 
 import '../__mocks__/env';
 

@@ -4,8 +4,8 @@ import { HandlerFunction } from '@octokit/webhooks/dist-types/types';
 
 import { PrivilegeEvent } from '@/constants';
 import { ActionsRepo, VERSION_SYNC_KEYWORD } from '@/constants/opensumi';
+import { AppSetting } from '@/dao/types';
 import Environment from '@/env';
-import { AppSetting } from '@/kv/types';
 
 import { CommandContext, issueCc } from './commands';
 import { parseCommandInMarkdownComments } from './commands/parse';

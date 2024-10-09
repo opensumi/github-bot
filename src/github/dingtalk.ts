@@ -1,11 +1,11 @@
 import { EmitterWebhookEventName } from '@octokit/webhooks';
 
 import { context } from '@/api/context';
+import { ISetting } from '@/dao/types';
 import {
   IMakeMarkdownOptions,
   standardizeMarkdown,
 } from '@/github/renderer/make-mark';
-import { ISetting } from '@/kv/types';
 import { limitTextByPosition } from '@/utils';
 import {
   Markdown,

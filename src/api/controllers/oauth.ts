@@ -1,4 +1,4 @@
-import { GitHubKVManager } from '@/kv/github';
+import { GitHubKVManager } from '@/dao/github';
 
 export function route(hono: THono) {
   hono.get('/auth/callback/:id', async (c) => {

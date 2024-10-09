@@ -1,5 +1,5 @@
-import { DingCommon, KVManager } from '@/kv';
-
+import { DingCommon } from './constants';
+import { KVManager } from './kv';
 import { IDingBotSetting, IDingInfo, IDingUserInfo } from './types';
 
 export class DingKVManager {

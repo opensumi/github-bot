@@ -7,7 +7,7 @@ import { code } from '@opensumi/dingtalk-bot/lib/types';
 
 import { IBotAdapter } from '../types';
 
-import { DingKVManager, DingUserKVManager } from '@/kv/ding';
+import { DingKVManager, DingUserKVManager } from '@/dao/ding';
 import { Session } from '@opensumi/dingtalk-bot';
 import { ISSUE_REGEX, REPO_REGEX } from './constants';
 import { IMCommandCenter } from './types';
