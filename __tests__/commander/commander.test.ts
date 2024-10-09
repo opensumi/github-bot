@@ -1,8 +1,8 @@
 import { sleep } from '@opensumi/ide-utils';
 
 import Environment from '@/env';
-import { ISSUE_REGEX } from '@/im/commands/constants';
 import { runtimeConfig } from '@/runtime/node/config';
+import { ISSUE_REGEX } from '@/services/dingtalk-bot/commands/constants';
 import { CommandCenter } from '@opensumi/bot-commander';
 
 import { testEnv } from '../__mocks__/env';

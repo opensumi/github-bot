@@ -1,5 +1,5 @@
 import { DingDAO } from '@/dao/ding';
-import { DingBotAdapter } from '@/im/ding/bot';
+import { DingBotAdapter } from '@/services/dingtalk-bot';
 import { Session, verifyMessage } from '@opensumi/dingtalk-bot';
 
 export function route(hono: THono) {

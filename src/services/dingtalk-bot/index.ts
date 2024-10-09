@@ -9,10 +9,10 @@ import {
   Session,
 } from '@opensumi/dingtalk-bot';
 
-import { registerCommonCommand } from '../commands/common';
-import { registerGitHubCommand } from '../commands/github';
-import { registerOpenSumiCommand } from '../commands/opensumi';
-import { CommandCenterContext } from '../commands/types';
+import { registerCommonCommand } from './commands/common';
+import { registerGitHubCommand } from './commands/github';
+import { registerOpenSumiCommand } from './commands/opensumi';
+import { CommandCenterContext } from './commands/types';
 
 export class DingBotAdapter extends BaseDingBotAdapter<CommandCenterContext> {
   constructor(
