@@ -168,29 +168,19 @@ export class OpenSumiOctoService extends GitHubService {
     return workflow;
   }
 
-  async updateLockfileForPr({ pull_number }: { pull_number: number }) {
-    const workflow = await this.octo.actions.createWorkflowDispatch({
-      ...ActionsRepo.UPDATE_LOCKFILE_WORKFLOW,
-      inputs: {
-        pull_number: pull_number.toString(),
-      },
+  async dispatchWorkflow(
+    workflow: {
+      workflow_id: string;
+      ref: string;
+      owner: string;
+      repo: string;
+    },
+    inputs: Record<string, any>,
+  ) {
+    const result = await this.octo.actions.createWorkflowDispatch({
+      ...workflow,
+      inputs,
     });
-    return workflow;
-  }
-
-  async createMergeCommitForPr({
-    pull_number,
-    owner,
-    repo,
-  }: { pull_number: number; owner: string; repo: string }) {
-    const workflow = await this.octo.actions.createWorkflowDispatch({
-      ...ActionsRepo.CREATE_MERGE_COMMIT_WORKFLOW,
-      inputs: {
-        pull_number: pull_number.toString(),
-        owner,
-        repo,
-      },
-    });
-    return workflow;
+    return result;
   }
 }

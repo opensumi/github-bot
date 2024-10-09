@@ -203,9 +203,12 @@ Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
     constraintRepo(fullname, updateLockfileAllowedRepo);
     await checkIsPullRequestAndUserHasPermission(ctx, 'write');
 
-    await app.octoService.updateLockfileForPr({
-      pull_number: issue.number,
-    });
+    await app.octoService.dispatchWorkflow(
+      ActionsRepo.UPDATE_LOCKFILE_WORKFLOW,
+      {
+        pull_number: String(issue.number),
+      },
+    );
     await app.createReactionForIssueComment(ctx, 'rocket');
   });
   it.on(
@@ -219,11 +222,18 @@ Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
       constraintRepo(fullname, mergeCommitAllowedRepo);
       await checkIsPullRequestAndUserHasPermission(ctx, 'admin');
 
-      await app.octoService.createMergeCommitForPr({
-        pull_number: issue.number,
-        owner,
-        repo,
-      });
+      await app.octoService.dispatchWorkflow(
+        ActionsRepo.CREATE_MERGE_COMMIT_WORKFLOW,
+        {
+          pull_number: String(issue.number),
+          owner,
+          repo,
+        },
+      );
+      await app.replyComment(
+        ctx,
+        `[Start merging the pull request](${getActionsUrl(ActionsRepo.CREATE_MERGE_COMMIT_WORKFLOW)})`,
+      );
       await app.createReactionForIssueComment(ctx, 'rocket');
     },
     ['merge-this'],
