@@ -1,15 +1,18 @@
-import { IRuntimeConfig } from './runtime/base';
-import { parseValidNumber } from './utils/number';
+import { saftParseInt } from './utils/number';
+
+export interface IEnvironmentConfig {
+  defaultTimeout: number;
+}
 
 export default class Environment {
   private constructor(
-    public readonly runtimeConfig: IRuntimeConfig,
+    public readonly config: IEnvironmentConfig,
     private env: IRuntimeEnv,
   ) {
-    this._timeout = runtimeConfig.defaultTimeout;
+    this._timeout = config.defaultTimeout;
 
     if (env.TIMEOUT) {
-      const timeout = parseValidNumber(env.TIMEOUT);
+      const timeout = saftParseInt(env.TIMEOUT);
       if (typeof timeout !== 'undefined') {
         this._timeout = timeout;
       }
@@ -47,7 +50,7 @@ export default class Environment {
     return this.#instance;
   }
 
-  static initialize(runtimeConfig: IRuntimeConfig, env: IRuntimeEnv) {
+  static initialize(runtimeConfig: IEnvironmentConfig, env: IRuntimeEnv) {
     this.#instance = new Environment(runtimeConfig, env);
   }
 
