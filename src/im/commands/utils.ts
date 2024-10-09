@@ -1,9 +1,7 @@
 import { StopErrorWithReply } from '@opensumi/bot-commander';
 
-import { IBotAdapter } from '../types';
-
 import { DingUserKVManager } from '@/dao/ding';
-import { Session } from '@opensumi/dingtalk-bot';
+import { DingBotAdapter, Session } from '@opensumi/dingtalk-bot';
 import { Context } from './types';
 
 export function hasApp(
@@ -12,7 +10,7 @@ export function hasApp(
   return !!item.app;
 }
 
-export async function replyIfAppNotDefined(_bot: IBotAdapter, ctx: Context) {
+export async function replyIfAppNotDefined(_bot: DingBotAdapter, ctx: Context) {
   if (!hasApp(ctx)) {
     throw new StopErrorWithReply(
       'current bot has not configured use GitHub App. Please contact admin.',

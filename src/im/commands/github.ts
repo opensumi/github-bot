@@ -4,11 +4,9 @@ import { renderPrOrIssue } from '@/services/github/renderer';
 import { StringBuilder } from '@/utils';
 import { code } from '@opensumi/dingtalk-bot/lib/types';
 
-import { IBotAdapter } from '../types';
-
 import { DingDAO, DingUserKVManager } from '@/dao/ding';
 import { DingtalkService } from '@/services/dingtalk';
-import { Session } from '@opensumi/dingtalk-bot';
+import { DingBotAdapter, Session } from '@opensumi/dingtalk-bot';
 import { ISSUE_REGEX, REPO_REGEX } from './constants';
 import { IMCommandCenter } from './types';
 import {
@@ -223,7 +221,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
   );
 }
 
-async function getDefaultRepo(bot: IBotAdapter, session: Session) {
+async function getDefaultRepo(bot: DingBotAdapter, session: Session) {
   const defaultRepo = await DingDAO.instance().getDefaultRepo(bot.id);
   if (!defaultRepo) {
     await session.replyText(
@@ -241,7 +239,7 @@ async function getDefaultRepo(bot: IBotAdapter, session: Session) {
 // 4. star microsoft core -> microsoft/core
 async function getRepoInfoFromCommand(
   argv: string[],
-  bot: IBotAdapter,
+  bot: DingBotAdapter,
   session: Session,
 ) {
   const defaultRepo = await DingDAO.instance().getDefaultRepo(bot.id);

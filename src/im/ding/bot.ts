@@ -1,6 +1,5 @@
 import { Context } from 'hono';
 
-import { DingDAO, DingUserKVManager } from '@/dao/ding';
 import { GitHubDAO } from '@/dao/github';
 import { IDingBotSetting } from '@/dao/types';
 import Environment from '@/env';
@@ -9,7 +8,6 @@ import {
   DingBotAdapter as BaseDingBotAdapter,
   Session,
 } from '@opensumi/dingtalk-bot';
-import { Message } from '@opensumi/dingtalk-bot/lib/types';
 
 import { registerCommonCommand } from '../commands/common';
 import { registerGitHubCommand } from '../commands/github';
@@ -43,7 +41,7 @@ export class DingBotAdapter extends BaseDingBotAdapter<CommandCenterContext> {
     }
 
     return {
-      bot: this,
+      bot: this as any,
       session,
       ctx: { app },
     };

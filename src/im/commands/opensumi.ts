@@ -5,10 +5,9 @@ import {
   StopErrorWithReply,
 } from '@opensumi/bot-commander';
 
-import { IBotAdapter } from '../types';
-
 import { DingDAO } from '@/dao/ding';
 import { DingtalkService } from '@/services/dingtalk';
+import { DingBotAdapter } from '@opensumi/dingtalk-bot';
 import { KnownRepo } from './constants';
 import { CommandCenterContext, Context, IMCommandCenter } from './types';
 import { hasApp, replyIfAppNotDefined } from './utils';
@@ -16,7 +15,7 @@ import { hasApp, replyIfAppNotDefined } from './utils';
 /**
  * 拦截本次请求
  */
-async function repoIntercept(bot: IBotAdapter, _ctx: Context, repo: string) {
+async function repoIntercept(bot: DingBotAdapter, _ctx: Context, repo: string) {
   const defaultRepo = await DingDAO.instance().getDefaultRepo(bot.id);
   if (!defaultRepo) {
     return true;
@@ -29,7 +28,7 @@ async function repoIntercept(bot: IBotAdapter, _ctx: Context, repo: string) {
 }
 
 export function registerOpenSumiCommand(it: IMCommandCenter) {
-  const intercept = async (bot: IBotAdapter, ctx: Context) => {
+  const intercept = async (bot: DingBotAdapter, ctx: Context) => {
     if (await repoIntercept(bot, ctx, KnownRepo.OpenSumi)) {
       throw new StopError('command only works in opensumi repo');
     }

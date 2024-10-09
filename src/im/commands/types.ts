@@ -1,16 +1,13 @@
 import { App } from '@/services/github/app';
 import { CommandCenter } from '@opensumi/bot-commander';
-import { Session } from '@opensumi/dingtalk-bot';
-import { Message } from '@opensumi/dingtalk-bot/lib/types';
-
-import { IBotAdapter } from '../types';
+import { DingBotAdapter, Session } from '@opensumi/dingtalk-bot';
 
 export interface Context {
   app?: App;
 }
 
 export type CommandCenterContext = {
-  bot: IBotAdapter;
+  bot: DingBotAdapter;
   session: Session;
   ctx: Context;
 };

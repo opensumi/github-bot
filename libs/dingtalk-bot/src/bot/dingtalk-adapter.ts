@@ -4,6 +4,8 @@ import { Session } from './session';
 export class DingBotAdapter<
   CommandCenterContext extends {
     session: Session;
+  } = {
+    session: Session;
   },
 > {
   public cc: CommandCenter<CommandCenterContext>;
