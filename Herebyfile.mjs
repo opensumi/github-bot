@@ -63,7 +63,7 @@ export const tscBuild = task({
 
 export const build = task({
   name: 'build',
-  dependencies: [tscBuild, gen],
+  dependencies: [clean, tscBuild, gen],
   run: async () => {
     await runTask(buildNode);
     await runTask(buildCfWorker);
@@ -121,6 +121,14 @@ export const devWorkerPreview = task({
   name: 'dev:worker:preview',
   run: async () => {
     await Promise.all([runTask(devWorker), runTask(devProxy)]);
+  },
+});
+
+export const clean = task({
+  name: 'clean',
+  run: async () => {
+    await shell('rm -rf libs/*/lib');
+    await shell('lerna run clean');
   },
 });
 

@@ -35,7 +35,7 @@
     "extract-fixtures": "tsx scripts/extract-webhook-example.ts",
     "generate:json-schemas": "node scripts/generate-json-schemas-all.mjs",
     "postinstall": "yarn build:libs",
-    "clean": "rm -rf libs/*/lib"
+    "clean": "hereby"
   },
   "dependencies": {
     "@hono/node-server": "^1.11.1",
