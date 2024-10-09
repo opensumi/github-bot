@@ -1,5 +1,5 @@
-import { QueueBatchConsumer } from '@/queue';
-import { BaseWorker } from '@/queue/worker';
+import { QueueBatchConsumer } from '@/services/queue';
+import { BaseWorker } from '@/services/queue/worker';
 
 import { MockMessage, MockMessageBatch } from '../__mocks__/queue/message';
 

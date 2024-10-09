@@ -1,7 +1,7 @@
 import Environment from '@/env';
 import { ignition } from '@/ignition';
-import { createBatchConsumer } from '@/queue';
-import { TQueueMessage } from '@/queue/types';
+import { createBatchConsumer } from '@/services/queue';
+import { TQueueMessage } from '@/services/queue/types';
 import { RequiredField } from '@/types';
 import { Logger } from '@/utils/logger';
 

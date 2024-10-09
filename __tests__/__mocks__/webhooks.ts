@@ -1,7 +1,10 @@
 import { Webhooks } from '@octokit/webhooks';
 
 import { GitHubDAO } from '@/dao/github';
-import { GitHubEventWorker, IOctokitShape } from '@/queue/worker/github';
+import {
+  GitHubEventWorker,
+  IOctokitShape,
+} from '@/services/queue/worker/github';
 
 export class MockGitHubEventWorker extends GitHubEventWorker {
   async createGitHubApp(botId: string): Promise<IOctokitShape | undefined> {

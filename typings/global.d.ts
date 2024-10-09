@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 
-import { TQueueMessage } from '../src/queue/types';
+import { TQueueMessage } from '../src/services/queue/types';
 
 export {};
 

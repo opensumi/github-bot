@@ -5,7 +5,7 @@ import {
   EmitterWebhookEventName,
 } from '@octokit/webhooks';
 
-import { IGitHubEventQueueMessage } from '@/queue/types';
+import { IGitHubEventQueueMessage } from '@/services/queue/types';
 
 import { prepareEnv } from '../__mocks__';
 import { MockMessageBatch } from '../__mocks__/queue/message';
