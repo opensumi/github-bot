@@ -15,12 +15,12 @@ jest.mock('@opensumi/dingtalk-bot/lib/utils', () => {
   };
 });
 
-import { sendContentToDing } from '@/github/dingtalk';
+import { DingtalkService } from '@/services/dingtalk';
 
 describe('can send content to dingtalk', () => {
   it('can filter event', async () => {
     content = undefined;
-    await sendContentToDing(
+    await DingtalkService.instance().sendContentToDing(
       {
         a: 1,
       },
@@ -48,21 +48,25 @@ describe('can send content to dingtalk', () => {
     const data = {
       a: 1,
     };
-    await sendContentToDing(data, 'discussion_comment.created', {
-      githubSecret: '',
-      contentLimit: 300,
-      dingWebhooks: [
-        {
-          secret: '',
-          url: '',
-          event: [
-            'release.released',
-            'discussion_comment.created',
-            'discussion.created',
-          ],
-        },
-      ],
-    });
+    await DingtalkService.instance().sendContentToDing(
+      data,
+      'discussion_comment.created',
+      {
+        githubSecret: '',
+        contentLimit: 300,
+        dingWebhooks: [
+          {
+            secret: '',
+            url: '',
+            event: [
+              'release.released',
+              'discussion_comment.created',
+              'discussion.created',
+            ],
+          },
+        ],
+      },
+    );
     expect(content).toBe(data);
   });
 });

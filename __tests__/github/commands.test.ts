@@ -1,5 +1,5 @@
-import { parseCommandInMarkdownComments } from '@/github/commands/parse';
-import { extractTargetBranchNameFromCommand } from '@/github/commands/pullRequests';
+import { parseCommandInMarkdownComments } from '@/services/github/commands/parse';
+import { extractTargetBranchNameFromCommand } from '@/services/github/commands/pullRequests';
 
 describe('command related', () => {
   it('can parse command in markdown comments', () => {

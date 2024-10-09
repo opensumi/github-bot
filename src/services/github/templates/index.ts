@@ -1,6 +1,6 @@
 import { pick } from 'es-toolkit/compat';
 
-import { Context } from '@/github/types';
+import { Context } from '@/services/github/types';
 
 import {
   handleCommitComment,

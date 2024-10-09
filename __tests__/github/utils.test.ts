@@ -1,11 +1,10 @@
-import { sendToDing } from '@/github/dingtalk';
 import {
   parseGitHubUrl,
   replaceGitHubText,
   replaceGitHubUrlToMarkdown,
-} from '@/github/gfm';
-import { standardizeMarkdown } from '@/github/renderer/make-mark';
-import { handlePr } from '@/github/templates/prOrIssue';
+} from '@/services/github/gfm';
+import { standardizeMarkdown } from '@/services/github/renderer/make-mark';
+import { handlePr } from '@/services/github/templates/prOrIssue';
 import {
   StringBuilder,
   limitLine,
@@ -15,6 +14,7 @@ import * as DingUtils from '@opensumi/dingtalk-bot/lib/utils';
 
 import { pr3628_open } from '../fixtures';
 
+import { DingtalkService } from '@/services/dingtalk';
 import { ctx } from './ctx';
 
 const commentWithImg = `<img width="954" alt="image" src="https://user-images.githubusercontent.com/2226423/153811718-2babbfa7-e63f-4ec7-9fd3-9f450beaad9b.png">
@@ -75,7 +75,7 @@ describe('github utils', () => {
         urls.push(url);
       });
 
-    await sendToDing(md, 'release.released', {
+    await DingtalkService.instance().sendToDing(md, 'release.released', {
       githubSecret: '123',
       contentLimit: 300,
       dingWebhooks: [
@@ -93,7 +93,7 @@ describe('github utils', () => {
     console.log(urls);
     expect(urls.length).toEqual(2);
 
-    await sendToDing(md, 'check_run', {
+    await DingtalkService.instance().sendToDing(md, 'check_run', {
       githubSecret: '123',
       contentLimit: 300,
       dingWebhooks: [

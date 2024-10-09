@@ -1,9 +1,9 @@
 import { Octokit } from '@octokit/core';
 
 import { GitHubDAO } from '@/dao/github';
-import { validateGithub, webhookHandler } from '@/github';
-import { initApp } from '@/github/app';
-import { SwitchesService } from '@/services/switches';
+import { validateGithub } from '@/services/github';
+import { initApp } from '@/services/github/app';
+import { WebhookService } from '@/services/webhook';
 
 export function route(hono: THono) {
   hono.post('/github/app/:id', async (c) => {
@@ -25,7 +25,7 @@ export function route(hono: THono) {
     const payload = await validateGithub(c.req, app.webhooks);
     app.listenWebhooks();
 
-    return webhookHandler(
+    return WebhookService.instance().handle(
       id,
       'github-app',
       app.webhooks,

@@ -4,7 +4,7 @@ import { DingDAO, DingUserKVManager } from '@/dao/ding';
 import { GitHubDAO } from '@/dao/github';
 import { IDingBotSetting } from '@/dao/types';
 import Environment from '@/env';
-import { App, initApp } from '@/github/app';
+import { App, initApp } from '@/services/github/app';
 import {
   DingBotAdapter as BaseDingBotAdapter,
   Session,

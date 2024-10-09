@@ -1,4 +1,4 @@
-import { App } from '@/github/app';
+import { App } from '@/services/github/app';
 import { CommandCenter } from '@opensumi/bot-commander';
 import { Session } from '@opensumi/dingtalk-bot';
 import { Message } from '@opensumi/dingtalk-bot/lib/types';

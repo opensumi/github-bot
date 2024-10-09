@@ -1,10 +1,10 @@
 import path from 'path';
 import { writeFile } from 'fs/promises';
 
-import { convertToDingMarkdown } from '@/github/dingtalk';
-import { handleReviewComment } from '@/github/templates/comment';
-import { handleReview } from '@/github/templates/review';
+import { handleReviewComment } from '@/services/github/templates/comment';
+import { handleReview } from '@/services/github/templates/review';
 
+import { DingtalkService } from '@/services/dingtalk';
 import {
   pull_request_2_review_comment_0_created,
   pull_request_review_2_1_dismissed_dismissed,
@@ -32,7 +32,10 @@ describe('github templates pr review', () => {
       );
     }
 
-    const dingContent = convertToDingMarkdown(result.title, result.text);
+    const dingContent = DingtalkService.instance().convertToDingMarkdown(
+      result.title,
+      result.text,
+    );
 
     expect(dingContent).toMatchSnapshot();
   });

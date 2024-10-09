@@ -1,5 +1,4 @@
 import { ActionsRepo, getActionsUrl } from '@/constants/opensumi';
-import { convertToDingMarkdown } from '@/github/dingtalk';
 import {
   ICommand,
   StopError,
@@ -9,6 +8,7 @@ import {
 import { IBotAdapter } from '../types';
 
 import { DingDAO } from '@/dao/ding';
+import { DingtalkService } from '@/services/dingtalk';
 import { KnownRepo } from './constants';
 import { CommandCenterContext, Context, IMCommandCenter } from './types';
 import { hasApp, replyIfAppNotDefined } from './utils';
@@ -65,7 +65,7 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     await app.octoService.deployBot();
     await app.octoService.deployBotPre();
     await session.reply(
-      convertToDingMarkdown(
+      DingtalkService.instance().convertToDingMarkdown(
         '开始部署机器人',
         '[开始部署机器人 & 预发机器人](https://github.com/opensumi/github-bot/actions)' +
           text,
@@ -99,7 +99,7 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
 
     await app.octoService.deployBotPre(workflowRef);
     await session.reply(
-      convertToDingMarkdown(
+      DingtalkService.instance().convertToDingMarkdown(
         '开始部署预发机器人',
         '[开始部署预发机器人](https://github.com/opensumi/github-bot/actions)' +
           text,
@@ -207,7 +207,7 @@ async function publishNextVersion(
 
       await app.octoService.releaseNextVersion(workflowInfo, ref);
       await session.reply(
-        convertToDingMarkdown(
+        DingtalkService.instance().convertToDingMarkdown(
           `Releasing a next version of ${name}`,
           `Releasing a [next version of ${name}](${getActionsUrl(
             workflowInfo,
@@ -251,7 +251,7 @@ async function syncVersion(
 
       await app.octoService.syncOpenSumiVersion(version, workflowRef);
       await session.reply(
-        convertToDingMarkdown(
+        DingtalkService.instance().convertToDingMarkdown(
           'Synchronizing OpenSumi packages',
           `[Synchronizing OpenSumi packages${
             version ? `@${version}` : ''
@@ -266,7 +266,7 @@ async function syncVersion(
 
       await app.octoService.syncCodeblitzVersion(version, workflowRef);
       await session.reply(
-        convertToDingMarkdown(
+        DingtalkService.instance().convertToDingMarkdown(
           'Synchronizing CodeBlitz packages',
           `[Synchronizing CodeBlitz packages${
             version ? `@${version}` : ''

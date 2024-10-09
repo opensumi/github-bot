@@ -1,7 +1,7 @@
 import {
   IssuesTitleLink,
   PullRequestRefInfo,
-} from '@/github/templates/components';
+} from '@/services/github/templates/components';
 import { StringBuilder } from '@/utils/string-builder';
 import type { IIssueDetail, IPrDetail } from '@opensumi/octo-service/lib/types';
 

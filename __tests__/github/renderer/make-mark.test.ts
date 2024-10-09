@@ -1,9 +1,12 @@
 import path from 'path';
 import { readFile } from 'fs/promises';
 
-import { convertToDingMarkdown } from '@/github/dingtalk';
-import { replaceGitHubText } from '@/github/gfm';
-import { makeMarkdown, parseMarkdown } from '@/github/renderer/make-mark';
+import { DingtalkService } from '@/services/dingtalk';
+import { replaceGitHubText } from '@/services/github/gfm';
+import {
+  makeMarkdown,
+  parseMarkdown,
+} from '@/services/github/renderer/make-mark';
 
 describe('github renderer make-mark', () => {
   it('parse and make', async () => {
@@ -29,7 +32,7 @@ describe('github renderer make-mark', () => {
       path.join(__dirname, './review_comment_created.md'),
       'utf-8',
     );
-    const made = convertToDingMarkdown('', md);
+    const made = DingtalkService.instance().convertToDingMarkdown('', md);
     expect(made.markdown.text).toMatchSnapshot('convertToDingMarkdown');
   });
 });

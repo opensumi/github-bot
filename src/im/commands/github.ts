@@ -1,13 +1,13 @@
-import { App } from '@/github/app';
-import { convertToDingMarkdown, createImageProxy } from '@/github/dingtalk';
-import { parseGitHubUrl } from '@/github/gfm';
-import { renderPrOrIssue } from '@/github/renderer';
+import { App } from '@/services/github/app';
+import { parseGitHubUrl } from '@/services/github/gfm';
+import { renderPrOrIssue } from '@/services/github/renderer';
 import { StringBuilder } from '@/utils';
 import { code } from '@opensumi/dingtalk-bot/lib/types';
 
 import { IBotAdapter } from '../types';
 
 import { DingDAO, DingUserKVManager } from '@/dao/ding';
+import { DingtalkService } from '@/services/dingtalk';
 import { Session } from '@opensumi/dingtalk-bot';
 import { ISSUE_REGEX, REPO_REGEX } from './constants';
 import { IMCommandCenter } from './types';
@@ -36,10 +36,10 @@ export function registerGitHubCommand(it: IMCommandCenter) {
     const full_name = repoData.data?.full_name;
     if (full_name) {
       await session.reply(
-        convertToDingMarkdown(
+        DingtalkService.instance().convertToDingMarkdown(
           `${full_name} Open Graph`,
           `![](https://opengraph.githubassets.com/${makeid(16)}/${full_name})`,
-          createImageProxy(),
+          DingtalkService.instance().createImageProxy(),
         ),
       );
     }
@@ -110,12 +110,12 @@ export function registerGitHubCommand(it: IMCommandCenter) {
           const full_name = result.data?.full_name;
           if (full_name) {
             await session.reply(
-              convertToDingMarkdown(
+              DingtalkService.instance().convertToDingMarkdown(
                 `${full_name} Open Graph`,
                 `![](https://opengraph.githubassets.com/${makeid(
                   16,
                 )}/${full_name})`,
-                createImageProxy(),
+                DingtalkService.instance().createImageProxy(),
               ),
             );
           }
@@ -213,7 +213,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
       }
 
       await session.reply(
-        convertToDingMarkdown(
+        DingtalkService.instance().convertToDingMarkdown(
           `${githubUserId}'s prs of ${owner}/${repo}`,
           builder.toString(),
         ),
@@ -300,7 +300,9 @@ async function replyGitHubIssue(
   );
   if (issue) {
     const data = renderPrOrIssue(issue);
-    await session.reply(convertToDingMarkdown(data.title, data.text));
+    await session.reply(
+      DingtalkService.instance().convertToDingMarkdown(data.title, data.text),
+    );
   } else {
     await session.replyText(
       `${issueNumber} 不是 ${owner}/${repo} 仓库有效的 issue number`,

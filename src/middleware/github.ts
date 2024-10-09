@@ -1,4 +1,4 @@
-import { ValidationError } from '@/github';
+import { ValidationError } from '@/services/github';
 import { assert } from '@/utils/api/assert';
 
 import { objectRequired } from '@/utils/api/validator';

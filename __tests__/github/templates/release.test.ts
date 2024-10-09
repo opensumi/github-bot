@@ -1,4 +1,4 @@
-import { handleRelease } from '@/github/templates/release';
+import { handleRelease } from '@/services/github/templates/release';
 
 import { antd_mini_release_published, release_published } from '../../fixtures';
 import { ctx } from '../ctx';

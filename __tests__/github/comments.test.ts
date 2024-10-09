@@ -1,4 +1,4 @@
-import { CommentBody } from '@/github/templates/comment';
+import { CommentBody } from '@/services/github/templates/comment';
 
 describe('comment', () => {
   it('renderCommentBody', () => {

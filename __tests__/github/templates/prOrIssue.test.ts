@@ -1,4 +1,4 @@
-import { handleIssue, handlePr } from '@/github/templates/prOrIssue';
+import { handleIssue, handlePr } from '@/services/github/templates/prOrIssue';
 
 import {
   issue_opened_event,

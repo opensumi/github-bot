@@ -1,5 +1,5 @@
-import { replaceGitHubText } from '@/github/gfm';
-import { render } from '@/github/renderer';
+import { replaceGitHubText } from '@/services/github/gfm';
+import { render } from '@/services/github/renderer';
 
 export interface IBuildOptions {
   appendNewLineToTheEnd?: boolean;

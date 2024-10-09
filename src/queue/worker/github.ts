@@ -4,15 +4,14 @@ import DefaultMap from 'mnemonist/default-map';
 
 import { GitHubDAO } from '@/dao/github';
 import { ISetting } from '@/dao/types';
-import { initApp } from '@/github/app';
-import { sendToDing } from '@/github/dingtalk';
-import { setupWebhooksTemplate } from '@/github/handler';
-import { TemplateRenderResult } from '@/github/templates';
+import { initApp } from '@/services/github/app';
+import { setupWebhooksTemplate } from '@/services/github/handler';
+import { TemplateRenderResult } from '@/services/github/templates';
 import { Logger } from '@/utils/logger';
 
 import { IGitHubEventQueueMessage } from '../types';
 
-import { memoize, pMemoize } from '@opensumi/ide-utils';
+import { DingtalkService } from '@/services/dingtalk';
 import { BaseWorker } from '.';
 
 export function createUniqueMessageId(
@@ -210,7 +209,7 @@ export class GitHubEventWorker extends BaseWorker<IGitHubEventQueueMessage> {
 
         for (const { markdown, eventName } of results) {
           try {
-            await sendToDing(
+            await DingtalkService.instance().sendToDing(
               markdown,
               eventName as EmitterWebhookEventName,
               setting,

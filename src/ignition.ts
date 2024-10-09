@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { HTTPException } from 'hono/http-exception';
 import { prettyJSON } from 'hono/pretty-json';
 
-import { ValidationError } from '@/github';
+import { ValidationError } from '@/services/github';
 
 import { registerControllers } from './controllers';
 import { dispatch } from './gateway';

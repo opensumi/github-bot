@@ -1,4 +1,4 @@
-import { ValidationError } from '@/github';
+import { ValidationError } from '@/services/github';
 
 import { assert } from './assert';
 

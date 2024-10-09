@@ -1,12 +1,9 @@
 import { Webhooks } from '@octokit/webhooks';
 
 import { GitHubDAO } from '@/dao/github';
-import {
-  setupWebhooksTemplate,
-  validateGithub,
-  webhookHandler,
-} from '@/github';
-import { sendToDing } from '@/github/dingtalk';
+import { DingtalkService } from '@/services/dingtalk';
+import { setupWebhooksTemplate, validateGithub } from '@/services/github';
+import { WebhookService } from '@/services/webhook';
 
 export function route(hono: THono) {
   hono.get('/webhook/:id', async (c) => {
@@ -59,11 +56,15 @@ export function route(hono: THono) {
         setting,
       },
       async ({ markdown, eventName }) => {
-        await sendToDing(markdown, eventName, setting);
+        await DingtalkService.instance().sendToDing(
+          markdown,
+          eventName,
+          setting,
+        );
       },
     );
 
-    return webhookHandler(
+    return WebhookService.instance().handle(
       id,
       'github-webhook',
       webhooks,

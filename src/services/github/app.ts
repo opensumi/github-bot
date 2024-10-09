@@ -7,9 +7,9 @@ import { ActionsRepo, VERSION_SYNC_KEYWORD } from '@/constants/opensumi';
 import { AppSetting } from '@/dao/types';
 import Environment from '@/env';
 
+import { DingtalkService } from '../dingtalk';
 import { CommandContext, issueCc } from './commands';
 import { parseCommandInMarkdownComments } from './commands/parse';
-import { sendToDing } from './dingtalk';
 import { setupWebhooksTemplate } from './handler';
 import { OpenSumiOctoService } from './service/opensumi';
 
@@ -61,7 +61,7 @@ export class App {
         throw new Error('unknown repo');
     }
 
-    await sendToDing(
+    await DingtalkService.instance().sendToDing(
       {
         title: 'Starts Synchronizing',
         text: `[${fullname}] ${tag} has published. [starts synchronizing ${name} packages@${version} to npmmirror](https://github.com/opensumi/actions/actions/workflows/${file})`,
@@ -179,7 +179,11 @@ export class App {
         setting: this.setting,
       },
       async ({ markdown, eventName }) => {
-        await sendToDing(markdown, eventName, this.setting);
+        await DingtalkService.instance().sendToDing(
+          markdown,
+          eventName,
+          this.setting,
+        );
       },
     );
   }
