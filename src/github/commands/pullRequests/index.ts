@@ -214,11 +214,15 @@ Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
       const { app, payload } = ctx;
       const { issue } = payload;
       const fullname = payload.repository.full_name;
+      const owner = payload.repository.owner.login;
+      const repo = payload.repository.name;
       constraintRepo(fullname, mergeCommitAllowedRepo);
       await checkIsPullRequestAndUserHasPermission(ctx, 'admin');
 
       await app.octoService.createMergeCommitForPr({
         pull_number: issue.number,
+        owner,
+        repo,
       });
       await app.createReactionForIssueComment(ctx, 'rocket');
     },

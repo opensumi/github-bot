@@ -178,11 +178,17 @@ export class OpenSumiOctoService extends GitHubService {
     return workflow;
   }
 
-  async createMergeCommitForPr({ pull_number }: { pull_number: number }) {
+  async createMergeCommitForPr({
+    pull_number,
+    owner,
+    repo,
+  }: { pull_number: number; owner: string; repo: string }) {
     const workflow = await this.octo.actions.createWorkflowDispatch({
       ...ActionsRepo.CREATE_MERGE_COMMIT_WORKFLOW,
       inputs: {
         pull_number: pull_number.toString(),
+        owner,
+        repo,
       },
     });
     return workflow;
