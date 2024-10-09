@@ -1,10 +1,9 @@
 import { StatusCode } from 'hono/utils/http-status';
 
-import { middleware } from '../context';
-
+import * as AsyncLocalStorage from './async-local-storage';
 import * as GitHub from './github';
 
-export const enhanceContext = (hono: THono) => {
+export function applyMiddleware(hono: THono) {
   hono.use('*', async (c, next) => {
     const url = new URL(c.req.url);
     const origin = url.origin;
@@ -35,15 +34,10 @@ export const enhanceContext = (hono: THono) => {
 
     await next();
   });
-
   hono.use(
-    middleware<THonoEnvironment>((ctx) => ({
+    AsyncLocalStorage.middleware<THonoEnvironment>((ctx) => ({
       ctx,
     })),
   );
-};
-
-export function applyMiddleware(hono: THono) {
-  enhanceContext(hono);
   GitHub.middleware(hono);
 }

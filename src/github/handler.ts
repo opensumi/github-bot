@@ -8,8 +8,8 @@ import {
 } from '@octokit/webhooks/dist-types/types';
 import { HonoRequest } from 'hono';
 
-import { error, json } from '@/api/utils/response';
 import Environment from '@/env';
+import { error, json } from '@/utils/api/response';
 import { Logger } from '@/utils/logger';
 
 import { SwitchesService } from '@/services/switches';

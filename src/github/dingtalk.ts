@@ -1,6 +1,5 @@
 import { EmitterWebhookEventName } from '@octokit/webhooks';
 
-import { context } from '@/api/context';
 import { ISetting } from '@/dao/types';
 import {
   IMakeMarkdownOptions,
@@ -13,6 +12,7 @@ import {
 } from '@opensumi/dingtalk-bot/lib/types';
 import { send } from '@opensumi/dingtalk-bot/lib/utils';
 
+import { context } from '@/middleware/async-local-storage';
 import { MarkdownContent } from './types';
 
 function dingSecurityInterception(text: string) {

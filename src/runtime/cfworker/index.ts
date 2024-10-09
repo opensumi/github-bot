@@ -1,5 +1,5 @@
-import { ignition } from '@/api';
 import Environment from '@/env';
+import { ignition } from '@/ignition';
 import { createBatchConsumer } from '@/queue';
 import { TQueueMessage } from '@/queue/types';
 import { RequiredField } from '@/types';

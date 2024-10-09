@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { serve } from '@hono/node-server';
 
-import { ignition } from '@/api';
+import { ignition } from '@/ignition';
 
 const port = process.env.PORT ? Number(process.env.PORT) : 8787;
 

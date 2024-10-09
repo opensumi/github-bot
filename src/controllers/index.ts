@@ -1,7 +1,6 @@
-import favicon from '../../public/favicon.svg';
-import html from '../../public/index.html';
-import { context } from '../context';
 import { ERuleName } from '../gateway';
+import favicon from '../public/favicon.svg';
+import html from '../public/index.html';
 
 import { ControllerFacade } from './base';
 import * as Configuration from './configuration';

@@ -1,7 +1,7 @@
-import { assert } from '@/api/utils/assert';
 import { ValidationError } from '@/github';
+import { assert } from '@/utils/api/assert';
 
-import { objectRequired } from '../utils/validator';
+import { objectRequired } from '@/utils/api/validator';
 
 export function middleware(hono: THono) {
   hono.use('/github/app/*', async (c, next) => {

@@ -22,3 +22,13 @@ export const asyncLocalStorage = <T>() => {
     },
   };
 };
+
+export type ContinuationContext = {
+  ctx: Context<THonoEnvironment>;
+};
+
+const { middleware, get } = asyncLocalStorage<ContinuationContext>();
+
+export { middleware };
+
+export const context = () => get('ctx');
