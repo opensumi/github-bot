@@ -11,7 +11,6 @@
   },
   "workspaces": ["libs/*"],
   "scripts": {
-    "format": "yarn biome format --write",
     "build": "hereby",
     "build:libs": "hereby",
     "build:cfworker": "hereby",
@@ -25,17 +24,18 @@
     "dev:worker": "hereby",
     "dev:proxy": "hereby",
     "gen": "hereby",
+    "clean": "hereby",
     "predeploy:local": "yarn build",
     "deploy:local": "wrangler deploy",
     "publish:libs": "lerna publish",
     "lint": "biome check",
     "lint:fix": "yarn biome check --write",
+    "format": "yarn biome format --write",
     "test": "jest --config jest.config.js --verbose",
     "test:cov": "yarn test --coverage",
     "extract-fixtures": "tsx scripts/extract-webhook-example.ts",
     "generate:json-schemas": "node scripts/generate-json-schemas-all.mjs",
-    "postinstall": "yarn build:libs",
-    "clean": "hereby"
+    "postinstall": "yarn build:libs"
   },
   "dependencies": {
     "@hono/node-server": "^1.11.1",

@@ -61,6 +61,14 @@ export const tscBuild = task({
   },
 });
 
+export const clean = task({
+  name: 'clean',
+  run: async () => {
+    await shell('rm -rf libs/*/lib');
+    await shell('lerna run clean');
+  },
+});
+
 export const build = task({
   name: 'build',
   dependencies: [clean, tscBuild, gen],
@@ -124,13 +132,6 @@ export const devWorkerPreview = task({
   },
 });
 
-export const clean = task({
-  name: 'clean',
-  run: async () => {
-    await shell('rm -rf libs/*/lib');
-    await shell('lerna run clean');
-  },
-});
 
 export default task({
   name: 'npm script',
