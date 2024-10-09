@@ -7,6 +7,7 @@ import { code } from '@opensumi/dingtalk-bot/lib/types';
 
 import { IBotAdapter } from '../types';
 
+import { Session } from '@opensumi/dingtalk-bot';
 import { ISSUE_REGEX, REPO_REGEX } from './constants';
 import { IMCommandCenter } from './types';
 import {
@@ -16,7 +17,7 @@ import {
 } from './utils';
 
 export function registerGitHubCommand(it: IMCommandCenter) {
-  it.on(REPO_REGEX, async ({ bot, ctx, result }) => {
+  it.on(REPO_REGEX, async ({ bot, ctx, result, session }) => {
     await replyIfAppNotDefined(bot, ctx);
     if (!hasApp(ctx)) {
       return;
@@ -33,7 +34,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
     });
     const full_name = repoData.data?.full_name;
     if (full_name) {
-      await bot.reply(
+      await session.reply(
         convertToDingMarkdown(
           `${full_name} Open Graph`,
           `![](https://opengraph.githubassets.com/${makeid(16)}/${full_name})`,
@@ -43,7 +44,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
     }
   });
 
-  it.on(ISSUE_REGEX, async ({ bot, ctx, result }) => {
+  it.on(ISSUE_REGEX, async ({ bot, ctx, result, session }) => {
     await replyIfAppNotDefined(bot, ctx);
     if (!hasApp(ctx)) {
       return;
@@ -52,10 +53,10 @@ export function registerGitHubCommand(it: IMCommandCenter) {
     const { app } = ctx;
     const regexResult = result.result;
     const issueNumber = Number(regexResult.groups!['number']);
-    const defaultRepo = await getDefaultRepo(bot);
+    const defaultRepo = await getDefaultRepo(bot, session);
 
     await replyGitHubIssue(
-      bot,
+      session,
       app,
       defaultRepo.owner,
       defaultRepo.repo,
@@ -65,7 +66,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
 
   it.on(
     'history',
-    async ({ bot, ctx }, command) => {
+    async ({ bot, ctx, session }, command) => {
       await replyIfAppNotDefined(bot, ctx);
       if (!hasApp(ctx)) {
         return;
@@ -74,20 +75,24 @@ export function registerGitHubCommand(it: IMCommandCenter) {
       const { app } = ctx;
 
       const posArg = command.argv;
-      const { owner, repo } = await getRepoInfoFromCommand(posArg, bot);
+      const { owner, repo } = await getRepoInfoFromCommand(
+        posArg,
+        bot,
+        session,
+      );
       const payload = await app.octoService.getRepoHistory(owner, repo);
       console.log(`🚀 ~ file: github.ts ~ line 127 ~ payload`, payload);
       const content = code('json', JSON.stringify(payload, null, 2));
       console.log(`🚀 ~ file: github.ts ~ line 128 ~ content`, content);
-      await bot.reply(content);
-      await bot.replyText('已经发给你啦');
+      await session.reply(content);
+      await session.replyText('已经发给你啦');
     },
     [],
   );
 
   it.on(
     'http',
-    async ({ bot, ctx }, command) => {
+    async ({ bot, ctx, session }, command) => {
       await replyIfAppNotDefined(bot, ctx);
       if (!hasApp(ctx)) {
         return;
@@ -103,7 +108,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
           });
           const full_name = result.data?.full_name;
           if (full_name) {
-            await bot.reply(
+            await session.reply(
               convertToDingMarkdown(
                 `${full_name} Open Graph`,
                 `![](https://opengraph.githubassets.com/${makeid(
@@ -116,7 +121,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
           return;
         } else if (githubUrl.type === 'issue') {
           return await replyGitHubIssue(
-            bot,
+            session,
             app,
             githubUrl.owner,
             githubUrl.repo,
@@ -130,7 +135,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
 
   it.on(
     'star',
-    async ({ bot, ctx }, command) => {
+    async ({ bot, ctx, session }, command) => {
       await replyIfAppNotDefined(bot, ctx);
       if (!hasApp(ctx)) {
         return;
@@ -139,15 +144,19 @@ export function registerGitHubCommand(it: IMCommandCenter) {
       const { app } = ctx;
 
       const posArg = command.argv;
-      const { owner, repo } = await getRepoInfoFromCommand(posArg, bot);
+      const { owner, repo } = await getRepoInfoFromCommand(
+        posArg,
+        bot,
+        session,
+      );
       const payload = await app.octoService.getRepoStarRecords(owner, repo);
       const content = code('json', JSON.stringify(payload));
-      await bot.reply(content);
+      await session.reply(content);
     },
     ['stars'],
   );
 
-  it.on('bind-github', async ({ bot, ctx }, command) => {
+  it.on('bind-github', async ({ bot, ctx, session }, command) => {
     await replyIfAppNotDefined(bot, ctx);
     if (!hasApp(ctx)) {
       return;
@@ -168,21 +177,25 @@ export function registerGitHubCommand(it: IMCommandCenter) {
       githubId,
     );
 
-    await bot.replyText('success');
+    await session.replyText('success');
   });
 
   it.on(
     'my-pr',
-    async ({ bot, ctx }, command) => {
+    async ({ bot, ctx, session }, command) => {
       await replyIfAppNotDefined(bot, ctx);
       if (!hasApp(ctx)) {
         return;
       }
 
       const { app } = ctx;
-      const githubUserId = await getGitHubUserFromDingtalkId(bot);
+      const githubUserId = await getGitHubUserFromDingtalkId(bot, session);
       const posArg = command.argv;
-      const { owner, repo } = await getRepoInfoFromCommand(posArg, bot);
+      const { owner, repo } = await getRepoInfoFromCommand(
+        posArg,
+        bot,
+        session,
+      );
       const prs = await app.octoService.pr.getPullRequests(
         owner,
         repo,
@@ -198,7 +211,7 @@ export function registerGitHubCommand(it: IMCommandCenter) {
         builder.add(`- [${pr.title}](${pr.html_url})`);
       }
 
-      await bot.reply(
+      await session.reply(
         convertToDingMarkdown(
           `${githubUserId}'s prs of ${owner}/${repo}`,
           builder.toString(),
@@ -209,10 +222,10 @@ export function registerGitHubCommand(it: IMCommandCenter) {
   );
 }
 
-async function getDefaultRepo(bot: IBotAdapter) {
+async function getDefaultRepo(bot: IBotAdapter, session: Session) {
   const defaultRepo = await bot.kvManager.getDefaultRepo(bot.id);
   if (!defaultRepo) {
-    await bot.replyText(
+    await session.replyText(
       'pls set defaultRepo first. e.g. `putData --defaultRepo opensumi/core`',
     );
     throw new Error('pls set defaultRepo first');
@@ -225,7 +238,11 @@ async function getDefaultRepo(bot: IBotAdapter) {
 // 2. star ide-startup -> opensumi/ide-startup
 // 3. star microsoft/core -> microsoft/core
 // 4. star microsoft core -> microsoft/core
-async function getRepoInfoFromCommand(argv: string[], bot: IBotAdapter) {
+async function getRepoInfoFromCommand(
+  argv: string[],
+  bot: IBotAdapter,
+  session: Session,
+) {
   const defaultRepo = await bot.kvManager.getDefaultRepo(bot.id);
   let owner, repo;
   if (defaultRepo) {
@@ -246,7 +263,7 @@ async function getRepoInfoFromCommand(argv: string[], bot: IBotAdapter) {
     repo = argv[2];
   }
   if (!owner || !repo) {
-    await bot.replyText(
+    await session.replyText(
       'pls set defaultRepo first. e.g. `putData --defaultRepo opensumi/core`',
     );
     throw new Error('pls set defaultRepo first');
@@ -269,7 +286,7 @@ function makeid(length: number) {
 }
 
 async function replyGitHubIssue(
-  bot: IBotAdapter,
+  session: Session,
   app: App,
   owner: string,
   repo: string,
@@ -282,9 +299,9 @@ async function replyGitHubIssue(
   );
   if (issue) {
     const data = renderPrOrIssue(issue);
-    await bot.reply(convertToDingMarkdown(data.title, data.text));
+    await session.reply(convertToDingMarkdown(data.title, data.text));
   } else {
-    await bot.replyText(
+    await session.replyText(
       `${issueNumber} 不是 ${owner}/${repo} 仓库有效的 issue number`,
     );
   }

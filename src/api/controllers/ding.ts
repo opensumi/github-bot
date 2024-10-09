@@ -34,18 +34,10 @@ export function route(hono: THono) {
       return c.send.error(403, errMessage);
     }
 
-    const session = new Session(
-      new DingBotAdapter(
-        id,
-        c,
-        await c.req.json(),
-        kvManager,
-        c.executionCtx,
-        setting,
-      ),
-    );
+    const bot = new DingBotAdapter(id, c, kvManager, c.executionCtx, setting);
+    const session = new Session(await c.req.json());
 
-    c.executionCtx.waitUntil(session.run());
+    c.executionCtx.waitUntil(bot.handle(session));
 
     return c.send.message('ok');
   });

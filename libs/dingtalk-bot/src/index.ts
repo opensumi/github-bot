@@ -56,6 +56,5 @@ export async function verifyMessage(headers: Headers, token: string) {
   }
 }
 
-export { IBotAdapter } from './bot/base-adapter';
 export { DingBotAdapter } from './bot/dingtalk-adapter';
 export { Session } from './bot/session';

@@ -2,6 +2,7 @@ import { StopErrorWithReply } from '@opensumi/bot-commander';
 
 import { IBotAdapter } from '../types';
 
+import { Session } from '@opensumi/dingtalk-bot';
 import { Context } from './types';
 
 export function hasApp(
@@ -18,8 +19,11 @@ export async function replyIfAppNotDefined(_bot: IBotAdapter, ctx: Context) {
   }
 }
 
-export async function getGitHubUserFromDingtalkId(bot: IBotAdapter) {
-  const dingtalkId = bot.msg.senderId;
+export async function getGitHubUserFromDingtalkId(
+  bot: IBotAdapter,
+  session: Session,
+) {
+  const dingtalkId = session.msg.senderId;
   const githubId =
     await bot.userInfoKVManager.getGitHubUserByDingtalkId(dingtalkId);
   if (!githubId) {

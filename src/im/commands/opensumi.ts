@@ -43,7 +43,7 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     return hasApp(ctx);
   };
 
-  it.on('deploy', async ({ bot, ctx }) => {
+  it.on('deploy', async ({ bot, ctx, session }) => {
     await intercept(bot, ctx);
 
     const app = ctx.app!;
@@ -63,7 +63,7 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
 
     await app.octoService.deployBot();
     await app.octoService.deployBotPre();
-    await bot.reply(
+    await session.reply(
       convertToDingMarkdown(
         '开始部署机器人',
         '[开始部署机器人 & 预发机器人](https://github.com/opensumi/github-bot/actions)' +
@@ -72,7 +72,7 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     );
   });
 
-  it.on('deploypre', async ({ bot, ctx }, command) => {
+  it.on('deploypre', async ({ bot, ctx, session }, command) => {
     await intercept(bot, ctx);
 
     const app = ctx.app!;
@@ -97,7 +97,7 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     }
 
     await app.octoService.deployBotPre(workflowRef);
-    await bot.reply(
+    await session.reply(
       convertToDingMarkdown(
         '开始部署预发机器人',
         '[开始部署预发机器人](https://github.com/opensumi/github-bot/actions)' +
@@ -106,38 +106,43 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
     );
   });
 
-  it.on('rc', async ({ bot, ctx }, command) => {
+  it.on('rc', async ({ bot, ctx, session }, command) => {
     await intercept(bot, ctx);
 
-    await bot.replyText(
+    await session.replyText(
       '[rc 命令已经 deprecated, 请使用 nx 命令] 开始发布 next 版本',
     );
 
-    await publishNextVersion('nx', { ctx, bot }, command, 'core');
+    await publishNextVersion('nx', { bot, ctx, session }, command, 'core');
   });
 
-  it.on('nx', async ({ bot, ctx }, command) => {
+  it.on('nx', async ({ bot, ctx, session }, command) => {
     await intercept(bot, ctx);
-    await publishNextVersion('nx', { ctx, bot }, command, 'core');
+    await publishNextVersion('nx', { bot, ctx, session }, command, 'core');
   });
 
-  it.on('nx-cb', async ({ bot, ctx }, command) => {
+  it.on('nx-cb', async ({ bot, ctx, session }, command) => {
     await intercept(bot, ctx);
-    await publishNextVersion('nx-cb', { ctx, bot }, command, 'codeblitz');
+    await publishNextVersion(
+      'nx-cb',
+      { bot, ctx, session },
+      command,
+      'codeblitz',
+    );
   });
 
-  it.on('sync', async ({ bot, ctx }, command) => {
+  it.on('sync', async ({ bot, ctx, session }, command) => {
     await intercept(bot, ctx);
-    await syncVersion({ ctx, bot }, command, 'core');
+    await syncVersion({ bot, ctx, session }, command, 'core');
   });
-  it.on('sync-cb', async ({ bot, ctx }, command) => {
+  it.on('sync-cb', async ({ bot, ctx, session }, command) => {
     await intercept(bot, ctx);
-    await syncVersion({ ctx, bot }, command, 'codeblitz');
+    await syncVersion({ bot, ctx, session }, command, 'codeblitz');
   });
 
   it.on(
     'report',
-    async ({ bot, ctx }, command) => {
+    async ({ bot, ctx, session }, command) => {
       await intercept(bot, ctx);
 
       const app = ctx.app!;
@@ -149,7 +154,7 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
       }
 
       await app.octoService.monthlyReport(params);
-      await bot.replyText('Starts generating monthly report.');
+      await session.replyText('Starts generating monthly report.');
     },
     [],
   );
@@ -157,7 +162,7 @@ export function registerOpenSumiCommand(it: IMCommandCenter) {
 
 async function publishNextVersion(
   command: string,
-  { ctx, bot }: CommandCenterContext,
+  { ctx, session }: CommandCenterContext,
   payload: ICommand<any>,
   repo: 'core' | 'codeblitz',
 ) {
@@ -179,7 +184,7 @@ async function publishNextVersion(
       try {
         await app.octoService.getRefInfoByRepo(ref, 'opensumi', repo);
       } catch (error) {
-        await bot.replyText(
+        await session.replyText(
           `找不到 ref: ${ref}, 错误信息: ${(error as Error).message}`,
         );
       }
@@ -200,7 +205,7 @@ async function publishNextVersion(
       }
 
       await app.octoService.releaseNextVersion(workflowInfo, ref);
-      await bot.reply(
+      await session.reply(
         convertToDingMarkdown(
           `Releasing a next version of ${name}`,
           `Releasing a [next version of ${name}](${getActionsUrl(
@@ -209,15 +214,17 @@ async function publishNextVersion(
         ),
       );
     } catch (error) {
-      await bot.replyText(`执行出错：${(error as Error).message}`);
+      await session.replyText(`执行出错：${(error as Error).message}`);
     }
   } else {
-    await bot.replyText(`使用方法 ${command} --ref v2.xx 或 ${command} v2.xx`);
+    await session.replyText(
+      `使用方法 ${command} --ref v2.xx 或 ${command} v2.xx`,
+    );
   }
 }
 
 async function syncVersion(
-  { ctx, bot }: CommandCenterContext,
+  { ctx, session }: CommandCenterContext,
   command: ICommand<any>,
   repo: 'core' | 'codeblitz',
 ) {
@@ -242,7 +249,7 @@ async function syncVersion(
       });
 
       await app.octoService.syncOpenSumiVersion(version, workflowRef);
-      await bot.reply(
+      await session.reply(
         convertToDingMarkdown(
           'Synchronizing OpenSumi packages',
           `[Synchronizing OpenSumi packages${
@@ -257,7 +264,7 @@ async function syncVersion(
       });
 
       await app.octoService.syncCodeblitzVersion(version, workflowRef);
-      await bot.reply(
+      await session.reply(
         convertToDingMarkdown(
           'Synchronizing CodeBlitz packages',
           `[Synchronizing CodeBlitz packages${
@@ -267,6 +274,6 @@ async function syncVersion(
       );
     }
   } catch (error) {
-    await bot.replyText(`sync 出错：${(error as Error).message}`);
+    await session.replyText(`sync 出错：${(error as Error).message}`);
   }
 }

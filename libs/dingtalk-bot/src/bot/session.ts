@@ -1,14 +1,23 @@
-import { IBotAdapter } from './base-adapter';
+import { Message, SendMessage, compose, text as textFn } from '../types';
+import { send } from '../utils';
+
+function prepare(s: string) {
+  return s.toString().trim();
+}
 
 export class Session {
-  constructor(public impl: IBotAdapter) {}
+  constructor(public msg: Message) {}
 
-  async run() {
-    await this.impl.handle().catch(async (err: Error) => {
-      await this.impl.replyText(
-        `处理消息出错: ${(err as Error).message} ${(err as Error).stack}`,
-      );
-      throw err;
-    });
+  async replyText(text: string, contentExtra: Record<string, any> = {}) {
+    await this.reply(compose(textFn(text), contentExtra));
+  }
+
+  async reply(content: SendMessage) {
+    console.log(`DingBot ~ reply:`, JSON.stringify(content));
+    await send(content, this.msg.sessionWebhook);
+  }
+
+  get text() {
+    return prepare(this.msg.text.content);
   }
 }

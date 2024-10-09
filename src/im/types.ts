@@ -1,7 +1,8 @@
 import type { DingKVManager, DingUserKVManager } from '@/kv/ding';
-import { IBotAdapter as _IBotAdapter } from '@opensumi/dingtalk-bot';
 
-export interface IBotAdapter extends _IBotAdapter {
+export interface IBotAdapter {
+  id: string;
+
   kvManager: DingKVManager;
   userInfoKVManager: DingUserKVManager;
 }
