@@ -1,6 +1,6 @@
 import { html, raw } from 'hono/html';
 
-import { CommonKVDAO } from '@/dao/admin';
+import { AdminDAO } from '@/dao/admin';
 import { DingDAO } from '@/dao/ding';
 import { GitHubDAO } from '@/dao/github';
 import {
@@ -11,6 +11,7 @@ import {
 } from '@/dao/types';
 import UnauthorizedHTML from '@/public/configuration/401.html';
 import ConfigurationHTML from '@/public/configuration/configuration.html';
+import { AdminService } from '@/services/admin';
 
 declare module 'hono' {
   interface Context {
@@ -23,8 +24,7 @@ export function route(hono: THono) {
     const token = c.req.query('token');
     const id = c.req.param('id');
 
-    const kv = new CommonKVDAO();
-    const validLevel = await kv.isTokenValidFor(token, id);
+    const validLevel = await AdminService.instance().isTokenValidFor(token, id);
     if (validLevel > EValidLevel.None) {
       c.validLevel = validLevel;
       await next();
@@ -63,8 +63,8 @@ export function route(hono: THono) {
     }
 
     const token = body['token'];
-    const kv = new CommonKVDAO();
-    const validLevel = await kv.isTokenValidFor(token, id);
+    const kv = new AdminDAO();
+    const validLevel = await AdminService.instance().isTokenValidFor(token, id);
 
     if (validLevel < EValidLevel.Admin) {
       return c.send.error(404, 'page not found');

@@ -1,5 +1,5 @@
-import { Common } from './constants';
-import { KVManager } from './kv';
+import { Common } from '../dao/constants';
+import { KVManager } from '../dao/kv';
 
 interface SwitchesItem {
   enabled: boolean;
@@ -12,7 +12,7 @@ export const KnownSwitches = {
   EnableQueue: 'cfworker_enableQueue',
 };
 
-export class Switches {
+export class SwitchesService {
   private switchesKV: KVManager<SwitchesItem>;
 
   private constructor() {
@@ -22,7 +22,7 @@ export class Switches {
     );
   }
 
-  isEnableFor = async (key: string, id: string) => {
+  protected isEnableFor = async (key: string, id: string) => {
     const item = await this.switchesKV.getJSONCached(key);
     if (!item) {
       return false;
@@ -43,10 +43,14 @@ export class Switches {
     return true;
   };
 
-  private static _instance: Switches | undefined;
+  isEnableQueue = async (id: string) => {
+    return this.isEnableFor(KnownSwitches.EnableQueue, id);
+  };
+
+  private static _instance: SwitchesService | undefined;
   static instance() {
     if (!this._instance) {
-      this._instance = new Switches();
+      this._instance = new SwitchesService();
     }
 
     return this._instance;

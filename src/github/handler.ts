@@ -12,6 +12,7 @@ import { error, json } from '@/api/utils/response';
 import Environment from '@/env';
 import { Logger } from '@/utils/logger';
 
+import { SwitchesService } from '@/services/switches';
 import {
   StopHandleError,
   TemplateRenderResult,
@@ -131,23 +132,25 @@ export async function webhookHandler(
   webhooks: Webhooks<{ octokit?: Octokit }>,
   execContext: ExecutionContext,
   data: EmitterWebhookEvent,
-  useQueue?: boolean,
 ) {
   const logger = Logger.instance();
   const { id, name } = data;
   try {
     logger.info('receive github webhook, id: ${id}, name: ${name}');
     try {
+      const useQueue = await SwitchesService.instance().isEnableQueue(id);
       if (useQueue) {
-        const queueItem = {
-          botId,
-          type,
-          data,
-        };
         logger.info('send to queue');
-        await Environment.instance().Queue.send(queueItem, {
-          contentType: 'json',
-        });
+        await Environment.instance().Queue.send(
+          {
+            botId,
+            type,
+            data,
+          },
+          {
+            contentType: 'json',
+          },
+        );
       } else {
         execContext.waitUntil(webhooks.receive(data));
       }
