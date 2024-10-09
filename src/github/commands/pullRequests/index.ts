@@ -3,7 +3,10 @@ import {
   getActionsUrl,
   kBackportKeyword,
 } from '@/constants/opensumi';
-import { StopError, removeCommandPrefix } from '@opensumi/bot-commander';
+import {
+  StopErrorWithReply,
+  removeCommandPrefix,
+} from '@opensumi/bot-commander';
 
 import { CommandContext, GitHubCommandCenter } from '../types';
 
@@ -23,17 +26,28 @@ export function extractTargetBranchNameFromCommand(str: string) {
   return;
 }
 
-const backportAllowedRepo = new Set<string>(['opensumi/core']);
+const backportAllowedRepo = new Set<string>([
+  'opensumi/core',
+  'opensumi/codeblitz',
+]);
 const updateLockfileAllowedRepo = new Set<string>(['opensumi/core']);
+const mergeCommitAllowedRepo = new Set<string>([
+  'opensumi/core',
+  'opensumi/codeblitz',
+]);
 
 const nextAllowedRepo = new Set<string>([
   'opensumi/core',
   'opensumi/codeblitz',
 ]);
 
+function errorMessageForConstraintRepo(allowedRepo: Set<string>) {
+  return `This command is not allowed in ${Array.from(allowedRepo).join(', ')}`;
+}
+
 function constraintRepo(fullname: string, allowedRepo: Set<string>) {
   if (!allowedRepo.has(fullname)) {
-    throw new StopError('This command is not allowed in this repository');
+    throw new StopErrorWithReply(errorMessageForConstraintRepo(allowedRepo));
   }
 }
 
@@ -62,7 +76,7 @@ async function checkIsPullRequestAndUserHasPermission(
 
   if (!userHaveWritePerm) {
     await app.createReactionForIssueComment(ctx, 'confused');
-    throw new StopError(
+    throw new StopErrorWithReply(
       `User ${user} does not have write permission to the repository`,
     );
   }
@@ -194,16 +208,20 @@ Please see: <${getActionsUrl(ActionsRepo.BACKPORT_PR_WORKFLOW)}>`,
     });
     await app.createReactionForIssueComment(ctx, 'rocket');
   });
-  it.on('create-merge-commit', async (ctx) => {
-    const { app, payload } = ctx;
-    const { issue } = payload;
-    const fullname = payload.repository.full_name;
-    constraintRepo(fullname, updateLockfileAllowedRepo);
-    await checkIsPullRequestAndUserHasPermission(ctx, 'admin');
+  it.on(
+    'create-merge-commit',
+    async (ctx) => {
+      const { app, payload } = ctx;
+      const { issue } = payload;
+      const fullname = payload.repository.full_name;
+      constraintRepo(fullname, mergeCommitAllowedRepo);
+      await checkIsPullRequestAndUserHasPermission(ctx, 'admin');
 
-    await app.octoService.createMergeCommitForPr({
-      pull_number: issue.number,
-    });
-    await app.createReactionForIssueComment(ctx, 'rocket');
-  });
+      await app.octoService.createMergeCommitForPr({
+        pull_number: issue.number,
+      });
+      await app.createReactionForIssueComment(ctx, 'rocket');
+    },
+    ['merge-this'],
+  );
 }
