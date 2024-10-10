@@ -1,7 +1,7 @@
 import {
   handleCommitComment,
   handleIssueComment,
-} from '../../../src/github/templates/comment';
+} from '../../../src/services/github/templates/comment';
 import {
   commit_comment_611372_0_created,
   issue_comment_1_0_created,
