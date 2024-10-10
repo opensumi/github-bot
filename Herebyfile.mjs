@@ -21,14 +21,14 @@ async function shell(command) {
 export const buildNode = task({
   name: 'build:node',
   run: async (...args) => {
-    await tsx('build-node.ts', ...args);
+    await tsx('scripts/build/build-node.ts', ...args);
   },
 });
 
 export const buildCfWorker = task({
   name: 'build:cfworker',
   run: async (...args) => {
-    await tsx('build-cfworker.ts', ...args);
+    await tsx('scripts/build/build-cfworker.ts', ...args);
   },
 });
 
@@ -129,20 +129,5 @@ export const devWorkerPreview = task({
   name: 'dev:worker:preview',
   run: async () => {
     await Promise.all([runTask(devWorker), runTask(devProxy)]);
-  },
-});
-
-
-export default task({
-  name: 'npm script',
-  hiddenFromTaskList: true,
-  run: async () => {
-    if (process.env.npm_lifecycle_event === undefined) {
-      throw new Error('No script specified');
-    }
-
-    await execa('hereby', [process.env.npm_lifecycle_event], {
-      stdio: 'inherit',
-    });
   },
 });

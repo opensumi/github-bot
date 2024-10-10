@@ -1,11 +1,8 @@
 import 'dotenv/config';
 
-import { Plugin, context as createContext } from 'esbuild';
-import mri from 'mri';
+import { Plugin } from 'esbuild';
 
-import { DEFAULT_BUILD_ARGS, buildParams } from './build';
-
-const argv = mri(process.argv.slice(2));
+import { build } from './base';
 
 const resolvePlugin = {
   name: 'resolvePlugin',
@@ -33,31 +30,16 @@ function wrapNodeExternal(list: string[]) {
 
 const externalNodeBuiltins = wrapNodeExternal(['async_hooks']);
 
-async function buildWorker() {
-  const context = await createContext({
-    ...buildParams,
+async function main() {
+  await build({
     entryPoints: ['./src/runtime/cfworker/index.ts'],
     platform: 'browser',
     target: 'es2020',
     format: 'esm',
     treeShaking: true,
     plugins: [resolvePlugin],
-    define: DEFAULT_BUILD_ARGS,
     external: externalNodeBuiltins,
   });
-
-  if (argv['watch']) {
-    await context.watch();
-  } else {
-    await context.rebuild().then((v) => {
-      console.log(`build ~ result`, v);
-      context.dispose();
-    });
-  }
-}
-
-async function main() {
-  await buildWorker();
 }
 
 main();
