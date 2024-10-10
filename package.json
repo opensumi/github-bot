@@ -83,6 +83,6 @@
     "ts-jest": "^29.0.5",
     "ts-json-schema-generator": "^2.1.1",
     "typescript": "^5.4.5",
-    "wrangler": "^3.62.0"
+    "wrangler": "^3.80.2"
   }
 }

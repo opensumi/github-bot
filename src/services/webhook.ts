@@ -36,7 +36,10 @@ export class WebhookService {
     try {
       logger.info('receive github webhook, id: ${id}, name: ${name}');
       try {
-        const useQueue = await SwitchesService.instance().isEnableQueue(id);
+        const useQueue =
+          Environment.instance().Queue &&
+          (await SwitchesService.instance().isEnableQueue(id));
+
         if (useQueue) {
           logger.info('send to queue');
           await Environment.instance().Queue.send(
