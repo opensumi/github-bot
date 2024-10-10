@@ -59,7 +59,7 @@
     "micromark-extension-gfm": "^3.0.0",
     "mnemonist": "^0.39.5",
     "mri": "^1.2.0",
-    "tsx": "^3.12.2"
+    "tsx": "^4.19.1"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.2",
