@@ -121,7 +121,7 @@ export const devWorker = task({
 export const devProxy = task({
   name: 'dev:proxy',
   run: async () => {
-    await tsx('dev.ts');
+    await tsx('scripts/smee.ts');
   },
 });
 
