@@ -1,15 +1,6 @@
-# Workers KV
+# Configurations
 
-We use the Workers KV to store some configuration.
-
-## Create KV Namespace
-
-You need to create a KV Namepsace, and set it's id in the `.env` file:
-
-```dotenv
-KV_LOCAL_ID=xxxx
-KV_PROD_ID=xxxxx
-```
+We use the KV to store some configuration.
 
 ## Webhooks Configuration
 

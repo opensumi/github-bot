@@ -52,6 +52,16 @@ https://worker.bot/github/app/opensumi-core
 
 set `secret` to the value you seted in <https://worker.bot/configuration/opensumi-core/app-settings>
 
-When create bot done, you can get the last two secrets you need:
+When create bot done, you can get **App ID** and **private key**,
+but you need to transform the format of private key to PKCS#8 format, you can use this command：
 
-**App ID** and **private key**, and set it's value to <https://worker.bot/configuration/opensumi-core/app-settings>.
+```sh
+// https://github.com/gr2m/cloudflare-worker-github-app-example/blob/main/worker.js
+
+// The private-key.pem file from GitHub needs to be transformed from the
+// PKCS#1 format to PKCS#8, as the crypto APIs do not support PKCS#1:
+
+openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in private-key.pem -out private-key-pkcs8.pem
+```
+
+Then you can set the configuration in <https://worker.bot/configuration/opensumi-core/app-settings>.
