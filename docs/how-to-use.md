@@ -2,11 +2,11 @@
 
 Assure our worker is deployed on: <https://worker.bot/>
 
-Firstly is set a admin password, just visit: <https://worker.bot/set-admin-password>
+Firstly is set a admin password, just visit: <https://worker.bot//admin/initialize?newToken=password> to set a password.
 
 Select a id for your project, for example: `opensumi-core`.
 
-and visit 
+and visit <https://worker.bot/configuration/opensumi-core> to configure your project.
 
 ## Configure Github Webhook
 

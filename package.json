@@ -52,6 +52,8 @@
     "dayjs": "^1.11.10",
     "es-toolkit": "^1.21.0",
     "hono": "^4.3.9",
+    "kv-storage": "^0.0.9",
+    "lowdb": "^7.0.1",
     "mdast-util-from-markdown": "^2.0.1",
     "mdast-util-gfm": "^3.0.0",
     "mdast-util-to-markdown": "^2.1.0",

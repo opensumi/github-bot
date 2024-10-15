@@ -34,3 +34,5 @@ example.ts
 
 coverage
 .wireit
+
+db.json

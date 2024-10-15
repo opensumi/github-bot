@@ -1,5 +1,7 @@
 import { WorkersKV } from '@opensumi/workers-kv';
 import { workersKvDebug } from '@opensumi/workers-kv/lib/utils';
+import { Low } from 'lowdb';
+import { JSONFilePreset } from 'lowdb/node';
 
 const cfAccountId = process.env.CLOUDFLARE_ACCOUNT_ID!;
 const cfAuthToken = process.env.CLOUDFLARE_AUTH_TOKEN!;
@@ -40,14 +42,18 @@ export class NodeKV implements IKVNamespace {
   }
 }
 
-export class InMemoryKV implements IKVNamespace {
-  map: Map<any, any>;
-  constructor() {
-    this.map = new Map();
+export class LocalKV implements IKVNamespace {
+  private _db: Low<any> | undefined;
+
+  private async db() {
+    if (!this._db) {
+      this._db = await JSONFilePreset('db.json', {});
+    }
+    return this._db;
   }
 
-  get(key: unknown, type?: unknown): TKVValue<any> {
-    let result = this.map.get(key);
+  async get(key: unknown, type?: unknown): TKVValue<any> {
+    let result = (await this.db()).data[key as any];
     if (!result) {
       return Promise.resolve(result);
     }
@@ -69,9 +75,11 @@ export class InMemoryKV implements IKVNamespace {
         }
       | undefined,
   ): Promise<void> {
-    this.map.set(key, value);
+    (await this.db()).data[key] = value;
+    await (await this.db()).write();
   }
   async delete(key: string): Promise<void> {
-    this.map.delete(key);
+    (await this.db()).data[key] = undefined;
+    await (await this.db()).write();
   }
 }

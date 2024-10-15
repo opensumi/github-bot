@@ -3,10 +3,10 @@ import 'dotenv/config';
 import Environment from '@/env';
 
 import { runtimeConfig } from './config';
-import { InMemoryKV, NodeKV } from './kv';
+import { LocalKV, NodeKV } from './kv';
 import { InMemoryQueue } from './queue';
 
-const kv = process.env.IN_MEMORY_KV ? new InMemoryKV() : new NodeKV();
+const kv = process.env.IN_MEMORY_KV ? new LocalKV() : new NodeKV();
 
 Environment.initialize(runtimeConfig, {
   ...process.env,

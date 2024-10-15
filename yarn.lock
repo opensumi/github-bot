@@ -2811,8 +2811,10 @@ __metadata:
     hereby: "npm:^1.9.0"
     hono: "npm:^4.3.9"
     jest: "npm:^29.4.1"
+    kv-storage: "npm:^0.0.9"
     lefthook: "npm:^1.3.8"
     lerna: "npm:^8.1.6"
+    lowdb: "npm:^7.0.1"
     mdast-util-from-markdown: "npm:^2.0.1"
     mdast-util-gfm: "npm:^3.0.0"
     mdast-util-to-markdown: "npm:^2.1.0"
@@ -7903,6 +7905,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"kv-storage@npm:^0.0.9":
+  version: 0.0.9
+  resolution: "kv-storage@npm:0.0.9"
+  checksum: 10/eab93e62c4a143d22d1b4bbe6c4c2d96e93a4b05b5f987938bd56590c3b7a82ebd8bdafc1cd06c7fc89d78d6ec2dc435add74a715b3c7fda69ad5e3c179971b6
+  languageName: node
+  linkType: hard
+
 "lefthook-darwin-arm64@npm:1.6.9":
   version: 1.6.9
   resolution: "lefthook-darwin-arm64@npm:1.6.9"
@@ -8282,6 +8291,15 @@ __metadata:
   version: 3.1.0
   resolution: "longest-streak@npm:3.1.0"
   checksum: 10/d7f952ed004cbdb5c8bcfc4f7f5c3d65449e6c5a9e9be4505a656e3df5a57ee125f284286b4bf8ecea0c21a7b3bf2b8f9001ad506c319b9815ad6a63a47d0fd0
+  languageName: node
+  linkType: hard
+
+"lowdb@npm:^7.0.1":
+  version: 7.0.1
+  resolution: "lowdb@npm:7.0.1"
+  dependencies:
+    steno: "npm:^4.0.2"
+  checksum: 10/089cb878515b3b4634980c77b1697991571832a440f0fbc8cabe410ff9bb22b377387fc6cf6ebd9a6430707a835ebd69561f89d30aae7def43c93410b6f82b58
   languageName: node
   linkType: hard
 
@@ -11302,6 +11320,13 @@ __metadata:
     as-table: "npm:^1.0.36"
     get-source: "npm:^2.0.12"
   checksum: 10/c87f708b639636788c4b46ecc6e503c27b6124bec724bcdc3180d7cdddfab0dee370225009e3b407adaedf847362cfc77af64f01c805516e39a28d16c6d40df8
+  languageName: node
+  linkType: hard
+
+"steno@npm:^4.0.2":
+  version: 4.0.2
+  resolution: "steno@npm:4.0.2"
+  checksum: 10/cb8beb6b6da410f6a307261da813e57569ff3c85b11695437259f49f081fc6b0eeb26c059f0ec661c4098a09f361057fe834b04d3f94ece885e96a9e0eeba697
   languageName: node
   linkType: hard
 

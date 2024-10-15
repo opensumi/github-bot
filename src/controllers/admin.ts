@@ -10,7 +10,6 @@ export function route(hono: THono) {
     }
 
     const oldAdminToken = await AdminService.instance().getAdminToken();
-    console.log(`===== ~ hono.get ~ oldAdminToken:`, oldAdminToken);
     if (oldAdminToken && oldAdminToken !== oldToken) {
       return c.send.error(400, 'oldToken is not correct');
     }
