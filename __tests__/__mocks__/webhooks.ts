@@ -1,6 +1,6 @@
 import { Webhooks } from '@octokit/webhooks';
 
-import { GitHubDAO } from '@/dao/github';
+import { GitHubDAO } from '@/dal/github';
 import {
   GitHubEventWorker,
   IOctokitShape,

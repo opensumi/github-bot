@@ -4,7 +4,7 @@ import { renderPrOrIssue } from '@/services/github/renderer';
 import { StringBuilder } from '@/utils';
 import { code } from '@opensumi/dingtalk-bot/lib/types';
 
-import { DingDAO, DingUserKVManager } from '@/dao/ding';
+import { DingDAO, DingUserKVManager } from '@/dal/ding';
 import { DingtalkService } from '@/services/dingtalk';
 import { DingBotAdapter, Session } from '@opensumi/dingtalk-bot';
 import { ISSUE_REGEX, REPO_REGEX } from './constants';

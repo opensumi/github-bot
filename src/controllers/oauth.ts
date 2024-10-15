@@ -1,4 +1,4 @@
-import { GitHubDAO } from '@/dao/github';
+import { GitHubDAO } from '@/dal/github';
 
 export function route(hono: THono) {
   hono.get('/auth/callback/:id', async (c) => {

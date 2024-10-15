@@ -1,6 +1,6 @@
 import { StopErrorWithReply } from '@opensumi/bot-commander';
 
-import { DingUserKVManager } from '@/dao/ding';
+import { DingUserKVManager } from '@/dal/ding';
 import { DingBotAdapter, Session } from '@opensumi/dingtalk-bot';
 import { Context } from './types';
 

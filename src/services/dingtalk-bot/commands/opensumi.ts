@@ -5,7 +5,7 @@ import {
   StopErrorWithReply,
 } from '@opensumi/bot-commander';
 
-import { DingDAO } from '@/dao/ding';
+import { DingDAO } from '@/dal/ding';
 import { DingtalkService } from '@/services/dingtalk';
 import { DingBotAdapter } from '@opensumi/dingtalk-bot';
 import { KnownRepo } from './constants';

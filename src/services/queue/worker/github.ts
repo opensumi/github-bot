@@ -2,8 +2,8 @@ import { EmitterWebhookEventName, Webhooks } from '@octokit/webhooks';
 import { chunk, groupBy, orderBy } from 'es-toolkit';
 import DefaultMap from 'mnemonist/default-map';
 
-import { GitHubDAO } from '@/dao/github';
-import { ISetting } from '@/dao/types';
+import { GitHubDAO } from '@/dal/github';
+import { ISetting } from '@/dal/types';
 import { initApp } from '@/services/github/app';
 import { setupWebhooksTemplate } from '@/services/github/handler';
 import { TemplateRenderResult } from '@/services/github/templates';

@@ -1,5 +1,5 @@
-import { AdminDAO } from '@/dao/admin';
-import { EValidLevel } from '@/dao/types';
+import { AdminDAO } from '@/dal/admin';
+import { EValidLevel } from '@/dal/types';
 
 export class AdminService {
   private dao: AdminDAO;

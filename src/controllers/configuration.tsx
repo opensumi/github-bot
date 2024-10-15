@@ -1,14 +1,14 @@
 import { html, raw } from 'hono/html';
 
-import { AdminDAO } from '@/dao/admin';
-import { DingDAO } from '@/dao/ding';
-import { GitHubDAO } from '@/dao/github';
+import { AdminDAO } from '@/dal/admin';
+import { DingDAO } from '@/dal/ding';
+import { GitHubDAO } from '@/dal/github';
 import {
   EValidLevel,
   LevelSettingsMap,
   SettingType,
   SettingsNameMap,
-} from '@/dao/types';
+} from '@/dal/types';
 import UnauthorizedHTML from '@/public/configuration/401.html';
 import ConfigurationHTML from '@/public/configuration/configuration.html';
 import { AdminService } from '@/services/admin';

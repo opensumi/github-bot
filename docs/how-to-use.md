@@ -1,8 +1,12 @@
 # How to use?
 
-First we should set the secrets: [Secrets](./secrets.md).
-
 Assure our worker is deployed on: <https://worker.bot/>
+
+Firstly is set a admin password, just visit: <https://worker.bot/set-admin-password>
+
+Select a id for your project, for example: `opensumi-core`.
+
+and visit 
 
 ## Configure Github Webhook
 

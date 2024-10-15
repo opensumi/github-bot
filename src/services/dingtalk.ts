@@ -1,6 +1,6 @@
 import { EmitterWebhookEventName } from '@octokit/webhooks';
 
-import { ISetting } from '@/dao/types';
+import { ISetting } from '@/dal/types';
 import {
   IMakeMarkdownOptions,
   standardizeMarkdown,

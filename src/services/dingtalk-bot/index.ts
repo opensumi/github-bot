@@ -1,7 +1,7 @@
 import { Context } from 'hono';
 
-import { GitHubDAO } from '@/dao/github';
-import { IDingBotSetting } from '@/dao/types';
+import { GitHubDAO } from '@/dal/github';
+import { IDingBotSetting } from '@/dal/types';
 import Environment from '@/env';
 import { App, initApp } from '@/services/github/app';
 import {

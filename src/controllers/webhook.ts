@@ -1,6 +1,6 @@
 import { Webhooks } from '@octokit/webhooks';
 
-import { GitHubDAO } from '@/dao/github';
+import { GitHubDAO } from '@/dal/github';
 import { DingtalkService } from '@/services/dingtalk';
 import { setupWebhooksTemplate, validateGithub } from '@/services/github';
 import { WebhookService } from '@/services/webhook';

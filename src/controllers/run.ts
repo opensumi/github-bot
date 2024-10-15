@@ -1,6 +1,6 @@
 import { html } from 'hono/html';
 
-import { OpenSumiRunDAO } from '@/dao/run';
+import { OpenSumiRunDAO } from '@/dal/run';
 import Environment from '@/env';
 
 import { ControllerFacade } from './base';

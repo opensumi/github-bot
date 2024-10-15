@@ -1,4 +1,4 @@
-import { DingDAO } from '@/dao/ding';
+import { DingDAO } from '@/dal/ding';
 import { DingBotAdapter } from '@/services/dingtalk-bot';
 import { Session, verifyMessage } from '@opensumi/dingtalk-bot';
 

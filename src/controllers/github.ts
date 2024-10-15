@@ -1,6 +1,6 @@
 import { Octokit } from '@octokit/core';
 
-import { GitHubDAO } from '@/dao/github';
+import { GitHubDAO } from '@/dal/github';
 import { validateGithub } from '@/services/github';
 import { initApp } from '@/services/github/app';
 import { WebhookService } from '@/services/webhook';
