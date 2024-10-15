@@ -8,7 +8,7 @@ const githubAppId = process.env.GITHUB_APPID || 'mock-app-id';
 const githubPrivateKey =
   process.env.GITHUB_APP_PRIVATE_KEY || 'mock-private-key';
 
-export function prepareEnv() {
+export async function prepareEnv() {
   const kv = new LocalKV();
   Environment.initialize(runtimeConfig, {
     KV: kv,
@@ -16,7 +16,7 @@ export function prepareEnv() {
     ENVIRONMENT: 'unittest',
   });
 
-  kv.put(
+  await kv.put(
     `${GitHubCommon.GITHUB_APP_SETTINGS_PREFIX}mock`,
     JSON.stringify({
       appSettings: {
@@ -31,6 +31,6 @@ export function prepareEnv() {
   console.log('prepare env done');
   console.log(
     'app settings',
-    kv.get(`${GitHubCommon.GITHUB_APP_SETTINGS_PREFIX}mock`),
+    await kv.get(`${GitHubCommon.GITHUB_APP_SETTINGS_PREFIX}mock`),
   );
 }

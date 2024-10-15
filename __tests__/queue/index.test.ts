@@ -31,7 +31,7 @@ const botId = 'mock';
 
 describe('queue', () => {
   beforeAll(() => {
-    prepareEnv();
+    return prepareEnv();
   });
 
   it('should work', async () => {
