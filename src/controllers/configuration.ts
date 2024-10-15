@@ -63,8 +63,8 @@ export function route(hono: THono) {
     }
 
     const token = body['token'];
-    const kv = new AdminDAO();
-    const validLevel = await AdminService.instance().isTokenValidFor(token, id);
+    const adminService = AdminService.instance();
+    const validLevel = await adminService.isTokenValidFor(token, id);
 
     if (validLevel < EValidLevel.Admin) {
       return c.send.error(404, 'page not found');
@@ -72,7 +72,7 @@ export function route(hono: THono) {
 
     const scopeToken = body['scopeToken'];
     if (scopeToken) {
-      await kv.setScopeToken(id, scopeToken);
+      await adminService.setScopeToken(id, scopeToken);
     }
 
     return c.send.message('ok');

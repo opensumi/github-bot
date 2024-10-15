@@ -1,4 +1,5 @@
 import Environment from '@/env';
+import { merge } from 'es-toolkit';
 
 export type MemoizeFn<T> = (key: string) => Promise<T | null>;
 
@@ -56,8 +57,8 @@ export class KVManager<T> {
   }
 
   async updateJSON(key: string, data: Partial<T>) {
-    const oldData = (await this.getJSON(key)) ?? {};
-    const newData = Object.assign({}, oldData, data);
+    const oldData = (await this.getJSON(key)) ?? ({} as Partial<T>);
+    const newData = merge(oldData, data);
     return await this.kv.put(this.f(key), JSON.stringify(newData));
   }
 
@@ -95,5 +96,9 @@ export class KVItem<T> {
 
   set(data: T) {
     return this.manager.setJSON(this.key, data);
+  }
+
+  update(data: Partial<T>) {
+    return this.manager.updateJSON(this.key, data);
   }
 }

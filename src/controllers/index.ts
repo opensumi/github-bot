@@ -2,10 +2,12 @@ import { ERuleName } from '../gateway';
 import favicon from '../public/favicon.svg';
 import html from '../public/index.html';
 
+import * as Admin from './admin';
 import { ControllerFacade } from './base';
 import * as Configuration from './configuration';
 import * as Ding from './ding';
 import * as GitHub from './github';
+import * as Health from './health';
 import * as Auth from './oauth';
 import * as Proxy from './proxy';
 import { OpenSumiRun, OpenSumiRunWithIDEPrefix } from './run';
@@ -22,32 +24,6 @@ const OpenSumiRunHome = {
   route: (hono: THono) => {
     hono.get('/', (c) => {
       return c.redirect('/opensumi/core');
-    });
-  },
-};
-
-const HealthEndpoint = {
-  route: (hono: THono) => {
-    hono.get('/health', (c) => {
-      let uptime: number;
-
-      if (
-        typeof process !== 'undefined' &&
-        typeof process.uptime === 'function'
-      ) {
-        uptime = process.uptime();
-      } else if (
-        typeof performance !== 'undefined' &&
-        typeof performance.now === 'function'
-      ) {
-        uptime = performance.now();
-      } else {
-        uptime = -1;
-      }
-      return c.json({
-        uptime,
-        timestamp: Date.now(),
-      });
     });
   },
 };
@@ -74,14 +50,15 @@ const controllers = {
     Static,
     Configuration,
     Auth,
-    HealthEndpoint,
+    Health,
+    Admin,
   ],
   [ERuleName.Run]: [
     OpenSumiRunWithIDEPrefix,
     OpenSumiRun,
     Auth,
     OpenSumiRunHome,
-    HealthEndpoint,
+    Health,
   ],
 } as Record<ERuleName, ControllerFacade[]>;
 
@@ -94,8 +71,8 @@ function applyControllers(hono: THono, controllers: ControllerFacade[]) {
 }
 
 export const registerControllers = (hono: THono) => {
-  Object.entries(controllers).forEach(([basePath, controllers]) => {
-    const blueprint = hono.basePath(basePath);
-    applyControllers(blueprint, controllers);
+  Object.entries(controllers).forEach(([basePath, _controllers]) => {
+    const domain = hono.basePath(basePath);
+    applyControllers(domain, _controllers);
   });
 };

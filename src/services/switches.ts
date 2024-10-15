@@ -1,5 +1,5 @@
-import { Common } from '../dao/constants';
-import { KVManager } from '../dao/kv';
+import { Common } from '../dal/constants';
+import { KVManager } from '../dal/kv';
 
 interface SwitchesItem {
   enabled: boolean;

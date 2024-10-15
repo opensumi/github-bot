@@ -2,8 +2,10 @@ import { execa, execaCommand } from 'execa';
 import { task } from 'hereby';
 
 async function tsx(file, ...args) {
-  console.log(`[RUN] Starting ${file}`);
-  await execa('tsx', [file, ...args]);
+  console.log(`[RUN] Starting tsx ${file} ${args.join(' ')}`);
+  await execa('tsx', [file, ...args], {
+    stdio: 'inherit',
+  });
   console.log(`[RUN] Finished ${file}`);
 }
 

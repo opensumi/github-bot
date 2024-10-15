@@ -4,9 +4,8 @@ import { EValidLevel } from '@/dal/types';
 export class AdminService {
   private dao: AdminDAO;
   private constructor() {
-    this.dao = new AdminDAO();
+    this.dao = AdminDAO.instance();
   }
-
   private static _instance: AdminService;
   static instance() {
     if (!this._instance) {
@@ -24,5 +23,17 @@ export class AdminService {
     const adminToken = await this.dao.getAdminToken();
     if (adminToken && adminToken === token) return EValidLevel.Admin;
     return EValidLevel.None;
+  }
+
+  async getAdminToken() {
+    return this.dao.getAdminToken();
+  }
+
+  async setAdminToken(token: string) {
+    return this.dao.setAdminToken(token);
+  }
+
+  async setScopeToken(scope: string, token: string) {
+    return this.dao.setScopeToken(scope, token);
   }
 }

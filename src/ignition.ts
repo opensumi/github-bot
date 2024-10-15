@@ -13,7 +13,7 @@ export function ignition() {
   const hono = new Hono({
     getPath(request: Request) {
       const target = dispatch(request);
-      console.log(`[dispatch] ${request.url} ->`, target);
+      console.log(`[dispatch] ${request.url} -> ${target}`);
 
       return target;
     },

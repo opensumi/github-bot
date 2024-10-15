@@ -5,14 +5,29 @@ import { IAdminInfo } from './types';
 export class AdminDAO {
   kvItem: KVItem<IAdminInfo>;
 
-  constructor() {
+  private constructor() {
     this.kvItem = KVItem.for(Common.ADMIN);
+  }
+
+  private static _instance: AdminDAO;
+  static instance() {
+    if (!this._instance) {
+      this._instance = new AdminDAO();
+    }
+    return this._instance;
   }
 
   async getAdminToken() {
     const data = await this.kvItem.get();
     return data?.token;
   }
+
+  async setAdminToken(token: string) {
+    await this.kvItem.update({
+      token,
+    });
+  }
+
   async getTokenByScope(scope: string) {
     const data = await this.kvItem.get();
     if (!data) return;
@@ -22,12 +37,10 @@ export class AdminDAO {
   }
 
   async setScopeToken(scope: string, token: string) {
-    const data = await this.kvItem.get();
-    if (!data) return;
-    if (!data.tokenByScope) {
-      data.tokenByScope = {};
-    }
-    data.tokenByScope[scope] = token;
-    await this.kvItem.set(data);
+    await this.kvItem.update({
+      tokenByScope: {
+        [scope]: token,
+      },
+    });
   }
 }

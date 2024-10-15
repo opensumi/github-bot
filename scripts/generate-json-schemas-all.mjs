@@ -10,7 +10,7 @@ const __dirname = _dirname(new URL(import.meta.url).pathname);
 
 /** @type {import('ts-json-schema-generator/dist/src/Config').Config} */
 const config = {
-  path: resolve(__dirname, '../src/dao/types.ts'),
+  path: resolve(__dirname, '../src/dal/types.ts'),
   tsconfig: resolve(__dirname, '../tsconfig.build.json'),
 };
 

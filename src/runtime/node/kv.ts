@@ -48,6 +48,9 @@ export class InMemoryKV implements IKVNamespace {
 
   get(key: unknown, type?: unknown): TKVValue<any> {
     let result = this.map.get(key);
+    if (!result) {
+      return Promise.resolve(result);
+    }
 
     if (type === 'json') {
       result = JSON.parse(result);

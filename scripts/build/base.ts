@@ -23,6 +23,7 @@ export const build = async (opts: BuildOptions) => {
   const context = await createContext(merge(buildParams, opts));
 
   if (argv['watch']) {
+    console.log('watching...');
     await context.watch();
   } else {
     await context.rebuild().then((v) => {
