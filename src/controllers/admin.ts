@@ -17,4 +17,34 @@ export function route(hono: THono) {
     await AdminService.instance().setAdminToken(newToken);
     return c.send.message('Token updated successfully');
   });
+
+  hono.get('/admin/configure-scope', async (c) => {
+    const scope = c.req.query('scope');
+    const token = c.req.query('token');
+    const adminToken = c.req.query('adminToken');
+    if (!adminToken) {
+      return c.send.error(400, 'bad request');
+    }
+
+    const existsAdminToken = await AdminService.instance().getAdminToken();
+    if (!existsAdminToken) {
+      return c.send.error(400, 'server is not initialized');
+    }
+
+    if (existsAdminToken !== adminToken) {
+      return c.send.error(400, 'token is not correct');
+    }
+
+    if (!scope) {
+      return c.send.error(400, 'scope is required');
+    }
+
+    if (!token) {
+      return c.send.error(400, 'token is required');
+    }
+
+    await AdminService.instance().setScopeToken(scope, token);
+
+    return c.send.message('Token updated successfully');
+  });
 }
