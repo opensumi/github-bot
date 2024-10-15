@@ -13,9 +13,10 @@ CLOUDFLARE_NAMESPACE_ID=
 and run:
 
 ```bash
-yarn watch:node
-
+yarn dev:node
 ```
+
+and the server will start at `http://0.0.0.0:878`.
 
 ## Using Cloudflare Workers
 
@@ -26,11 +27,18 @@ It is recommended to use Github Codespaces to develop, because we can access the
 and just run:
 
 ```sh
-yarn global add wrangler
-yarn
-# Login to Cloudflare
-wrangler login
+yarn wrangler login
 yarn dev
 ```
 
 Then you should see the [how-to-use.md](./how-to-use.md).
+
+## Use smee.io to test
+
+You can use [smee.io](https://smee.io/) to test the webhook locally.
+
+```sh
+yarn dev:proxy
+```
+
+then you can get the webhook url, and set the webhook url in the GitHub repository settings.

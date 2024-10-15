@@ -26,7 +26,6 @@
     "gen": "hereby gen",
     "clean": "hereby clean",
     "predeploy:local": "yarn build",
-    "deploy:local": "wrangler deploy",
     "publish:libs": "lerna publish",
     "lint": "biome check",
     "lint:fix": "yarn biome check --write",

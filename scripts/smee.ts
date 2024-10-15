@@ -5,19 +5,23 @@
 import SmeeClient from 'smee-client';
 
 const allRoutes = [
-  // 'ding-opensumi',
-  // 'ding-trs',
-  // 'github-app-opensumi',
-  // 'github-app-qiuqiu',
-  // 'webhook-opensumi',
-  'github-app-opensumi2',
+  // 'ding/opensumi',
+  // 'ding/trs',
+  // 'github/app/opensumi',
+  // 'github/app/qiuqiu',
+  // 'webhook/opensumi',
+  'github/app/opensumi2',
 ];
 
 const allClients = [] as SmeeClient[];
 
 for (const routeName of allRoutes) {
-  const source = 'https://smee.io/opensumi-github-bot-' + routeName;
-  const target = 'http://localhost:8787/' + routeName.replace(/-/g, '/');
+  const dashSeparated = routeName.replace(/\//g, '-');
+  const smeePath = `opensumi-github-bot-${dashSeparated}`;
+  const source = 'https://smee.io/' + smeePath;
+  const target = 'http://localhost:8787/' + routeName;
+
+  console.log(`${source} -> ${target}`);
 
   const smee = new SmeeClient({
     source,
