@@ -10,27 +10,31 @@ const githubPrivateKey =
 
 export async function prepareEnv() {
   const kv = new LocalKV();
-  Environment.initialize(runtimeConfig, {
+  const e = Environment.from(runtimeConfig, {
     KV: kv,
     MESSAGE_QUEUE: {} as any,
     ENVIRONMENT: 'unittest',
   });
 
-  await kv.put(
-    `${GitHubCommon.GITHUB_APP_SETTINGS_PREFIX}mock`,
-    JSON.stringify({
-      appSettings: {
-        appId: githubAppId,
-        privateKey: githubPrivateKey!.replace(/\\n/g, '\n'),
-      },
-      githubSecret,
-      dingWebhooks: [],
-      contentLimit: 300,
-    }),
-  );
-  console.log('prepare env done');
-  console.log(
-    'app settings',
-    await kv.get(`${GitHubCommon.GITHUB_APP_SETTINGS_PREFIX}mock`),
-  );
+  await e.run(async () => {
+    await kv.put(
+      `${GitHubCommon.GITHUB_APP_SETTINGS_PREFIX}mock`,
+      JSON.stringify({
+        appSettings: {
+          appId: githubAppId,
+          privateKey: githubPrivateKey!.replace(/\\n/g, '\n'),
+        },
+        githubSecret,
+        dingWebhooks: [],
+        contentLimit: 300,
+      }),
+    );
+    console.log('prepare env done');
+    console.log(
+      'app settings',
+      await kv.get(`${GitHubCommon.GITHUB_APP_SETTINGS_PREFIX}mock`),
+    );
+  });
+
+  return e;
 }

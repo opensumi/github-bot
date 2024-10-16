@@ -1,16 +1,29 @@
+import { AsyncLocalStorage } from 'node:async_hooks';
 import { saftParseInt } from './utils/number';
+import { getHostOrigin } from './utils/req';
 
 export interface IEnvironmentConfig {
   defaultTimeout: number;
 }
 
+export const als = new AsyncLocalStorage<Environment>();
+
+export const getEnvironment = () => als.getStore()!;
+
+export interface IExtraEnv {
+  origin: string;
+}
+
 export default class Environment {
+  origin: string;
+
   private constructor(
     public readonly config: IEnvironmentConfig,
     private env: IRuntimeEnv,
+    extraEnv: IExtraEnv,
   ) {
     this._timeout = config.defaultTimeout;
-
+    this.origin = extraEnv.origin;
     if (env.TIMEOUT) {
       const timeout = saftParseInt(env.TIMEOUT);
       if (typeof timeout !== 'undefined') {
@@ -18,8 +31,6 @@ export default class Environment {
       }
     }
   }
-
-  static #instance: Environment | null;
 
   get Queue() {
     return this.env.MESSAGE_QUEUE;
@@ -43,18 +54,32 @@ export default class Environment {
     return this.env.ENVIRONMENT;
   }
 
-  static instance() {
-    if (!this.#instance) {
-      throw new Error('Environment is not initialized');
-    }
-    return this.#instance;
+  get supportProxy() {
+    return Boolean(this.origin);
   }
 
-  static initialize(runtimeConfig: IEnvironmentConfig, env: IRuntimeEnv) {
-    this.#instance = new Environment(runtimeConfig, env);
+  getProxiedUrl = (url: string) => {
+    return `${this.origin}/proxy/${encodeURIComponent(url)}`;
+  };
+
+  public run<R, TArgs extends any[]>(
+    callback: (...args: TArgs) => R,
+    ...args: TArgs
+  ): R {
+    return als.run(this, callback, ...args);
   }
 
-  static dispose() {
-    this.#instance = null;
+  static from(
+    runtimeConfig: IEnvironmentConfig,
+    env: IRuntimeEnv,
+    extraEnv?: IExtraEnv,
+  ) {
+    return new Environment(
+      runtimeConfig,
+      env,
+      extraEnv || {
+        origin: '',
+      },
+    );
   }
 }

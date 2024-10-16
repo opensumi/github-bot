@@ -1,13 +1,13 @@
 import { html } from 'hono/html';
 
 import { OpenSumiRunDAO } from '@/dal/run';
-import Environment from '@/env';
+import { getEnvironment } from '@/env';
 
 import { ControllerFacade } from './base';
 
 function registerOpenSumiRun(hono: THono, prefix = '') {
   hono.get(`${prefix}/:group/:project`, async (c) => {
-    const env = Environment.instance().environment;
+    const env = getEnvironment().environment;
     const kvManager = OpenSumiRunDAO.instance();
 
     const config = await kvManager.getCdnConfig();

@@ -39,9 +39,11 @@ export class QueueBatchConsumer<T extends { type: string }> {
   }
 }
 
-export const createBatchConsumer = () => {
+export const createBatchConsumer = (batch: MessageBatch<TQueueMessage>) => {
   const consumer = new QueueBatchConsumer<TQueueMessage>();
   consumer.addWorker('github-app', new GitHubEventWorker('app'));
   consumer.addWorker('github-webhook', new GitHubEventWorker('webhook'));
+
+  consumer.push(...batch.messages);
   return consumer;
 };

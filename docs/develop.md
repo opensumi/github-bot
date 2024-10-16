@@ -1,5 +1,11 @@
 # Develop
 
+## Install
+
+```bash
+yarn
+```
+
 ## Using Node.js
 
 configure cloudflare related env:
@@ -42,3 +48,8 @@ yarn dev:proxy
 ```
 
 then you can get the webhook url, and set the webhook url in the GitHub repository settings.
+
+## Deep dive
+
+In the root directory, we have a `wrangler.tpl.toml`, which is a template for `wrangler.toml`.
+We use `wrangler.tpl.toml` to generate `wrangler.toml` when we run `yarn dev`(this logic is in `libs/cfworker-builder/src/gen-toml.mjs`, and can used in other projects).

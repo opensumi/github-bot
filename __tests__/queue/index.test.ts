@@ -30,178 +30,192 @@ import {
 const botId = 'mock';
 
 describe('queue', () => {
-  beforeAll(() => {
-    return prepareEnv();
-  });
-
   it('should work', async () => {
-    const wk = new MockGitHubEventWorker('app');
-    const events = [
-      { name: 'pull_request', payload: pull_request_2_3_closed },
-      { name: 'pull_request', payload: pull_request_2_0_opened },
-      { name: 'pull_request', payload: pull_request_2_13_opened },
-      { name: 'pull_request', payload: pull_request_edited_wip },
-      { name: 'pull_request', payload: pull_request_edited_base },
-      { name: 'issues', payload: issue_opened_event },
-      { name: 'release', payload: release_published },
-      { name: 'release', payload: antd_mini_release_published },
-      {
-        name: 'pull_request_review_comment',
-        payload: pull_request_2_review_comment_0_created,
-      },
-    ] as { name: EmitterWebhookEventName; payload: any }[];
+    const e = await prepareEnv();
+    await e.run(async () => {
+      const wk = new MockGitHubEventWorker('app');
+      const events = [
+        { name: 'pull_request', payload: pull_request_2_3_closed },
+        { name: 'pull_request', payload: pull_request_2_0_opened },
+        { name: 'pull_request', payload: pull_request_2_13_opened },
+        { name: 'pull_request', payload: pull_request_edited_wip },
+        { name: 'pull_request', payload: pull_request_edited_base },
+        { name: 'issues', payload: issue_opened_event },
+        { name: 'release', payload: release_published },
+        { name: 'release', payload: antd_mini_release_published },
+        {
+          name: 'pull_request_review_comment',
+          payload: pull_request_2_review_comment_0_created,
+        },
+      ] as { name: EmitterWebhookEventName; payload: any }[];
 
-    const githubAppMessage = events.map((v) => ({
-      botId,
-      type: 'github-app',
-      data: {
-        id: `${Math.random()}`,
-        name: v.name,
-        payload: v.payload,
-      },
-    })) as IGitHubEventQueueMessage[];
+      const githubAppMessage = events.map((v) => ({
+        botId,
+        type: 'github-app',
+        data: {
+          id: `${Math.random()}`,
+          name: v.name,
+          payload: v.payload,
+        },
+      })) as IGitHubEventQueueMessage[];
 
-    const batch = MockMessageBatch.from(githubAppMessage);
-    batch.messages.forEach((v) => {
-      wk.push(v);
+      const batch = MockMessageBatch.from(githubAppMessage);
+      batch.messages.forEach((v) => {
+        wk.push(v);
+      });
+
+      await wk.run();
     });
-
-    await wk.run();
   });
 
   it('can composite pr review', async () => {
     expect.assertions(2);
-    const wk = new MockGitHubEventWorker('app');
-    const events = [
-      {
-        name: 'pull_request_review',
-        payload: pull_request_review_4_submitted_changes_requested,
-      },
-      {
-        name: 'pull_request_review_comment',
-        payload: pull_request_2_review_comment_0_created,
-      },
-      {
-        name: 'pull_request_review_comment',
-        payload: pull_request_2_review_comment_1_created,
-      },
-    ] as { name: EmitterWebhookEventName; payload: any }[];
+    const e = await prepareEnv();
+    await e.run(async () => {
+      const wk = new MockGitHubEventWorker('app');
+      const events = [
+        {
+          name: 'pull_request_review',
+          payload: pull_request_review_4_submitted_changes_requested,
+        },
+        {
+          name: 'pull_request_review_comment',
+          payload: pull_request_2_review_comment_0_created,
+        },
+        {
+          name: 'pull_request_review_comment',
+          payload: pull_request_2_review_comment_1_created,
+        },
+      ] as { name: EmitterWebhookEventName; payload: any }[];
 
-    const reviews = events.map((v) => ({
-      botId,
-      type: 'github-app',
-      data: {
-        id: `${Math.random()}`,
-        name: v.name,
-        payload: v.payload,
-      },
-    })) as IGitHubEventQueueMessage[];
+      const reviews = events.map((v) => ({
+        botId,
+        type: 'github-app',
+        data: {
+          id: `${Math.random()}`,
+          name: v.name,
+          payload: v.payload,
+        },
+      })) as IGitHubEventQueueMessage[];
 
-    const batch = MockMessageBatch.from(reviews);
-    wk.push(...batch.messages);
+      const batch = MockMessageBatch.from(reviews);
+      wk.push(...batch.messages);
 
-    wk.onBatchDoneForTest = (results) => {
-      expect(results.length).toBe(1);
-      expect(results).toMatchSnapshot();
-    };
+      wk.onBatchDoneForTest = (results) => {
+        expect(results.length).toBe(1);
+        expect(results).toMatchSnapshot();
+      };
 
-    await wk.run();
+      await wk.run();
+    });
   });
 
   it('can composite pr review single', async () => {
     expect.assertions(2);
-    const wk = new MockGitHubEventWorker('app');
-    const events = [
-      {
-        name: 'pull_request_review',
-        payload: pull_request_review_submitted_approved,
-      },
-    ] as { name: EmitterWebhookEventName; payload: any }[];
 
-    const reviews = events.map((v) => ({
-      botId,
-      type: 'github-app',
-      data: {
-        id: `${Math.random()}`,
-        name: v.name,
-        payload: v.payload,
-      },
-    })) as IGitHubEventQueueMessage[];
+    const e = await prepareEnv();
+    await e.run(async () => {
+      const wk = new MockGitHubEventWorker('app');
+      const events = [
+        {
+          name: 'pull_request_review',
+          payload: pull_request_review_submitted_approved,
+        },
+      ] as { name: EmitterWebhookEventName; payload: any }[];
 
-    const batch = MockMessageBatch.from(reviews);
-    wk.push(...batch.messages);
+      const reviews = events.map((v) => ({
+        botId,
+        type: 'github-app',
+        data: {
+          id: `${Math.random()}`,
+          name: v.name,
+          payload: v.payload,
+        },
+      })) as IGitHubEventQueueMessage[];
 
-    wk.onBatchDoneForTest = (results) => {
-      expect(results.length).toBe(1);
-      expect(results).toMatchSnapshot();
-    };
+      const batch = MockMessageBatch.from(reviews);
+      wk.push(...batch.messages);
 
-    await wk.run();
+      wk.onBatchDoneForTest = (results) => {
+        expect(results.length).toBe(1);
+        expect(results).toMatchSnapshot();
+      };
+
+      await wk.run();
+    });
   });
 
   it('can composite pr review comment single', async () => {
     expect.assertions(2);
-    const wk = new MockGitHubEventWorker('app');
-    const events = [
-      {
-        name: 'pull_request_review_comment',
-        payload: pull_request_2_review_comment_1_created,
-      },
-    ] as { name: EmitterWebhookEventName; payload: any }[];
 
-    const reviews = events.map((v) => ({
-      botId,
-      type: 'github-app',
-      data: {
-        id: `${Math.random()}`,
-        name: v.name,
-        payload: v.payload,
-      },
-    })) as IGitHubEventQueueMessage[];
+    const e = await prepareEnv();
+    await e.run(async () => {
+      const wk = new MockGitHubEventWorker('app');
+      const events = [
+        {
+          name: 'pull_request_review_comment',
+          payload: pull_request_2_review_comment_1_created,
+        },
+      ] as { name: EmitterWebhookEventName; payload: any }[];
 
-    const batch = MockMessageBatch.from(reviews);
-    wk.push(...batch.messages);
+      const reviews = events.map((v) => ({
+        botId,
+        type: 'github-app',
+        data: {
+          id: `${Math.random()}`,
+          name: v.name,
+          payload: v.payload,
+        },
+      })) as IGitHubEventQueueMessage[];
 
-    wk.onBatchDoneForTest = (results) => {
-      expect(results.length).toBe(1);
-      expect(results).toMatchSnapshot();
-    };
+      const batch = MockMessageBatch.from(reviews);
+      wk.push(...batch.messages);
 
-    await wk.run();
+      wk.onBatchDoneForTest = (results) => {
+        expect(results.length).toBe(1);
+        expect(results).toMatchSnapshot();
+      };
+
+      await wk.run();
+    });
   });
 
   it('can composite discussion', async () => {
     expect.assertions(2);
-    const wk = new MockGitHubEventWorker('app');
-    const events = [
-      {
-        name: 'discussion',
-        payload: discussion_90_0_created,
-      },
-      {
-        name: 'discussion_comment',
-        payload: discussion_comment_90_0_created,
-      },
-    ] as EmitterWebhookEvent[];
 
-    const reviews = events.map((v) => ({
-      botId,
-      type: 'github-app',
-      data: {
-        id: `${Math.random()}`,
-        name: v.name,
-        payload: v.payload,
-      },
-    })) as IGitHubEventQueueMessage[];
+    const e = await prepareEnv();
+    await e.run(async () => {
+      const wk = new MockGitHubEventWorker('app');
+      const events = [
+        {
+          name: 'discussion',
+          payload: discussion_90_0_created,
+        },
+        {
+          name: 'discussion_comment',
+          payload: discussion_comment_90_0_created,
+        },
+      ] as EmitterWebhookEvent[];
 
-    const batch = MockMessageBatch.from(reviews);
-    wk.push(...batch.messages);
+      const reviews = events.map((v) => ({
+        botId,
+        type: 'github-app',
+        data: {
+          id: `${Math.random()}`,
+          name: v.name,
+          payload: v.payload,
+        },
+      })) as IGitHubEventQueueMessage[];
 
-    wk.onBatchDoneForTest = (results) => {
-      expect(results.length).toBe(1);
-      expect(results).toMatchSnapshot();
-    };
+      const batch = MockMessageBatch.from(reviews);
+      wk.push(...batch.messages);
 
-    await wk.run();
+      wk.onBatchDoneForTest = (results) => {
+        expect(results.length).toBe(1);
+        expect(results).toMatchSnapshot();
+      };
+
+      await wk.run();
+    });
   });
 });

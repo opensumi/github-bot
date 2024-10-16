@@ -5,12 +5,9 @@ import { runtimeConfig } from '@/runtime/node/config';
 import { ISSUE_REGEX } from '@/services/dingtalk-bot/commands/constants';
 import { CommandCenter } from '@opensumi/bot-commander';
 
-import { testEnv } from '../__mocks__/env';
+import { getTestEnvironment } from '../__mocks__/env';
 
 describe('command center', () => {
-  afterEach(() => {
-    Environment.dispose();
-  });
   it('can resolve text', async () => {
     const fn = jest.fn();
     const cc = new CommandCenter({
@@ -61,53 +58,52 @@ describe('command center', () => {
       name: 'opensumi',
     });
     expect(fn).toBeCalled();
-
-    Environment.dispose();
   });
   it('try handle would canceled if timeout', async () => {
     const fn = jest.fn();
     const tokenOnCancellationRequested = jest.fn();
 
-    Environment.initialize(runtimeConfig, {
-      ...testEnv,
+    const e = getTestEnvironment({
       TIMEOUT: String(3 * 1000),
     });
 
-    const cc = new CommandCenter<{
-      name: string;
-    }>({
-      prefix: ['/'],
-    });
+    await e.run(async () => {
+      const cc = new CommandCenter<{
+        name: string;
+      }>({
+        prefix: ['/'],
+      });
 
-    cc.on('hello', async (ctx) => {
-      await Promise.race([
-        (async () => {
-          await sleep(5 * 1000);
-          fn();
-        })(),
-        new Promise<void>((resolve) => {
-          ctx.token.onCancellationRequested(() => {
-            tokenOnCancellationRequested();
-            resolve();
-          });
-        }),
-      ]);
-    });
-    try {
-      await cc.tryHandle(
-        '/hello',
-        {
-          name: 'opensumi',
-        },
-        {
-          timeout: 3 * 1000,
-        },
-      );
-    } catch (error) {
-      expect((error as any).message).toBe('Canceled');
-    }
+      cc.on('hello', async (ctx) => {
+        await Promise.race([
+          (async () => {
+            await sleep(5 * 1000);
+            fn();
+          })(),
+          new Promise<void>((resolve) => {
+            ctx.token.onCancellationRequested(() => {
+              tokenOnCancellationRequested();
+              resolve();
+            });
+          }),
+        ]);
+      });
+      try {
+        await cc.tryHandle(
+          '/hello',
+          {
+            name: 'opensumi',
+          },
+          {
+            timeout: 3 * 1000,
+          },
+        );
+      } catch (error) {
+        expect((error as any).message).toBe('Canceled');
+      }
 
-    expect(fn).not.toBeCalled();
-    expect(tokenOnCancellationRequested).toBeCalled();
+      expect(fn).not.toBeCalled();
+      expect(tokenOnCancellationRequested).toBeCalled();
+    });
   });
 });

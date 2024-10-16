@@ -5,7 +5,7 @@ import {
   WebhookEventHandlerError,
 } from '@octokit/webhooks/dist-types/types';
 
-import Environment from '@/env';
+import Environment, { getEnvironment } from '@/env';
 import { error, json } from '@/utils/api/response';
 import { Logger } from '@/utils/logger';
 
@@ -37,12 +37,12 @@ export class WebhookService {
       logger.info('receive github webhook, id: ${id}, name: ${name}');
       try {
         const useQueue =
-          Environment.instance().Queue &&
+          getEnvironment().Queue &&
           (await SwitchesService.instance().isEnableQueue(id));
 
         if (useQueue) {
           logger.info('send to queue');
-          await Environment.instance().Queue.send(
+          await getEnvironment().Queue.send(
             {
               botId,
               type,

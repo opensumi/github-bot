@@ -12,7 +12,7 @@ import {
 } from '@opensumi/dingtalk-bot/lib/types';
 import { send } from '@opensumi/dingtalk-bot/lib/utils';
 
-import { context } from '@/middleware/async-local-storage';
+import { getEnvironment } from '@/env';
 import { MarkdownContent } from './github/types';
 
 function dingSecurityInterception(text: string) {
@@ -97,8 +97,11 @@ export class DingtalkService {
     return {
       handleImageUrl: (url: string) => {
         try {
-          return context().getProxiedUrl(url);
-        } catch {
+          const e = getEnvironment();
+          if (e.supportProxy) {
+            return e.getProxiedUrl(url);
+          }
+        } finally {
           return url;
         }
       },

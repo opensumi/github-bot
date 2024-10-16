@@ -1,4 +1,4 @@
-import Environment from '@/env';
+import Environment, { getEnvironment } from '@/env';
 import { merge } from 'es-toolkit';
 
 export type MemoizeFn<T> = (key: string) => Promise<T | null>;
@@ -27,7 +27,7 @@ export class KVManager<T> {
     protected ttl = 0,
   ) {
     this.id = id;
-    this.kv = Environment.instance().KV;
+    this.kv = getEnvironment().KV;
     this.getJSONCached = this.momoizeGetJSON(this.ttl);
   }
 

@@ -1,13 +1,26 @@
 import { StatusCode } from 'hono/utils/http-status';
 
-import * as AsyncLocalStorage from './async-local-storage';
 import * as GitHub from './github';
 
 export function applyMiddleware(hono: THono) {
   hono.use('*', async (c, next) => {
-    const url = new URL(c.req.url);
-    const origin = url.origin;
-    c.origin = origin;
+    const waitUntil = c.executionCtx.waitUntil.bind(c.executionCtx);
+    c.executionCtx.waitUntil = (promise) => {
+      return waitUntil(
+        (async () => {
+          try {
+            await promise;
+          } catch (err) {
+            console.log('waitUntil error', err);
+          }
+        })(),
+      );
+    };
+
+    await next();
+  });
+
+  hono.use('*', async (c, next) => {
     c.send = {
       error: (
         status: StatusCode | number = 500,
@@ -28,16 +41,7 @@ export function applyMiddleware(hono: THono) {
       },
     } as ISend;
 
-    c.getProxiedUrl = (url: string) => {
-      return `${origin}/proxy/${encodeURIComponent(url)}`;
-    };
-
     await next();
   });
-  hono.use(
-    AsyncLocalStorage.middleware<THonoEnvironment>((ctx) => ({
-      ctx,
-    })),
-  );
   GitHub.middleware(hono);
 }

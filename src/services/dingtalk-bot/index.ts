@@ -2,7 +2,7 @@ import { Context } from 'hono';
 
 import { GitHubDAO } from '@/dal/github';
 import { IDingBotSetting } from '@/dal/types';
-import Environment from '@/env';
+import Environment, { getEnvironment } from '@/env';
 import { App, initApp } from '@/services/github/app';
 import {
   DingBotAdapter as BaseDingBotAdapter,
@@ -23,7 +23,7 @@ export class DingBotAdapter extends BaseDingBotAdapter<CommandCenterContext> {
   ) {
     super(id, {
       prefix: [''],
-      timeout: Environment.instance().timeout,
+      timeout: getEnvironment().timeout,
     });
 
     registerCommonCommand(this.cc);

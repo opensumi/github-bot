@@ -11,30 +11,8 @@ import { logger } from './middleware/logger';
 
 export function ignition() {
   const hono = new Hono({
-    getPath(request: Request) {
-      const target = dispatch(request);
-      console.log(`[dispatch] ${request.url} -> ${target}`);
-
-      return target;
-    },
+    getPath: dispatch,
   }) as THono;
-
-  hono.use('*', async (c, next) => {
-    const waitUntil = c.executionCtx.waitUntil.bind(c.executionCtx);
-    c.executionCtx.waitUntil = (promise) => {
-      return waitUntil(
-        (async () => {
-          try {
-            await promise;
-          } catch (err) {
-            console.log('waitUntil error', err);
-          }
-        })(),
-      );
-    };
-
-    await next();
-  });
 
   applyMiddleware(hono);
 

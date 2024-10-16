@@ -10,7 +10,7 @@ const rules = {
   'local.opensumi.run': ERuleName.Run,
 } as Record<string, ERuleName>;
 
-export function dispatch(request: Request) {
+function getTarget(request: Request) {
   const rawPath = getPath(request);
   const hostname = new URL(request.url).hostname;
 
@@ -19,4 +19,13 @@ export function dispatch(request: Request) {
     return mergePath(path, rawPath);
   }
   return rawPath;
+}
+
+/**
+ * 将请求根据域名分发到不同的服务
+ */
+export function dispatch(request: Request) {
+  const target = getTarget(request);
+  console.log(`[dispatch] ${request.url} -> ${target}`);
+  return target;
 }

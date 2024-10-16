@@ -5,7 +5,7 @@ import { HandlerFunction } from '@octokit/webhooks/dist-types/types';
 import { PrivilegeEvent } from '@/constants';
 import { ActionsRepo, VERSION_SYNC_KEYWORD } from '@/constants/opensumi';
 import { AppSetting } from '@/dal/types';
-import Environment from '@/env';
+import Environment, { getEnvironment } from '@/env';
 
 import { DingtalkService } from '../dingtalk';
 import { CommandContext, issueCc } from './commands';
@@ -97,7 +97,7 @@ export class App {
         octokit,
       } as unknown as CommandContext,
       {
-        timeout: Environment.instance().timeout,
+        timeout: getEnvironment().timeout,
       },
     );
 
