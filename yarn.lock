@@ -2818,12 +2818,6 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@opensumi/onebot@workspace:libs/onebot":
-  version: 0.0.0-use.local
-  resolution: "@opensumi/onebot@workspace:libs/onebot"
-  languageName: unknown
-  linkType: soft
-
 "@opensumi/workers-kv@workspace:^, @opensumi/workers-kv@workspace:libs/workers-kv":
   version: 0.0.0-use.local
   resolution: "@opensumi/workers-kv@workspace:libs/workers-kv"
