@@ -11,7 +11,7 @@ const octo = new Octokit({
 const service = new GitHubService();
 service.octo = octo;
 async function main() {
-  const targetDir = path.join(__dirname, '../__tests__/fixtures');
+  const targetDir = path.join(__dirname, '../src/__tests__/fixtures');
   const issueData = await service.getIssuePrByNumber('opensumi', 'core', 2045);
   await writeFile(
     path.join(targetDir, './issue-2045.json'),

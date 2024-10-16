@@ -4,7 +4,7 @@ import { prettyJSON } from 'hono/pretty-json';
 
 import { ValidationError } from '@/services/github';
 
-import { registerControllers } from './controllers';
+import { applyControllers } from './controllers';
 import { dispatch } from './gateway';
 import { applyMiddleware } from './middleware';
 import { logger } from './middleware/logger';
@@ -19,14 +19,14 @@ export function ignition() {
   hono.use('*', logger());
   hono.use('*', prettyJSON());
 
-  registerControllers(hono);
+  applyControllers(hono);
 
   hono.notFound((c) => {
     return c.send.error(404, 'no router found');
   });
 
   hono.onError((err, c) => {
-    console.error('onError', err);
+    console.error('handle request error', err);
     if (err instanceof ValidationError) {
       return c.send.error(
         err.statusCode,

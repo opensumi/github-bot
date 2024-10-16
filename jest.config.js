@@ -7,11 +7,15 @@ const config = {
         useESM: true,
       },
     ],
-    '^.+\\.html$': '<rootDir>/__tests__/transforms/text.js',
-    '^.+\\.svg$': '<rootDir>/__tests__/transforms/text.js',
+    '^.+\\.html$': '<rootDir>/scripts/transforms/text.js',
+    '^.+\\.svg$': '<rootDir>/scripts/transforms/text.js',
   },
   testMatch: ['**/__tests__/**/*.(spec|test).[jt]s?(x)'],
-  testPathIgnorePatterns: ['<rootDir>/build/', '<rootDir>/node_modules/'],
+  testPathIgnorePatterns: [
+    '<rootDir>/build/',
+    '<rootDir>/dist/',
+    '<rootDir>/node_modules/',
+  ],
   '//': 'https://github.com/remarkjs/remark/issues/969',
   transformIgnorePatterns: [],
   collectCoverageFrom: ['src/**/*.{ts,js}'],
@@ -19,7 +23,7 @@ const config = {
   moduleNameMapper: {
     '@/(.*)$': '<rootDir>/src/$1',
   },
-  setupFilesAfterEnv: ['<rootDir>/jest-setup.js'],
+  setupFilesAfterEnv: ['<rootDir>/scripts/jest-setup.js'],
 };
 
 if (process.env.CI) {
