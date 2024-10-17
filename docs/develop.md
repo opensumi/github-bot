@@ -53,3 +53,23 @@ then you can get the webhook url, and set the webhook url in the GitHub reposito
 
 In the root directory, we have a `wrangler.tpl.toml`, which is a template for `wrangler.toml`.
 We use `wrangler.tpl.toml` to generate `wrangler.toml` when we run `yarn dev`(this logic is in `libs/cfworker-builder/src/gen-toml.mjs`, and can used in other projects).
+
+## Build
+
+Just run:
+
+```bash
+# build for node
+yarn build:node
+# or build for cloudflare workers
+yarn build:cfworker
+```
+
+the output will be in the `dist` directory.
+and you can use it in your own project.
+
+for example, you can run the node version:
+
+```bash
+node dist/node/index.js
+```
